@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real lingo — Find Your Language Shortcut</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --y: #ffeb99; --ym: #f5d96a;
+      --dk: #111216; --bl: #99adff; --wh: #ffffff;
+      --sr: 'T`imes New Roman', Georgia, serif;
+      --ss: 'Be Vietnam Pro', system-ui, sans-serif;
+    }
+    html, body { width:100%; height:100%; background:#0d0e11; overflow:hidden; font-family:var(--ss); color:var(--wh); }
+
+    /* ── BG ── */
+    .bg { position:fixed; inset:0; z-index:0; background:#0d0e11; overflow:hidden; }
+    .blob { position:absolute; border-radius:50%; will-change:transform; }
+    .b1 { width:60vw;height:60vw;background:radial-gradient(circle,var(--y) 0%,transparent 70%);opacity:.055;top:-20%;left:-5%;animation:d1 24s ease-in-out infinite; }
+    .b2 { width:50vw;height:50vw;background:radial-gradient(circle,var(--bl) 0%,transparent 70%);opacity:.04;bottom:-15%;right:-5%;animation:d2 20s ease-in-out infinite 6s; }
+    .b3 { width:40vw;height:40vw;background:radial-gradient(circle,var(--y) 0%,transparent 70%);opacity:.03;top:45%;right:18%;animation:d3 28s ease-in-out infinite 12s; }
+    @keyframes d1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(4vw,-3vh) scale(1.06)} 66%{transform:translate(-3vw,4vh) scale(.96)} }
+    @keyframes d2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-5vw,-3vh) scale(1.1)} }
+    @keyframes d3 { 0%,100%{transform:translate(0,0) scale(1)} 45%{transform:translate(4vw,3vh) scale(.88)} }
+    .grain { position:fixed;inset:0;z-index:2;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;opacity:.032; }
+
+    /* ── SCREENS ── */
+    .screen { position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;transition:opacity .45s cubic-bezier(.4,0,.2,1); }
+    .screen.off { opacity:0;pointer-events:none; }
+    #s-form { overflow:hidden; } /* step area handles its own scroll */
+
+    /* ── SHARED HEADER ── */
+    .app-hdr { position:absolute;top:0;left:0;right:0;z-index:30;padding:1.625rem 2.5rem;display:flex;align-items:center;justify-content:space-between; }
+    .logo { font-size:1.3rem;text-decoration:none;color:rgba(255,255,255,.65);display:flex;align-items:baseline;gap:.06em;transition:color .2s; }
+    .logo:hover { color:rgba(255,255,255,.9); }
+    .lr { font-family:var(--sr);font-style:italic;font-weight:400; }
+    .ll { font-family:var(--ss);font-weight:900;letter-spacing:-.03em; }
+    .skip-btn { background:none;border:1px solid rgba(255,255,255,.16);border-radius:100px;padding:.5rem 1.375rem;color:rgba(255,255,255,.38);font-family:var(--ss);font-size:.8rem;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:color .22s,border-color .22s; }
+    .skip-btn:hover { color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.35); }
+
+    /* ── INTRO ── */
+    #s-intro { align-items:center;justify-content:center; }
+    .sticker { position:absolute;padding:.55rem 1.375rem;border-radius:100px;font-size:1.05rem;font-weight:700;letter-spacing:.04em;user-select:none; }
+    .s-zh { background:var(--y);color:#111;top:22%;right:11%;animation:ftR 4.5s ease-in-out infinite;font-family:'PingFang SC','Noto Sans SC','Microsoft YaHei',var(--ss); }
+    .s-ar { border:1px solid rgba(153,173,255,.45);color:var(--bl);bottom:28%;left:9%;animation:ftL 5.5s ease-in-out infinite 1.6s;font-family:'Noto Sans Arabic','Arial Unicode MS',var(--ss);direction:rtl; }
+    @keyframes ftR { 0%,100%{transform:rotate(9deg) translateY(0)} 50%{transform:rotate(9deg) translateY(-12px)} }
+    @keyframes ftL { 0%,100%{transform:rotate(-7deg) translateY(0)} 50%{transform:rotate(-7deg) translateY(-10px)} }
+    .intro-body { display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:5; }
+    .intro-h1 { font-family:var(--ss);font-weight:900;font-size:clamp(3.75rem,10.5vw,9.5rem);color:var(--wh);letter-spacing:-.04em;line-height:.9;text-transform:lowercase;transition:opacity .3s ease,transform .3s ease; }
+    .intro-h1.slogan-out { opacity:0;transform:translateY(-18px); }
+    .intro-over { display:block;font-family:var(--sr);font-style:italic;font-weight:400;font-size:.33em;letter-spacing:.04em;color:rgba(255,255,255,.42);margin-bottom:.28em;text-transform:none; }
+    .btn-start { margin-top:2.75rem;display:inline-flex;align-items:center;gap:.5rem;padding:.9rem 2.375rem;border:1px solid rgba(255,255,255,.22);border-radius:100px;background:transparent;color:rgba(255,255,255,.7);font-family:var(--ss);font-size:.88rem;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:background .25s,border-color .25s,color .25s; }
+    .btn-start:hover { background:var(--y);border-color:var(--y);color:#111; }
+
+    /* ── QUIZ ── */
+    #s-quiz { justify-content:flex-end; }
+    .step-nav { position:absolute;left:2.375rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.5rem;z-index:20; }
+    .sp { width:34px;height:34px;border-radius:5px;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:rgba(255,255,255,.18);transition:background .35s,border-color .35s,color .35s; }
+    .sp.done { background:var(--y);border-color:var(--y);color:#111; }
+    .sp.cur { border-color:var(--y);color:var(--y);box-shadow:0 0 0 3px rgba(255,235,153,.12); }
+    .quiz-wrap { flex:1;display:flex;flex-direction:column;justify-content:center;padding:5.5rem 4.5rem 4rem 6.5rem; }
+    .quiz-q { font-family:var(--ss);font-size:clamp(2rem,5vw,4.5rem);font-weight:900;color:var(--wh);letter-spacing:-.03em;line-height:1.1;max-width:700px;transition:opacity .35s ease,transform .35s ease; }
+    .quiz-opts { display:flex;flex-wrap:wrap;gap:.625rem;padding-top:2rem;transition:opacity .35s ease,transform .35s ease; }
+    .opt { display:inline-flex;align-items:center;gap:.625rem;padding:.8rem 1.5rem;border:1px solid rgba(255,255,255,.18);border-radius:100px;background:transparent;color:rgba(255,255,255,.65);font-family:var(--ss);font-size:.875rem;font-weight:500;cursor:pointer;transition:background .2s,border-color .2s,color .2s;text-align:left;line-height:1.4; }
+    .opt:hover { background:rgba(255,235,153,.1);border-color:rgba(255,235,153,.5);color:var(--y); }
+    .opt.chosen { background:var(--y);border-color:var(--y);color:#111; }
+    .opt .ok { font-size:.68rem;font-weight:900;opacity:.5;flex-shrink:0;letter-spacing:.04em; }
+    .opt.chosen .ok { opacity:.6; }
+    .faded { opacity:0!important;transform:translateY(10px)!important; }
+
+    /* ── Variant tooltip ── */
+    .quiz-tip {
+      position:fixed; z-index:9999;
+      background:rgba(18,19,24,.97);
+      border:1px solid rgba(255,235,153,.18);
+      border-radius:8px;
+      padding:.75rem 1.0625rem .75rem;
+      width:320px;
+      font-size:.78rem; line-height:1.65;
+      color:rgba(255,255,255,.68);
+      pointer-events:none;
+      opacity:0; transform:translateY(6px);
+      transition:opacity .2s ease, transform .2s ease;
+      box-shadow:0 12px 36px rgba(0,0,0,.6), 0 0 0 .5px rgba(255,235,153,.1);
+    }
+    .quiz-tip.show { opacity:1; transform:translateY(0); }
+    .quiz-tip-hd {
+      font-size:.67rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+      color:rgba(255,235,153,.6); margin-bottom:.375rem;
+    }
+    .quiz-tip-body { margin-bottom:.75rem; }
+
+    /* Map inside tooltip */
+    .tip-map {
+      position:relative; overflow:hidden;
+      border-radius:5px; height:166px;
+      background:#111216;
+      border:1px solid rgba(255,255,255,.06);
+      margin:-0.125rem -0.125rem 0;
+    }
+    .tip-map svg { display:block; width:100%; height:100%; }
+    .tip-map path { transition:fill .25s ease; }
+
+    /* ── INVITE (Page 5) ── */
+    #s-invite { align-items:stretch;justify-content:center; }
+    .invite-wrap { flex:1;display:grid;grid-template-columns:3fr 2fr;gap:4rem;align-items:center;padding:7rem 4rem 4rem 6.5rem; }
+    .inv-tag { display:inline-flex;align-items:center;gap:.5rem;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--y);border:1px solid rgba(255,235,153,.2);border-radius:100px;padding:.3rem .875rem;margin-bottom:1.5rem; }
+    .inv-tag::before { content:'';width:6px;height:6px;border-radius:50%;background:var(--y);animation:blink 1.5s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+    .inv-h { font-family:var(--ss);font-weight:900;font-size:clamp(2.5rem,5vw,5rem);color:var(--wh);letter-spacing:-.04em;line-height:.92;text-transform:lowercase;margin-bottom:1.375rem; }
+    .inv-h em { font-style:italic;font-family:var(--sr);font-weight:400;color:var(--y); }
+    .inv-over { display:block;font-family:var(--sr);font-style:italic;font-weight:400;font-size:.38em;color:rgba(255,255,255,.4);letter-spacing:.04em;margin-bottom:.3em;text-transform:none; }
+    .inv-sub { font-size:.975rem;font-weight:300;color:rgba(255,255,255,.45);line-height:1.75;max-width:440px;margin-bottom:2rem; }
+    .inv-perks { list-style:none;display:flex;flex-direction:column;gap:.875rem;margin-bottom:2.5rem; }
+    .inv-perks li { display:flex;align-items:flex-start;gap:.75rem;font-size:.875rem;color:rgba(255,255,255,.5); }
+    .perk-arrow { color:var(--y);flex-shrink:0;margin-top:.1rem; }
+    .inv-btns { display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap; }
+    .btn-signup { background:var(--y);color:#111;border:none;padding:1rem 2.5rem;font-family:var(--ss);font-size:.95rem;font-weight:800;letter-spacing:.04em;cursor:pointer;border-radius:4px;transition:background .2s,transform .2s; }
+    .btn-signup:hover { background:var(--ym);transform:translateY(-2px); }
+    .btn-skip-inv { background:none;border:none;color:rgba(255,255,255,.35);font-family:var(--ss);font-size:.875rem;font-weight:500;cursor:pointer;transition:color .2s; }
+    .btn-skip-inv:hover { color:rgba(255,255,255,.65); }
+    .inv-card { background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:1.75rem;max-width:300px; }
+    .inv-card-lbl { font-size:.62rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,235,153,.4);padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:1.25rem; }
+    .sum-row { display:flex;flex-direction:column;gap:.2rem;margin-bottom:1rem; }
+    .sum-row:last-child { margin-bottom:0; }
+    .sum-l { font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.22); }
+    .sum-v { font-size:.92rem;font-weight:600;color:rgba(255,255,255,.75); }
+
+    /* ══════════════════════════════════════════════════════════
+       FORM SCREEN (Page 6) — MULTI-STEP
+    ══════════════════════════════════════════════════════════ */
+
+    /* Layout: fixed flex column, no scroll on outer container */
+    #s-form { display:flex;flex-direction:column;overflow:hidden; }
+
+    /* Sticky header inside flex */
+    #s-form .app-hdr {
+      position:relative; /* participates in flex flow */
+      background:rgba(13,14,17,.92);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(255,255,255,.06);
+      flex-shrink:0;
+    }
+
+    /* Progress bar */
+    .fp-bar {
+      flex-shrink:0;
+      padding:.875rem 2.5rem 1rem;
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
+    .fp-meta {
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:.625rem;
+    }
+    .fp-step {
+      font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+      color:var(--y);
+    }
+    .fp-title {
+      font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+      color:rgba(255,255,255,.22);
+    }
+    .fp-track {
+      height:2px;background:rgba(255,255,255,.07);border-radius:1px;overflow:hidden;
+    }
+    .fp-fill {
+      height:100%;background:var(--y);border-radius:1px;
+      transition:width .45s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* Step content scrollable area */
+    .fstep-area {
+      flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+      position:relative;
+    }
+
+    /* Content inside — centered with padding */
+    .fstep-inner {
+      max-width:680px;width:100%;
+      margin:0 auto;
+      padding:2.5rem 2rem 1rem;
+      min-height:100%;
+      display:flex;flex-direction:column;justify-content:center;
+    }
+
+    /* Step heading */
+    .fstep-tag {
+      font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+      color:var(--y);opacity:.7;margin-bottom:.75rem;
+    }
+    .fstep-q {
+      font-family:var(--ss);font-weight:900;
+      font-size:clamp(1.875rem,4vw,3.5rem);
+      color:var(--wh);letter-spacing:-.035em;line-height:1.08;
+      margin-bottom:2rem;
+    }
+
+    /* Slide transitions */
+    @keyframes sOutL { to   { transform:translateX(-48px);opacity:0; } }
+    @keyframes sInR  { from { transform:translateX(48px); opacity:0; } }
+    @keyframes sOutR { to   { transform:translateX(48px); opacity:0; } }
+    @keyframes sInL  { from { transform:translateX(-48px);opacity:0; } }
+    .s-out-l { animation:sOutL .26s ease forwards; }
+    .s-in-r  { animation:sInR  .26s ease forwards; }
+    .s-out-r { animation:sOutR .26s ease forwards; }
+    .s-in-l  { animation:sInL  .26s ease forwards; }
+
+    /* Error message */
+    .ferr {
+      margin-top:.875rem;font-size:.8rem;font-weight:600;
+      color:#ff7070;min-height:1.1em;
+    }
+    @keyframes errShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+    .ferr.shake { animation:errShake .3s ease; }
+
+    /* Bottom navigation bar */
+    .form-nav {
+      flex-shrink:0;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:1.25rem 2.5rem;
+      border-top:1px solid rgba(255,255,255,.06);
+      gap:1rem;
+    }
+
+    .fbn-back {
+      background:none;border:1px solid rgba(255,255,255,.14);border-radius:100px;
+      padding:.75rem 1.75rem;color:rgba(255,255,255,.45);
+      font-family:var(--ss);font-size:.875rem;font-weight:600;
+      cursor:pointer;transition:color .2s,border-color .2s,opacity .2s;
+    }
+    .fbn-back:hover:not(:disabled) { color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3); }
+    .fbn-back:disabled { opacity:.2;cursor:not-allowed; }
+
+    .fbn-next {
+      background:var(--y);color:#111;border:none;
+      padding:.875rem 2.25rem;border-radius:4px;
+      font-family:var(--ss);font-size:.9rem;font-weight:800;letter-spacing:.04em;
+      cursor:pointer;transition:background .2s,transform .15s;
+      margin-left:auto;
+    }
+    .fbn-next:hover { background:var(--ym);transform:translateY(-1px); }
+
+    /* ── Shared form inputs (used inside step content) ── */
+    .fi {
+      width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.11);
+      border-radius:6px;padding:.875rem 1.125rem;color:#fff;
+      font-family:var(--ss);font-size:.95rem;font-weight:400;
+      outline:none;transition:border-color .2s;
+      -webkit-appearance:none;appearance:none;
+    }
+    .fi:focus { border-color:var(--y); }
+    .fi::placeholder { color:rgba(255,255,255,.22); }
+    input[type="number"].fi { -moz-appearance:textfield;appearance:textfield; }
+    input[type="number"].fi::-webkit-outer-spin-button,
+    input[type="number"].fi::-webkit-inner-spin-button { -webkit-appearance:none;appearance:none; }
+
+    .fs {
+      width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.11);
+      border-radius:6px;padding:.875rem 2.5rem .875rem 1.125rem;color:#fff;
+      font-family:var(--ss);font-size:.9rem;outline:none;
+      cursor:pointer;transition:border-color .2s;
+      -webkit-appearance:none;appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,0.3)'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;background-position:right 1rem center;
+    }
+    .fs:focus { border-color:var(--y); }
+    .fs option { background:#1a1c22;color:#fff; }
+    .fs optgroup { color:rgba(255,235,153,.5);font-size:.75rem; }
+
+    /* Radio / checkbox pills */
+    .radio-grp,.chk-grp { display:flex;flex-wrap:wrap;gap:.5rem; }
+    .r-opt,.c-opt {
+      display:inline-flex;align-items:center;gap:.625rem;
+      padding:.75rem 1.375rem;border:1px solid rgba(255,255,255,.14);
+      border-radius:100px;cursor:pointer;
+      font-family:var(--ss);font-size:.9rem;font-weight:500;
+      color:rgba(255,255,255,.55);transition:border-color .2s,background .2s,color .2s;
+      user-select:none;background:transparent;
+    }
+    .r-opt:hover,.c-opt:hover { border-color:rgba(255,235,153,.35);color:rgba(255,255,255,.8); }
+    .r-opt.sel,.c-opt.sel { background:rgba(255,235,153,.1);border-color:var(--y);color:var(--y); }
+    .c-opt.sel::before { content:'✓';font-size:.78rem;font-weight:900; }
+
+    /* Conditional reveal */
+    .cond { max-height:0;overflow:hidden;opacity:0;transition:max-height .32s ease,opacity .32s ease,margin .32s ease; }
+    .cond.show { max-height:300px;opacity:1;margin-top:.875rem; }
+
+    /* Label (small) */
+    .fl-sm { display:block;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.4rem; }
+
+    /* Dual-handle range slider */
+    .rslider { position:relative;padding:2rem 0 .25rem;user-select:none; }
+    .rslider-track {
+      position:relative;height:4px;background:rgba(255,255,255,.1);
+      border-radius:2px;cursor:pointer;margin:0 11px;
+    }
+    .rslider-fill { position:absolute;height:100%;background:var(--y);border-radius:2px;pointer-events:none; }
+    .rslider-handle {
+      position:absolute;top:50%;
+      width:22px;height:22px;border-radius:50%;
+      background:var(--y);cursor:grab;
+      box-shadow:0 0 0 5px rgba(255,235,153,.14);
+      transition:box-shadow .15s;
+      touch-action:none;z-index:3;
+      transform:translate(-50%,-50%);
+    }
+    .rslider-handle:hover { box-shadow:0 0 0 9px rgba(255,235,153,.16); }
+    .rslider-handle.dragging { cursor:grabbing;box-shadow:0 0 0 12px rgba(255,235,153,.18); }
+    .rslider-lbl {
+      position:absolute;bottom:calc(100% + 11px);left:50%;
+      transform:translateX(-50%);
+      font-size:.7rem;font-weight:800;color:var(--y);
+      white-space:nowrap;pointer-events:none;
+      background:rgba(10,11,14,.92);
+      padding:.2rem .5rem;border-radius:3px;
+      border:1px solid rgba(255,235,153,.22);
+      min-width:2rem;text-align:center;
+    }
+    .slider-ends { display:flex;justify-content:space-between;margin-top:.625rem;font-size:.68rem;color:rgba(255,255,255,.2); }
+    .rs-value { margin-top:1.25rem;font-size:.95rem;font-weight:500;color:rgba(255,255,255,.5); }
+    .rs-value strong { color:var(--y);font-weight:700; }
+
+    /* Certificate multi-select accordion */
+    .ms-wrap { border:1px solid rgba(255,255,255,.11);border-radius:6px;overflow:hidden; }
+    .ms-trigger { display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;padding:.875rem 1.125rem;background:rgba(255,255,255,.04);cursor:pointer;transition:background .2s;min-height:50px; }
+    .ms-trigger:hover { background:rgba(255,255,255,.06); }
+    .ms-trigger.open { background:rgba(255,235,153,.05);border-bottom:1px solid rgba(255,255,255,.08); }
+    .ms-tags { display:flex;flex-wrap:wrap;gap:.375rem;flex:1; }
+    .ms-ph { color:rgba(255,255,255,.25);font-size:.9rem;line-height:1.6; }
+    .ms-tag { display:inline-flex;align-items:center;gap:.3rem;padding:.22rem .7rem;background:rgba(255,235,153,.12);border:1px solid rgba(255,235,153,.25);border-radius:100px;font-size:.72rem;font-weight:700;color:var(--y); }
+    .ms-tag-x { cursor:pointer;opacity:.55;font-size:.9rem;transition:opacity .15s;line-height:1; }
+    .ms-tag-x:hover { opacity:1; }
+    .ms-caret { color:rgba(255,255,255,.3);font-size:.8rem;flex-shrink:0;margin-top:.2rem;transition:transform .25s; }
+    .ms-caret.open { transform:rotate(180deg); }
+    .ms-body { max-height:0;overflow:hidden;transition:max-height .35s ease;background:rgba(10,11,14,.8); }
+    .ms-body.open { max-height:280px;overflow-y:auto; }
+    .ms-search { width:100%;padding:.75rem 1.125rem;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.07);color:#fff;font-family:var(--ss);font-size:.875rem;outline:none;position:sticky;top:0;z-index:5;background:rgba(15,16,19,.95); }
+    .ms-search::placeholder { color:rgba(255,255,255,.22); }
+    .ms-grp-lbl { padding:.625rem 1.125rem .25rem;font-size:.6rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:rgba(255,235,153,.4); }
+    .ms-opt { display:flex;align-items:center;gap:.75rem;padding:.625rem 1.125rem;cursor:pointer;transition:background .15s; }
+    .ms-opt:hover { background:rgba(255,255,255,.04); }
+    .ms-opt.sel { background:rgba(255,235,153,.05); }
+    .ms-cb { width:16px;height:16px;border:1.5px solid rgba(255,255,255,.22);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:.6rem;color:transparent;font-weight:900; }
+    .ms-opt.sel .ms-cb { background:var(--y);border-color:var(--y);color:#111; }
+    .ms-opt-txt { font-size:.83rem;color:rgba(255,255,255,.6);line-height:1.4; }
+    .ms-opt.sel .ms-opt-txt { color:rgba(255,255,255,.88); }
+    .ms-opt.hidden { display:none; }
+
+    /* File upload */
+    .file-zone { display:block;border:1.5px dashed rgba(255,255,255,.1);border-radius:6px;padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s; }
+    .file-zone:hover { border-color:rgba(255,235,153,.25);background:rgba(255,235,153,.02); }
+    .file-zone.has-file { border-color:rgba(255,235,153,.3); }
+    .fz-icon { display:block;font-size:1.25rem;opacity:.3;margin-bottom:.375rem; }
+    .fz-txt { font-size:.8rem;color:rgba(255,255,255,.28); }
+    .file-zone.has-file .fz-txt { color:rgba(255,235,153,.7); }
+
+    /* 2-col grid */
+    .fg-2 { display:grid;grid-template-columns:1fr 1fr;gap:1rem; }
+
+    /* ── WELCOME OVERLAY ── */
+    #s-welcome { position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;background:rgba(13,14,17,.9);backdrop-filter:blur(18px);opacity:0;pointer-events:none;transition:opacity .5s ease; }
+    #s-welcome.show { opacity:1;pointer-events:all; }
+    .wlc-card { background:var(--y);padding:4rem 5rem;text-align:center;max-width:560px;width:90%;border-radius:4px; }
+    .wlc-en { font-family:var(--sr);font-style:italic;font-size:clamp(2rem,5vw,3.5rem);font-weight:400;color:var(--dk);margin-bottom:.625rem;opacity:0;animation:fadeUp .55s ease forwards .15s; }
+    .wlc-en strong { font-family:var(--ss);font-style:normal;font-weight:900;letter-spacing:-.03em; }
+    .wlc-zh { font-size:1.875rem;font-weight:700;color:var(--dk);font-family:'PingFang SC','Noto Sans SC','Microsoft YaHei',var(--ss);margin-bottom:.625rem;opacity:0;animation:fadeUp .55s ease forwards .5s; }
+    .wlc-ar { font-size:1.625rem;font-weight:700;color:var(--dk);font-family:'Noto Sans Arabic','Arial Unicode MS',var(--ss);direction:rtl;margin-bottom:2rem;opacity:0;animation:fadeUp .55s ease forwards .85s; }
+    .wlc-note { font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(17,18,22,.4);opacity:0;animation:fadeUp .55s ease forwards 1.2s; }
+    .wlc-bar { width:0;height:2px;background:rgba(17,18,22,.2);margin:1.125rem auto 0;border-radius:1px;animation:barFill 3.2s linear forwards 1.4s; }
+    .wlc-skip {
+      display:inline-block;margin-top:1.25rem;
+      background:none;border:1px solid rgba(17,18,22,.2);border-radius:100px;
+      padding:.5rem 1.5rem;
+      font-family:var(--ss);font-size:.78rem;font-weight:600;letter-spacing:.04em;
+      color:rgba(17,18,22,.45);cursor:pointer;
+      transition:background .2s,color .2s,border-color .2s;
+      opacity:0;animation:fadeUp .4s ease forwards 1.5s;
+    }
+    .wlc-skip:hover { background:rgba(17,18,22,.08);color:rgba(17,18,22,.75);border-color:rgba(17,18,22,.35); }
+    @keyframes barFill { to { width:100%; } }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width:900px) {
+      .invite-wrap { grid-template-columns:1fr;padding:7rem 2.5rem 3rem;gap:2.5rem; }
+      .inv-card { max-width:100%; }
+      .fp-bar,.form-nav { padding-left:1.5rem;padding-right:1.5rem; }
+    }
+    @media (max-width:680px) {
+      .app-hdr { padding:1.25rem 1.5rem; }
+      .s-zh { top:16%;right:4%; }
+      .s-ar { bottom:18%;left:4%; }
+      .quiz-wrap { padding:5rem 1.75rem 2.5rem 4.5rem; }
+      .step-nav { left:1.25rem; }
+      .fstep-inner { padding:2rem 1.25rem 1rem; }
+      .budget-row { flex-direction:column; }
+      .fg-2 { grid-template-columns:1fr; }
+      .wlc-card { padding:3rem 2rem; }
+    }
+    @media (max-height:620px) {
+      .fstep-inner { justify-content:flex-start;padding-top:1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- BG -->
+<div class="bg" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ═══ INTRO ══════════════════════════════════════════════════ -->
+<section class="screen" id="s-intro">
+  <header class="app-hdr">
+    <a href="landing.html" class="logo"><span class="lr">Real</span><span class="ll">lingo</span></a>
+    <button class="skip-btn" onclick="goLanding()">skip →</button>
+  </header>
+  <div class="sticker s-zh">中文</div>
+  <div class="sticker s-ar">عربي</div>
+  <div class="intro-body">
+    <h1 class="intro-h1" id="introH1"><span class="intro-over" id="introLine1">Beyond Words</span><span id="introLine2">Into Worlds</span></h1>
+    <button class="btn-start" onclick="startQuiz()">start quiz</button>
+  </div>
+</section>
+
+<!-- ═══ QUIZ ══════════════════════════════════════════════════ -->
+<section class="screen off" id="s-quiz">
+  <header class="app-hdr">
+    <a href="landing.html" class="logo"><span class="lr">Real</span><span class="ll">lingo</span></a>
+    <button class="skip-btn" onclick="goLanding()">skip →</button>
+  </header>
+  <nav class="step-nav" aria-label="Quiz progress">
+    <div class="sp cur" id="sp1">1</div>
+    <div class="sp"     id="sp2">2</div>
+    <div class="sp"     id="sp3">3</div>
+    <div class="sp"     id="sp4">4</div>
+  </nav>
+  <div class="quiz-wrap">
+    <p class="quiz-q" id="qQ"></p>
+    <div class="quiz-opts" id="qO"></div>
+  </div>
+</section>
+
+<!-- ═══ INVITE (Page 5) ════════════════════════════════════════ -->
+<section class="screen off" id="s-invite">
+  <header class="app-hdr">
+    <a href="landing.html" class="logo"><span class="lr">Real</span><span class="ll">lingo</span></a>
+  </header>
+  <div class="invite-wrap">
+    <div>
+      <div class="inv-tag">Quiz Complete</div>
+      <h2 class="inv-h"><span class="inv-over">join us — it's free</span>create your<br><em>profile</em></h2>
+      <p class="inv-sub">Get matched with the right tutor, interpreter, or opportunity — and save your preferences for next time.</p>
+      <ul class="inv-perks">
+        <li><span class="perk-arrow">→</span>Personalised matches based on your answers</li>
+        <li><span class="perk-arrow">→</span>Save your language and dialect preferences</li>
+        <li><span class="perk-arrow">→</span>Track your service requests in one place</li>
+      </ul>
+      <div class="inv-btns">
+        <button class="btn-signup" onclick="showForm()">Sign Up Now</button>
+        <button class="btn-skip-inv" onclick="goLanding()">Skip, explore first →</button>
+      </div>
+    </div>
+    <div><div class="inv-card"><div class="inv-card-lbl">Your preferences</div><div id="summaryRows"></div></div></div>
+  </div>
+</section>
+
+<!-- ═══ FORM (Page 6) — multi-step ════════════════════════════ -->
+<section class="screen off" id="s-form">
+
+  <!-- Header (part of flex column — no absolute) -->
+  <header class="app-hdr">
+    <a href="landing.html" class="logo"><span class="lr">Real</span><span class="ll">lingo</span></a>
+    <button class="skip-btn" onclick="goLanding()">skip →</button>
+  </header>
+
+  <!-- Progress bar -->
+  <div class="fp-bar">
+    <div class="fp-meta">
+      <span class="fp-step" id="fpStep">Step 1 of 4</span>
+      <span class="fp-title" id="fpTitle"></span>
+    </div>
+    <div class="fp-track"><div class="fp-fill" id="fpFill" style="width:0%"></div></div>
+  </div>
+
+  <!-- Scrollable step area -->
+  <div class="fstep-area" id="fstepArea">
+    <div class="fstep-inner" id="fstepInner">
+      <!-- dynamic content rendered here -->
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="form-nav">
+    <button class="fbn-back" id="fBtnBack" onclick="prevStep()">← Back</button>
+    <button class="fbn-next" id="fBtnNext" onclick="nextStep()">Next →</button>
+  </div>
+
+</section>
+
+<!-- ═══ WELCOME OVERLAY ════════════════════════════════════════ -->
+<div id="s-welcome">
+  <div class="wlc-card">
+    <div class="wlc-en">Welcome to <strong>Real</strong>lingo!</div>
+    <div class="wlc-zh">欢迎加入！</div>
+    <div class="wlc-ar">أهلاً وسهلاً بك!</div>
+    <div class="wlc-note">Taking you to the platform...</div>
+    <div class="wlc-bar"></div>
+    <button class="wlc-skip" onclick="skipWelcome()">Skip →</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script>
+/* ── Screen switcher — always hides every other screen ── */
+const ALL_SCREENS = ['s-intro','s-quiz','s-invite','s-form'];
+function showScreen(id) {
+  ALL_SCREENS.forEach(sid =>
+    document.getElementById(sid)?.classList.toggle('off', sid !== id)
+  );
+}
+
+/* ════════════════════════════════════════════════════════════
+   QUIZ
+════════════════════════════════════════════════════════════ */
+const ans = {};
+let cur = 0;
+
+const STEPS = [
+  { k:'s1', q:()=>"I want to...", opts:()=>[{k:'a',t:'find a language service'},{k:'b',t:'provide a language service'}] },
+  {
+    k:'s2',
+    q:()=> ans.s1==='a' ? "I want to find a..." : "I want to be...",
+    opts:()=> ans.s1==='a'
+      ? [{k:'a',t:'Tutor'},{k:'b',t:'Interpreter'},{k:'c',t:'Intern / Employee'},{k:'d',t:'Educational Resource'}]
+      : [{k:'a',t:'a Tutor'},{k:'b',t:'an Interpreter'},{k:'c',t:'employed as an Intern / Full-Time Professional'},{k:'d',t:'an Educational Consultant'}]
+  },
+  { k:'s3', q:()=>"of which language?", opts:()=>[{k:'a',t:'Arabic'},{k:'b',t:'Chinese'}] },
+  {
+    k:'s4', q:()=>"with which variant?",
+    opts:()=> ans.s3==='a'
+      ? [{k:'a',t:'Fusha / Modern Standard Arabic'},{k:'b',t:'Gulf Arabic'},{k:'c',t:'Egyptian Arabic'},{k:'d',t:'Levantine Arabic'},{k:'e',t:'Maghrebi Arabic'},{k:'f',t:'Other variants'}]
+      : [{k:'a',t:'Mandarin Chinese'},{k:'b',t:'Cantonese'},{k:'c',t:'Taiwanese Mandarin'},{k:'d',t:'Hokkien / Taiwanese'},{k:'e',t:'Other varieties'}]
+  }
+];
+
+function startQuiz() {
+  showScreen('s-quiz');
+  renderStep(0);
+}
+
+function renderStep(idx) {
+  cur = idx;
+  hideVariantTip(); // clear any tooltip from previous step
+  const step = STEPS[idx];
+  ['sp1','sp2','sp3','sp4'].forEach((id,i) => {
+    document.getElementById(id).className = 'sp'+(i<idx?' done':i===idx?' cur':'');
+  });
+  const qEl=document.getElementById('qQ'), oEl=document.getElementById('qO');
+  qEl.classList.add('faded'); oEl.classList.add('faded');
+  setTimeout(() => {
+    qEl.textContent = step.q();
+    oEl.innerHTML = step.opts().map(o =>
+      `<button class="opt" data-k="${o.k}" onclick="pick('${step.k}','${o.k}',${idx})">
+         <span class="ok">${o.k}</span>${o.t}</button>`
+    ).join('');
+    qEl.classList.remove('faded'); oEl.classList.remove('faded');
+    // Attach hover tooltips on the variant-selection step (step index 3)
+    if (idx === 3) attachVariantTooltips(ans.s3 === 'a' ? 'arabic' : 'chinese');
+  }, 360);
+}
+
+function pick(stepKey, val, idx) {
+  ans[stepKey] = val;
+  document.querySelectorAll('.opt').forEach(b => b.classList.remove('chosen'));
+  document.querySelector(`.opt[data-k="${val}"]`)?.classList.add('chosen');
+  setTimeout(() => {
+    if (idx+1 < STEPS.length) renderStep(idx+1);
+    else showInvite();
+  }, 400);
+}
+
+/* ════════════════════════════════════════════════════════════
+   VARIANT TOOLTIPS (Quiz step 4)
+════════════════════════════════════════════════════════════ */
+
+const VARIANT_TOOLTIPS = {
+  arabic: {
+    a: { h:'Modern Standard Arabic (Fusha)', b:'Used in formal contexts across all Arab countries — Saudi Arabia, UAE, Egypt, Jordan, Morocco, and more.',
+         cc:['SAU','ARE','EGY','JOR','MAR','KWT','QAT','BHR','OMN','LBN','SYR','DZA','TUN','LBY','MRT','IRQ'] },
+    b: { h:'Gulf Arabic (Khaleeji)',          b:'Spoken in Gulf states — Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, and Oman.',
+         cc:['SAU','ARE','KWT','QAT','BHR','OMN'] },
+    c: { h:'Egyptian Arabic',                 b:'Spoken in Egypt and widely understood across the Arab world through film, TV, and music.',
+         cc:['EGY'] },
+    d: { h:'Levantine Arabic',                b:'Spoken in the Levant — Lebanon, Syria, Jordan, and Palestine.',
+         cc:['LBN','SYR','JOR','PSE'] },
+    e: { h:'Maghrebi Arabic (Darija)',        b:'Spoken in North Africa — Morocco, Algeria, Tunisia, Libya, and Mauritania.',
+         cc:['MAR','DZA','TUN','LBY','MRT'] },
+    f: { h:'Other Arabic Variants',           b:'Regional varieties not listed above — Sudanese, Iraqi, Yemeni Arabic, and more.',
+         cc:['SDN','IRQ','YEM'] },
+  },
+  chinese: {
+    a: { h:'Mandarin Chinese (Putonghua)',       b:'Standard spoken Chinese used across Mainland China, Taiwan, and Singapore.',
+         cc:['CHN','TWN','SGP'] },
+    b: { h:'Cantonese (Yue)',                    b:'Spoken in Hong Kong, Macau, Guangdong province, and Cantonese-speaking communities worldwide.',
+         cc:['HKG','MAC','GDG'] },
+    c: { h:'Taiwanese Mandarin',                 b:"Taiwan's standard Mandarin — similar to Mainland Mandarin with some vocabulary and pronunciation differences.",
+         cc:['TWN'] },
+    d: { h:'Hokkien / Taiwanese (Southern Min)', b:'Spoken in Taiwan, Fujian province (China), and overseas Chinese communities in Southeast Asia.',
+         cc:['TWN','FUJ'] },
+    e: { h:'Other Chinese Varieties',            b:'Wu (Shanghainese), Hakka, Teochew, and other Chinese varieties.',
+         cc:['CHN'] },
+  }
+};
+
+/* Alpha-3 → ISO 3166-1 numeric (world-atlas topojson IDs, zero-padded to 3 digits) */
+const ALPHA3_TO_NUM = {
+  SAU:'682', ARE:'784', KWT:'414', QAT:'634', BHR:'048', OMN:'512',
+  EGY:'818', LBN:'422', SYR:'760', JOR:'400', PSE:'275',
+  MAR:'504', DZA:'012', TUN:'788', LBY:'434', MRT:'478',
+  IRQ:'368', SDN:'729', YEM:'887',
+  CHN:'156', TWN:'158', SGP:'702', HKG:'344', MAC:'446',
+  FUJ:'156', GDG:'156', // sub-national → China
+};
+
+let _topoCache = null, _topoLoading = null;
+let _tipEl = null, _tipSvg = null, _tipTimer = null;
+
+function preloadWorldTopo() {
+  if (_topoCache || _topoLoading) return;
+  _topoLoading = fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+    .then(r => r.json())
+    .then(d => { _topoCache = d; _topoLoading = null; })
+    .catch(() => { _topoLoading = null; });
+}
+
+function getWorldTopo() {
+  if (_topoCache) return Promise.resolve(_topoCache);
+  if (!_topoLoading) preloadWorldTopo();
+  return _topoLoading || Promise.resolve(null);
+}
+
+/* Eastern-Hemisphere crop: lon [-25, 180], lat [-47, 75] */
+const MAP_LON_MIN = -25, MAP_LON_MAX = 180, MAP_LAT_MAX = 75, MAP_LAT_MIN = -47;
+const MAP_W = MAP_LON_MAX - MAP_LON_MIN; // 205 coordinate units
+const MAP_H = MAP_LAT_MAX - MAP_LAT_MIN; // 122 coordinate units
+
+function featureToPath(geom) {
+  if (!geom) return '';
+  function projectRing(ring) {
+    return ring.map(([lo, la], i) => {
+      const x = ((lo - MAP_LON_MIN) / MAP_W * MAP_W).toFixed(1);
+      const y = ((MAP_LAT_MAX - la) / MAP_H * MAP_H).toFixed(1);
+      return (i ? 'L' : 'M') + x + ' ' + y;
+    }).join('') + 'Z';
+  }
+  const polys = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
+  return polys.flatMap(poly => poly.map(projectRing)).join('');
+}
+
+function buildMapSVG(topo) {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${MAP_W} ${MAP_H}`);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+  const defs = document.createElementNS(NS, 'defs');
+  const clip = document.createElementNS(NS, 'clipPath');
+  clip.setAttribute('id', '_mc');
+  const cr = document.createElementNS(NS, 'rect');
+  cr.setAttribute('width', MAP_W); cr.setAttribute('height', MAP_H);
+  clip.appendChild(cr); defs.appendChild(clip); svg.appendChild(defs);
+
+  const bg = document.createElementNS(NS, 'rect');
+  bg.setAttribute('width', MAP_W); bg.setAttribute('height', MAP_H);
+  bg.setAttribute('fill', '#111216');
+  svg.appendChild(bg);
+
+  const g = document.createElementNS(NS, 'g');
+  g.setAttribute('clip-path', 'url(#_mc)');
+
+  const countries = topojson.feature(topo, topo.objects.countries);
+  countries.features.forEach(feat => {
+    const d = featureToPath(feat.geometry);
+    if (!d) return;
+    const p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', d);
+    p.dataset.n = String(feat.id ?? '').padStart(3, '0');
+    p.setAttribute('fill', '#EEEDE9');
+    p.setAttribute('stroke', '#111216');
+    p.setAttribute('stroke-width', '0.55');
+    g.appendChild(p);
+  });
+
+  svg.appendChild(g);
+  return svg;
+}
+
+function updateMapHighlight(numSet) {
+  if (!_tipSvg) return;
+  _tipSvg.querySelectorAll('path[data-n]').forEach(p => {
+    p.setAttribute('fill', numSet.has(p.dataset.n) ? '#FFEB99' : '#EEEDE9');
+  });
+}
+
+function getTipEl() {
+  if (!_tipEl) {
+    _tipEl = document.createElement('div');
+    _tipEl.className = 'quiz-tip';
+    _tipEl.innerHTML = `
+      <div class="quiz-tip-hd" id="_ttHd"></div>
+      <div class="quiz-tip-body" id="_ttBd"></div>
+      <div class="tip-map" id="_ttMap"></div>`;
+    document.body.appendChild(_tipEl);
+  }
+  return _tipEl;
+}
+
+async function showVariantTip(data, anchor) {
+  const el = getTipEl();
+  document.getElementById('_ttHd').textContent = data.h;
+  document.getElementById('_ttBd').textContent = data.b;
+
+  const r = anchor.getBoundingClientRect();
+  const tW = 320, tH = el.offsetHeight || 240, gap = 10;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  let top  = r.top - tH - gap;
+  let left = r.left + r.width / 2 - tW / 2;
+  if (top < gap)            top  = r.bottom + gap;
+  if (top + tH > vh - gap) top  = vh - tH - gap;
+  left = Math.max(gap, Math.min(left, vw - tW - gap));
+  el.style.top  = top  + 'px';
+  el.style.left = left + 'px';
+  el.classList.add('show');
+
+  if (data.cc) {
+    const hiNums = new Set(data.cc.map(c => ALPHA3_TO_NUM[c]).filter(Boolean));
+    const topo = await getWorldTopo();
+    if (topo && el.classList.contains('show')) {
+      if (!_tipSvg) {
+        _tipSvg = buildMapSVG(topo);
+        document.getElementById('_ttMap').appendChild(_tipSvg);
+      }
+      updateMapHighlight(hiNums);
+    }
+  }
+}
+
+function hideVariantTip() {
+  clearTimeout(_tipTimer);
+  _tipEl?.classList.remove('show');
+}
+
+function attachVariantTooltips(lang) {
+  const tips = VARIANT_TOOLTIPS[lang];
+  if (!tips) return;
+  preloadWorldTopo();
+
+  document.querySelectorAll('#qO .opt').forEach(btn => {
+    const data = tips[btn.dataset.k];
+    if (!data) return;
+    btn.addEventListener('mouseenter', () => showVariantTip(data, btn));
+    btn.addEventListener('mouseleave', hideVariantTip);
+    btn.addEventListener('touchstart', () => {
+      clearTimeout(_tipTimer);
+      showVariantTip(data, btn);
+      _tipTimer = setTimeout(hideVariantTip, 2500);
+    }, { passive: true });
+  });
+}
+
+/* ════════════════════════════════════════════════════════════
+   INVITE (Page 5)
+════════════════════════════════════════════════════════════ */
+function showInvite() {
+  showScreen('s-invite');
+
+  const s2Find = {a:'Tutor',b:'Interpreter',c:'Intern / Employee',d:'Educational Resource'};
+  const s2Prvd = {a:'Tutor',b:'Interpreter',c:'Intern / Full-time',d:'Educational Consultant'};
+  const s3Map  = {a:'Arabic',b:'Chinese'};
+  const s4A    = {a:'Fusha / MSA',b:'Gulf Arabic',c:'Egyptian Arabic',d:'Levantine Arabic',e:'Maghrebi Arabic',f:'Other variant'};
+  const s4C    = {a:'Mandarin',b:'Cantonese',c:'Taiwanese Mandarin',d:'Hokkien / Taiwanese',e:'Other variety'};
+
+  const rows = [
+    { l:'Goal',    v: ans.s1==='a'?'Find a language service':'Provide a language service' },
+    { l: ans.s1==='a'?'Service type':'My role', v: (ans.s1==='a'?s2Find:s2Prvd)[ans.s2] },
+    { l:'Language', v: s3Map[ans.s3] },
+    { l:'Variant',  v: (ans.s3==='a'?s4A:s4C)[ans.s4] },
+  ].filter(r=>r.v);
+
+  document.getElementById('summaryRows').innerHTML = rows.map(r =>
+    `<div class="sum-row"><span class="sum-l">${r.l}</span><span class="sum-v">${r.v}</span></div>`
+  ).join('');
+}
+
+/* ════════════════════════════════════════════════════════════
+   FORM (Page 6) — MULTI-STEP ENGINE
+════════════════════════════════════════════════════════════ */
+
+/* ── State ── */
+const formData   = {};          // persisted values across steps
+const selCerts   = new Map();   // certificate multi-select state
+let   fStepIdx   = 0;           // current step index
+let   fSteps     = [];          // active step definitions array
+
+/* ── Scope labels ── */
+const SCOPE_LABELS = {
+  transcreation:'Transcreation', interpretation:'Interpretation',
+  'tour-guide':'Tour Guide', tutor:'Tutor',
+  intern:'Talent (Internship)', fulltime:'Talent (Full-time)',
+  influencer:'Influencer / Content Creator'
+};
+
+/* ── Countries ── */
+const COUNTRIES = [
+  'Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia',
+  'Australia','Austria','Azerbaijan','Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium',
+  'Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria',
+  'Burkina Faso','Burundi','Cabo Verde','Cambodia','Cameroon','Canada','Central African Republic',
+  'Chad','Chile','China','Colombia','Comoros','Congo (Democratic Republic)','Congo (Republic)',
+  'Costa Rica','Croatia','Cuba','Cyprus','Czech Republic','Denmark','Djibouti','Dominica',
+  'Dominican Republic','Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia',
+  'Eswatini','Ethiopia','Fiji','Finland','France','Gabon','Gambia','Georgia','Germany','Ghana',
+  'Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana','Haiti','Honduras','Hungary',
+  'Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Jamaica','Japan','Jordan',
+  'Kazakhstan','Kenya','Kiribati','Korea (North)','Korea (South)','Kosovo','Kuwait','Kyrgyzstan',
+  'Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania','Luxembourg',
+  'Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Mauritania',
+  'Mauritius','Mexico','Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique',
+  'Myanmar','Namibia','Nauru','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria',
+  'North Macedonia','Norway','Oman','Pakistan','Palau','Palestine','Panama','Papua New Guinea',
+  'Paraguay','Peru','Philippines','Poland','Portugal','Qatar','Romania','Russia','Rwanda',
+  'Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Samoa','San Marino',
+  'São Tomé and Príncipe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore',
+  'Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','South Sudan','Spain','Sri Lanka',
+  'Sudan','Suriname','Sweden','Switzerland','Syria','Taiwan','Tajikistan','Tanzania','Thailand',
+  'Timor-Leste','Togo','Tonga','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Tuvalu',
+  'Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan',
+  'Vanuatu','Vatican City','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe'
+];
+
+/* ── Certificate groups ── */
+const CERT_GROUPS = {
+  'Chinese':[
+    {id:'hsk',   name:'HSK (Hanyu Shuiping Kaoshi / Chinese Proficiency Test)'},
+    {id:'hskk',  name:'HSKK (Chinese Speaking Proficiency Test)'},
+    {id:'ctcsol',name:'CTCSOL (Certificate for Teachers of Chinese to Speakers of Other Languages)'},
+    {id:'tcsol', name:'TCSOL (Teaching Chinese to Speakers of Other Languages)'},
+    {id:'catti', name:'CATTI (China Accreditation Test for Translators and Interpreters)'},
+    {id:'naati', name:'NAATI Chinese Translator / Interpreter Certification'},
+  ],
+  'Arabic':[
+    {id:'alpt',  name:'ALPT (Arabic Language Proficiency Test)'},
+    {id:'actfl', name:'ACTFL Arabic OPI / WPT'},
+    {id:'cctafl',name:'CCTAFL (Certificate in Teaching Arabic as a Foreign Language)'},
+    {id:'tafl',  name:'TAFL (Teaching Arabic as a Foreign Language)'},
+    {id:'ata',   name:'ATA Arabic Translation Certification'},
+    {id:'ciol',  name:'CIOL Diploma in Translation (Arabic)'},
+  ],
+  'Other':[{id:'other',name:'Other Certificate'}]
+};
+
+/* ═══════════════════════════════════════════════════════════
+   STEP DEFINITIONS
+════════════════════════════════════════════════════════════ */
+
+/* Helper: radio group HTML */
+function radioHtml(groupId, options, savedVal) {
+  return `<div class="radio-grp" id="${groupId}">${
+    options.map(o =>
+      `<button type="button" class="r-opt${savedVal===o.val?' sel':''}"
+               data-val="${o.val}" data-reveal="${o.reveal||''}"
+               onclick="pickR(this,'${groupId}')">${o.label}</button>`
+    ).join('')
+  }</div>`;
+}
+
+/* Scenario A steps */
+const STEPS_A = [
+  {
+    tag:'Find a Language Service', q:"What's your name?",
+    html() {
+      return `<input type="text" class="fi" id="inp-name" placeholder="Your full name"
+                     value="${formData.name||''}">`;
+    },
+    validate() {
+      const v = document.getElementById('inp-name')?.value?.trim();
+      return v ? null : 'Please enter your name';
+    },
+    save() { formData.name = document.getElementById('inp-name')?.value?.trim(); }
+  },
+  {
+    tag:'Find a Language Service', q:"I'm hiring as...",
+    html() {
+      const h = formData.hiring||'';
+      return `
+        ${radioHtml('hiringGrp',[
+          {val:'individual',label:'Individual',reveal:''},
+          {val:'corporate', label:'Corporate', reveal:'corpRev'}
+        ], h)}
+        <div class="cond${h==='corporate'?' show':''}" id="corpRev">
+          <input type="text" class="fi" id="inp-corp" placeholder="Corporate name"
+                 value="${formData.corp_name||''}">
+        </div>`;
+    },
+    validate() {
+      const h = document.querySelector('#hiringGrp .r-opt.sel')?.dataset.val;
+      if (!h) return 'Please select one';
+      if (h==='corporate' && !document.getElementById('inp-corp')?.value?.trim())
+        return 'Please enter your corporate name';
+      return null;
+    },
+    save() {
+      formData.hiring    = document.querySelector('#hiringGrp .r-opt.sel')?.dataset.val||'';
+      formData.corp_name = document.getElementById('inp-corp')?.value?.trim()||'';
+    }
+  },
+  {
+    tag:'Find a Language Service', q:"How can we contact you?",
+    html() {
+      const c = formData.contact||'';
+      return `
+        ${radioHtml('contactGrp',[
+          {val:'email',label:'Email',reveal:'emailRev'},
+          {val:'phone',label:'Phone',reveal:'phoneRev'}
+        ], c)}
+        <div class="cond${c==='email'?' show':''}" id="emailRev">
+          <input type="email" class="fi" id="inp-email" placeholder="Email address"
+                 value="${formData.email||''}">
+        </div>
+        <div class="cond${c==='phone'?' show':''}" id="phoneRev">
+          <input type="tel" class="fi" id="inp-phone" placeholder="Phone number"
+                 value="${formData.phone||''}">
+        </div>`;
+    },
+    validate() {
+      const c = document.querySelector('#contactGrp .r-opt.sel')?.dataset.val;
+      if (!c) return 'Please select a contact method';
+      if (c==='email' && !document.getElementById('inp-email')?.value?.trim()) return 'Please enter your email address';
+      if (c==='phone' && !document.getElementById('inp-phone')?.value?.trim()) return 'Please enter your phone number';
+      return null;
+    },
+    save() {
+      formData.contact = document.querySelector('#contactGrp .r-opt.sel')?.dataset.val||'';
+      formData.email   = document.getElementById('inp-email')?.value?.trim()||'';
+      formData.phone   = document.getElementById('inp-phone')?.value?.trim()||'';
+    }
+  },
+  {
+    tag:'Find a Language Service', q:"What's your hiring budget?",
+    html() {
+      const cur = formData.budget_currency||'SAR';
+      const gulfs = ['SAR–Saudi Riyal','AED–UAE Dirham','QAR–Qatari Riyal','KWD–Kuwaiti Dinar','BHD–Bahraini Dinar','OMR–Omani Rial','IQD–Iraqi Dinar','YER–Yemeni Rial'];
+      const intls = ['CNY–Chinese Yuan','USD–US Dollar','EUR–Euro'];
+      function optHtml(list) {
+        return list.map(s=>{ const [v,l]=s.split('–'); return `<option value="${v}"${cur===v?' selected':''}>${v} – ${l}</option>`; }).join('');
+      }
+      return `
+        <div style="margin-bottom:1.375rem">
+          <label class="fl-sm">Currency</label>
+          <select class="fs" id="inp-currency">
+            <optgroup label="Gulf Currencies">${optHtml(gulfs)}</optgroup>
+            <optgroup label="International">${optHtml(intls)}</optgroup>
+          </select>
+        </div>
+        <label class="fl-sm">Budget Range</label>
+        <div class="rslider">
+          <div class="rslider-track" id="rs-track">
+            <div class="rslider-fill" id="rs-fill"></div>
+            <div class="rslider-handle" id="rs-hmin" role="slider" aria-label="Minimum budget">
+              <div class="rslider-lbl" id="rs-lmin"></div>
+            </div>
+            <div class="rslider-handle" id="rs-hmax" role="slider" aria-label="Maximum budget">
+              <div class="rslider-lbl" id="rs-lmax"></div>
+            </div>
+          </div>
+          <div class="slider-ends"><span>0</span><span>50,000+</span></div>
+        </div>
+        <div class="rs-value" id="rs-value"></div>
+        <p style="margin-top:.875rem;font-size:.75rem;color:rgba(255,255,255,.25)">Optional — leave blank to discuss later</p>`;
+    },
+    validate() { return null; },
+    save() {
+      formData.budget_currency = document.getElementById('inp-currency')?.value||'';
+      // budget_min / budget_max are written in real time by initRangeSlider
+    }
+  }
+];
+
+/* Scenario B steps */
+const STEPS_B = [
+  {
+    tag:'Provide a Language Service', q:"What's your name?",
+    html() { return `<input type="text" class="fi" id="inp-name" placeholder="Your full name" value="${formData.name||''}">`; },
+    validate() { return document.getElementById('inp-name')?.value?.trim() ? null : 'Please enter your name'; },
+    save() { formData.name = document.getElementById('inp-name')?.value?.trim(); }
+  },
+  {
+    tag:'Provide a Language Service', q:"Where are you from?",
+    html() {
+      return `<select class="fs" id="inp-country">
+        <option value="">Select your country...</option>
+        ${COUNTRIES.map(c=>`<option value="${c}"${formData.country===c?' selected':''}>${c}</option>`).join('')}
+      </select>`;
+    },
+    validate() { return document.getElementById('inp-country')?.value ? null : 'Please select your country'; },
+    save() { formData.country = document.getElementById('inp-country')?.value||''; }
+  },
+  {
+    tag:'Provide a Language Service', q:"What's your professional language?",
+    html() {
+      // Pre-fill from quiz answer if not yet set
+      const saved = formData.language || (ans.s3==='a'?'arabic':ans.s3==='b'?'chinese':'');
+      return radioHtml('langGrp',[{val:'arabic',label:'Arabic'},{val:'chinese',label:'Chinese'}], saved);
+    },
+    validate() { return document.querySelector('#langGrp .r-opt.sel') ? null : 'Please select your professional language'; },
+    save() { formData.language = document.querySelector('#langGrp .r-opt.sel')?.dataset.val||''; }
+  },
+  {
+    tag:'Provide a Language Service', q:"What's your language level?",
+    html() {
+      const saved = formData.level||'';
+      return radioHtml('levelGrp',[
+        {val:'native',label:'Native'},
+        {val:'fluent',label:'Fluent'},
+        {val:'intermediate',label:'Intermediate'},
+        {val:'working',label:'Working Professional'},
+        {val:'beginner',label:'Beginner'}
+      ], saved);
+    },
+    validate() { return document.querySelector('#levelGrp .r-opt.sel') ? null : 'Please select your language level'; },
+    save() { formData.level = document.querySelector('#levelGrp .r-opt.sel')?.dataset.val||''; }
+  },
+  {
+    tag:'Provide a Language Service', q:"What's your scope of service?",
+    html() {
+      const saved = formData.scope||[];
+      return `<p style="font-size:.8rem;color:rgba(255,255,255,.35);margin-bottom:1rem">Select all that apply</p>
+        <div class="chk-grp" id="scopeGrp">${
+          Object.entries(SCOPE_LABELS).map(([v,l]) =>
+            `<button type="button" class="c-opt${saved.includes(v)?' sel':''}"
+                     data-val="${v}" onclick="toggleChk(this)">${l}</button>`
+          ).join('')
+        }</div>`;
+    },
+    validate() {
+      return document.querySelectorAll('#scopeGrp .c-opt.sel').length>0
+        ? null : 'Please select at least one service';
+    },
+    save() {
+      formData.scope = Array.from(document.querySelectorAll('#scopeGrp .c-opt.sel')).map(el=>el.dataset.val);
+    }
+  },
+  {
+    tag:'Provide a Language Service', q:"Do you hold any certificates?",
+    html() { return buildCertHtml(); },
+    validate() { return null; }, // optional
+    save() {
+      formData.certs      = Array.from(selCerts.keys());
+      formData.cert_other = document.getElementById('inp-cert-other')?.value?.trim()||'';
+      formData.cert_level = document.getElementById('inp-cert-level')?.value||'';
+      formData.cert_num   = document.getElementById('inp-cert-num')?.value?.trim()||'';
+    }
+  }
+];
+
+/* ═══════════════════════════════════════════════════════════
+   SHOW / NAVIGATE
+════════════════════════════════════════════════════════════ */
+function showForm() {
+  showScreen('s-form');
+  fSteps   = ans.s1==='a' ? STEPS_A : STEPS_B;
+  fStepIdx = 0;
+  selCerts.clear();
+  // Restore cert state if coming back
+  if (formData.certs) formData.certs.forEach(id => {
+    // find name from CERT_GROUPS
+    for (const group of Object.values(CERT_GROUPS)) {
+      const c = group.find(x=>x.id===id);
+      if (c) selCerts.set(id, c.name);
+    }
+  });
+  renderFormStep('none');
+}
+
+function renderFormStep(direction) {
+  const step  = fSteps[fStepIdx];
+  const total = fSteps.length;
+  const inner = document.getElementById('fstepInner');
+
+  // Progress bar
+  document.getElementById('fpStep').textContent  = `Step ${fStepIdx+1} of ${total}`;
+  document.getElementById('fpTitle').textContent = step.tag;
+  document.getElementById('fpFill').style.width  = `${((fStepIdx+1)/total)*100}%`;
+
+  // Back button
+  const back = document.getElementById('fBtnBack');
+  back.disabled = false;
+  back.textContent = fStepIdx===0 ? '← Back to invite' : '← Back';
+
+  // Next / Submit button
+  const next = document.getElementById('fBtnNext');
+  next.textContent = fStepIdx===total-1 ? 'Submit →' : 'Next →';
+
+  // Scroll area to top
+  document.getElementById('fstepArea').scrollTop = 0;
+
+  // Animate out then swap content
+  if (direction==='none') {
+    inner.innerHTML = buildStepHtml(step);
+    postRenderStep(step);
+    return;
+  }
+  const outClass = direction==='fwd' ? 's-out-l' : 's-out-r';
+  const inClass  = direction==='fwd' ? 's-in-r'  : 's-in-l';
+  inner.classList.add(outClass);
+  setTimeout(() => {
+    inner.classList.remove(outClass);
+    inner.innerHTML = buildStepHtml(step);
+    postRenderStep(step);
+    inner.classList.add(inClass);
+    setTimeout(() => inner.classList.remove(inClass), 280);
+  }, 260);
+}
+
+function buildStepHtml(step) {
+  return `
+    <div class="fstep-tag">${step.tag}</div>
+    <h2 class="fstep-q">${step.q}</h2>
+    <div class="fstep-inputs">${step.html()}</div>
+    <div class="ferr" id="fErr"></div>`;
+}
+
+function postRenderStep(step) {
+  // Budget range slider (Scenario A, step 4)
+  if (document.getElementById('rs-track')) {
+    initRangeSlider();
+  }
+
+  // Certs step (Scenario B, last step)
+  if (step === fSteps[fSteps.length-1] && ans.s1==='b') {
+    refreshCertUI();
+
+    // Event delegation for cert options (avoids inline onclick escaping issues)
+    const msOpts = document.getElementById('msOpts');
+    if (msOpts) {
+      msOpts.addEventListener('click', e => {
+        const opt = e.target.closest('.ms-opt');
+        if (!opt) return;
+        toggleCert(opt.dataset.id);
+      });
+    }
+
+    document.addEventListener('click', outsideClick);
+  } else {
+    document.removeEventListener('click', outsideClick);
+  }
+}
+
+function nextStep() {
+  const step = fSteps[fStepIdx];
+
+  // Save current values
+  step.save();
+
+  // Validate
+  const err = step.validate();
+  if (err) { showErr(err); return; }
+
+  if (fStepIdx < fSteps.length-1) {
+    fStepIdx++;
+    renderFormStep('fwd');
+  } else {
+    submitForm();
+  }
+}
+
+function prevStep() {
+  // Save current (don't validate on back)
+  fSteps[fStepIdx].save();
+  clearErr();
+
+  if (fStepIdx === 0) {
+    document.removeEventListener('click', outsideClick);
+    showScreen('s-invite');
+  } else {
+    fStepIdx--;
+    renderFormStep('back');
+  }
+}
+
+function showErr(msg) {
+  const el = document.getElementById('fErr');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.remove('shake');
+  void el.offsetWidth; // reflow to re-trigger animation
+  el.classList.add('shake');
+}
+function clearErr() { const el=document.getElementById('fErr'); if(el) el.textContent=''; }
+
+/* ── Radio / checkbox interactions ── */
+function pickR(el, groupId) {
+  document.querySelectorAll(`#${groupId} .r-opt`).forEach(o => {
+    o.classList.remove('sel');
+    const rid = o.dataset.reveal;
+    if (rid) document.getElementById(rid)?.classList.remove('show');
+  });
+  el.classList.add('sel');
+  const rid = el.dataset.reveal;
+  if (rid) document.getElementById(rid)?.classList.add('show');
+  clearErr();
+}
+function toggleChk(el) { el.classList.toggle('sel'); clearErr(); }
+
+/* ═══════════════════════════════════════════════════════════
+   CERTIFICATE MULTI-SELECT
+════════════════════════════════════════════════════════════ */
+function buildCertHtml() {
+  let opts = '';
+  Object.entries(CERT_GROUPS).forEach(([grp,certs]) => {
+    opts += `<div class="ms-grp-lbl">${grp}</div>`;
+    certs.forEach(c => {
+      opts += `<div class="ms-opt${selCerts.has(c.id)?' sel':''}" data-id="${c.id}"
+                    data-search="${c.name.toLowerCase()}">
+                 <div class="ms-cb">✓</div>
+                 <span class="ms-opt-txt">${c.name}</span>
+               </div>`;
+    });
+  });
+
+  const otherSaved = formData.cert_other||'';
+  return `
+    <p style="font-size:.8rem;color:rgba(255,255,255,.35);margin-bottom:1rem">Optional — select all that apply</p>
+    <div class="ms-wrap">
+      <div class="ms-trigger" id="msTrigger" onclick="toggleCertPanel(event)">
+        <div class="ms-tags" id="msTags"><span class="ms-ph">Select certificates...</span></div>
+        <span class="ms-caret" id="msCaret">▾</span>
+      </div>
+      <div class="ms-body" id="msBody">
+        <input class="ms-search" placeholder="Search certificates..."
+               oninput="filterCerts(this.value)" onclick="event.stopPropagation()">
+        <div id="msOpts">${opts}</div>
+      </div>
+    </div>
+    <div class="cond${selCerts.has('other')?' show':''}" id="otherCertCond" style="margin-top:.75rem">
+      <input type="text" class="fi" id="inp-cert-other" placeholder="Please specify your certificate"
+             value="${otherSaved}">
+    </div>
+    <div class="fg-2" style="margin-top:1.25rem">
+      <div>
+        <label class="fl-sm">Certificate level (optional)</label>
+        <select class="fs" id="inp-cert-level" style="font-size:.875rem;padding:.7rem 2.25rem .7rem .875rem">
+          <option value="">Select level</option>
+          ${['Elementary','Intermediate','Upper Intermediate','Advanced','Proficient / Native'].map(l=>
+            `<option${formData.cert_level===l?' selected':''}>${l}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label class="fl-sm">Certificate number (optional)</label>
+        <input type="text" class="fi" id="inp-cert-num" style="font-size:.875rem"
+               placeholder="e.g. HSK-2024-001" value="${formData.cert_num||''}">
+      </div>
+    </div>
+    <div style="margin-top:1rem">
+      <label class="fl-sm">Upload certificate (optional)</label>
+      <label class="file-zone" id="fileZone">
+        <input type="file" name="cert_file" accept=".pdf,.jpg,.png,.jpeg"
+               onchange="updateFileZone(this)" style="display:none">
+        <span class="fz-icon">↑</span>
+        <span class="fz-txt" id="fzTxt">PDF, JPG or PNG · max 10 MB</span>
+      </label>
+    </div>`;
+}
+
+function restoreCertOptionals() {
+  // Cert optional fields are already pre-filled via html() but re-apply file label if needed
+}
+
+/* ════════════════════════════════════════════════════════════
+   DUAL-HANDLE RANGE SLIDER
+════════════════════════════════════════════════════════════ */
+function initRangeSlider() {
+  const MIN=0, MAX=50000, STEP=500;
+  let vMin = Math.max(MIN, formData.budget_min ?? 0);
+  let vMax = Math.min(MAX, formData.budget_max ?? 25000);
+  if (vMin >= vMax) { vMin=0; vMax=25000; }
+
+  const track = document.getElementById('rs-track');
+  const fill  = document.getElementById('rs-fill');
+  const hMin  = document.getElementById('rs-hmin');
+  const hMax  = document.getElementById('rs-hmax');
+  const lMin  = document.getElementById('rs-lmin');
+  const lMax  = document.getElementById('rs-lmax');
+  const valEl = document.getElementById('rs-value');
+  if (!track) return;
+
+  function snap(v)  { return Math.round(v/STEP)*STEP; }
+  function pct(v)   { return ((v-MIN)/(MAX-MIN))*100; }
+  function fmt(v)   { return v.toLocaleString(); }
+  function cur()    { return document.getElementById('inp-currency')?.value||'SAR'; }
+
+  function render() {
+    const p1=pct(vMin), p2=pct(vMax);
+    hMin.style.left  = p1+'%';
+    hMax.style.left  = p2+'%';
+    fill.style.left  = p1+'%';
+    fill.style.width = (p2-p1)+'%';
+    lMin.textContent = fmt(vMin);
+    lMax.textContent = fmt(vMax);
+    if (valEl) valEl.innerHTML = `<strong>${fmt(vMin)} – ${fmt(vMax)}</strong> ${cur()}`;
+    formData.budget_min = vMin;
+    formData.budget_max = vMax;
+    requestAnimationFrame(adjustLabels);
+  }
+
+  function adjustLabels() {
+    lMin.style.transform = 'translateX(-50%)';
+    lMax.style.transform = 'translateX(-50%)';
+    const r1 = lMin.getBoundingClientRect();
+    const r2 = lMax.getBoundingClientRect();
+    const overlap = r1.right + 10 - r2.left;
+    if (overlap > 0) {
+      const push = overlap/2 + 2;
+      lMin.style.transform = `translateX(calc(-50% - ${push}px))`;
+      lMax.style.transform = `translateX(calc(-50% + ${push}px))`;
+    }
+  }
+
+  function valFromX(clientX) {
+    const rect = track.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (clientX-rect.left)/rect.width));
+    return snap(MIN + ratio*(MAX-MIN));
+  }
+
+  // Min handle — use pointer capture so drag works outside the element
+  hMin.addEventListener('pointerdown', e => {
+    hMin.setPointerCapture(e.pointerId);
+    hMin.classList.add('dragging');
+    e.preventDefault();
+  });
+  hMin.addEventListener('pointermove', e => {
+    if (!hMin.hasPointerCapture(e.pointerId)) return;
+    vMin = Math.max(MIN, Math.min(valFromX(e.clientX), vMax-STEP));
+    render();
+  });
+  hMin.addEventListener('pointerup', () => hMin.classList.remove('dragging'));
+
+  // Max handle
+  hMax.addEventListener('pointerdown', e => {
+    hMax.setPointerCapture(e.pointerId);
+    hMax.classList.add('dragging');
+    e.preventDefault();
+  });
+  hMax.addEventListener('pointermove', e => {
+    if (!hMax.hasPointerCapture(e.pointerId)) return;
+    vMax = Math.min(MAX, Math.max(valFromX(e.clientX), vMin+STEP));
+    render();
+  });
+  hMax.addEventListener('pointerup', () => hMax.classList.remove('dragging'));
+
+  // Track click — move the closer handle
+  track.addEventListener('click', e => {
+    if (e.target.classList.contains('rslider-handle')) return;
+    const v = valFromX(e.clientX);
+    if (Math.abs(v-vMin) <= Math.abs(v-vMax)) {
+      vMin = Math.max(MIN, Math.min(v, vMax-STEP));
+    } else {
+      vMax = Math.min(MAX, Math.max(v, vMin+STEP));
+    }
+    render();
+  });
+
+  // Currency change updates the display label
+  document.getElementById('inp-currency')?.addEventListener('change', () => {
+    formData.budget_currency = cur();
+    render();
+  });
+
+  render();
+}
+
+function toggleCertPanel(e) {
+  e.stopPropagation();
+  const body=document.getElementById('msBody'), trig=document.getElementById('msTrigger'), caret=document.getElementById('msCaret');
+  const open = body?.classList.contains('open');
+  if (open) { body?.classList.remove('open'); trig?.classList.remove('open'); caret?.classList.remove('open'); }
+  else       { body?.classList.add('open');   trig?.classList.add('open');   caret?.classList.add('open');   }
+}
+
+function closeCertPanel() {
+  document.getElementById('msBody')?.classList.remove('open');
+  document.getElementById('msTrigger')?.classList.remove('open');
+  document.getElementById('msCaret')?.classList.remove('open');
+}
+
+function outsideClick(e) {
+  const wrap = document.querySelector('.ms-wrap');
+  if (wrap && !wrap.contains(e.target)) closeCertPanel();
+}
+
+function toggleCert(id) {
+  if (selCerts.has(id)) {
+    selCerts.delete(id);
+  } else {
+    // Look up display name from CERT_GROUPS
+    let name = id;
+    for (const group of Object.values(CERT_GROUPS)) {
+      const c = group.find(x => x.id === id);
+      if (c) { name = c.name; break; }
+    }
+    selCerts.set(id, name);
+  }
+  refreshCertUI();
+  document.getElementById('otherCertCond')?.classList.toggle('show', selCerts.has('other'));
+}
+
+function refreshCertUI() {
+  const tags = document.getElementById('msTags');
+  if (!tags) return;
+  tags.innerHTML = selCerts.size===0
+    ? '<span class="ms-ph">Select certificates...</span>'
+    : Array.from(selCerts.entries()).map(([id,name]) => {
+        const short = name.split(' (')[0];
+        return `<span class="ms-tag">${short}<span class="ms-tag-x"
+                  onclick="event.stopPropagation();removeCert('${id}')">×</span></span>`;
+      }).join('');
+  document.querySelectorAll('.ms-opt').forEach(opt =>
+    opt.classList.toggle('sel', selCerts.has(opt.dataset.id))
+  );
+}
+
+function removeCert(id) {
+  selCerts.delete(id);
+  refreshCertUI();
+  if (id==='other') document.getElementById('otherCertCond')?.classList.remove('show');
+}
+
+function filterCerts(q) {
+  document.querySelectorAll('.ms-opt').forEach(opt =>
+    opt.classList.toggle('hidden', !opt.dataset.search.includes(q.toLowerCase()))
+  );
+}
+
+function updateFileZone(inp) {
+  if (!inp.files.length) return;
+  document.getElementById('fileZone')?.classList.add('has-file');
+  const txt=document.getElementById('fzTxt'); if(txt) txt.textContent=inp.files[0].name;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SUBMIT → WELCOME → LANDING
+════════════════════════════════════════════════════════════ */
+let _welcomeTimer = null;
+
+function submitForm() {
+  fSteps[fStepIdx].save();
+
+  // (In production: POST formData to your backend here)
+  console.log('Form submitted:', { quiz: ans, form: formData, certs: Object.fromEntries(selCerts) });
+
+  document.removeEventListener('click', outsideClick);
+  document.getElementById('s-welcome').classList.add('show');
+
+  // Auto-redirect after the animation completes (~3.6 s)
+  _welcomeTimer = setTimeout(() => { window.location.href = 'landing.html'; }, 3600);
+}
+
+function skipWelcome() {
+  clearTimeout(_welcomeTimer);
+  window.location.href = 'landing.html';
+}
+
+const SLOGANS = [
+  ['Beyond Words','Into Worlds'],
+  ['Authentic Experiences','Powered by People'],
+  ['Unlock Your','Linguistic Journey'],
+  ['Explore Your','Real-Life Stories'],
+  ['Discover Your','Unique Adventure'],
+  ['Uncover Your','Perfect Match'],
+];
+let _sloganIdx = 0;
+(function(){
+  const h1 = document.getElementById('introH1');
+  const l1 = document.getElementById('introLine1');
+  const l2 = document.getElementById('introLine2');
+  setInterval(()=>{
+    _sloganIdx = (_sloganIdx + 1) % SLOGANS.length;
+    h1.classList.add('slogan-out');
+    setTimeout(()=>{
+      l1.textContent = SLOGANS[_sloganIdx][0];
+      l2.textContent = SLOGANS[_sloganIdx][1];
+      h1.classList.remove('slogan-out');
+    }, 300);
+  }, 4000);
+})();
+
+function goLanding() {
+  document.removeEventListener('click', outsideClick);
+  window.location.href = 'landing.html';
+}
+</script>
+</body>
+</html>
