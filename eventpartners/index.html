@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/site.css">
+<link rel="stylesheet" href="../assets/css/event-network.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font-sans); }
@@ -28,16 +29,18 @@
   .ep-cards { display: flex; flex-direction: column; gap: 1.5rem; }
   .ep-card {
     background: #fff; border: 1px solid var(--border-sub); border-radius: 18px;
-    padding: 2.25rem 2.5rem; display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 2rem; align-items: start;
+    padding: 2.25rem 2.5rem; display: grid; grid-template-columns: 1.3fr 1fr .95fr 1fr; gap: 2rem; align-items: start;
     transition: box-shadow .3s ease, transform .3s ease;
   }
   .ep-card:hover { box-shadow: 0 20px 44px rgba(17,18,22,.1); transform: translateY(-3px); }
+  .ep-card.epn-active { box-shadow: 0 0 0 2px var(--yellow), 0 20px 44px rgba(17,18,22,.14); }
   .ep-card-main .ep-label { font-size: .66rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-soft); margin-bottom: .4rem; }
   .ep-card-partner { font-size: 1.15rem; font-weight: 800; color: var(--dark); margin-bottom: .3rem; }
   .ep-card-event { font-family: var(--font-serif); font-style: italic; font-size: 1.05rem; color: var(--text-mid); }
   .ep-card-field { }
   .ep-card-field .ep-label { font-size: .66rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-soft); margin-bottom: .5rem; }
   .ep-card-field .ep-val { font-size: .88rem; color: var(--dark); line-height: 1.55; }
+  .ep-loc-row { display: flex; align-items: center; gap: .65rem; }
   .ep-langs { display: flex; flex-wrap: wrap; gap: .4rem; }
   .ep-lang-chip { font-size: .72rem; font-weight: 700; background: var(--cream); color: var(--text-mid); padding: .28rem .65rem; border-radius: 100px; }
 
@@ -77,11 +80,44 @@
     <div class="ep-list-head">
       <div class="ep-kicker">Current Partners</div>
       <h2 class="ep-h2">Where the <em>community</em> gathers</h2>
-      <p class="ep-list-sub">Two partners are already hosting RealLingo language events — more join every season.</p>
+      <p class="ep-list-sub">Four partners are already hosting RealLingo language events — more join every season.</p>
+    </div>
+
+    <!-- Global Event Network: an abstract, animated map of connected hubs
+         rather than a static pin repeated per city. Hover/focus a node to
+         see its event details and highlight its matching card below. -->
+    <div class="epn-wrap" aria-label="RealLingo global event network">
+      <svg class="epn-lines" viewBox="0 0 1000 210" preserveAspectRatio="none" aria-hidden="true">
+        <path class="epn-path" data-idx="0" d="M 90 150 C 190 60, 260 40, 360 60"/>
+        <path class="epn-path" data-idx="1" d="M 360 60 C 460 80, 550 170, 650 140"/>
+        <path class="epn-path" data-idx="2" d="M 650 140 C 750 110, 820 40, 910 55"/>
+        <circle class="epn-dot" r="3.2"><animateMotion dur="7s" repeatCount="indefinite" path="M 90 150 C 190 60, 260 40, 360 60"/></circle>
+        <circle class="epn-dot" r="3.2"><animateMotion dur="8s" begin="1.2s" repeatCount="indefinite" path="M 360 60 C 460 80, 550 170, 650 140"/></circle>
+        <circle class="epn-dot" r="3.2"><animateMotion dur="6.4s" begin=".6s" repeatCount="indefinite" path="M 650 140 C 750 110, 820 40, 910 55"/></circle>
+      </svg>
+      <div class="epn-nodes">
+        <button type="button" class="epn-node" data-key="koyee" style="left:9%;top:71%">
+          <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+          <span class="epn-node-label">Khobar</span>
+        </button>
+        <button type="button" class="epn-node" data-key="sinogulf" style="left:36%;top:28.6%">
+          <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+          <span class="epn-node-label">Multi-city</span>
+        </button>
+        <button type="button" class="epn-node" data-key="arabnetwork" style="left:65%;top:66.7%">
+          <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+          <span class="epn-node-label">Singapore</span>
+        </button>
+        <button type="button" class="epn-node" data-key="igotone" style="left:91%;top:26.2%">
+          <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>
+          <span class="epn-node-label">Dammam</span>
+        </button>
+      </div>
+      <div class="epn-tooltip" id="epnTooltip" role="tooltip"></div>
     </div>
 
     <div class="ep-cards">
-      <div class="ep-card">
+      <div class="ep-card" data-key="koyee">
         <div class="ep-card-main">
           <div class="ep-label">Partner</div>
           <div class="ep-card-partner">Koyee Korean Cafe and Restaurant</div>
@@ -89,7 +125,14 @@
         </div>
         <div class="ep-card-field">
           <div class="ep-label">Location</div>
-          <div class="ep-val">Khobar, Saudi Arabia</div>
+          <div class="ep-loc-row">
+            <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+            <span class="ep-val">Khobar, Saudi Arabia</span>
+          </div>
+        </div>
+        <div class="ep-card-field">
+          <div class="ep-label">Upcoming Event</div>
+          <div class="ep-val">Ongoing partnership</div>
         </div>
         <div class="ep-card-field">
           <div class="ep-label">Languages</div>
@@ -100,7 +143,7 @@
         </div>
       </div>
 
-      <div class="ep-card">
+      <div class="ep-card" data-key="sinogulf">
         <div class="ep-card-main">
           <div class="ep-label">Partner</div>
           <div class="ep-card-partner">Sino-Gulf Youth Network</div>
@@ -108,13 +151,72 @@
         </div>
         <div class="ep-card-field">
           <div class="ep-label">Location</div>
-          <div class="ep-val">Jeddah + Khobar, Saudi Arabia; Beijing + Yiwu, China</div>
+          <div class="ep-loc-row">
+            <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+            <span class="ep-val">Jeddah + Khobar, KSA; Beijing + Yiwu, China</span>
+          </div>
+        </div>
+        <div class="ep-card-field">
+          <div class="ep-label">Upcoming Event</div>
+          <div class="ep-val">Ongoing partnership</div>
         </div>
         <div class="ep-card-field">
           <div class="ep-label">Languages</div>
           <div class="ep-langs">
             <span class="ep-lang-chip">Chinese</span>
             <span class="ep-lang-chip">Arabic</span>
+            <span class="ep-lang-chip">English</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ep-card" data-key="arabnetwork">
+        <div class="ep-card-main">
+          <div class="ep-label">Partner</div>
+          <div class="ep-card-partner">Arab Network@Singapore</div>
+          <div class="ep-card-event">Arabic Language &amp; Culture Meetup</div>
+        </div>
+        <div class="ep-card-field">
+          <div class="ep-label">Location</div>
+          <div class="ep-loc-row">
+            <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+            <span class="ep-val">Singapore</span>
+          </div>
+        </div>
+        <div class="ep-card-field">
+          <div class="ep-label">Upcoming Event</div>
+          <div class="ep-val">Aug 28–29 · 6–10 PM</div>
+        </div>
+        <div class="ep-card-field">
+          <div class="ep-label">Languages</div>
+          <div class="ep-langs">
+            <span class="ep-lang-chip">Arabic</span>
+            <span class="ep-lang-chip">English</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ep-card" data-key="igotone">
+        <div class="ep-card-main">
+          <div class="ep-label">Partner</div>
+          <div class="ep-card-partner">I-Got-One Project</div>
+          <div class="ep-card-event">Language Across Borders</div>
+        </div>
+        <div class="ep-card-field">
+          <div class="ep-label">Location</div>
+          <div class="ep-loc-row">
+            <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>
+            <span class="ep-val">Dammam, Saudi Arabia</span>
+          </div>
+        </div>
+        <div class="ep-card-field">
+          <div class="ep-label">Upcoming Event</div>
+          <div class="ep-val">Jul 31</div>
+        </div>
+        <div class="ep-card-field">
+          <div class="ep-label">Languages</div>
+          <div class="ep-langs">
+            <span class="ep-lang-chip">Chinese</span>
             <span class="ep-lang-chip">English</span>
           </div>
         </div>
@@ -138,6 +240,61 @@
   window.SITE_ROOT = "../";
   window.SITE_SECTION = "explore";
   window.SITE_PAGE = "eventpartners";
+</script>
+<script>
+  /* Global Event Network: hovering/focusing a node lights up its adjoining
+     connector paths, shows an event tooltip, and highlights the matching
+     card in the list below — ties the abstract map to the concrete data. */
+  (function () {
+    var wrap = document.querySelector('.epn-wrap');
+    if (!wrap) return;
+
+    var EPN_DATA = {
+      koyee:       { event: 'Korean Workshop',              place: 'Khobar, Saudi Arabia',                          date: 'Ongoing partnership',    partner: 'Koyee Korean Cafe and Restaurant' },
+      sinogulf:    { event: 'Language Across Borders',       place: 'Jeddah + Khobar, KSA · Beijing + Yiwu, China',  date: 'Ongoing partnership',    partner: 'Sino-Gulf Youth Network' },
+      arabnetwork: { event: 'Arabic Language & Culture Meetup', place: 'Singapore',                                  date: 'Aug 28–29 · 6–10 PM',    partner: 'Arab Network@Singapore' },
+      igotone:     { event: 'Language Across Borders',       place: 'Dammam, Saudi Arabia',                          date: 'Jul 31',                 partner: 'I-Got-One Project' }
+    };
+
+    var tooltip = document.getElementById('epnTooltip');
+    var nodes = Array.prototype.slice.call(wrap.querySelectorAll('.epn-node'));
+    var paths = Array.prototype.slice.call(wrap.querySelectorAll('.epn-path'));
+
+    function showTip(node) {
+      var d = EPN_DATA[node.dataset.key];
+      if (!d) return;
+      tooltip.innerHTML =
+        '<div class="epn-tip-event">' + d.event + '</div>' +
+        '<div class="epn-tip-row"><strong>' + d.place + '</strong></div>' +
+        '<div class="epn-tip-row">' + d.date + '</div>' +
+        '<div class="epn-tip-row">' + d.partner + '</div>';
+
+      var wrapRect = wrap.getBoundingClientRect();
+      var nodeRect = node.getBoundingClientRect();
+      tooltip.style.left = (nodeRect.left - wrapRect.left + nodeRect.width / 2) + 'px';
+      tooltip.style.top = (nodeRect.top - wrapRect.top) + 'px';
+      tooltip.classList.add('show');
+
+      var idx = nodes.indexOf(node);
+      paths.forEach(function (p, i) { p.classList.toggle('lit', i === idx - 1 || i === idx); });
+      var card = document.querySelector('.ep-card[data-key="' + node.dataset.key + '"]');
+      if (card) card.classList.add('epn-active');
+    }
+
+    function hideTip(node) {
+      tooltip.classList.remove('show');
+      paths.forEach(function (p) { p.classList.remove('lit'); });
+      var card = document.querySelector('.ep-card[data-key="' + node.dataset.key + '"]');
+      if (card) card.classList.remove('epn-active');
+    }
+
+    nodes.forEach(function (node) {
+      node.addEventListener('mouseenter', function () { showTip(node); });
+      node.addEventListener('mouseleave', function () { hideTip(node); });
+      node.addEventListener('focus', function () { showTip(node); });
+      node.addEventListener('blur', function () { hideTip(node); });
+    });
+  })();
 </script>
 <script src="../assets/js/nav.js" defer></script>
 </body>

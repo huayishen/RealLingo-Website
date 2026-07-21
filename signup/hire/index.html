@@ -73,10 +73,8 @@ const QUIZ_FLOW = 'hire';
    getReviewRows() switch (both flows run on separate pages, but that
    function is shared code keyed only by section name). */
 const HIRE_ROLES = [
-  {key:'tutor',          sect:'hireTutor',          as:'a tutor',                 label:'Tutor'},
   {key:'translator',     sect:'hireTranslator',     as:'a translator / interpreter', label:'Translator'},
   {key:'influencer',     sect:'hireInfluencer',     as:'an influencer',           label:'Influencer'},
-  {key:'tourGuide',      sect:'hireTourGuide',      as:'a tour guide',            label:'Tour Guide'},
   {key:'languageEvent',  sect:'hireLanguageEvent',  as:'an event organizer',      label:'Event Organizer'},
   {key:'languageTalent', sect:'hireLanguageTalent', as:'a language talent',       label:'Language Talent'},
 ];
@@ -243,10 +241,8 @@ function hireRoleSteps(tag, prefix, questionText) {
 
 const ALL_SECTION_STEPS = {
   general: generalSteps,
-  hireTutor:          hireRoleSteps('Tutor',           'hireTutor',          "I'm looking for a tutor that speaks..."),
   hireTranslator:      hireRoleSteps('Translator',      'hireTranslator',     "I'm looking for a translator for..."),
   hireInfluencer:      hireRoleSteps('Influencer',      'hireInfluencer',     "I'm looking for KOL/KOCs that speak..."),
-  hireTourGuide:       hireRoleSteps('Tour Guide',      'hireTourGuide',      "I'm looking for a tour guide that speaks..."),
   hireLanguageEvent:   hireRoleSteps('Event Organizer', 'hireLanguageEvent',  "I'm looking for an event organizer that speaks..."),
   hireLanguageTalent:  hireRoleSteps('Language Talent', 'hireLanguageTalent', "I'm looking for language talent that speaks..."),
 

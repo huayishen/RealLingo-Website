@@ -121,6 +121,23 @@
             box-shadow: 0 10px 24px rgba(17,18,22,.18);
         }
 
+        .btn-outline {
+            border: 1.5px solid var(--dark);
+            color: var(--dark);
+            background: transparent;
+            padding: 1rem 2.25rem;
+            font-family: var(--font-sans);
+            font-size: .95rem; font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: background .2s, color .2s, transform .2s;
+        }
+        .btn-outline:hover {
+            background: var(--dark);
+            color: var(--yellow);
+            transform: translateY(-2px);
+        }
+
         .btn-ghost {
             font-size: .88rem; font-weight: 500;
             color: var(--text-mid); text-decoration: none;
@@ -557,6 +574,7 @@
         </p>
         <div class="hero-ctas">
             <a href="signup/" class="btn-dark">Find Your Match</a>
+            <a href="explore/resources/" class="btn-outline">Explore now!</a>
             <a href="#features" class="btn-ghost">See how it works</a>
         </div>
     </div>
@@ -758,115 +776,174 @@
         <div class="kicker">Our Team</div>
         <h2 class="sh2">The people behind <em>RealLingo</em></h2>
     </div>
-    <div class="team-grid">
-        <div class="team-card reveal">
-            <img class="team-av" src="assets/img/team/huayi-shen.jpg" alt="Huayi Shen">
-            <div class="team-name">Huayi Shen</div>
-            <div class="team-title">Founder &amp; Executive Director</div>
-            <a href="mailto:hyshen@thereallingo.com" class="team-email">hyshen@thereallingo.com</a>
-            <div class="team-origin">
-                <div class="team-origin-row"><span class="team-origin-label">From</span> 🇨🇳 China</div>
-                <div class="team-origin-row"><span class="team-origin-label">Based in</span> 🇸🇦 Saudi Arabia</div>
-            </div>
-            <p class="team-bio">Leads RealLingo's overall vision, strategy, and day-to-day operations.</p>
-            <div class="team-links">
-                <a href="mailto:hyshen@thereallingo.com" class="team-link" title="Email hyshen@thereallingo.com" aria-label="Email Huayi Shen">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
-                </a>
-                <a href="https://www.linkedin.com/in/huayishen" target="_blank" rel="noopener" class="team-link" title="LinkedIn" aria-label="Huayi Shen on LinkedIn">
-                    <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
-                </a>
-                <a href="https://github.com/huayishen" target="_blank" rel="noopener" class="team-link" title="GitHub" aria-label="Huayi Shen on GitHub">
-                    <svg viewBox="0 0 24 24"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.79-.25.79-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.16.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.1 11.1 0 015.8 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .3.21.66.79.55A11.5 11.5 0 0023.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
-                </a>
-            </div>
-        </div>
-        <div class="team-card reveal" style="transition-delay:.05s">
-            <img class="team-av" src="assets/img/team/samia-azmery.jpg" alt="Samia Azmery">
-            <div class="team-name">Samia Azmery</div>
-            <div class="team-title">Marketing Director</div>
-            <a href="mailto:sazmery@thereallingo.com" class="team-email">sazmery@thereallingo.com</a>
-            <div class="team-origin">
-                <div class="team-origin-row"><span class="team-origin-label">From</span> 🇧🇩 Bangladesh</div>
-                <div class="team-origin-row"><span class="team-origin-label">Based in</span> 🇨🇳 China</div>
-            </div>
-            <p class="team-bio">Shapes how RealLingo tells its story and reaches new communities.</p>
-            <div class="team-links">
-                <a href="mailto:sazmery@thereallingo.com" class="team-link" title="Email sazmery@thereallingo.com" aria-label="Email Samia Azmery">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
-                </a>
-                <a href="https://linkedin.com/in/samia-azmery-16793123b" target="_blank" rel="noopener" class="team-link" title="LinkedIn" aria-label="Samia Azmery on LinkedIn">
-                    <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
-                </a>
-            </div>
-        </div>
-        <div class="team-card reveal" style="transition-delay:.1s">
-            <img class="team-av" src="assets/img/team/ebraam-labib.jpg" alt="Ebraam Labib">
-            <div class="team-name">Ebraam Labib</div>
-            <div class="team-title">Product Engineer</div>
-            <a href="mailto:ewlabib@thereallingo.com" class="team-email">ewlabib@thereallingo.com</a>
-            <div class="team-origin">
-                <div class="team-origin-row"><span class="team-origin-label">From</span> 🇪🇬 Egypt</div>
-                <div class="team-origin-row"><span class="team-origin-label">Based in</span> 🇸🇦 Saudi Arabia</div>
-            </div>
-            <p class="team-bio">Designs the RealLingo experience end to end, from product to platform.</p>
-            <div class="team-links">
-                <a href="mailto:ewlabib@thereallingo.com" class="team-link" title="Email ewlabib@thereallingo.com" aria-label="Email Ebraam Labib">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
-                </a>
-                <a href="https://linkedin.com/in/ebraam-wadee" target="_blank" rel="noopener" class="team-link" title="LinkedIn" aria-label="Ebraam Labib on LinkedIn">
-                    <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
-                </a>
-                <a href="https://github.com/bero288" target="_blank" rel="noopener" class="team-link" title="GitHub" aria-label="Ebraam Labib on GitHub">
-                    <svg viewBox="0 0 24 24"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.79-.25.79-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.16.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.1 11.1 0 015.8 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .3.21.66.79.55A11.5 11.5 0 0023.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
-                </a>
-            </div>
-        </div>
-        <div class="team-card reveal" style="transition-delay:.15s">
-            <img class="team-av" src="assets/img/team/xuanbo-jia.jpg" alt="Xuanbo Jia">
-            <div class="team-name">Xuanbo Jia</div>
-            <div class="team-title">Technology Advisor</div>
-            <a href="mailto:xbjia@thereallingo.com" class="team-email">xbjia@thereallingo.com</a>
-            <div class="team-origin">
-                <div class="team-origin-row"><span class="team-origin-label">From</span> 🇨🇳 China</div>
-                <div class="team-origin-row"><span class="team-origin-label">Based in</span> 🇺🇸 USA</div>
-            </div>
-            <p class="team-bio">Advises on RealLingo's technical direction and platform architecture.</p>
-            <div class="team-links">
-                <a href="mailto:xbjia@thereallingo.com" class="team-link" title="Email xbjia@thereallingo.com" aria-label="Email Xuanbo Jia">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
-                </a>
-                <a href="https://linkedin.com/in/xuanbo-jia-4a72b0338" target="_blank" rel="noopener" class="team-link" title="LinkedIn" aria-label="Xuanbo Jia on LinkedIn">
-                    <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
-                </a>
-                <a href="https://github.com/XuanboJia" target="_blank" rel="noopener" class="team-link" title="GitHub" aria-label="Xuanbo Jia on GitHub">
-                    <svg viewBox="0 0 24 24"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.79-.25.79-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.16.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.1 11.1 0 015.8 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .3.21.66.79.55A11.5 11.5 0 0023.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
-                </a>
-                <a href="https://www.xuanbojia.com" target="_blank" rel="noopener" class="team-link" title="Website" aria-label="Xuanbo Jia's website">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-                </a>
-            </div>
-        </div>
-        <div class="team-card reveal" style="transition-delay:.2s">
-            <img class="team-av" src="assets/img/team/yasser-mejia.jpg" alt="Yasser Mejía">
-            <div class="team-name">Yasser Mejía</div>
-            <div class="team-title">Public Relations Director</div>
-            <a href="mailto:yamejia@thereallingo.com" class="team-email">yamejia@thereallingo.com</a>
-            <div class="team-origin">
-                <div class="team-origin-row"><span class="team-origin-label">From</span> 🇳🇮 Nicaragua</div>
-                <div class="team-origin-row"><span class="team-origin-label">Based in</span> 🇨🇳 China</div>
-            </div>
-            <p class="team-bio">Leads RealLingo's public relations and external communications.</p>
-            <div class="team-links">
-                <a href="mailto:yamejia@thereallingo.com" class="team-link" title="Email yamejia@thereallingo.com" aria-label="Email Yasser Mejía">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
-                </a>
-                <a href="https://linkedin.com/in/yasser-mejía-299072420" target="_blank" rel="noopener" class="team-link" title="LinkedIn" aria-label="Yasser Mejía on LinkedIn">
-                    <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
-                </a>
+
+    <div class="tg-section">
+        <button type="button" class="tg-arrow tg-arrow-left" aria-label="Scroll team gallery left">←</button>
+        <button type="button" class="tg-arrow tg-arrow-right" aria-label="Scroll team gallery right">→</button>
+
+        <div class="tg-viewport" id="teamViewport">
+            <div class="tg-track">
+                <div class="tg-card">
+                    <img class="tg-av" src="assets/img/team/ebraam-labib.jpg" alt="Ebraam Labib">
+                    <div class="tg-name">Ebraam Labib</div>
+                    <div class="tg-title">Software Engineer</div>
+                    <div class="tg-origin">🇪🇬 Egypt · based in 🇸🇦 Saudi Arabia</div>
+                    <p class="tg-bio">Designs the RealLingo experience end to end, from product to platform.</p>
+                    <div class="tg-links">
+                        <a href="mailto:ewlabib@thereallingo.com" class="tg-link" title="Email ewlabib@thereallingo.com" aria-label="Email Ebraam Labib">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
+                        </a>
+                        <a href="https://linkedin.com/in/ebraam-wadee" target="_blank" rel="noopener" class="tg-link" title="LinkedIn" aria-label="Ebraam Labib on LinkedIn">
+                            <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
+                        </a>
+                        <a href="https://github.com/bero288" target="_blank" rel="noopener" class="tg-link" title="GitHub" aria-label="Ebraam Labib on GitHub">
+                            <svg viewBox="0 0 24 24"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.79-.25.79-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.16.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.1 11.1 0 015.8 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .3.21.66.79.55A11.5 11.5 0 0023.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="tg-card">
+                    <img class="tg-av" src="assets/img/team/huayi-shen.jpg" alt="Huayi Shen">
+                    <div class="tg-name">Huayi Shen</div>
+                    <div class="tg-title">Founder &amp; Executive Director</div>
+                    <div class="tg-origin">🇨🇳 China · based in 🇸🇦 Saudi Arabia</div>
+                    <p class="tg-bio">Leads RealLingo's overall vision, strategy, and day-to-day operations.</p>
+                    <div class="tg-links">
+                        <a href="mailto:hyshen@thereallingo.com" class="tg-link" title="Email hyshen@thereallingo.com" aria-label="Email Huayi Shen">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/huayishen" target="_blank" rel="noopener" class="tg-link" title="LinkedIn" aria-label="Huayi Shen on LinkedIn">
+                            <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
+                        </a>
+                        <a href="https://github.com/huayishen" target="_blank" rel="noopener" class="tg-link" title="GitHub" aria-label="Huayi Shen on GitHub">
+                            <svg viewBox="0 0 24 24"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.79-.25.79-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.16.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.1 11.1 0 015.8 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .3.21.66.79.55A11.5 11.5 0 0023.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="tg-card">
+                    <img class="tg-av" src="assets/img/team/samia-azmery.jpg" alt="Samia Azmery">
+                    <div class="tg-name">Samia Azmery</div>
+                    <div class="tg-title">Marketing Director</div>
+                    <div class="tg-origin">🇧🇩 Bangladesh · based in 🇨🇳 China</div>
+                    <p class="tg-bio">Shapes how RealLingo tells its story and reaches new communities.</p>
+                    <div class="tg-links">
+                        <a href="mailto:sazmery@thereallingo.com" class="tg-link" title="Email sazmery@thereallingo.com" aria-label="Email Samia Azmery">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
+                        </a>
+                        <a href="https://linkedin.com/in/samia-azmery-16793123b" target="_blank" rel="noopener" class="tg-link" title="LinkedIn" aria-label="Samia Azmery on LinkedIn">
+                            <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="tg-card">
+                    <img class="tg-av" src="assets/img/team/xuanbo-jia.jpg" alt="Xuanbo Jia">
+                    <div class="tg-name">Xuanbo Jia</div>
+                    <div class="tg-title">Technology Advisor</div>
+                    <div class="tg-origin">🇨🇳 China · based in 🇺🇸 USA</div>
+                    <p class="tg-bio">Advises on RealLingo's technical direction and platform architecture.</p>
+                    <div class="tg-links">
+                        <a href="mailto:xbjia@thereallingo.com" class="tg-link" title="Email xbjia@thereallingo.com" aria-label="Email Xuanbo Jia">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
+                        </a>
+                        <a href="https://linkedin.com/in/xuanbo-jia-4a72b0338" target="_blank" rel="noopener" class="tg-link" title="LinkedIn" aria-label="Xuanbo Jia on LinkedIn">
+                            <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
+                        </a>
+                        <a href="https://github.com/XuanboJia" target="_blank" rel="noopener" class="tg-link" title="GitHub" aria-label="Xuanbo Jia on GitHub">
+                            <svg viewBox="0 0 24 24"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.79-.25.79-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.16.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.1 11.1 0 015.8 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .3.21.66.79.55A11.5 11.5 0 0023.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+                        </a>
+                        <a href="https://www.xuanbojia.com" target="_blank" rel="noopener" class="tg-link" title="Website" aria-label="Xuanbo Jia's website">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="tg-card">
+                    <img class="tg-av" src="assets/img/team/yasser-mejia.jpg" alt="Yasser Mejía">
+                    <div class="tg-name">Yasser Mejía</div>
+                    <div class="tg-title">Product Manager</div>
+                    <div class="tg-origin">🇳🇮 Nicaragua · based in 🇨🇳 China</div>
+                    <p class="tg-bio">Leads RealLingo's public relations and external communications.</p>
+                    <div class="tg-links">
+                        <a href="mailto:yamejia@thereallingo.com" class="tg-link" title="Email yamejia@thereallingo.com" aria-label="Email Yasser Mejía">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
+                        </a>
+                        <a href="https://linkedin.com/in/yasser-mejía-299072420" target="_blank" rel="noopener" class="tg-link" title="LinkedIn" aria-label="Yasser Mejía on LinkedIn">
+                            <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tg-card tg-card--cta">
+                    <div class="tg-cta-icon" aria-hidden="true">+</div>
+                    <div class="tg-name">Join Our Team</div>
+                    <p class="tg-cta-text">Love languages and connecting cultures? We're always looking for people who do too.</p>
+                    <button type="button" class="tg-cta-btn" id="tgApplyBtn">Apply Now</button>
+                </div>
+
             </div>
         </div>
     </div>
+
+    <dialog class="tja-modal" id="teamApplyDialog">
+        <div class="tja-inner">
+            <button type="button" class="tja-close" id="tjaClose" aria-label="Close">✕</button>
+            <div id="tjaFormWrap">
+                <h3>Join the RealLingo Team</h3>
+                <p class="tja-sub">Tell us a bit about yourself — we'd love to see if there's a fit.</p>
+                <form id="tjaForm" novalidate>
+                    <div class="tja-field">
+                        <label for="tja-name">Name</label>
+                        <input type="text" id="tja-name" autocomplete="name">
+                    </div>
+                    <div class="tja-field">
+                        <label for="tja-email">Email</label>
+                        <input type="email" id="tja-email" autocomplete="email">
+                    </div>
+                    <div class="tja-field">
+                        <label for="tja-phone">Phone Number <span class="opt">(optional)</span></label>
+                        <input type="tel" id="tja-phone" autocomplete="tel">
+                    </div>
+                    <div class="tja-field">
+                        <label for="tja-bio">Short Bio <span class="opt">(max 200 words)</span></label>
+                        <textarea id="tja-bio" rows="4"></textarea>
+                        <div class="tja-wordcount" id="tjaWordcount">0 / 200 words</div>
+                    </div>
+                    <div class="tja-field">
+                        <label>Interested Roles</label>
+                        <div class="tja-roles" id="tjaRoles">
+                            <button type="button" class="tja-role" data-val="engineering">Software Engineering</button>
+                            <button type="button" class="tja-role" data-val="product">Product</button>
+                            <button type="button" class="tja-role" data-val="design">Design</button>
+                            <button type="button" class="tja-role" data-val="marketing">Marketing</button>
+                            <button type="button" class="tja-role" data-val="community">Community &amp; Events</button>
+                            <button type="button" class="tja-role" data-val="bizdev">Business Development</button>
+                            <button type="button" class="tja-role" data-val="other">Other</button>
+                        </div>
+                    </div>
+                    <div class="tja-field">
+                        <label for="tja-location">Location</label>
+                        <input type="text" id="tja-location" placeholder="City, Country">
+                    </div>
+                    <div class="tja-field">
+                        <label for="tja-affiliation">Current Affiliation <span class="opt">(optional)</span></label>
+                        <input type="text" id="tja-affiliation" placeholder="e.g. Student at ..., Works at ...">
+                    </div>
+                    <div class="tja-field">
+                        <label for="tja-cv">CV <span class="opt">(optional)</span></label>
+                        <input type="file" id="tja-cv" accept=".pdf,.doc,.docx">
+                    </div>
+                    <div class="tja-err" id="tjaErr"></div>
+                    <div class="tja-actions">
+                        <button type="button" class="tja-cancel" id="tjaCancel">Cancel</button>
+                        <button type="submit" class="tja-submit">Submit Application</button>
+                    </div>
+                </form>
+            </div>
+            <div id="tjaSuccessWrap" class="tja-success" hidden>
+                <div class="icon">🎉</div>
+                <h3>Application received!</h3>
+                <p>Thanks for reaching out — our team will review your application and get back to you soon.</p>
+            </div>
+        </div>
+    </dialog>
 </section>
 
 <!-- ═══ CTA ════════════════════════════════════════════════════ -->
@@ -912,6 +989,181 @@
             }, 300);
         }, 2600 + i * 550);
     });
+
+    document.querySelectorAll('.tg-section').forEach(section => {
+        const vp = section.querySelector('.tg-viewport');
+        const track = section.querySelector('.tg-track');
+        if (!vp || !track) return;
+
+        // Duplicate the card set once so the auto-scroll can loop seamlessly;
+        // the clone is hidden from assistive tech/keyboard tabbing and stripped
+        // of ids so it never collides with the real "Apply Now" button etc.
+        Array.from(track.children).forEach(card => {
+            const clone = card.cloneNode(true);
+            clone.setAttribute('aria-hidden', 'true');
+            clone.removeAttribute('id');
+            clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+            clone.querySelectorAll('a, button').forEach(el => el.tabIndex = -1);
+            track.appendChild(clone);
+        });
+
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const SPEED = 0.45; // px per frame, ~60fps
+        let paused = false, dragging = false, resumeTimer = null;
+        // scrollLeft is browser-rounded to an integer, so a sub-pixel speed must
+        // accumulate in its own float — otherwise each frame's fraction is
+        // truncated away and the carousel never actually moves.
+        let pos = vp.scrollLeft;
+
+        function pauseBriefly() {
+            paused = true;
+            clearTimeout(resumeTimer);
+            resumeTimer = setTimeout(() => { paused = false; }, 1600);
+        }
+
+        function tick() {
+            if (!paused && !dragging) {
+                pos += SPEED;
+                vp.scrollLeft = pos;
+            } else {
+                pos = vp.scrollLeft;
+            }
+            const half = track.scrollWidth / 2;
+            if (vp.scrollLeft >= half) vp.scrollLeft -= half;
+            requestAnimationFrame(tick);
+        }
+        if (!reducedMotion) requestAnimationFrame(tick);
+
+        // Auto-scroll pauses only while the pointer/focus is on an individual
+        // profile card — not just anywhere over the carousel — so visitors
+        // can stop to read one bio without freezing the whole gallery.
+        track.querySelectorAll('.tg-card').forEach(card => {
+            card.addEventListener('mouseenter', () => { paused = true; });
+            card.addEventListener('mouseleave', () => { paused = false; });
+            card.addEventListener('focusin', () => { paused = true; });
+            card.addEventListener('focusout', () => { paused = false; });
+        });
+
+        vp.addEventListener('wheel', e => {
+            if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                vp.scrollLeft += e.deltaY;
+                e.preventDefault();
+                pauseBriefly();
+            }
+        }, { passive: false });
+
+        let isDown = false, startX = 0, startScroll = 0, moved = false;
+        vp.addEventListener('mousedown', e => {
+            isDown = true; dragging = true; moved = false; vp.classList.add('dragging');
+            startX = e.pageX; startScroll = vp.scrollLeft;
+        });
+        window.addEventListener('mouseup', () => { isDown = false; dragging = false; vp.classList.remove('dragging'); });
+        vp.addEventListener('mouseleave', () => { isDown = false; dragging = false; vp.classList.remove('dragging'); });
+        vp.addEventListener('mousemove', e => {
+            if (!isDown) return;
+            e.preventDefault();
+            const dx = e.pageX - startX;
+            if (Math.abs(dx) > 4) moved = true;
+            vp.scrollLeft = startScroll - dx;
+        });
+        vp.addEventListener('click', e => { if (moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+
+        const prev = section.querySelector('.tg-arrow-left');
+        const next = section.querySelector('.tg-arrow-right');
+        if (prev) prev.addEventListener('click', () => { vp.scrollBy({ left: -320, behavior: 'smooth' }); pauseBriefly(); });
+        if (next) next.addEventListener('click', () => { vp.scrollBy({ left: 320, behavior: 'smooth' }); pauseBriefly(); });
+    });
+
+    // "Join Our Team" application modal
+    (() => {
+        const dialog = document.getElementById('teamApplyDialog');
+        const applyBtn = document.getElementById('tgApplyBtn');
+        if (!dialog || !applyBtn) return;
+
+        const closeBtn = document.getElementById('tjaClose');
+        const cancelBtn = document.getElementById('tjaCancel');
+        const form = document.getElementById('tjaForm');
+        const formWrap = document.getElementById('tjaFormWrap');
+        const successWrap = document.getElementById('tjaSuccessWrap');
+        const bioEl = document.getElementById('tja-bio');
+        const wordcountEl = document.getElementById('tjaWordcount');
+        const errEl = document.getElementById('tjaErr');
+        const roleBtns = Array.from(document.querySelectorAll('#tjaRoles .tja-role'));
+        let selectedRoles = new Set();
+        let autoCloseTimer = null;
+
+        function wordCount(text) {
+            const words = text.trim().split(/\s+/).filter(Boolean);
+            return words.length;
+        }
+
+        function updateWordcount() {
+            const n = wordCount(bioEl.value);
+            wordcountEl.textContent = `${n} / 200 words`;
+            wordcountEl.classList.toggle('over', n > 200);
+        }
+        bioEl.addEventListener('input', updateWordcount);
+
+        roleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const val = btn.dataset.val;
+                if (selectedRoles.has(val)) { selectedRoles.delete(val); btn.classList.remove('sel'); }
+                else { selectedRoles.add(val); btn.classList.add('sel'); }
+            });
+        });
+
+        function resetForm() {
+            clearTimeout(autoCloseTimer);
+            form.reset();
+            selectedRoles = new Set();
+            roleBtns.forEach(btn => btn.classList.remove('sel'));
+            updateWordcount();
+            errEl.textContent = '';
+            successWrap.hidden = true;
+            formWrap.hidden = false;
+        }
+
+        function openModal() {
+            resetForm();
+            dialog.showModal();
+        }
+        function closeModal() { dialog.close(); }
+
+        applyBtn.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        dialog.addEventListener('click', e => { if (e.target === dialog) closeModal(); });
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const name = document.getElementById('tja-name').value.trim();
+            const email = document.getElementById('tja-email').value.trim();
+            const phone = document.getElementById('tja-phone').value.trim();
+            const bio = bioEl.value.trim();
+            const location = document.getElementById('tja-location').value.trim();
+            const affiliation = document.getElementById('tja-affiliation').value.trim();
+            const cvFile = document.getElementById('tja-cv').files[0];
+
+            if (!name) { errEl.textContent = 'Please enter your name.'; return; }
+            if (!email || !email.includes('@') || !email.includes('.')) { errEl.textContent = 'Please enter a valid email.'; return; }
+            if (!bio) { errEl.textContent = 'Please add a short bio.'; return; }
+            if (wordCount(bio) > 200) { errEl.textContent = 'Your bio is over the 200-word limit.'; return; }
+            if (selectedRoles.size === 0) { errEl.textContent = 'Please select at least one interested role.'; return; }
+            if (!location) { errEl.textContent = 'Please enter your location.'; return; }
+            errEl.textContent = '';
+
+            console.log('Team application submitted:', {
+                name, email, phone: phone || null, bio,
+                roles: Array.from(selectedRoles), location,
+                affiliation: affiliation || null,
+                cvFileName: cvFile ? cvFile.name : null
+            });
+
+            formWrap.hidden = true;
+            successWrap.hidden = false;
+            autoCloseTimer = setTimeout(closeModal, 3200);
+        });
+    })();
 </script>
 </body>
 </html>

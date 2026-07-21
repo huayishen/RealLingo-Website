@@ -40,7 +40,7 @@ function getActiveSections() {
 function invalidateSections() { _cachedSections = null; }
 
 function getSectionSteps(key) {
-  return ALL_SECTION_STEPS[key] || [];
+  return (ALL_SECTION_STEPS[key] || []).filter(step => !step.skip || !step.skip());
 }
 function currentSectionKey() { return getActiveSections()[sectIdx]; }
 function currentSteps() { return getSectionSteps(currentSectionKey()); }

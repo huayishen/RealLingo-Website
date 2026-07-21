@@ -62,36 +62,44 @@
       cancelClose();
       items.forEach(function (i) {
         i.classList.remove('open');
-        var b = i.querySelector('.site-nav-btn');
-        if (b) b.setAttribute('aria-expanded', 'false');
+        var t = i.querySelector('.site-nav-btn, .site-nav-caret');
+        if (t) t.setAttribute('aria-expanded', 'false');
       });
     }
     function openOnly(item) {
       cancelClose();
       closeAll();
       item.classList.add('open');
-      item.querySelector('.site-nav-btn').setAttribute('aria-expanded', 'true');
+      var t = item.querySelector('.site-nav-btn, .site-nav-caret');
+      if (t) t.setAttribute('aria-expanded', 'true');
     }
     function scheduleClose(item) {
       cancelClose();
       closeTimer = setTimeout(function () {
         item.classList.remove('open');
-        item.querySelector('.site-nav-btn').setAttribute('aria-expanded', 'false');
+        var t = item.querySelector('.site-nav-btn, .site-nav-caret');
+        if (t) t.setAttribute('aria-expanded', 'false');
       }, CLOSE_DELAY);
     }
 
     items.forEach(function (item) {
-      var btn = item.querySelector('.site-nav-btn');
-      if (!btn) return; // plain link item (e.g. "About") — no dropdown to wire up
+      if (!item.querySelector('.site-dd')) return; // plain link item (e.g. "About") — no dropdown to wire up
+      // "Explore" splits its label (a real link) from a separate caret that
+      // only toggles the submenu, so the label click can navigate straight
+      // to Resources while the caret still reveals the other subpages.
+      var toggle = item.querySelector('.site-nav-btn, .site-nav-caret');
 
       // Click / tap — primary interaction on mobile, also works on desktop (keyboard access).
-      btn.addEventListener('click', function () {
-        if (item.classList.contains('open')) {
-          closeAll();
-        } else {
-          openOnly(item);
-        }
-      });
+      if (toggle) {
+        toggle.addEventListener('click', function (e) {
+          e.preventDefault();
+          if (item.classList.contains('open')) {
+            closeAll();
+          } else {
+            openOnly(item);
+          }
+        });
+      }
 
       // Hover — desktop only, so the submenu shows just by moving the mouse over it.
       // Closing is delayed so the cursor has time to travel from the button into the

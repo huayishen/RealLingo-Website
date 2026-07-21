@@ -1,0 +1,91 @@
+/* ══════════════════════════════════════════════════════════
+   RealLingo — modular location/event icon badges + the animated
+   "global event network" visualization. Built so a partner, venue,
+   or event marker never has to reuse the same static pin — swap the
+   inner SVG per entry (compass, globe, network nodes, flight path...)
+   while the badge chrome stays one consistent design language.
+══════════════════════════════════════════════════════════ */
+
+.loc-badge {
+    position: relative; flex-shrink: 0;
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--cream); border: 1px solid var(--border-sub); color: var(--dark);
+    transition: transform .35s cubic-bezier(.2,.8,.2,1), background .35s ease, border-color .35s ease, box-shadow .35s ease;
+}
+.loc-badge svg { width: 16px; height: 16px; }
+.loc-badge::after {
+    content: ''; position: absolute; inset: -7px; border-radius: 50%;
+    border: 1.5px solid var(--yellow-mid); opacity: 0; transform: scale(.7);
+}
+.ep-card:hover .loc-badge,
+.epn-node:hover .loc-badge,
+.epn-node:focus-visible .loc-badge {
+    transform: scale(1.12); background: var(--yellow); border-color: var(--yellow);
+    box-shadow: 0 10px 20px rgba(230,178,0,.3);
+}
+.ep-card:hover .loc-badge::after,
+.epn-node:hover .loc-badge::after,
+.epn-node:focus-visible .loc-badge::after {
+    animation: locPulse 1.6s ease-out infinite;
+}
+@keyframes locPulse {
+    0%   { opacity: .6; transform: scale(.85); }
+    100% { opacity: 0;  transform: scale(1.45); }
+}
+
+/* ── Global Event Network strip ── */
+.epn-wrap {
+    position: relative; width: 100%; aspect-ratio: 1000 / 210;
+    margin: 0 auto 3.5rem; max-width: 980px;
+}
+.epn-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; display: block; }
+.epn-path {
+    fill: none; stroke: var(--border-sub); stroke-width: 1.5;
+    transition: stroke .5s ease, filter .5s ease;
+}
+.epn-path.lit { stroke: var(--yellow-mid); filter: drop-shadow(0 0 5px rgba(230,178,0,.55)); }
+.epn-dot { fill: var(--yellow-mid); opacity: .8; }
+
+.epn-nodes { position: absolute; inset: 0; }
+.epn-node {
+    position: absolute; transform: translate(-50%, -50%);
+    display: flex; flex-direction: column; align-items: center; gap: .5rem;
+    background: none; border: none; padding: .35rem; cursor: pointer;
+    font-family: var(--font-sans);
+}
+.epn-node-label {
+    font-size: .68rem; font-weight: 800; letter-spacing: .03em; color: var(--text-mid);
+    white-space: nowrap; transition: color .3s ease;
+}
+.epn-node:hover .epn-node-label, .epn-node:focus-visible .epn-node-label { color: var(--dark); }
+.epn-node:focus-visible { outline: 2px solid var(--dark); outline-offset: 4px; border-radius: 12px; }
+
+.epn-tooltip {
+    position: absolute; z-index: 20; min-width: 210px; max-width: 250px;
+    background: var(--dark); color: #fff; border-radius: 14px; padding: 1rem 1.15rem;
+    opacity: 0; visibility: hidden; transform: translate(-50%, -8px);
+    transition: opacity .28s ease, transform .28s ease, visibility .28s;
+    pointer-events: none; box-shadow: 0 20px 40px rgba(17,18,22,.3);
+    left: 0; top: 0;
+}
+.epn-tooltip.show { opacity: 1; visibility: visible; transform: translate(-50%, -14px); }
+.epn-tooltip::after {
+    content: ''; position: absolute; left: 50%; bottom: -6px;
+    width: 12px; height: 12px; background: var(--dark); border-radius: 2px;
+    transform: translateX(-50%) rotate(45deg);
+}
+.epn-tip-event { font-size: .82rem; font-weight: 800; margin-bottom: .4rem; }
+.epn-tip-row { font-size: .72rem; color: rgba(255,255,255,.7); line-height: 1.6; }
+.epn-tip-row strong { color: var(--yellow); font-weight: 700; }
+
+@media (max-width: 700px) {
+    .epn-wrap { aspect-ratio: 1000 / 460; }
+    .epn-node-label { font-size: .6rem; }
+    .loc-badge { width: 28px; height: 28px; }
+    .loc-badge svg { width: 14px; height: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .loc-badge::after { animation: none !important; }
+    .epn-dot { display: none; }
+}

@@ -110,6 +110,16 @@
 .os-float-icon .lbl { font-size: .6rem; font-weight: 700; color: var(--text-mid); background: rgba(255, 255, 255, .6); padding: .1rem .4rem; border-radius: 4px; }
 @keyframes osFloatBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
+/* A handful of desktop icons (Instagram, LinkedIn) are real links rather
+   than decorative files, so they need pointer events and a hover cue. The
+   bob animation above already drives this element's transform continuously,
+   so the hover-scale is applied to an inner wrapper instead — otherwise the
+   animation would just overwrite the hover transform every frame. */
+.os-float-icon.linkable { pointer-events: auto; cursor: pointer; text-decoration: none; }
+.os-float-icon.linkable:focus-visible { outline: 2px solid var(--dark); outline-offset: 4px; border-radius: 8px; }
+.os-float-inner { display: flex; flex-direction: column; align-items: center; gap: .3rem; transition: transform .2s ease; }
+.os-float-icon.linkable:hover .os-float-inner, .os-float-icon.linkable:focus-visible .os-float-inner { transform: scale(1.12); }
+
 @media (max-width: 640px) {
     .os-menubar-item { display: none; }
     .os-dock { display: none; }

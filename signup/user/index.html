@@ -212,6 +212,7 @@ const ALL_SECTION_STEPS = {
     },
     {
       tag:'Learner', q:"My hiring budget is...",
+      skip() { return !(formData.learnerLooking||[]).includes('tutor'); },
       html() {
         const saved=formData.learnerBudgetTypes||[];
         const period=formData.learnerPeriodSpec||'';

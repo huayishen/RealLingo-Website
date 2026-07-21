@@ -80,6 +80,18 @@
 .site-nav-btn .car { width: 8px; height: 8px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform .2s; opacity: .6; }
 .site-nav-item.open .site-nav-btn .car { transform: rotate(225deg) translateY(1px); }
 
+/* "Explore" splits into a real link (label) + a separate caret button so the
+   label can navigate straight to Resources while the caret still toggles
+   the submenu of other Explore subpages. */
+.site-nav-split { display: flex; align-items: center; }
+.site-nav-caret {
+  background: none; border: none; cursor: pointer; padding: .4rem .1rem .4rem .3rem;
+  display: flex; align-items: center; color: var(--text-mid); transition: color .2s;
+}
+.site-nav-caret:hover { color: var(--dark); }
+.site-nav-caret .car { width: 8px; height: 8px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform .2s; opacity: .6; }
+.site-nav-item.open .site-nav-caret .car { transform: rotate(225deg) translateY(1px); }
+
 .site-dd {
   position: absolute; top: calc(100% + .9rem); left: 50%; transform: translateX(-50%) translateY(6px);
   min-width: 220px; background: #fff; border: 1px solid var(--border);
@@ -130,6 +142,9 @@
   .site-nav-item { border-bottom: 1px solid var(--border-sub); }
   .site-nav-btn { width: 100%; justify-content: space-between; padding: 1rem .25rem; font-size: .95rem; }
   .site-nav-link { display: block; width: 100%; padding: 1rem .25rem; font-size: .95rem; }
+  .site-nav-split { width: 100%; justify-content: space-between; }
+  .site-nav-split .site-nav-link { width: auto; flex: 1 1 auto; }
+  .site-nav-caret { padding: 1rem .5rem; }
   .site-dd {
     position: static; transform: none; opacity: 1; pointer-events: none;
     box-shadow: none; border: none; background: none; padding: 0 0 .5rem .25rem;

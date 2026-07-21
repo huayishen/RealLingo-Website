@@ -152,7 +152,7 @@
 <script>
 const SECTION_OPTS = {
   1: { target: 'user/',     opts: [{v:'learner',t:'a language learner'},{v:'traveler',t:'a traveler'},{v:'eventMember',t:'an event member'}] },
-  2: { target: 'hire/',     opts: SERVICE_ROLES.map(r=>({v:r.key, t:r.as})) },
+  2: { target: 'hire/',     opts: SERVICE_ROLES.filter(r=>r.key!=='tutor'&&r.key!=='tourGuide').map(r=>({v:r.key, t:r.as})) },
   3: { target: 'join-us/', opts: SERVICE_ROLES.map(r=>({v:r.key, t:r.as})).concat([{v:'other', t:'others (please specify)', other:true}]) },
 };
 

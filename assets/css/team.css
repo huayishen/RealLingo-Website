@@ -1,49 +1,174 @@
 /* ══════════════════════════════════════════════════════════
-   RealLingo — shared "Our Team" profile grid.
+   RealLingo — horizontal, alphabetically-grouped "Our Team" gallery.
    Used on the homepage (#team) and join-us/team/.
 ══════════════════════════════════════════════════════════ */
-.team-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem; margin-top: 4rem;
+.tg-section { position: relative; margin-top: 3rem; }
+
+.tg-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+    width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border);
+    background: #fff; color: var(--dark); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+    box-shadow: 0 8px 20px rgba(17,18,22,.1);
+    transition: background .2s, transform .2s, box-shadow .2s;
 }
-.team-card {
-    background: #fff; padding: 2.125rem;
-    border: 1px solid var(--border-sub);
-    display: flex; flex-direction: column; gap: .75rem;
+.tg-arrow:hover { background: var(--dark); color: var(--yellow); transform: translateY(-50%) scale(1.08); }
+.tg-arrow-left { left: -8px; }
+.tg-arrow-right { right: -8px; }
+
+.tg-viewport {
+    overflow-x: auto; overflow-y: hidden; cursor: grab;
+    scroll-behavior: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: .5rem 1.75rem 1.75rem;
+    scrollbar-width: thin;
+    /* Fade the carousel's edges so cards drift in/out rather than clipping abruptly. */
+    mask-image: linear-gradient(90deg, transparent 0, #000 56px, #000 calc(100% - 56px), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 56px, #000 calc(100% - 56px), transparent 100%);
 }
-.team-av {
-    width: 92px; height: 92px; border-radius: 50%;
+.tg-viewport.dragging { cursor: grabbing; user-select: none; }
+.tg-viewport::-webkit-scrollbar { height: 6px; }
+.tg-viewport::-webkit-scrollbar-thumb { background: var(--border); border-radius: 100px; }
+.tg-viewport::-webkit-scrollbar-track { background: transparent; }
+
+.tg-track { display: flex; align-items: stretch; width: max-content; }
+
+/* Profile cards */
+.tg-card {
+    flex: 0 0 auto; width: 258px; margin-right: 1.25rem;
+    background: #fff; border: 1px solid var(--border-sub);
+    padding: 1.75rem 1.5rem 1.5rem; position: relative;
+    display: flex; flex-direction: column; align-items: flex-start;
+    opacity: 0; transform: translateY(16px);
+    animation: tgCardIn .6s ease forwards;
+    transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, opacity .35s ease, filter .35s ease, border-color .35s ease;
+}
+@keyframes tgCardIn { to { opacity: 1; transform: translateY(0); } }
+.tg-card::before {
+    content: ''; position: absolute; top: 0; left: 1.5rem; right: 1.5rem; height: 2px;
+    background: var(--yellow-mid); transform: scaleX(0); transform-origin: left;
+    transition: transform .4s ease;
+}
+.tg-card:hover, .tg-card:focus-within {
+    transform: translateY(-8px) scale(1.035);
+    box-shadow: 0 30px 60px rgba(17,18,22,.16);
+    border-color: rgba(17,18,22,.14);
+    z-index: 4;
+}
+.tg-card:hover::before, .tg-card:focus-within::before { transform: scaleX(1); }
+.tg-viewport:has(.tg-card:hover) .tg-card:not(:hover),
+.tg-viewport:has(.tg-card:focus-within) .tg-card:not(:focus-within) {
+    opacity: .5; filter: saturate(.65);
+}
+
+.tg-av {
+    width: 84px; height: 84px; border-radius: 50%;
     background: var(--yellow);
     display: flex; align-items: center; justify-content: center;
     font-family: var(--font-serif); font-style: italic;
-    font-size: 1.9rem; color: var(--dark); flex-shrink: 0;
+    font-size: 1.7rem; color: var(--dark); flex-shrink: 0;
     object-fit: cover; object-position: center top;
-    margin-bottom: .375rem;
+    margin-bottom: .875rem;
 }
-.team-name  { font-size: 1.02rem; font-weight: 700; color: var(--dark); }
-.team-title { font-size: .78rem; font-weight: 700; color: #6a5800; letter-spacing: .02em; }
-.team-email { font-size: .78rem; color: var(--text-mid); text-decoration: none; }
-.team-email:hover { color: var(--dark); text-decoration: underline; }
-.team-origin { font-size: .78rem; color: var(--text-mid); display: flex; flex-direction: column; gap: .2rem; }
-.team-origin-row { display: flex; align-items: center; gap: .35rem; }
-.team-origin-label { font-weight: 700; font-size: .66rem; letter-spacing: .06em; text-transform: uppercase; color: var(--text-soft); min-width: 4.6em; }
-.team-bio { font-size: .84rem; line-height: 1.65; color: var(--text-mid); flex: 1; }
-.team-links {
-    display: flex; align-items: center; gap: .6rem;
-    padding-top: 1rem; border-top: 1px solid var(--border-sub);
+.tg-name  { font-size: 1rem; font-weight: 700; color: var(--dark); }
+.tg-title { font-size: .76rem; font-weight: 700; color: #6a5800; letter-spacing: .02em; margin-bottom: .6rem; }
+.tg-origin { font-size: .74rem; color: var(--text-mid); margin-bottom: .5rem; }
+
+.tg-bio {
+    font-size: .8rem; line-height: 1.6; color: var(--text-mid);
+    max-height: 0; opacity: 0; overflow: hidden;
+    transition: max-height .45s ease, opacity .35s ease, margin-bottom .45s ease;
 }
-.team-link {
-    width: 32px; height: 32px; border-radius: 50%;
+.tg-card:hover .tg-bio, .tg-card:focus-within .tg-bio { max-height: 160px; opacity: 1; margin-bottom: .875rem; }
+@media (hover: none) { .tg-bio { max-height: 160px; opacity: 1; margin-bottom: .875rem; } }
+
+.tg-links {
+    display: flex; align-items: center; gap: .55rem; margin-top: auto;
+    padding-top: 1rem; border-top: 1px solid var(--border-sub); width: 100%;
+}
+.tg-link {
+    width: 30px; height: 30px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     border: 1px solid var(--border); color: var(--text-mid);
     transition: background .2s, color .2s, border-color .2s;
 }
-.team-link:hover { background: var(--dark); color: var(--yellow); border-color: var(--dark); }
-.team-link svg { width: 15px; height: 15px; fill: currentColor; }
+.tg-link:hover { background: var(--dark); color: var(--yellow); border-color: var(--dark); }
+.tg-link svg { width: 14px; height: 14px; fill: currentColor; }
+.tg-email { font-size: .74rem; color: var(--text-mid); text-decoration: none; display: block; margin-bottom: .5rem; }
+.tg-email:hover { color: var(--dark); text-decoration: underline; }
 
-@media (max-width: 1100px) {
-    .team-grid { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 900px) {
+    .tg-arrow { display: none; }
+    .tg-card { width: 220px; }
 }
-@media (max-width: 768px) {
-    .team-grid { grid-template-columns: 1fr; }
+
+@media (prefers-reduced-motion: reduce) {
+    .tg-card { animation: none; opacity: 1; transform: none; }
 }
+
+/* ── "Join Our Team" application CTA card + modal ── */
+.tg-card--cta {
+    align-items: center; justify-content: center; text-align: center;
+    border: 1.5px dashed var(--border); background: var(--cream);
+}
+.tg-card--cta:hover, .tg-card--cta:focus-within {
+    border-color: var(--yellow-mid); background: #fff;
+}
+.tg-cta-icon {
+    width: 56px; height: 56px; border-radius: 50%; border: 1.5px dashed var(--yellow-mid);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; line-height: 1; color: var(--dark); margin-bottom: 1rem; flex-shrink: 0;
+    transition: transform .35s ease, background .35s ease;
+}
+.tg-card--cta:hover .tg-cta-icon, .tg-card--cta:focus-within .tg-cta-icon { transform: rotate(90deg); background: var(--yellow); }
+.tg-cta-text { font-size: .8rem; line-height: 1.6; color: var(--text-mid); margin-bottom: 1.1rem; }
+.tg-cta-btn {
+    background: var(--dark); color: var(--yellow); border: none; cursor: pointer;
+    padding: .7rem 1.6rem; border-radius: 100px; font-family: var(--font-sans);
+    font-size: .82rem; font-weight: 700; transition: background .2s, transform .2s;
+}
+.tg-cta-btn:hover { background: #1e2028; transform: translateY(-2px); }
+
+dialog.tja-modal { border: none; border-radius: 20px; padding: 0; width: min(560px, 92vw); box-shadow: 0 30px 70px rgba(17,18,22,.3); }
+dialog.tja-modal::backdrop { background: rgba(17,18,22,.5); backdrop-filter: blur(2px); }
+.tja-inner { position: relative; padding: 2.25rem 2.25rem 1.75rem; max-height: 84vh; overflow-y: auto; }
+.tja-close {
+    position: absolute; top: 1.25rem; right: 1.25rem; width: 32px; height: 32px; border-radius: 50%;
+    border: none; background: var(--cream); color: var(--text-mid); font-size: 1rem; cursor: pointer;
+    transition: background .2s, color .2s;
+}
+.tja-close:hover { background: var(--border-sub); color: var(--dark); }
+.tja-inner h3 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400; color: var(--dark); margin-bottom: .4rem; padding-right: 2rem; }
+.tja-sub { font-size: .86rem; color: var(--text-mid); line-height: 1.55; margin-bottom: 1.5rem; }
+.tja-field { margin-bottom: 1.15rem; }
+.tja-field label { display: block; font-size: .76rem; font-weight: 700; color: var(--text-mid); margin-bottom: .4rem; }
+.tja-field label .opt { font-weight: 500; color: var(--text-soft); text-transform: none; }
+.tja-field input[type=text], .tja-field input[type=email], .tja-field input[type=tel], .tja-field textarea {
+    width: 100%; padding: .75rem .9rem; border: 1px solid var(--border); border-radius: 9px;
+    font-family: var(--font-sans); font-size: .88rem; background: var(--cream); color: var(--dark);
+}
+.tja-field input:focus, .tja-field textarea:focus { outline: 2px solid var(--yellow-mid); outline-offset: 1px; }
+.tja-field textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+.tja-wordcount { font-size: .72rem; color: var(--text-soft); text-align: right; margin-top: .3rem; }
+.tja-wordcount.over { color: #b3311c; font-weight: 700; }
+.tja-roles { display: flex; flex-wrap: wrap; gap: .5rem; }
+.tja-role {
+    font-family: var(--font-sans); font-size: .78rem; font-weight: 600;
+    padding: .5rem 1rem; border-radius: 100px; border: 1px solid var(--border);
+    background: #fff; color: var(--text-mid); cursor: pointer; transition: background .2s, color .2s, border-color .2s;
+}
+.tja-role.sel { background: var(--dark); color: var(--yellow); border-color: var(--dark); }
+.tja-err { font-size: .78rem; color: #b3311c; margin-bottom: 1rem; min-height: 1em; }
+.tja-actions { display: flex; gap: .75rem; margin-top: .5rem; }
+.tja-cancel, .tja-submit {
+    flex: 1; font-family: var(--font-sans); font-size: .86rem; font-weight: 700;
+    padding: .8rem; border-radius: 100px; cursor: pointer; border: none;
+}
+.tja-cancel { background: var(--cream); color: var(--dark); }
+.tja-cancel:hover { background: var(--border-sub); }
+.tja-submit { background: var(--dark); color: var(--yellow); }
+.tja-submit:hover { background: #1e2028; }
+.tja-success { text-align: center; padding: 1.5rem 0 .5rem; }
+.tja-success .icon { font-size: 2.25rem; margin-bottom: 1rem; }
+.tja-success h3 { margin-bottom: .6rem; }
+.tja-success p { font-size: .88rem; color: var(--text-mid); line-height: 1.6; }
