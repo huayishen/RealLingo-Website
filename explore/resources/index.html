@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resources with RealLingo — Real lingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/resources-hero.css">
+<link rel="stylesheet" href="../../assets/css/os-gateway.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+
+<!-- ═══ RealLingo Lock Screen ═══════════════════════════════ -->
+<div class="os-lock" id="osLock">
+    <div class="os-aurora a1" aria-hidden="true"></div>
+    <div class="os-aurora a2" aria-hidden="true"></div>
+    <div class="os-aurora a3" aria-hidden="true"></div>
+    <svg class="os-constellation" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <line x1="60" y1="90" x2="180" y2="150"/>
+        <line x1="180" y1="150" x2="120" y2="260"/>
+        <line x1="180" y1="150" x2="300" y2="120"/>
+        <line x1="300" y1="120" x2="340" y2="240"/>
+        <line x1="120" y1="260" x2="260" y2="310"/>
+        <line x1="260" y1="310" x2="340" y2="240"/>
+        <circle cx="60" cy="90" r="3"/>
+        <circle cx="180" cy="150" r="3.5" style="animation-delay:.4s"/>
+        <circle cx="120" cy="260" r="3" style="animation-delay:.9s"/>
+        <circle cx="300" cy="120" r="3" style="animation-delay:1.3s"/>
+        <circle cx="340" cy="240" r="3.5" style="animation-delay:1.8s"/>
+        <circle cx="260" cy="310" r="3" style="animation-delay:2.2s"/>
+    </svg>
+    <div class="os-greeting" style="left:8%; top:22%; animation-delay:0s">Hello</div>
+    <div class="os-greeting" style="right:10%; top:30%; animation-delay:.8s">你好</div>
+    <div class="os-greeting" style="left:14%; bottom:28%; animation-delay:1.6s" dir="rtl">مرحبًا</div>
+    <div class="os-greeting" style="right:12%; bottom:34%; animation-delay:2.4s">안녕하세요</div>
+
+    <div class="os-lock-content">
+        <div class="os-clock-date" id="osDate"></div>
+        <div class="os-clock-time" id="osTime"></div>
+
+        <div class="os-lock-spacer"></div>
+
+        <div class="os-avatar">RL</div>
+        <div class="os-username" id="osUsername">guest@myreallingo</div>
+        <div class="os-welcome">Welcome to the RealLingo Open Source Hub</div>
+
+        <button type="button" class="os-unlock-btn" id="osUnlockBtn">🔓 Unlock</button>
+        <div class="os-unlock-hint">Click anywhere to unlock</div>
+    </div>
+</div>
+
+<!-- ═══ RealLingo Desktop ═══════════════════════════════════ -->
+<div class="os-menubar">
+    <div class="os-menubar-left">
+        <span class="os-menubar-logo">Real lingo</span>
+        <span class="os-menubar-item">Explore</span>
+        <span class="os-menubar-item">Resources</span>
+        <span class="os-menubar-item">Help</span>
+    </div>
+    <div class="os-menubar-right" id="osMenubarTime"></div>
+</div>
+
+<div id="site-header"></div>
+
+<main class="rmap-hero">
+    <div class="os-float-icon" style="left:6%; top:14%; animation-delay:.3s" aria-hidden="true">📄<span class="lbl">README.md</span></div>
+    <div class="os-float-icon" style="right:7%; top:10%; animation-delay:1.1s" aria-hidden="true">🗂️<span class="lbl">grants</span></div>
+    <div class="os-float-icon" style="left:4%; bottom:12%; animation-delay:1.9s" aria-hidden="true">💾<span class="lbl">prompts.db</span></div>
+
+    <div class="rmap-intro">
+        <div class="rmap-crumb">Explore / Resources</div>
+        <h1 class="rmap-h1">Pick your next <em>stop</em></h1>
+        <p class="rmap-sub">A small map of everything RealLingo offers beyond the classroom — funding, tools, and open opportunities.</p>
+    </div>
+
+    <!-- Desktop/tablet: fixed game-map canvas -->
+    <div class="rmap-outer">
+        <div class="rmap-canvas">
+            <svg class="rmap-path" viewBox="0 0 900 460" aria-hidden="true">
+                <path class="route" d="M110,320 C280,320 230,90 450,90 C670,90 620,320 790,320"/>
+            </svg>
+            <div class="rmap-marker" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l7-1 5-8 2 1-3 7 6-1 2 2-7 3-2 6-2-1 1-6-6 1z"/></svg>
+            </div>
+
+            <a href="scholarship/" class="rmap-node rmap-node-1">
+                <span class="rmap-node-ring">🎓</span>
+                <span class="rmap-node-label">Scholarship</span>
+                <span class="rmap-node-desc">Scholarships &amp; funding to support your language journey.</span>
+            </a>
+            <a href="prompt/" class="rmap-node rmap-node-2">
+                <span class="rmap-node-ring">🤖</span>
+                <span class="rmap-node-label">Prompt Repository</span>
+                <span class="rmap-node-desc">A growing library of AI prompts built for language learners and educators.</span>
+            </a>
+            <a href="application-hub/" class="rmap-node rmap-node-3">
+                <span class="rmap-node-ring">🧭</span>
+                <span class="rmap-node-label">Application Hub</span>
+                <span class="rmap-node-desc">Apply to RealLingo programs, grants, and open opportunities — all in one place.</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Mobile: vertical stop-list fallback -->
+    <div class="rmap-list">
+        <a href="scholarship/" class="rmap-node">
+            <span class="rmap-node-ring">🎓</span>
+            <span class="rmap-node-textwrap">
+                <span class="rmap-node-label">Scholarship</span>
+                <span class="rmap-node-desc">Scholarships &amp; funding to support your language journey.</span>
+            </span>
+        </a>
+        <a href="prompt/" class="rmap-node">
+            <span class="rmap-node-ring">🤖</span>
+            <span class="rmap-node-textwrap">
+                <span class="rmap-node-label">Prompt Repository</span>
+                <span class="rmap-node-desc">A growing library of AI prompts built for language learners and educators.</span>
+            </span>
+        </a>
+        <a href="application-hub/" class="rmap-node">
+            <span class="rmap-node-ring">🧭</span>
+            <span class="rmap-node-textwrap">
+                <span class="rmap-node-label">Application Hub</span>
+                <span class="rmap-node-desc">Apply to RealLingo programs, grants, and open opportunities — all in one place.</span>
+            </span>
+        </a>
+    </div>
+
+    <p class="rmap-hint">Click a stop to explore →</p>
+</main>
+
+<div class="os-dock">
+    <a href="../learn/" class="os-dock-icon" data-label="Learn with RealLingo">🎓</a>
+    <a href="../travel/" class="os-dock-icon" data-label="Travel with RealLingo">✈️</a>
+    <a href="../event/" class="os-dock-icon" data-label="Community with RealLingo">🎉</a>
+    <a href="../../join-us/team/" class="os-dock-icon" data-label="Team">🧑‍🤝‍🧑</a>
+    <a href="../../join-us/professional/" class="os-dock-icon" data-label="Sign Up as a Professional">💼</a>
+</div>
+
+<div id="site-footer"></div>
+
+<script>
+  window.SITE_ROOT = "../../";
+  window.SITE_SECTION = "explore";
+  window.SITE_PAGE = "explore/resources";
+
+  /* ── Live clock (lock screen + menu bar) ── */
+  (function () {
+    var dateEl = document.getElementById('osDate');
+    var timeEl = document.getElementById('osTime');
+    var menubarTimeEl = document.getElementById('osMenubarTime');
+    function tick() {
+      var now = new Date();
+      var dateStr = now.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+      var timeStr = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+      if (dateEl) dateEl.textContent = dateStr;
+      if (timeEl) timeEl.textContent = timeStr;
+      if (menubarTimeEl) menubarTimeEl.textContent = dateStr + '  ' + timeStr;
+    }
+    tick();
+    setInterval(tick, 1000 * 15);
+  })();
+
+  /* ── Unlock transition ── */
+  (function () {
+    var lock = document.getElementById('osLock');
+    var btn = document.getElementById('osUnlockBtn');
+    var unlocked = false;
+    function unlock() {
+      if (unlocked) return;
+      unlocked = true;
+      lock.classList.add('unlocking');
+      setTimeout(function () { lock.style.display = 'none'; }, 650);
+    }
+    btn.addEventListener('click', function (e) { e.stopPropagation(); unlock(); });
+    lock.addEventListener('click', unlock);
+  })();
+</script>
+<script src="../../assets/js/nav.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real lingo — Find Your Language Shortcut</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/quiz.css">
+</head>
+<body>
+
+<!-- BG -->
+<div class="bg" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ═══ INTRO ══════════════════════════════════════════════════ -->
+<section class="screen" id="s-intro">
+  <header class="app-hdr">
+    <a href="../../" class="logo"><span class="lr">Real</span><span class="ll">lingo</span></a>
+    <button class="skip-btn" onclick="goLanding()">skip →</button>
+  </header>
+  <div class="sticker s-zh">中文</div>
+  <div class="sticker s-ar">عربي</div>
+  <div class="sticker s-kr">한국어</div>
+  <div class="intro-body">
+    <h1 class="intro-h1" id="introH1"><span class="intro-over" id="introLine1">Beyond Words</span><span id="introLine2">Into Worlds</span></h1>
+    <button class="btn-start" onclick="showForm()">start quiz</button>
+  </div>
+</section>
+
+<!-- ═══ FORM — multi-section questionnaire ═══════════════════ -->
+<section class="screen off" id="s-form">
+
+  <header class="app-hdr">
+    <a href="../../" class="logo"><span class="lr">Real</span><span class="ll">lingo</span></a>
+    <button class="skip-btn" onclick="goLanding()">skip →</button>
+  </header>
+
+  <div class="form-body">
+    <!-- Left sidebar: section progress -->
+    <nav class="sect-nav" id="sectNav" aria-label="Form sections"></nav>
+
+    <!-- Main content -->
+    <div class="form-main">
+      <!-- Progress bar -->
+      <div class="fp-bar">
+        <div class="fp-meta">
+          <span class="fp-step" id="fpStep">Step 1</span>
+          <span class="fp-title" id="fpTitle"></span>
+        </div>
+        <div class="fp-track"><div class="fp-fill" id="fpFill" style="width:0%"></div></div>
+      </div>
+
+      <!-- Scrollable step area -->
+      <div class="fstep-area" id="fstepArea">
+        <div class="fstep-inner" id="fstepInner"></div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="form-nav">
+        <button class="fbn-back" id="fBtnBack" onclick="prevStep()">← Back</button>
+        <button class="fbn-next" id="fBtnNext" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══ WELCOME OVERLAY ════════════════════════════════════════ -->
+<div id="s-welcome">
+  <div class="wlc-card">
+    <div class="wlc-en">Welcome to <strong>Real</strong>lingo!</div>
+    <div class="wlc-zh">欢迎加入！</div>
+    <div class="wlc-ar">أهلاً وسهلاً بك!</div>
+    <div class="wlc-kr">환영합니다!</div>
+    <div class="wlc-note">Taking you to the platform...</div>
+    <div class="wlc-bar"></div>
+    <button class="wlc-skip" onclick="skipWelcome()">Skip →</button>
+  </div>
+</div>
+
+<script src="../../assets/js/quiz-data.js"></script>
+<script src="../../assets/js/quiz-engine.js"></script>
+<script>
+window.SITE_ROOT = "../../";
+const QUIZ_FLOW = 'user';
+
+const ROLE_KEYS = ['learner','traveler','eventMember'];
+const ROLE_DISPLAY = {
+  learner:    'a language learner',
+  traveler:   'a traveler',
+  eventMember:'an event member',
+};
+const SECTION_LABEL = {
+  general:    'General',
+  learner:    'Learner',
+  traveler:   'Traveler',
+  eventMember:'Event Member',
+  final:      'Final',
+  review:     'Review',
+};
+
+/* Pre-seed from the branch-selector (?sel=learner,traveler), if present.
+   Falls back to showing the "I am..." question when absent, empty, or
+   entirely invalid, so a visitor is never left with no way to pick a role. */
+const _preset = getPresetSel();
+if (_preset) _preset.forEach(r => selectedRoles.add(r));
+const _hasPreset = _preset && ROLE_KEYS.some(r => selectedRoles.has(r));
+
+const generalSteps = [
+  {
+    tag:'General', q:"How should we call you?",
+    html() { return `<input type="text" class="fi" id="inp-name" placeholder="Your full name" value="${esc(formData.name||'')}" autocomplete="name">`; },
+    validate() { return document.getElementById('inp-name')?.value?.trim() ? null : 'Please enter your name'; },
+    save() { formData.name = document.getElementById('inp-name')?.value?.trim()||''; }
+  },
+  {
+    tag:'General', q:"My language level...", hint:"Select language(s) and proficiency",
+    html() { return buildLangLevelHtml(); },
+    validate() {
+      const langs = formData.languages||{};
+      if (!Object.keys(langs).length) return 'Please select at least one language';
+      for (const [lk,lv] of Object.entries(langs)) {
+        const def = LANGUAGES.find(l=>l.key===lk);
+        if (!def) continue;
+        if (def.variants.length===0) { if (!lv) return `Please select your level for ${def.label}`; }
+        else {
+          if (!lv||typeof lv!=='object'||!Object.keys(lv).length) return `Please select a variant for ${def.label}`;
+          for (const [,vl] of Object.entries(lv)) { if (!vl) return `Please select a level for each ${def.label} variant`; }
+        }
+      }
+      return null;
+    },
+    save() { /* formData.languages updated live */ }
+  },
+  {
+    tag:'General', q:"I'm currently based in...",
+    html() {
+      return `
+        <div style="margin-bottom:1rem">
+          <label class="fl-sm">Country</label>
+          ${countrySelectHtml('inp-country', formData.country||'')}
+        </div>
+        <div>
+          <label class="fl-sm">City</label>
+          <input type="text" class="fi" id="inp-city" placeholder="Your city" value="${esc(formData.city||'')}">
+        </div>`;
+    },
+    validate() { return document.getElementById('inp-country')?.value ? null : 'Please select your country'; },
+    save() { formData.country=document.getElementById('inp-country')?.value||''; formData.city=document.getElementById('inp-city')?.value?.trim()||''; }
+  },
+];
+if (!_hasPreset) {
+  generalSteps.splice(1, 0, {
+    tag:'General', q:"I am...", hint:"Select all that apply",
+    html() {
+      return `<div class="chk-grp role-cards" id="rolesGrp">${
+        ROLE_KEYS.map(k=>`<button type="button" class="c-opt${selectedRoles.has(k)?' sel':''}" data-val="${k}" onclick="toggleRole(this)">${esc(ROLE_DISPLAY[k])}</button>`).join('')
+      }</div>`;
+    },
+    validate() { return selectedRoles.size>0 ? null : 'Please select at least one role'; },
+    save() { invalidateSections(); }
+  });
+}
+
+const ALL_SECTION_STEPS = {
+  general: generalSteps,
+
+  /* ── Learner (2 questions) ── */
+  learner: [
+    {
+      tag:'Learner', q:"I'm learning for...", hint:"Select all that apply",
+      html() {
+        const saved=formData.learnerPurpose||[];
+        const others=formData.learnerPurposeOther||'';
+        return `
+          <div class="chk-grp" id="learnerPurpGrp">
+            ${[{v:'work',t:'Work / Business'},{v:'academia',t:'Academia'},{v:'travel',t:'Travel'},{v:'immigration',t:'Immigration'},{v:'personal',t:'Personal Interest'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
+            <button type="button" class="c-opt${saved.includes('others')?' sel':''}" data-val="others" onclick="toggleChkOther(this,'learnerPurpOtherRev')">Others</button>
+          </div>
+          <div class="cond${saved.includes('others')?' show':''}" id="learnerPurpOtherRev">
+            <input type="text" class="fi" id="inp-learnerPurpOther" placeholder="Please specify..." value="${esc(others)}">
+          </div>`;
+      },
+      validate() { return document.querySelectorAll('#learnerPurpGrp .c-opt.sel').length>0?null:'Please select at least one option'; },
+      save() {
+        formData.learnerPurpose=Array.from(document.querySelectorAll('#learnerPurpGrp .c-opt.sel')).map(e=>e.dataset.val);
+        formData.learnerPurposeOther=document.getElementById('inp-learnerPurpOther')?.value?.trim()||'';
+      }
+    },
+    {
+      tag:'Learner', q:"I'm looking for...", hint:"Select all that apply",
+      html() {
+        const saved=formData.learnerLooking||[];
+        const others=formData.learnerLookingOther||'';
+        return `
+          <div class="chk-grp" id="learnerLookGrp">
+            ${[{v:'tutor',t:'Tutor'},{v:'event',t:'Language Community Event'},{v:'study',t:'Study Group'},{v:'buddy',t:'Language Buddy'},{v:'resources',t:'Educational Resources'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
+            <button type="button" class="c-opt${saved.includes('others')?' sel':''}" data-val="others" onclick="toggleChkOther(this,'learnerLookOtherRev')">Others</button>
+          </div>
+          <div class="cond${saved.includes('others')?' show':''}" id="learnerLookOtherRev">
+            <input type="text" class="fi" id="inp-learnerLookOther" placeholder="Please specify..." value="${esc(others)}">
+          </div>`;
+      },
+      validate() { return document.querySelectorAll('#learnerLookGrp .c-opt.sel').length>0?null:'Please select at least one option'; },
+      save() {
+        formData.learnerLooking=Array.from(document.querySelectorAll('#learnerLookGrp .c-opt.sel')).map(e=>e.dataset.val);
+        formData.learnerLookingOther=document.getElementById('inp-learnerLookOther')?.value?.trim()||'';
+      }
+    },
+    {
+      tag:'Learner', q:"My hiring budget is...",
+      html() {
+        const saved=formData.learnerBudgetTypes||[];
+        const period=formData.learnerPeriodSpec||'';
+        return `
+          <div class="chk-grp" id="learnerBudgetGrp">
+            ${[{v:'hourly',t:'Hourly'},{v:'daily',t:'Daily'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
+            <button type="button" class="c-opt${saved.includes('period')?' sel':''}" data-val="period" onclick="toggleChkOther(this,'learnerPeriodRev')">Per Period of Time</button>
+          </div>
+          <div class="cond${saved.includes('period')?' show':''}" id="learnerPeriodRev">
+            <input type="text" class="fi" id="inp-learnerPeriod" placeholder="e.g. per month, 10-session package" value="${esc(period)}">
+          </div>
+          <div style="margin-top:1.25rem">
+            <label class="fl-sm">Currency</label>
+            ${currencyHtml('learnerCur',formData.learnerCurrency||'SAR')}
+          </div>
+          <label class="fl-sm" style="margin-top:1rem;display:block">Budget Range</label>
+          ${sliderHtml('learnerSlider',0,10000,formData.learnerBudMin??0,formData.learnerBudMax??1000)}`;
+      },
+      validate() { return null; },
+      save() {
+        formData.learnerBudgetTypes=Array.from(document.querySelectorAll('#learnerBudgetGrp .c-opt.sel')).map(e=>e.dataset.val);
+        formData.learnerPeriodSpec=document.getElementById('inp-learnerPeriod')?.value?.trim()||'';
+        formData.learnerCurrency=document.getElementById('learnerCur')?.value||'SAR';
+      },
+      postRender() { initSlider('learnerSlider',0,10000,100,'learnerBudMin','learnerBudMax','learnerCur'); }
+    },
+  ],
+
+  /* ── Traveler (2 questions) ── */
+  traveler: [
+    {
+      tag:'Traveler', q:"I'm traveling to...", hint:"Hold Ctrl / Cmd to select multiple countries",
+      html() { return multiCountryHtml('inp-travelCountries',formData.travelCountries||[]); },
+      validate() {
+        const sel=Array.from(document.getElementById('inp-travelCountries')?.selectedOptions||[]).map(o=>o.value);
+        return sel.length>0?null:'Please select at least one destination';
+      },
+      save() { formData.travelCountries=Array.from(document.getElementById('inp-travelCountries')?.selectedOptions||[]).map(o=>o.value); }
+    },
+    {
+      tag:'Traveler', q:"When is your trip?",
+      html() {
+        return `
+          <div class="fg-2">
+            <div>
+              <label class="fl-sm">Start date</label>
+              <input type="date" class="fi" id="inp-tripStart" value="${esc(formData.tripStart||'')}">
+            </div>
+            <div>
+              <label class="fl-sm">End date</label>
+              <input type="date" class="fi" id="inp-tripEnd" value="${esc(formData.tripEnd||'')}">
+            </div>
+          </div>`;
+      },
+      validate() {
+        const s=document.getElementById('inp-tripStart')?.value;
+        const e=document.getElementById('inp-tripEnd')?.value;
+        if(!s||!e) return 'Please select both a start and end date';
+        if(e<s) return 'End date must be after the start date';
+        return null;
+      },
+      save() {
+        formData.tripStart=document.getElementById('inp-tripStart')?.value||'';
+        formData.tripEnd=document.getElementById('inp-tripEnd')?.value||'';
+      }
+    },
+    {
+      tag:'Traveler', q:"My hiring budget is...",
+      html() {
+        const saved=formData.travelBudgetTypes||[];
+        const period=formData.travelPeriodSpec||'';
+        return `
+          <div class="chk-grp" id="travelBudgetGrp">
+            ${[{v:'hourly',t:'Hourly'},{v:'daily',t:'Daily'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
+            <button type="button" class="c-opt${saved.includes('period')?' sel':''}" data-val="period" onclick="toggleChkOther(this,'travelPeriodRev')">Per Period of Time</button>
+          </div>
+          <div class="cond${saved.includes('period')?' show':''}" id="travelPeriodRev">
+            <input type="text" class="fi" id="inp-travelPeriod" placeholder="e.g. per trip, 3-day package" value="${esc(period)}">
+          </div>
+          <div style="margin-top:1.25rem">
+            <label class="fl-sm">Currency</label>
+            ${currencyHtml('travelCur',formData.travelCurrency||'SAR')}
+          </div>
+          <label class="fl-sm" style="margin-top:1rem;display:block">Budget Range</label>
+          ${sliderHtml('travelSlider',0,10000,formData.travelBudMin??0,formData.travelBudMax??1000)}`;
+      },
+      validate() { return null; },
+      save() {
+        formData.travelBudgetTypes=Array.from(document.querySelectorAll('#travelBudgetGrp .c-opt.sel')).map(e=>e.dataset.val);
+        formData.travelPeriodSpec=document.getElementById('inp-travelPeriod')?.value?.trim()||'';
+        formData.travelCurrency=document.getElementById('travelCur')?.value||'SAR';
+      },
+      postRender() { initSlider('travelSlider',0,10000,100,'travelBudMin','travelBudMax','travelCur'); }
+    },
+  ],
+
+  /* ── Event Member (4 questions) ── */
+  eventMember: [
+    {
+      tag:'Event Member', q:"I'm available for...", hint:"Select all that apply",
+      html() { return checkboxGroupHtml('memberAvailGrp',[{v:'online',t:'Online Event'},{v:'offline',t:'In-Person Event'}],formData.memberAvailability||[]); },
+      validate() { return document.querySelectorAll('#memberAvailGrp .c-opt.sel').length>0?null:'Please select at least one option'; },
+      save() { formData.memberAvailability=Array.from(document.querySelectorAll('#memberAvailGrp .c-opt.sel')).map(e=>e.dataset.val); }
+    },
+    {
+      tag:'Event Member', q:"I'm interested in...", hint:"Select all that apply",
+      html() {
+        const opts=[{v:'culture',t:'Culture'},{v:'networking',t:'Networking'},{v:'business',t:'Business'},{v:'entertainment',t:'Entertainment'},{v:'others',t:'Others'}];
+        return checkboxGroupHtml('memberIntGrp',opts,formData.memberInterests||[]);
+      },
+      validate() { return document.querySelectorAll('#memberIntGrp .c-opt.sel').length>0?null:'Please select at least one interest'; },
+      save() { formData.memberInterests=Array.from(document.querySelectorAll('#memberIntGrp .c-opt.sel')).map(e=>e.dataset.val); }
+    },
+    {
+      tag:'Event Member', q:"Are you currently a member of our partner communities?",
+      html() {
+        const saved = formData.partnerMember||'';
+        const yesOpts = formData.partnerCommunities||[];
+        const other = formData.partnerCommunityOther||'';
+        return `
+          <div class="radio-grp" id="partnerMemberGrp">
+            <button type="button" class="r-opt${saved==='no'?' sel':''}" data-val="no" data-reveal="partnerNoRev" onclick="pickR(this,'partnerMemberGrp')">No</button>
+            <button type="button" class="r-opt${saved==='yes'?' sel':''}" data-val="yes" data-reveal="partnerYesRev" onclick="pickR(this,'partnerMemberGrp')">Yes</button>
+          </div>
+          <div class="cond${saved==='no'?' show':''}" id="partnerNoRev" style="margin-top:1rem">
+            <div style="background:rgba(255,235,153,.08);border-left:2px solid var(--y);padding:.75rem .9rem;font-size:.85rem;color:rgba(255,255,255,.6);border-radius:2px">
+              Explore in our <a href="${SITE_ROOT}eventpartners/" style="color:var(--y)" target="_blank" rel="noopener">community page</a>.
+            </div>
+          </div>
+          <div class="cond${saved==='yes'?' show':''}" id="partnerYesRev" style="margin-top:1rem">
+            <div class="chk-grp col" id="partnerCommGrp">
+              ${[{v:'sinogulf',t:'Sino-Gulf Youth Network'},{v:'koyee',t:'Koyee Korean Restaurant and Cafe'},{v:'arabsg',t:'Arab Network at Singapore'}].map(o=>`<button type="button" class="c-opt${yesOpts.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
+              <button type="button" class="c-opt${yesOpts.includes('others')?' sel':''}" data-val="others" onclick="toggleChkOther(this,'partnerCommOtherRev')">Others</button>
+            </div>
+            <div class="cond${yesOpts.includes('others')?' show':''}" id="partnerCommOtherRev">
+              <input type="text" class="fi" id="inp-partnerCommOther" placeholder="Please specify..." value="${esc(other)}">
+            </div>
+          </div>`;
+      },
+      validate() {
+        const saved = document.querySelector('#partnerMemberGrp .r-opt.sel')?.dataset.val;
+        if (!saved) return 'Please select an option';
+        if (saved==='yes' && document.querySelectorAll('#partnerCommGrp .c-opt.sel').length===0) return 'Please select at least one community';
+        return null;
+      },
+      save() {
+        const saved = document.querySelector('#partnerMemberGrp .r-opt.sel')?.dataset.val || '';
+        formData.partnerMember = saved;
+        if (saved==='yes') {
+          formData.partnerCommunities=Array.from(document.querySelectorAll('#partnerCommGrp .c-opt.sel')).map(e=>e.dataset.val);
+          formData.partnerCommunityOther=document.getElementById('inp-partnerCommOther')?.value?.trim()||'';
+        } else {
+          formData.partnerCommunities=[]; formData.partnerCommunityOther='';
+        }
+      }
+    },
+    {
+      tag:'Event Member', q:"Which language are you interested in?", hint:"Select all that apply",
+      html() {
+        const saved=formData.memberLangInterest||[];
+        const other=formData.memberLangInterestOther||'';
+        return `
+          <div class="chk-grp" id="memberLangGrp">
+            ${[{v:'chinese',t:'Chinese'},{v:'arabic',t:'Arabic'},{v:'korean',t:'Korean'},{v:'french',t:'French'},{v:'spanish',t:'Spanish'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
+            <button type="button" class="c-opt${saved.includes('others')?' sel':''}" data-val="others" onclick="toggleChkOther(this,'memberLangOtherRev')">Others</button>
+          </div>
+          <div class="cond${saved.includes('others')?' show':''}" id="memberLangOtherRev">
+            <input type="text" class="fi" id="inp-memberLangOther" placeholder="Please specify..." value="${esc(other)}">
+          </div>`;
+      },
+      validate() { return document.querySelectorAll('#memberLangGrp .c-opt.sel').length>0?null:'Please select at least one language'; },
+      save() {
+        formData.memberLangInterest=Array.from(document.querySelectorAll('#memberLangGrp .c-opt.sel')).map(e=>e.dataset.val);
+        formData.memberLangInterestOther=document.getElementById('inp-memberLangOther')?.value?.trim()||'';
+      }
+    },
+  ],
+
+  /* ── Final (contact only) ── */
+  final: [
+    {
+      tag:'Almost done!', q:"How can we contact you?", hint:"At least one contact method required",
+      html() {
+        return `
+          <div style="margin-bottom:1rem">
+            <label class="fl-sm">Email address</label>
+            <input type="email" class="fi" id="inp-email" placeholder="you@example.com" value="${esc(formData.email||'')}" autocomplete="email">
+          </div>
+          <div>
+            <label class="fl-sm">Phone number</label>
+            <input type="tel" class="fi" id="inp-phone" placeholder="+1 234 567 8900" value="${esc(formData.phone||'')}" autocomplete="tel">
+          </div>`;
+      },
+      validate() {
+        const email=document.getElementById('inp-email')?.value?.trim();
+        const phone=document.getElementById('inp-phone')?.value?.trim();
+        if(!email&&!phone) return 'Please provide at least one contact method';
+        if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address';
+        return null;
+      },
+      save() {
+        formData.email=document.getElementById('inp-email')?.value?.trim()||'';
+        formData.phone=document.getElementById('inp-phone')?.value?.trim()||'';
+      }
+    },
+  ],
+};
+
+if (_hasPreset) { showForm(); } else { showScreen('s-intro'); }
+</script>
+</body>
+</html>

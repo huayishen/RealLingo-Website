@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hire — Real lingo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/quiz.css">
+</head>
+<body>
+
+<!-- BG -->
+<div class="bg" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ═══ FORM — multi-section questionnaire ═══════════════════ -->
+<section class="screen off" id="s-form">
+
+  <header class="app-hdr">
+    <a href="../../" class="logo"><span class="lr">Real</span><span class="ll">lingo</span></a>
+    <button class="skip-btn" onclick="goLanding()">skip →</button>
+  </header>
+
+  <div class="form-body">
+    <nav class="sect-nav" id="sectNav" aria-label="Form sections"></nav>
+
+    <div class="form-main">
+      <div class="fp-bar">
+        <div class="fp-meta">
+          <span class="fp-step" id="fpStep">Step 1</span>
+          <span class="fp-title" id="fpTitle"></span>
+        </div>
+        <div class="fp-track"><div class="fp-fill" id="fpFill" style="width:0%"></div></div>
+      </div>
+
+      <div class="fstep-area" id="fstepArea">
+        <div class="fstep-inner" id="fstepInner"></div>
+      </div>
+
+      <div class="form-nav">
+        <button class="fbn-back" id="fBtnBack" onclick="prevStep()">← Back</button>
+        <button class="fbn-next" id="fBtnNext" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══ WELCOME OVERLAY ════════════════════════════════════════ -->
+<div id="s-welcome">
+  <div class="wlc-card">
+    <div class="wlc-en">Welcome to <strong>Real</strong>lingo!</div>
+    <div class="wlc-zh">欢迎加入！</div>
+    <div class="wlc-ar">أهلاً وسهلاً بك!</div>
+    <div class="wlc-kr">환영합니다!</div>
+    <div class="wlc-note">Taking you to the platform...</div>
+    <div class="wlc-bar"></div>
+    <button class="wlc-skip" onclick="skipWelcome()">Skip →</button>
+  </div>
+</div>
+
+<script src="../../assets/js/quiz-data.js"></script>
+<script src="../../assets/js/quiz-engine.js"></script>
+<script>
+window.SITE_ROOT = "../../";
+const QUIZ_FLOW = 'hire';
+
+/* Each hired-for role gets its own section (mirrors the Join-Us flow),
+   keyed by a "hire"-prefixed internal key so it never collides with
+   Join-Us's own section keys of the same profession in the shared
+   getReviewRows() switch (both flows run on separate pages, but that
+   function is shared code keyed only by section name). */
+const HIRE_ROLES = [
+  {key:'tutor',          sect:'hireTutor',          as:'a tutor',                 label:'Tutor'},
+  {key:'translator',     sect:'hireTranslator',     as:'a translator / interpreter', label:'Translator'},
+  {key:'influencer',     sect:'hireInfluencer',     as:'an influencer',           label:'Influencer'},
+  {key:'tourGuide',      sect:'hireTourGuide',      as:'a tour guide',            label:'Tour Guide'},
+  {key:'languageEvent',  sect:'hireLanguageEvent',  as:'an event organizer',      label:'Event Organizer'},
+  {key:'languageTalent', sect:'hireLanguageTalent', as:'a language talent',       label:'Language Talent'},
+];
+const ROLE_KEYS = HIRE_ROLES.map(r=>r.sect);
+const ROLE_DISPLAY = Object.fromEntries(HIRE_ROLES.map(r=>[r.sect, r.as]));
+const SECTION_LABEL = Object.fromEntries([
+  ['general','General'],
+  ...HIRE_ROLES.map(r=>[r.sect, r.label]),
+  ['final','Final'], ['review','Review'],
+]);
+
+/* ?sel=translator,influencer — external preset keys (shared with the
+   branch-selector and the Business pages) map onto our internal
+   "hire"-prefixed section keys and pre-select them in selectedRoles,
+   skipping the "I'm hiring..." picker when present. */
+const _preset = getPresetSel();
+const _presetSections = _preset ? _preset.map(k => HIRE_ROLES.find(r=>r.key===k)?.sect).filter(Boolean) : [];
+_presetSections.forEach(s => selectedRoles.add(s));
+const _hasPreset = _presetSections.length > 0;
+
+const generalSteps = [
+  {
+    tag:'General', q:"How should we call you?",
+    html() { return `<input type="text" class="fi" id="inp-name" placeholder="Your full name" value="${esc(formData.name||'')}" autocomplete="name">`; },
+    validate() { return document.getElementById('inp-name')?.value?.trim() ? null : 'Please enter your name'; },
+    save() { formData.name = document.getElementById('inp-name')?.value?.trim()||''; }
+  },
+  {
+    tag:'General', q:"What language do you speak?", hint:"Select language(s) and proficiency",
+    html() { return buildLangLevelHtml(); },
+    validate() {
+      const langs = formData.languages||{};
+      if (!Object.keys(langs).length) return 'Please select at least one language';
+      for (const [lk,lv] of Object.entries(langs)) {
+        const def = LANGUAGES.find(l=>l.key===lk);
+        if (!def) continue;
+        if (def.variants.length===0) { if (!lv) return `Please select your level for ${def.label}`; }
+        else {
+          if (!lv||typeof lv!=='object'||!Object.keys(lv).length) return `Please select a variant for ${def.label}`;
+          for (const [,vl] of Object.entries(lv)) { if (!vl) return `Please select a level for each ${def.label} variant`; }
+        }
+      }
+      return null;
+    },
+    save() { /* formData.languages updated live */ }
+  },
+  {
+    tag:'General', q:"I'm currently based in...",
+    html() {
+      return `
+        <div style="margin-bottom:1rem">
+          <label class="fl-sm">Country</label>
+          ${countrySelectHtml('inp-country', formData.country||'')}
+        </div>
+        <div>
+          <label class="fl-sm">City</label>
+          <input type="text" class="fi" id="inp-city" placeholder="Your city" value="${esc(formData.city||'')}">
+        </div>`;
+    },
+    validate() { return document.getElementById('inp-country')?.value ? null : 'Please select your country'; },
+    save() { formData.country=document.getElementById('inp-country')?.value||''; formData.city=document.getElementById('inp-city')?.value?.trim()||''; }
+  },
+  {
+    tag:'General', q:"I'm hiring as...",
+    html() {
+      const saved=formData.hiringAs||'';
+      return `
+        <div class="radio-grp" id="hiringTypeGrp">
+          <button type="button" class="r-opt${saved==='individual'?' sel':''}" data-val="individual" onclick="pickHiringType(this)">An individual</button>
+          <button type="button" class="r-opt${saved==='company'?' sel':''}" data-val="company" onclick="pickHiringType(this)">A company</button>
+        </div>
+        <div class="cond${saved==='company'?' show':''}" id="companyRev">
+          <div class="fg-2" style="margin-top:0">
+            <div>
+              <label class="fl-sm">Company name</label>
+              <input type="text" class="fi" id="inp-companyName" placeholder="Company name" value="${esc(formData.companyName||'')}">
+            </div>
+            <div>
+              <label class="fl-sm">Industry</label>
+              <select class="fs" id="inp-companyInd">
+                <option value="">Select industry...</option>
+                ${INDUSTRIES.map(i=>`<option value="${i}"${formData.companyIndustry===i?' selected':''}>${esc(i)}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+        </div>`;
+    },
+    validate() {
+      const v=document.querySelector('#hiringTypeGrp .r-opt.sel')?.dataset.val;
+      if(!v) return 'Please select one option';
+      if(v==='company'&&!document.getElementById('inp-companyName')?.value?.trim()) return 'Please enter the company name';
+      return null;
+    },
+    save() {
+      formData.hiringAs=document.querySelector('#hiringTypeGrp .r-opt.sel')?.dataset.val||'';
+      formData.companyName=document.getElementById('inp-companyName')?.value?.trim()||'';
+      formData.companyIndustry=document.getElementById('inp-companyInd')?.value||'';
+    }
+  },
+];
+if (!_hasPreset) {
+  generalSteps.splice(1, 0, {
+    tag:'General', q:"I'm hiring...", hint:"Select all that apply",
+    html() {
+      return `<div class="chk-grp role-cards" id="rolesGrp">${
+        HIRE_ROLES.map(r=>`<button type="button" class="c-opt${selectedRoles.has(r.sect)?' sel':''}" data-val="${r.sect}" onclick="toggleRole(this)">${esc(r.as)}</button>`).join('')
+      }</div>`;
+    },
+    validate() { return selectedRoles.size>0 ? null : 'Please select at least one option'; },
+    save() { invalidateSections(); }
+  });
+}
+
+/* Every hired-for role follows the same shape: "I'm looking for a ___
+   that speaks..." (no proficiency level needed — that's the candidate's,
+   not the employer's) + a budget question. Built once and reused per role
+   instead of hand-duplicating six near-identical blocks. */
+function hireRoleSteps(tag, prefix, questionText) {
+  const langGrpId = prefix+'LangGrp', budgetGrpId = prefix+'BudgetGrp';
+  const periodRevId = prefix+'PeriodRev', periodInputId = 'inp-'+prefix+'Period';
+  const curId = prefix+'Cur', sliderId = prefix+'Slider';
+  const langField = prefix+'Languages', typesField = prefix+'BudgetTypes', periodField = prefix+'PeriodSpec';
+  const currField = prefix+'Currency', minField = prefix+'BudMin', maxField = prefix+'BudMax';
+  return [
+    {
+      tag, q: questionText, hint:"Select all that apply",
+      html() {
+        const opts=[{v:'arabic',t:'Arabic'},{v:'chinese',t:'Chinese'},{v:'korean',t:'Korean'},{v:'french',t:'French'},{v:'spanish',t:'Spanish'}];
+        return checkboxGroupHtml(langGrpId, opts, formData[langField]||[]);
+      },
+      validate() { return document.querySelectorAll(`#${langGrpId} .c-opt.sel`).length>0?null:'Please select at least one language'; },
+      save() { formData[langField]=Array.from(document.querySelectorAll(`#${langGrpId} .c-opt.sel`)).map(e=>e.dataset.val); }
+    },
+    {
+      tag, q:"My hiring budget is...",
+      html() {
+        const saved=formData[typesField]||[];
+        const period=formData[periodField]||'';
+        return `
+          <div class="chk-grp" id="${budgetGrpId}">
+            ${[{v:'hourly',t:'Hourly'},{v:'daily',t:'Daily'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
+            <button type="button" class="c-opt${saved.includes('period')?' sel':''}" data-val="period" onclick="toggleChkOther(this,'${periodRevId}')">Per Period of Time</button>
+          </div>
+          <div class="cond${saved.includes('period')?' show':''}" id="${periodRevId}">
+            <input type="text" class="fi" id="${periodInputId}" placeholder="e.g. per project, 1-month engagement" value="${esc(period)}">
+          </div>
+          <div style="margin-top:1.25rem">
+            <label class="fl-sm">Currency</label>
+            ${currencyHtml(curId, formData[currField]||'SAR')}
+          </div>
+          <label class="fl-sm" style="margin-top:1rem;display:block">Budget Range</label>
+          ${sliderHtml(sliderId, 0, 10000, formData[minField]??0, formData[maxField]??1000)}`;
+      },
+      validate() { return null; },
+      save() {
+        formData[typesField]=Array.from(document.querySelectorAll(`#${budgetGrpId} .c-opt.sel`)).map(e=>e.dataset.val);
+        formData[periodField]=document.getElementById(periodInputId)?.value?.trim()||'';
+        formData[currField]=document.getElementById(curId)?.value||'SAR';
+      },
+      postRender() { initSlider(sliderId,0,10000,100,minField,maxField,curId); }
+    },
+  ];
+}
+
+const ALL_SECTION_STEPS = {
+  general: generalSteps,
+  hireTutor:          hireRoleSteps('Tutor',           'hireTutor',          "I'm looking for a tutor that speaks..."),
+  hireTranslator:      hireRoleSteps('Translator',      'hireTranslator',     "I'm looking for a translator for..."),
+  hireInfluencer:      hireRoleSteps('Influencer',      'hireInfluencer',     "I'm looking for KOL/KOCs that speak..."),
+  hireTourGuide:       hireRoleSteps('Tour Guide',      'hireTourGuide',      "I'm looking for a tour guide that speaks..."),
+  hireLanguageEvent:   hireRoleSteps('Event Organizer', 'hireLanguageEvent',  "I'm looking for an event organizer that speaks..."),
+  hireLanguageTalent:  hireRoleSteps('Language Talent', 'hireLanguageTalent', "I'm looking for language talent that speaks..."),
+
+  /* ── Final (contact only) ── */
+  final: [
+    {
+      tag:'Almost done!', q:"How can we contact you?", hint:"At least one contact method required",
+      html() {
+        return `
+          <div style="margin-bottom:1rem">
+            <label class="fl-sm">Email address</label>
+            <input type="email" class="fi" id="inp-email" placeholder="you@example.com" value="${esc(formData.email||'')}" autocomplete="email">
+          </div>
+          <div>
+            <label class="fl-sm">Phone number</label>
+            <input type="tel" class="fi" id="inp-phone" placeholder="+1 234 567 8900" value="${esc(formData.phone||'')}" autocomplete="tel">
+          </div>`;
+      },
+      validate() {
+        const email=document.getElementById('inp-email')?.value?.trim();
+        const phone=document.getElementById('inp-phone')?.value?.trim();
+        if(!email&&!phone) return 'Please provide at least one contact method';
+        if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address';
+        return null;
+      },
+      save() {
+        formData.email=document.getElementById('inp-email')?.value?.trim()||'';
+        formData.phone=document.getElementById('inp-phone')?.value?.trim()||'';
+      }
+    },
+  ],
+};
+
+showForm();
+</script>
+</body>
+</html>

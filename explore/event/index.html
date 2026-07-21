@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event with RealLingo — Real lingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/explore-hero.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+
+  /* ── Editorial split-layout hero (this page only) ──
+     Text sits directly on the video — no boxed panel — divided by a thin
+     vertical rule, echoing an editorial hospitality-brand hero. */
+  .ex-hero-editorial.ex-hero-centered { display: block; padding: 0; }
+  .ex-hero-editorial .ex-hero-bg-overlay { background: rgba(17, 18, 22, .32); }
+
+  .ex-edit-divider {
+    position: absolute; z-index: 2; left: 50%; top: 9%; bottom: 11%;
+    width: 1px; background: rgba(255, 255, 255, .32);
+  }
+
+  .ex-edit-content {
+    position: relative; z-index: 3; min-height: calc(100vh - 82px);
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    padding: 4.5rem 3rem 3.5rem; text-align: center;
+  }
+
+  .ex-edit-eyebrow {
+    font-family: var(--font-sans); font-size: .68rem; font-weight: 700;
+    letter-spacing: .35em; text-transform: uppercase; color: rgba(255,255,255,.85);
+    margin-bottom: 1.25rem;
+  }
+  .ex-edit-title {
+    font-family: var(--font-serif); font-weight: 400; color: #fff;
+    text-shadow: 0 6px 30px rgba(0,0,0,.35);
+    font-size: clamp(1.9rem, 4.4vw, 3.3rem); line-height: 1.22;
+  }
+  .ex-edit-title em { font-style: italic; color: var(--yellow); }
+
+  .ex-edit-ctas { display: flex; gap: 1rem; justify-content: center; margin-top: 2.25rem; flex-wrap: wrap; }
+  .ex-edit-ctas .ex-cta-outline {
+    background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.55);
+    border-radius: 100px; padding: 1rem 2.25rem; font-family: var(--font-sans);
+    font-size: .95rem; font-weight: 700; text-decoration: none; display: inline-block;
+    transition: background .2s, border-color .2s, transform .2s;
+  }
+  .ex-edit-ctas .ex-cta-outline:hover { background: rgba(255,255,255,.12); border-color: #fff; transform: translateY(-2px); }
+  .ex-edit-ctas .ex-cta { border-radius: 100px; }
+
+  .ex-edit-bottom { display: flex; width: 100%; justify-content: space-between; align-items: flex-end; gap: 2rem; margin-top: auto; }
+  .ex-edit-tagline {
+    font-family: var(--font-serif); font-style: italic; color: #fff;
+    text-shadow: 0 4px 20px rgba(0,0,0,.35);
+    font-size: clamp(1rem, 1.6vw, 1.3rem); line-height: 1.4; max-width: 280px;
+  }
+  .ex-edit-tagline.left { text-align: left; }
+  .ex-edit-tagline.right { text-align: right; margin-left: auto; }
+
+  @media (max-width: 760px) {
+    .ex-edit-divider { display: none; }
+    .ex-edit-content { padding: 3.5rem 1.5rem 2.5rem; }
+    .ex-edit-bottom { flex-direction: column; align-items: center; gap: 1.5rem; text-align: center; }
+    .ex-edit-tagline.left, .ex-edit-tagline.right { text-align: center; max-width: 100%; margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main class="ex-hero has-bg-video ex-hero-centered ex-hero-editorial">
+    <video class="ex-hero-bg-video" autoplay muted loop playsinline preload="auto" disablepictureinpicture
+        poster="../../assets/video/explore-event-bg-poster.jpg">
+        <source src="../../assets/video/explore-event-bg.mp4" type="video/mp4">
+        <img src="../../assets/video/explore-event-bg-poster.jpg" class="ex-hero-bg-video" alt="">
+    </video>
+    <div class="ex-hero-bg-overlay"></div>
+    <div class="ex-edit-divider" aria-hidden="true"></div>
+
+    <div class="ex-edit-content">
+        <div>
+            <div class="ex-edit-eyebrow">Arabic &amp; Chinese &amp; Korean · Since 2026</div>
+            <h1 class="ex-edit-title">Every city has a<br><em>language community</em><br>find yours now</h1>
+            <div class="ex-edit-ctas">
+                <a href="../../signup/user/?sel=eventMember" class="ex-cta">Start Your Journey</a>
+                <a href="../../eventpartners/" class="ex-cta-outline">See how it works</a>
+            </div>
+        </div>
+
+        <div class="ex-edit-bottom">
+            <p class="ex-edit-tagline left">We celebrate your curiosity, amplify your voice</p>
+            <p class="ex-edit-tagline right">and build a community where every story belongs</p>
+        </div>
+    </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+  window.SITE_ROOT = "../../";
+  window.SITE_SECTION = "explore";
+  window.SITE_PAGE = "explore/event";
+
+  // Graceful fallback: if the background video can't load or autoplay gets
+  // blocked, drop it and let the poster-image background (set via CSS) show instead.
+  (function () {
+    var v = document.querySelector('.ex-hero-bg-video');
+    if (!v) return;
+    function fallbackToImage() {
+      v.style.display = 'none';
+      v.parentElement.style.setProperty('background-image', 'url("../../assets/video/explore-event-bg-poster.jpg")');
+    }
+    v.addEventListener('error', fallbackToImage);
+    var playPromise = v.play();
+    if (playPromise && playPromise.catch) playPromise.catch(fallbackToImage);
+  })();
+</script>
+<script src="../../assets/js/nav.js" defer></script>
+</body>
+</html>

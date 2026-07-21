@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — Real lingo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/quiz.css">
+  <style>
+    /* Branch-selector-only layout: the shared quiz.css locks html/body to a
+       fixed fullscreen viewport for the step-by-step form screens, but this
+       page needs to scroll (3 sections of pills can exceed one viewport,
+       especially on mobile), so it overrides that here rather than in the
+       shared file. */
+    html, body { height: auto; overflow-y: auto; }
+    .bs-main { position: relative; z-index: 5; max-width: 720px; margin: 0 auto; padding: 7.5rem 1.5rem 8rem; }
+    .bs-h1 { font-family: var(--ss); font-weight: 900; font-size: clamp(2rem,5vw,3.25rem); letter-spacing:-.03em; margin-bottom: .75rem; text-align:center; }
+    .bs-sub { text-align:center; color: rgba(255,255,255,.4); font-size: .9rem; margin-bottom: 3rem; }
+
+    /* ── Game route: a dashed quest-line connecting the 3 sections,
+       with a traveling glow dot and per-section "world" markers. ── */
+    .bs-route { position: relative; margin-left: 14px; padding-left: 2.25rem; border-left: 2px dashed rgba(255,235,153,.22); }
+    .bs-route::before {
+      content: ''; position: absolute; left: -7px; top: 0;
+      width: 12px; height: 12px; border-radius: 50%; background: var(--y);
+      box-shadow: 0 0 14px 3px rgba(255,235,153,.65);
+      animation: bsRouteTravel 6.5s ease-in-out infinite alternate;
+    }
+    @keyframes bsRouteTravel { to { top: calc(100% - 12px); } }
+
+    .bs-section { position: relative; border: 1px solid rgba(255,255,255,.09); border-radius: 14px; padding: 1.75rem; margin-bottom: 1.25rem; transition: opacity .25s, filter .25s, border-color .3s; }
+    .bs-section::before {
+      content: ''; position: absolute; left: -2.6rem; top: 1.9rem;
+      width: 14px; height: 14px; border-radius: 50%; background: #0d0e11;
+      border: 2px solid rgba(255,235,153,.3); transition: border-color .3s, box-shadow .3s;
+    }
+    .bs-section.active::before { border-color: var(--y); box-shadow: 0 0 10px 3px rgba(255,235,153,.55); }
+    .bs-section.active { border-color: rgba(255,235,153,.3); }
+    .bs-section.disabled { opacity: .32; filter: grayscale(1); pointer-events: none; }
+    .bs-sec-title { font-family: var(--ss); font-weight: 800; font-size: 1.15rem; margin-bottom: .3rem; display: flex; align-items: center; gap: .75rem; }
+    .bs-sec-hint { font-size: .78rem; color: rgba(255,255,255,.35); margin-bottom: 1.1rem; }
+
+    .bs-clear {
+      pointer-events: auto; font-family: var(--ss); font-size: .72rem; font-weight: 700;
+      color: var(--y); background: rgba(255,235,153,.1); border: 1px solid rgba(255,235,153,.3);
+      border-radius: 100px; padding: .3rem .75rem; cursor: pointer; transition: background .2s;
+    }
+    .bs-clear:hover { background: rgba(255,235,153,.2); }
+
+    .bs-lock-hint {
+      display: none; align-items: center; gap: .6rem; margin-top: 1rem;
+      font-size: .78rem; color: rgba(255,255,255,.45);
+    }
+    .bs-section.disabled .bs-lock-hint { display: flex; }
+    .bs-lock-hint .bs-clear { pointer-events: auto; }
+    .bs-section.disabled { pointer-events: none; }
+    .bs-section.disabled .bs-lock-hint { pointer-events: auto; }
+
+    .bs-other-wrap { margin-top: 1rem; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .3s ease, opacity .3s ease, margin-top .3s ease; }
+    .bs-other-wrap.show { max-height: 80px; opacity: 1; }
+    .bs-other-input {
+      width: 100%; padding: .8rem 1rem; border-radius: 10px; border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.04); color: #fff; font-family: var(--ss); font-size: .88rem;
+    }
+    .bs-other-input:focus { outline: none; border-color: var(--y); }
+    .bs-other-input::placeholder { color: rgba(255,255,255,.3); }
+
+    .bs-continue-wrap { position: sticky; bottom: 0; display: flex; flex-direction: column; align-items: center; gap: .6rem; padding: 1.5rem 0 .5rem; background: linear-gradient(rgba(13,14,17,0), rgba(13,14,17,.92) 40%); }
+    .bs-continue { display: none; align-items: center; gap: .6rem; padding: 1rem 2.5rem; border: none; border-radius: 100px; background: var(--y); color: #111; font-family: var(--ss); font-size: .92rem; font-weight: 800; letter-spacing: .03em; cursor: pointer; transition: background .2s, transform .15s, opacity .2s; }
+    .bs-continue:hover { background: var(--ym); transform: translateY(-1px); }
+    .bs-continue:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .bs-continue-note { display: none; font-size: .74rem; color: rgba(255,255,255,.35); }
+    .bs-continue-note.show { display: block; }
+
+    @media (max-width: 560px) {
+      .bs-main { padding: 6.5rem 1.25rem 7rem; }
+      .bs-section { padding: 1.25rem; }
+      .bs-route { margin-left: 8px; padding-left: 1.5rem; }
+      .bs-section::before { left: -1.85rem; }
+    }
+
+    /* ── Gamer-style custom cursor (pointer devices only) ── */
+    body.gamer-cursor, body.gamer-cursor * { cursor: none !important; }
+    .cursor-dot, .cursor-ring { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; border-radius: 50%; }
+    .cursor-dot { width: 6px; height: 6px; background: var(--y); margin: -3px 0 0 -3px; }
+    .cursor-ring {
+      width: 30px; height: 30px; margin: -15px 0 0 -15px; border: 1.5px solid rgba(255,235,153,.55);
+      transition: width .2s, height .2s, margin .2s, border-color .2s, background .2s;
+    }
+    body.cursor-hover .cursor-ring { width: 46px; height: 46px; margin: -23px 0 0 -23px; background: rgba(255,235,153,.12); border-color: var(--y); }
+  </style>
+</head>
+<body>
+
+<!-- BG -->
+<div class="bg" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="app-hdr" style="position:fixed;background:rgba(13,14,17,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06);">
+  <a href="../" class="logo"><span class="lr">Real</span><span class="ll">lingo</span></a>
+  <button class="skip-btn" onclick="window.location.href='../'">skip →</button>
+</header>
+
+<main class="bs-main">
+  <h1 class="bs-h1">How do you describe yourself?</h1>
+  <p class="bs-sub">Choose one category — you can select multiple options inside it. Picking a category locks the other two until you clear it.</p>
+
+  <div class="bs-route">
+    <section class="bs-section" id="sec1">
+      <div class="bs-sec-title">
+        <span>I am a...</span>
+        <button type="button" class="bs-clear" id="clear1" onclick="clearSection(1)" style="display:none">✕ Clear</button>
+      </div>
+      <div class="bs-sec-hint">Select all that apply</div>
+      <div class="chk-grp" id="sec1-opts"></div>
+      <div class="bs-lock-hint"><span>Locked — you're selecting in another section.</span> <button type="button" class="bs-clear" onclick="clearActive()">✕ Clear that selection</button></div>
+    </section>
+
+    <section class="bs-section" id="sec2">
+      <div class="bs-sec-title">
+        <span>I'm hiring...</span>
+        <button type="button" class="bs-clear" id="clear2" onclick="clearSection(2)" style="display:none">✕ Clear</button>
+      </div>
+      <div class="bs-sec-hint">Select all that apply</div>
+      <div class="chk-grp" id="sec2-opts"></div>
+      <div class="bs-lock-hint"><span>Locked — you're selecting in another section.</span> <button type="button" class="bs-clear" onclick="clearActive()">✕ Clear that selection</button></div>
+    </section>
+
+    <section class="bs-section" id="sec3">
+      <div class="bs-sec-title">
+        <span>I work as...</span>
+        <button type="button" class="bs-clear" id="clear3" onclick="clearSection(3)" style="display:none">✕ Clear</button>
+      </div>
+      <div class="bs-sec-hint">Select all that apply</div>
+      <div class="chk-grp" id="sec3-opts"></div>
+      <div class="bs-other-wrap" id="sec3-other-wrap">
+        <input type="text" id="sec3-other-input" class="bs-other-input" placeholder="Tell us what you do…" maxlength="80">
+      </div>
+      <div class="bs-lock-hint"><span>Locked — you're selecting in another section.</span> <button type="button" class="bs-clear" onclick="clearActive()">✕ Clear that selection</button></div>
+    </section>
+  </div>
+
+  <div class="bs-continue-wrap">
+    <button class="bs-continue" id="continueBtn" onclick="goContinue()">Continue →</button>
+    <div class="bs-continue-note" id="continueNote">Please tell us what you do to continue</div>
+  </div>
+</main>
+
+<script src="../assets/js/quiz-data.js"></script>
+<script>
+const SECTION_OPTS = {
+  1: { target: 'user/',     opts: [{v:'learner',t:'a language learner'},{v:'traveler',t:'a traveler'},{v:'eventMember',t:'an event member'}] },
+  2: { target: 'hire/',     opts: SERVICE_ROLES.map(r=>({v:r.key, t:r.as})) },
+  3: { target: 'join-us/', opts: SERVICE_ROLES.map(r=>({v:r.key, t:r.as})).concat([{v:'other', t:'others (please specify)', other:true}]) },
+};
+
+Object.keys(SECTION_OPTS).forEach(n => {
+  const el = document.getElementById(`sec${n}-opts`);
+  el.innerHTML = SECTION_OPTS[n].opts.map(o =>
+    `<button type="button" class="c-opt" data-val="${o.v}" ${o.other ? 'data-other="1"' : ''} onclick="selectOption(this, ${n})">${o.t}</button>`
+  ).join('');
+});
+
+let activeSection = null;
+
+function selectOption(el, n) {
+  if (activeSection && String(activeSection) !== String(n)) return;
+  el.classList.toggle('sel');
+  if (el.dataset.other) {
+    const wrap = document.getElementById('sec3-other-wrap');
+    const input = document.getElementById('sec3-other-input');
+    const on = el.classList.contains('sel');
+    wrap.classList.toggle('show', on);
+    if (on) { setTimeout(() => input.focus(), 150); }
+    else { input.value = ''; }
+  }
+  refresh();
+}
+
+function clearSection(n) {
+  document.querySelectorAll(`#sec${n}-opts .c-opt.sel`).forEach(e => e.classList.remove('sel'));
+  if (String(n) === '3') {
+    document.getElementById('sec3-other-wrap').classList.remove('show');
+    document.getElementById('sec3-other-input').value = '';
+  }
+  refresh();
+}
+
+function clearActive() {
+  if (activeSection) clearSection(activeSection);
+}
+
+function refresh() {
+  const counts = {};
+  Object.keys(SECTION_OPTS).forEach(n => {
+    counts[n] = document.querySelectorAll(`#sec${n}-opts .c-opt.sel`).length;
+  });
+  activeSection = Object.keys(counts).find(n => counts[n] > 0) || null;
+
+  Object.keys(SECTION_OPTS).forEach(n => {
+    const sec = document.getElementById(`sec${n}`);
+    const isActive = activeSection !== null && String(activeSection) === String(n);
+    sec.classList.toggle('disabled', activeSection !== null && !isActive);
+    sec.classList.toggle('active', isActive);
+    document.getElementById(`clear${n}`).style.display = isActive ? 'inline-flex' : 'none';
+  });
+
+  const otherSelected = document.querySelector('#sec3-opts .c-opt.sel[data-other]');
+  const otherFilled = document.getElementById('sec3-other-input').value.trim().length > 0;
+  const blockedByEmptyOther = String(activeSection) === '3' && otherSelected && !otherFilled;
+
+  const btn = document.getElementById('continueBtn');
+  const note = document.getElementById('continueNote');
+  btn.style.display = activeSection ? 'inline-flex' : 'none';
+  btn.disabled = !!blockedByEmptyOther;
+  note.classList.toggle('show', !!blockedByEmptyOther);
+}
+
+document.getElementById('sec3-other-input').addEventListener('input', refresh);
+
+function goContinue() {
+  if (!activeSection) return;
+  const cfg = SECTION_OPTS[activeSection];
+  let vals = Array.from(document.querySelectorAll(`#sec${activeSection}-opts .c-opt.sel`)).map(e => e.dataset.val);
+
+  let otherText = '';
+  if (String(activeSection) === '3') {
+    otherText = document.getElementById('sec3-other-input').value.trim();
+    vals = vals.filter(v => v !== 'other'); // "other" isn't a real preset role key — sent separately below
+  }
+
+  let url = cfg.target + '?sel=' + vals.join(',');
+  if (otherText) url += '&other=' + encodeURIComponent(otherText);
+  window.location.href = url;
+}
+
+window.addEventListener('pageshow', (e) => { if (e.persisted) location.reload(); });
+
+/* ── Gamer-style custom cursor ── */
+(function () {
+  const hoverCapable = window.matchMedia('(hover: hover) and (pointer: fine)');
+  if (!hoverCapable.matches) return;
+
+  document.body.classList.add('gamer-cursor');
+  const dot = document.createElement('div'); dot.className = 'cursor-dot';
+  const ring = document.createElement('div'); ring.className = 'cursor-ring';
+  document.body.appendChild(dot);
+  document.body.appendChild(ring);
+
+  let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
+  window.addEventListener('mousemove', (e) => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.transform = `translate(${mx}px, ${my}px)`;
+  });
+  (function loop() {
+    rx += (mx - rx) * 0.18;
+    ry += (my - ry) * 0.18;
+    ring.style.transform = `translate(${rx}px, ${ry}px)`;
+    requestAnimationFrame(loop);
+  })();
+
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest('.c-opt, button, a, input')) document.body.classList.add('cursor-hover');
+  });
+  document.addEventListener('mouseout', (e) => {
+    if (e.target.closest('.c-opt, button, a, input')) document.body.classList.remove('cursor-hover');
+  });
+})();
+</script>
+</body>
+</html>

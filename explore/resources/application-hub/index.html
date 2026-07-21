@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Application Hub — Real lingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../assets/css/site.css">
+<link rel="stylesheet" href="../../../assets/css/apphub.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main>
+    <section class="apphub-hero">
+        <div class="apphub-crumb">Explore / Resources / Application Hub</div>
+        <h1 class="apphub-h1">Apps built <em>with</em> the community</h1>
+        <p class="apphub-sub">The Application Hub is where developers, educators, and language lovers showcase the tools they've built for the RealLingo ecosystem — from study aids to translation helpers.</p>
+        <button type="button" class="apphub-hero-cta" data-open-modal>Share Your Application</button>
+        <div class="apphub-back">
+            <a href="../">← Back to Resources with RealLingo</a>
+        </div>
+    </section>
+
+    <section class="apphub-gallery">
+        <div class="apphub-gallery-head">
+            <div class="apphub-kicker">Community Apps</div>
+            <h2 class="apphub-h2">Nothing published <em>yet</em></h2>
+            <p class="apphub-gallery-sub">No applications have been shared here yet — be one of the first. Every tile below is an open spot waiting for your project.</p>
+        </div>
+
+        <!-- Empty-state gallery: each .apphub-card is an open, clickable "slot."
+             Once real apps exist, swap a card's inner markup for the
+             ".apphub-card.filled" shape documented in apphub.css — icon,
+             name, description, language chips, link, optional featured badge. -->
+        <div class="apphub-grid" id="apphubGrid">
+            <button type="button" class="apphub-card" data-open-modal>
+                <span class="apphub-card-icon">+</span>
+                <span class="apphub-card-msg" data-msg></span>
+                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
+            </button>
+            <button type="button" class="apphub-card" data-open-modal>
+                <span class="apphub-card-icon">+</span>
+                <span class="apphub-card-msg" data-msg></span>
+                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
+            </button>
+            <button type="button" class="apphub-card" data-open-modal>
+                <span class="apphub-card-icon">+</span>
+                <span class="apphub-card-msg" data-msg></span>
+                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
+            </button>
+            <button type="button" class="apphub-card" data-open-modal>
+                <span class="apphub-card-icon">+</span>
+                <span class="apphub-card-msg" data-msg></span>
+                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
+            </button>
+            <button type="button" class="apphub-card" data-open-modal>
+                <span class="apphub-card-icon">+</span>
+                <span class="apphub-card-msg" data-msg></span>
+                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
+            </button>
+            <button type="button" class="apphub-card" data-open-modal>
+                <span class="apphub-card-icon">+</span>
+                <span class="apphub-card-msg" data-msg></span>
+                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
+            </button>
+            <button type="button" class="apphub-card" data-open-modal>
+                <span class="apphub-card-icon">+</span>
+                <span class="apphub-card-msg" data-msg></span>
+                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
+            </button>
+            <button type="button" class="apphub-card" data-open-modal>
+                <span class="apphub-card-icon">+</span>
+                <span class="apphub-card-msg" data-msg></span>
+                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
+            </button>
+            <button type="button" class="apphub-card" data-open-modal>
+                <span class="apphub-card-icon">+</span>
+                <span class="apphub-card-msg" data-msg></span>
+                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
+            </button>
+        </div>
+    </section>
+</main>
+
+<dialog class="apphub-modal" id="apphubModal">
+    <div class="apphub-modal-inner">
+        <div class="apphub-modal-head">
+            <h2 class="apphub-modal-title">Add Your Application</h2>
+            <button type="button" class="apphub-modal-close" id="apphubClose" aria-label="Close">✕</button>
+        </div>
+
+        <form id="apphubForm">
+            <div class="apphub-field">
+                <label for="appName">Application Name</label>
+                <input type="text" id="appName" name="appName" required>
+            </div>
+            <div class="apphub-field">
+                <label for="appUrl">Application URL</label>
+                <input type="url" id="appUrl" name="appUrl" placeholder="https://" required>
+            </div>
+            <div class="apphub-field">
+                <label for="appDesc">Short Description</label>
+                <textarea id="appDesc" name="appDesc" required></textarea>
+            </div>
+            <div class="apphub-field">
+                <label for="appCategory">Category</label>
+                <select id="appCategory" name="appCategory">
+                    <option>Language Learning</option>
+                    <option>Translation &amp; Interpretation</option>
+                    <option>AI &amp; NLP Tools</option>
+                    <option>Travel &amp; Culture</option>
+                    <option>Community &amp; Events</option>
+                    <option>Business &amp; Talent</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div class="apphub-field">
+                <label>Languages Supported</label>
+                <div class="apphub-chip-group">
+                    <label class="apphub-chip"><input type="checkbox" name="langs" value="Arabic"><span>Arabic</span></label>
+                    <label class="apphub-chip"><input type="checkbox" name="langs" value="Chinese"><span>Chinese</span></label>
+                    <label class="apphub-chip"><input type="checkbox" name="langs" value="Korean"><span>Korean</span></label>
+                    <label class="apphub-chip"><input type="checkbox" name="langs" value="French"><span>French</span></label>
+                    <label class="apphub-chip"><input type="checkbox" name="langs" value="Spanish"><span>Spanish</span></label>
+                    <label class="apphub-chip"><input type="checkbox" name="langs" value="Other"><span>Other</span></label>
+                </div>
+            </div>
+            <div class="apphub-field">
+                <label for="appDev">Developer / Organization <span class="opt">(optional)</span></label>
+                <input type="text" id="appDev" name="appDev">
+            </div>
+            <div class="apphub-field">
+                <label for="appEmail">Contact Email <span class="opt">(optional)</span></label>
+                <input type="email" id="appEmail" name="appEmail">
+            </div>
+            <button type="submit" class="apphub-submit">Submit Application</button>
+        </form>
+
+        <div class="apphub-success" id="apphubSuccess" style="display:none">
+            <div class="apphub-success-icon">🎉</div>
+            <h3>Thanks for sharing!</h3>
+            <p>Application submissions aren't open yet, but we've saved your interest — we'll reach out as soon as the Application Hub goes live.</p>
+            <button type="button" class="apphub-submit" id="apphubDone">Done</button>
+        </div>
+    </div>
+</dialog>
+
+<div id="site-footer"></div>
+
+<script>
+  window.SITE_ROOT = "../../../";
+  window.SITE_SECTION = "explore";
+  window.SITE_PAGE = "explore/resources/application-hub";
+
+  (function () {
+    var messages = ['Stay Tuned', 'Upload Your Application', 'Develop Your Application', 'Share Your Application'];
+    document.querySelectorAll('#apphubGrid [data-msg]').forEach(function (el) {
+      el.textContent = messages[Math.floor(Math.random() * messages.length)];
+    });
+
+    var modal = document.getElementById('apphubModal');
+    var form = document.getElementById('apphubForm');
+    var success = document.getElementById('apphubSuccess');
+
+    function openModal() {
+      form.style.display = '';
+      success.style.display = 'none';
+      form.reset();
+      modal.showModal();
+    }
+    document.querySelectorAll('[data-open-modal]').forEach(function (btn) {
+      btn.addEventListener('click', openModal);
+    });
+    document.getElementById('apphubClose').addEventListener('click', function () { modal.close(); });
+    document.getElementById('apphubDone').addEventListener('click', function () { modal.close(); });
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) modal.close();
+    });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      form.style.display = 'none';
+      success.style.display = 'block';
+    });
+  })();
+</script>
+<script src="../../../assets/js/nav.js" defer></script>
+</body>
+</html>

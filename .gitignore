@@ -1,4 +1,9 @@
-*
-!index.html
-!landing.html
-!CLAUDE.md``
+.DS_Store
+.tmp/
+temporary_ss/
+screenshots/
+Web _Inspiraiton/
+RealLingo LOGO/
+RealLingo Team Headshot/
+RealLingo Founding Partners/
+.claude/

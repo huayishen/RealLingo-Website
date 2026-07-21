@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find a KOL/KOC — Real lingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/business-hero.css">
+<link rel="stylesheet" href="../../assets/css/business-network.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main class="biz-hero">
+    <div>
+        <div class="biz-pill">
+            <span>Arabic</span> &amp; <span>Chinese</span> &amp; <span>Korean</span> · Language Services Since 2026
+        </div>
+        <h1 class="biz-h1">Turn <em>attention</em><br>into <em>audience.</em></h1>
+        <p class="biz-sub">
+            At RealLingo, we are committed to solving real-world challenges in language-related scenarios, empowering and shaping the future of language services.
+        </p>
+        <div class="biz-ctas">
+            <a href="../../signup/hire/?sel=influencer" class="biz-cta">Find Your Match</a>
+        </div>
+    </div>
+
+    <div class="biz-visual">
+        <div class="bn-stage" role="img" aria-label="Diagram: a brand connects with local creators whose content spreads and generates engagement">
+            <svg class="bn-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <path class="bn-line-quiet" d="M15,50 L46,20"></path>
+                <path d="M15,50 L54,55"></path>
+                <path class="bn-line-quiet" d="M15,50 L44,85"></path>
+                <path d="M54,55 L76,34"></path>
+                <path d="M54,55 L80,60"></path>
+                <path class="bn-line-quiet" d="M54,55 L64,76"></path>
+            </svg>
+
+            <a class="bn-node hub" style="left:15%; top:50%">
+                <div class="bn-node-dot">🏢</div>
+                <div class="bn-node-label">RealLingo Brand</div>
+                <div class="bn-tooltip">Looking for creators in 3 languages</div>
+            </a>
+            <a class="bn-node" style="left:46%; top:20%">
+                <div class="bn-node-dot">📷</div>
+                <div class="bn-node-label">@creator_ar</div>
+                <div class="bn-tooltip">Arabic lifestyle · 82K followers</div>
+            </a>
+            <a class="bn-node matched" style="left:54%; top:55%">
+                <div class="bn-node-dot">🎥</div>
+                <div class="bn-node-label">@creator_zh</div>
+                <div class="bn-tooltip">Best match — Chinese Gen-Z audience</div>
+            </a>
+            <a class="bn-node" style="left:44%; top:85%">
+                <div class="bn-node-dot">📱</div>
+                <div class="bn-node-label">@creator_kr</div>
+                <div class="bn-tooltip">Korean beauty &amp; travel · 45K followers</div>
+            </a>
+
+            <div class="bn-badge" style="left:76%; top:28%; animation-delay:.3s">❤️ <span id="bnLikes">12.4K</span></div>
+            <div class="bn-badge" style="left:80%; top:54%; animation-delay:1s">💬 862</div>
+            <div class="bn-badge" style="left:64%; top:70%; animation-delay:1.7s">
+                <svg class="bn-spark" viewBox="0 0 34 16"><path d="M1,13 L7,9 L13,11 L19,4 L25,7 L33,2"></path></svg>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+  window.SITE_ROOT = "../../";
+  window.SITE_SECTION = "business";
+  window.SITE_PAGE = "business/marketing";
+
+  /* Live-feeling engagement counter on the hero diagram */
+  (function () {
+    var el = document.getElementById('bnLikes');
+    if (!el) return;
+    var n = 12400;
+    setInterval(function () {
+      n += Math.floor(Math.random() * 9) + 1;
+      el.textContent = (n / 1000).toFixed(1) + 'K';
+    }, 2200);
+  })();
+</script>
+<script src="../../assets/js/nav.js" defer></script>
+</body>
+</html>

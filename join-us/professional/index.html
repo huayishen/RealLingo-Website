@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join as a Professional — Real lingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/gateway.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main class="gw-hero" id="gwHero">
+    <div class="gw-bg-gradient" aria-hidden="true"></div>
+
+    <svg class="gw-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M14,20 L50,50"/>
+        <path d="M88,18 L50,50"/>
+        <path d="M8,55 L50,50 L92,50"/>
+    </svg>
+
+    <div class="gw-greeting" style="left:4%; top:38%; animation-delay:.2s" aria-hidden="true">Hello</div>
+    <div class="gw-greeting" style="right:5%; top:35%; animation-delay:1.1s" aria-hidden="true">你好</div>
+    <div class="gw-greeting" style="left:8%; bottom:14%; animation-delay:1.8s" aria-hidden="true">Bonjour</div>
+    <div class="gw-greeting" style="right:9%; bottom:16%; animation-delay:.7s" aria-hidden="true" dir="rtl">مرحبًا</div>
+
+    <div class="gw-badge" style="left:9%; top:14%; animation: gwDrift1 8s ease-in-out infinite;" aria-hidden="true">🌐 Translator</div>
+    <div class="gw-badge" style="right:7%; top:16%; animation: gwDrift2 9.5s ease-in-out infinite;" aria-hidden="true">🎓 Tutor</div>
+    <div class="gw-badge" style="left:4%; top:52%; animation: gwDrift3 7.5s ease-in-out infinite;" aria-hidden="true">🧭 Tour Guide</div>
+    <div class="gw-badge" style="right:3%; top:50%; animation: gwDrift4 10s ease-in-out infinite;" aria-hidden="true">🎤 Influencer</div>
+    <div class="gw-badge" style="left:50%; top:6%; transform:translateX(-50%); animation: gwDrift5 8.8s ease-in-out infinite;" aria-hidden="true">✨ Language Talent</div>
+
+    <div class="gw-content">
+        <div class="gw-eyebrow">Your Professional Journey Starts Here</div>
+        <h1 class="gw-h1">Are you ready to turn your <em>passion</em> into your <em>profession</em>?</h1>
+        <p class="gw-sub">You're about to join a global network of translators, tutors, tour guides, influencers, and language talent — all building the future of language services together.</p>
+    </div>
+
+    <div class="gw-ctas">
+        <a href="../../signup/join-us/" class="gw-cta gw-cta-primary">Yes, let's begin</a>
+        <a href="../team/" class="gw-cta gw-cta-secondary">Not yet</a>
+    </div>
+</main>
+
+<script>
+  window.SITE_ROOT = "../../";
+  window.SITE_SECTION = "joinus";
+  window.SITE_PAGE = "join-us/professional";
+
+  var hero = document.getElementById('gwHero');
+  document.querySelectorAll('.gw-cta').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      if (this.dataset.leaving) return;
+      e.preventDefault();
+      this.dataset.leaving = '1';
+      var href = this.href;
+      hero.classList.add('leaving');
+      setTimeout(function () { window.location.href = href; }, 380);
+    });
+  });
+</script>
+<script src="../../assets/js/nav.js" defer></script>
+</body>
+</html>

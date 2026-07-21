@@ -1,0 +1,37 @@
+[
+  {
+    "route": "explore/learn",
+    "title": "Learn with RealLingo",
+    "crumb": "Explore / Learn with RealLingo",
+    "section": "explore",
+    "theme": "explore",
+    "children": [
+      { "label": "Tutor Page", "href": "explore/learn/tutor/" },
+      { "label": "Language Learning App", "href": "explore/learn/app/" }
+    ]
+  },
+  { "route": "explore/learn/tutor", "title": "Tutor", "crumb": "Explore / Learn with RealLingo / Tutor", "section": "explore", "theme": "explore" },
+  { "route": "explore/learn/app", "title": "Language Learning App", "crumb": "Explore / Learn with RealLingo / Language Learning App", "section": "explore", "theme": "explore" },
+  { "route": "explore/travel", "title": "Travel with RealLingo", "crumb": "Explore / Travel with RealLingo", "section": "explore", "theme": "explore" },
+  { "route": "explore/event", "title": "Event with RealLingo", "crumb": "Explore / Event with RealLingo", "section": "explore", "theme": "explore" },
+  {
+    "route": "explore/resources",
+    "title": "Resources with RealLingo",
+    "crumb": "Explore / Resources with RealLingo",
+    "section": "explore",
+    "theme": "explore",
+    "children": [
+      { "label": "Scholarship Page", "href": "explore/resources/scholarship/" },
+      { "label": "Prompt Repository", "href": "explore/resources/prompt/" }
+    ]
+  },
+  { "route": "explore/resources/scholarship", "title": "Scholarship", "crumb": "Explore / Resources / Scholarship", "section": "explore", "theme": "explore" },
+  { "route": "explore/resources/prompt", "title": "Prompt Repository", "crumb": "Explore / Resources / Prompt Repository", "section": "explore", "theme": "explore" },
+
+  { "route": "business/translator", "title": "Find a Translator", "crumb": "Business / Find a Translator", "section": "business", "theme": "business" },
+  { "route": "business/marketing", "title": "Find a KOL/KOC", "crumb": "Business / Find a KOL/KOC", "section": "business", "theme": "business" },
+  { "route": "business/talent", "title": "Find a Talent", "crumb": "Business / Find a Talent · incl. SGYN Consultancy", "section": "business", "theme": "business" },
+
+  { "route": "join-us/team", "title": "Team", "crumb": "Join Us / Team", "section": "joinus", "theme": "joinus" },
+  { "route": "join-us/professional", "title": "Sign Up as a Professional", "crumb": "Join Us / Sign Up as a Professional", "section": "joinus", "theme": "joinus" }
+]

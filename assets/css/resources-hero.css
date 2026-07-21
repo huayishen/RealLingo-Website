@@ -1,0 +1,129 @@
+/* ══════════════════════════════════════════════════════════
+   RealLingo — "Resources" level-select map (explore/resources/).
+   A game-world-map style gateway: a single winding route connects
+   three "stops," with a traveling marker and clickable level nodes.
+   RealLingo Explore palette only (yellow / dark / white).
+══════════════════════════════════════════════════════════ */
+.rmap-hero {
+    background: var(--yellow);
+    min-height: calc(100vh - 82px);
+    padding: 5.5rem 2rem 5rem;
+    position: relative; overflow: hidden;
+}
+.rmap-hero::before, .rmap-hero::after {
+    content: ''; position: absolute; border-radius: 50%;
+    border: 1px solid rgba(17,18,22,.07); pointer-events: none;
+}
+.rmap-hero::before { width: 480px; height: 480px; top: -160px; left: -140px; }
+.rmap-hero::after  { width: 300px; height: 300px; bottom: -100px; right: -80px; }
+
+.rmap-intro { max-width: 640px; margin: 0 auto 3rem; text-align: center; position: relative; z-index: 2; }
+.rmap-crumb { font-size: .7rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: var(--text-mid); margin-bottom: 1.25rem; }
+.rmap-h1 { font-family: var(--font-serif); font-size: clamp(2.1rem, 4.4vw, 3.4rem); font-weight: 400; line-height: 1.15; color: var(--dark); margin-bottom: 1rem; }
+.rmap-h1 em { font-style: italic; }
+.rmap-sub { font-size: 1rem; color: var(--text-mid); line-height: 1.7; }
+
+/* ── Fixed-canvas game map (tablet & up) ── */
+.rmap-outer { position: relative; height: 460px; overflow: hidden; }
+.rmap-canvas {
+    position: relative; width: 900px; height: 460px; margin: 0 auto;
+    transform-origin: top center;
+}
+.rmap-path { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+.rmap-path path.route {
+    fill: none; stroke: rgba(17,18,22,.28); stroke-width: 3;
+    stroke-dasharray: 2 12; stroke-linecap: round;
+    animation: rmapFlow 2.6s linear infinite;
+}
+@keyframes rmapFlow { to { stroke-dashoffset: -28; } }
+
+.rmap-marker {
+    position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px;
+    border-radius: 50%; background: var(--dark);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 18px rgba(17,18,22,.28);
+    offset-path: path("M110,320 C280,320 230,90 450,90 C670,90 620,320 790,320");
+    offset-rotate: 0deg;
+    animation: rmapTravel 7s ease-in-out infinite alternate;
+    z-index: 1;
+}
+.rmap-marker svg { width: 15px; height: 15px; }
+@keyframes rmapTravel { to { offset-distance: 100%; } }
+
+.rmap-node {
+    position: absolute; z-index: 2; text-decoration: none; color: inherit;
+    display: flex; flex-direction: column; align-items: center; width: 190px;
+    transform: translate(-50%, -50%);
+}
+.rmap-node-ring {
+    width: 76px; height: 76px; border-radius: 50%;
+    background: #fff; border: 3px solid var(--dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; box-shadow: 0 14px 30px rgba(17,18,22,.18);
+    transition: transform .3s ease, box-shadow .3s ease;
+    position: relative;
+}
+.rmap-node-ring::before {
+    content: ''; position: absolute; inset: -8px; border-radius: 50%;
+    border: 2px dashed rgba(17,18,22,.25); opacity: 0;
+    transition: opacity .3s ease, transform .3s ease;
+    transform: scale(.85);
+}
+.rmap-node:hover .rmap-node-ring, .rmap-node:focus-visible .rmap-node-ring {
+    transform: translateY(-6px) scale(1.08);
+    box-shadow: 0 20px 40px rgba(17,18,22,.26);
+}
+.rmap-node:hover .rmap-node-ring::before, .rmap-node:focus-visible .rmap-node-ring::before {
+    opacity: 1; transform: scale(1);
+}
+.rmap-node-label {
+    margin-top: .875rem; font-weight: 800; font-size: .95rem; color: var(--dark);
+    background: #fff; padding: .35rem .9rem; border-radius: 100px;
+    border: 1px solid rgba(17,18,22,.1);
+}
+.rmap-node-desc {
+    margin-top: .6rem; font-size: .78rem; line-height: 1.55; color: var(--text-mid);
+    text-align: center; max-height: 0; opacity: 0; overflow: hidden;
+    transition: max-height .35s ease, opacity .3s ease, margin-top .35s ease;
+}
+.rmap-node:hover .rmap-node-desc, .rmap-node:focus-visible .rmap-node-desc {
+    max-height: 90px; opacity: 1; margin-top: .6rem;
+}
+@media (hover: none) {
+    .rmap-node-desc { max-height: 90px; opacity: 1; margin-top: .6rem; }
+}
+
+.rmap-node-1 { left: 110px; top: 320px; }
+.rmap-node-2 { left: 450px; top: 90px; }
+.rmap-node-3 { left: 790px; top: 320px; }
+
+.rmap-hint { text-align: center; font-size: .78rem; color: var(--text-mid); margin-top: 1.5rem; position: relative; z-index: 2; }
+
+@media (max-width: 1000px) and (min-width: 641px) {
+    .rmap-outer { height: 345px; }
+    .rmap-canvas { transform: scale(.75); }
+}
+
+/* ── Mobile fallback: simple vertical stop-list (no canvas map) ── */
+.rmap-list { display: none; }
+@media (max-width: 640px) {
+    .rmap-outer { display: none; }
+    .rmap-list {
+        display: flex; flex-direction: column; gap: 1.5rem;
+        margin-left: 12px; padding-left: 1.75rem;
+        border-left: 2px dashed rgba(17,18,22,.28);
+        position: relative; z-index: 2;
+    }
+    .rmap-list .rmap-node {
+        position: relative; flex-direction: row; align-items: center; width: auto;
+        transform: none; text-align: left; gap: 1rem;
+    }
+    .rmap-list .rmap-node::before {
+        content: ''; position: absolute; left: -1.75rem; top: 50%; margin-top: -6px; margin-left: -6px;
+        width: 12px; height: 12px; border-radius: 50%; background: var(--dark);
+    }
+    .rmap-list .rmap-node-ring { width: 54px; height: 54px; font-size: 1.4rem; flex-shrink: 0; }
+    .rmap-list .rmap-node-label { margin-top: 0; }
+    .rmap-list .rmap-node-textwrap { display: flex; flex-direction: column; align-items: flex-start; }
+    .rmap-list .rmap-node-desc { text-align: left; max-height: 90px; opacity: 1; margin-top: .35rem; }
+}

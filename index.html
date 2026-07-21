@@ -1,1750 +1,917 @@
 <!DOCTYPE html>
-<html lang="en"></html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Real lingo — Find Your Language Shortcut</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --y: #ffeb99; --ym: #f5d96a;
-      --dk: #111216; --bl: #99adff; --wh: #ffffff;
-      --sr: 'Times New Roman', Georgia, serif;
-      --ss: 'Be Vietnam Pro', system-ui, sans-serif;
-    }
-    html, body { width:100%; height:100%; background:#0d0e11; overflow:hidden; font-family:var(--ss); color:var(--wh); }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real lingo — Arabic & Chinese & Korean Language Services</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/site.css">
+    <link rel="stylesheet" href="assets/css/team.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── BG ── */
-    .bg { position:fixed; inset:0; z-index:0; background:#0d0e11; overflow:hidden; }
-    .blob { position:absolute; border-radius:50%; will-change:transform; }
-    .b1 { width:60vw;height:60vw;background:radial-gradient(circle,var(--y) 0%,transparent 70%);opacity:.055;top:-20%;left:-5%;animation:d1 24s ease-in-out infinite; }
-    .b2 { width:50vw;height:50vw;background:radial-gradient(circle,var(--bl) 0%,transparent 70%);opacity:.04;bottom:-15%;right:-5%;animation:d2 20s ease-in-out infinite 6s; }
-    .b3 { width:40vw;height:40vw;background:radial-gradient(circle,var(--y) 0%,transparent 70%);opacity:.03;top:45%;right:18%;animation:d3 28s ease-in-out infinite 12s; }
-    @keyframes d1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(4vw,-3vh) scale(1.06)} 66%{transform:translate(-3vw,4vh) scale(.96)} }
-    @keyframes d2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-5vw,-3vh) scale(1.1)} }
-    @keyframes d3 { 0%,100%{transform:translate(0,0) scale(1)} 45%{transform:translate(4vw,3vh) scale(.88)} }
-    .grain { position:fixed;inset:0;z-index:2;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;opacity:.032; }
+        :root {
+            --yellow:      #ffeb99;
+            --yellow-mid:  #f5d96a;
+            --cream:       #eeede9;
+            --cream-white: #fffff2;
+            --lavender:    #f2f2ff;
+            --dark:        #111216;
+            --blue:        #99adff;
+            --blue-dim:    #c4cfff;
+            --text:        #111216;
+            --text-mid:    #4a4840;
+            --text-soft:   #8a8878;
+            --border:      rgba(17,18,22,.09);
+            --border-sub:  rgba(17,18,22,.05);
+            --font-serif:  'Times New Roman', 'Times', Georgia, serif;
+            --font-sans:   'Be Vietnam Pro', system-ui, sans-serif;
+        }
 
-    /* ── SCREENS ── */
-    .screen { position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;transition:opacity .45s cubic-bezier(.4,0,.2,1); }
-    .screen.off { opacity:0;pointer-events:none; }
+        html { scroll-behavior: smooth; }
 
-    /* ── SHARED HEADER ── */
-    .app-hdr { position:absolute;top:0;left:0;right:0;z-index:30;padding:1.625rem 2.5rem;display:flex;align-items:center;justify-content:space-between; }
-    .logo { font-size:1.3rem;text-decoration:none;color:rgba(255,255,255,.65);display:flex;align-items:baseline;gap:.06em;transition:color .2s; }
-    .logo:hover { color:rgba(255,255,255,.9); }
-    .lr { font-family:var(--sr);font-style:italic;font-weight:400; }
-    .ll { font-family:var(--ss);font-weight:900;letter-spacing:-.03em; }
-    .skip-btn { background:none;border:1px solid rgba(255,255,255,.16);border-radius:100px;padding:.5rem 1.375rem;color:rgba(255,255,255,.38);font-family:var(--ss);font-size:.8rem;font-weight:600;letter-spacing:.05em;cursor:pointer;transition:color .22s,border-color .22s; }
-    .skip-btn:hover { color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.35); }
+        body {
+            font-family: var(--font-sans);
+            background: var(--cream);
+            color: var(--text);
+            overflow-x: hidden;
+            font-size: 16px;
+            line-height: 1.6;
+        }
 
-    /* ── INTRO ── */
-    #s-intro { align-items:center;justify-content:center; }
-    .sticker { position:absolute;padding:.55rem 1.375rem;border-radius:100px;font-size:1.05rem;font-weight:700;letter-spacing:.04em;user-select:none; }
-    .s-zh { background:var(--y);color:#111;top:22%;right:11%;animation:ftR 4.5s ease-in-out infinite;font-family:'PingFang SC','Noto Sans SC','Microsoft YaHei',var(--ss); }
-    .s-ar { border:1px solid rgba(153,173,255,.45);color:var(--bl);bottom:28%;left:9%;animation:ftL 5.5s ease-in-out infinite 1.6s;font-family:'Noto Sans Arabic','Arial Unicode MS',var(--ss);direction:rtl; }
-    @keyframes ftR { 0%,100%{transform:rotate(9deg) translateY(0)} 50%{transform:rotate(9deg) translateY(-12px)} }
-    @keyframes ftL { 0%,100%{transform:rotate(-7deg) translateY(0)} 50%{transform:rotate(-7deg) translateY(-10px)} }
-    .intro-body { display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:5; }
-    .intro-h1 { font-family:var(--ss);font-weight:900;font-size:clamp(3.75rem,10.5vw,9.5rem);color:var(--wh);letter-spacing:-.04em;line-height:.9;text-transform:lowercase;transition:opacity .3s ease,transform .3s ease; }
-    .intro-h1.slogan-out { opacity:0;transform:translateY(-18px); }
-    .intro-over { display:block;font-family:var(--sr);font-style:italic;font-weight:400;font-size:.33em;letter-spacing:.04em;color:rgba(255,255,255,.42);margin-bottom:.28em;text-transform:none; }
-    .btn-start { margin-top:2.75rem;display:inline-flex;align-items:center;gap:.5rem;padding:.9rem 2.375rem;border:1px solid rgba(255,255,255,.22);border-radius:100px;background:transparent;color:rgba(255,255,255,.7);font-family:var(--ss);font-size:.88rem;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:background .25s,border-color .25s,color .25s; }
-    .btn-start:hover { background:var(--y);border-color:var(--y);color:#111; }
+        /* ── HERO ────────────────────────────────────────────── */
+        .hero {
+            background: var(--yellow);
+            min-height: 100vh;
+            padding: 7.5rem 4rem 5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-    /* ══════════════════════════════════════════════════════════
-       FORM SCREEN — multi-section questionnaire
-    ══════════════════════════════════════════════════════════ */
-    #s-form { display:flex;flex-direction:column;overflow:hidden; }
+        .hero-lang-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--text-mid);
+            margin-bottom: 1.75rem;
+            padding: .35rem 1rem;
+            border: 1px solid rgba(17,18,22,.15);
+            border-radius: 100px;
+            opacity: 0;
+            animation: fadeUp .7s ease forwards .2s;
+        }
+        .hero-lang-pill span { color: var(--dark); font-weight: 800; }
 
-    #s-form .app-hdr {
-      position:relative;
-      background:rgba(13,14,17,.92);
-      backdrop-filter:blur(12px);
-      border-bottom:1px solid rgba(255,255,255,.06);
-      flex-shrink:0;
-    }
+        .hero-h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(3rem, 5.5vw, 5.75rem);
+            font-weight: 400;
+            line-height: 1.04;
+            letter-spacing: -.025em;
+            color: var(--dark);
+            margin-bottom: 1.625rem;
+            opacity: 0;
+            animation: fadeUp .7s ease forwards .4s;
+        }
+        .hero-h1 em { font-style: italic; }
 
-    /* body: sidebar + main */
-    .form-body { flex:1;display:flex;overflow:hidden; }
+        .hero-sub {
+            font-size: 1.05rem;
+            font-weight: 300;
+            color: var(--text-mid);
+            line-height: 1.75;
+            max-width: 460px;
+            margin-bottom: 2.625rem;
+            opacity: 0;
+            animation: fadeUp .7s ease forwards .6s;
+        }
 
-    /* Left section nav */
-    .sect-nav {
-      width:196px;flex-shrink:0;
-      padding:1.625rem 1.125rem;
-      border-right:1px solid rgba(255,255,255,.06);
-      overflow-y:auto;
-      display:flex;flex-direction:column;gap:.175rem;
-    }
-    .sn-hd { font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.16);padding:.375rem .5rem .625rem; }
-    .sn-item { display:flex;align-items:center;gap:.6rem;padding:.425rem .5rem;border-radius:5px; }
-    .sn-item.cur { background:rgba(255,235,153,.07); }
-    .sn-dot {
-      width:18px;height:18px;border-radius:50%;flex-shrink:0;
-      display:flex;align-items:center;justify-content:center;
-      font-size:.58rem;font-weight:900;
-    }
-    .sn-dot.done { background:var(--y);color:#111; }
-    .sn-dot.cur { border:2px solid var(--y);color:var(--y); }
-    .sn-dot.pending { background:rgba(255,255,255,.09); }
-    .sn-label { font-size:.7rem;font-weight:700;letter-spacing:.02em;color:rgba(255,255,255,.25);line-height:1.35; }
-    .sn-item.done .sn-label { color:rgba(255,255,255,.4); }
-    .sn-item.cur .sn-label { color:rgba(255,235,153,.9);font-weight:800; }
+        .hero-ctas {
+            display: flex;
+            gap: 1.125rem;
+            align-items: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeUp .7s ease forwards .8s;
+        }
 
-    /* Main content area */
-    .form-main { flex:1;display:flex;flex-direction:column;overflow:hidden; }
+        .btn-dark {
+            background: var(--dark);
+            color: var(--yellow);
+            padding: 1rem 2.25rem;
+            font-family: var(--font-sans);
+            font-size: .95rem; font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: background .2s, transform .2s, box-shadow .2s;
+        }
+        .btn-dark:hover {
+            background: #1e2028;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(17,18,22,.18);
+        }
 
-    /* Progress bar */
-    .fp-bar { flex-shrink:0;padding:.875rem 2.5rem 1rem;border-bottom:1px solid rgba(255,255,255,.05); }
-    .fp-meta { display:flex;align-items:center;justify-content:space-between;margin-bottom:.625rem; }
-    .fp-step { font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--y); }
-    .fp-title { font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.22); }
-    .fp-track { height:2px;background:rgba(255,255,255,.07);border-radius:1px;overflow:hidden; }
-    .fp-fill { height:100%;background:var(--y);border-radius:1px;transition:width .45s cubic-bezier(.4,0,.2,1); }
+        .btn-ghost {
+            font-size: .88rem; font-weight: 500;
+            color: var(--text-mid); text-decoration: none;
+            display: flex; align-items: center; gap: .4rem;
+            transition: color .2s;
+        }
+        .btn-ghost:hover { color: var(--text); }
+        .btn-ghost::after { content: '↓'; transition: transform .2s; }
+        .btn-ghost:hover::after { transform: translateY(3px); }
 
-    /* Scrollable step area */
-    .fstep-area { flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative; }
-    .fstep-inner { max-width:640px;width:100%;margin:0 auto;padding:2.5rem 2rem 1rem;min-height:100%;display:flex;flex-direction:column;justify-content:center; }
+        /* ── HERO ILLUSTRATION: globe + orbiting languages ─────── */
+        .hero-visual {
+            position: relative;
+            height: 520px;
+            opacity: 0;
+            animation: fadeIn .9s ease forwards 1.05s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .globe-illust { position: relative; z-index: 2; }
+        .globe-illust .node { transform-box: fill-box; transform-origin: center; animation: nodePulse 3.6s ease-in-out infinite; }
+        .globe-illust .n2 { animation-delay: .7s; }
+        .globe-illust .n3 { animation-delay: 1.4s; }
+        .globe-illust .n4 { animation-delay: 2.1s; }
+        @keyframes nodePulse {
+            0%, 100% { r: 4; opacity: 1; }
+            50%      { r: 5.5; opacity: .5; }
+        }
 
-    /* Step heading */
-    .fstep-tag { font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--y);opacity:.7;margin-bottom:.75rem; }
-    .fstep-q { font-family:var(--ss);font-weight:900;font-size:clamp(1.875rem,3.8vw,3.25rem);color:var(--wh);letter-spacing:-.035em;line-height:1.08;margin-bottom:.625rem; }
-    .fstep-hint { font-size:.8rem;color:rgba(255,255,255,.35);margin-bottom:1.5rem; }
-    .fstep-inputs { }
+        .orbit-ring {
+            position: absolute; top: 50%; left: 50%;
+            width: 420px; height: 420px; margin: -210px 0 0 -210px;
+            border: 1.5px dashed rgba(17,18,22,.16);
+            border-radius: 50%;
+        }
+        .orbit-spinner {
+            position: absolute; top: 50%; left: 50%; width: 0; height: 0;
+            animation: orbitSpin 46s linear infinite;
+        }
+        .orbit-item {
+            position: absolute; top: 0; left: 0;
+            transform: rotate(var(--a)) translateX(210px);
+        }
+        @keyframes orbitSpin { to { transform: rotate(360deg); } }
 
-    /* Slide transitions */
-    @keyframes sOutL { to   { transform:translateX(-48px);opacity:0; } }
-    @keyframes sInR  { from { transform:translateX(48px); opacity:0; } }
-    @keyframes sOutR { to   { transform:translateX(48px); opacity:0; } }
-    @keyframes sInL  { from { transform:translateX(-48px);opacity:0; } }
-    .s-out-l { animation:sOutL .24s ease forwards; }
-    .s-in-r  { animation:sInR  .24s ease forwards; }
-    .s-out-r { animation:sOutR .24s ease forwards; }
-    .s-in-l  { animation:sInL  .24s ease forwards; }
+        .lang-chip {
+            display: flex; align-items: center; gap: .4rem;
+            background: #fff; border: 1px solid rgba(17,18,22,.1);
+            padding: .5rem .85rem; border-radius: 100px;
+            font-size: .8rem; font-weight: 700; color: var(--dark);
+            box-shadow: 0 8px 20px rgba(17,18,22,.08);
+            white-space: nowrap;
+            animation: chipCounter 46s linear infinite;
+        }
+        .lang-chip .cf { font-size: 1rem; line-height: 1; }
+        .lang-chip[lang="ko"], .lang-chip[lang="zh"] { font-family: 'Noto Sans KR', 'Be Vietnam Pro', var(--font-sans); }
+        .lang-chip.has-variant {
+            flex-direction: column; align-items: flex-start; gap: .15rem;
+            border-radius: 14px; padding: .5rem .85rem .55rem;
+        }
+        .lang-chip.has-variant .cf-row { display: flex; align-items: center; gap: .4rem; }
+        .chip-variant {
+            font-size: .64rem; font-weight: 600; letter-spacing: .01em;
+            color: var(--text-soft); text-transform: none;
+            transition: opacity .3s ease;
+        }
+        @keyframes chipCounter {
+            from { transform: translate(-50%, -50%) rotate(calc(-1 * var(--a))); }
+            to   { transform: translate(-50%, -50%) rotate(calc(-1 * var(--a) - 360deg)); }
+        }
 
-    /* Error message */
-    .ferr { margin-top:.875rem;font-size:.8rem;font-weight:600;color:#ff7070;min-height:1.1em; }
-    @keyframes errShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
-    .ferr.shake { animation:errShake .3s ease; }
+        .accent-icon {
+            position: absolute; z-index: 3;
+            width: 46px; height: 46px; border-radius: 50%;
+            background: #fff; border: 1px solid rgba(17,18,22,.08);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 24px rgba(17,18,22,.09);
+        }
+        .a-plane  { top: 8%;    left: 2%;   animation: floatUp 4s   ease-in-out infinite; }
+        .a-chat   { bottom: 9%; left: -2%;  animation: floatUp 5.2s ease-in-out infinite 1.3s; }
+        .a-people { bottom: 2%; right: 4%;  animation: floatUp 4.6s ease-in-out infinite .6s; }
 
-    /* Bottom nav */
-    .form-nav { flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 2.5rem;border-top:1px solid rgba(255,255,255,.06);gap:1rem; }
-    .fbn-back { background:none;border:1px solid rgba(255,255,255,.14);border-radius:100px;padding:.75rem 1.75rem;color:rgba(255,255,255,.45);font-family:var(--ss);font-size:.875rem;font-weight:600;cursor:pointer;transition:color .2s,border-color .2s,opacity .2s; }
-    .fbn-back:hover:not(:disabled) { color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3); }
-    .fbn-back:disabled { opacity:.2;cursor:not-allowed; }
-    .fbn-next { background:var(--y);color:#111;border:none;padding:.875rem 2.25rem;border-radius:4px;font-family:var(--ss);font-size:.9rem;font-weight:800;letter-spacing:.04em;cursor:pointer;transition:background .2s,transform .15s;margin-left:auto; }
-    .fbn-next:hover { background:var(--ym);transform:translateY(-1px); }
+        /* ── LANG BANNER ─────────────────────────────────────── */
+        .lang-banner {
+            background: var(--dark);
+            padding: 1.5rem 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+        }
+        .lang-pill {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: .875rem 2rem;
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 100px;
+        }
+        .lang-flag { font-size: 1.6rem; }
+        .lang-info {}
+        .lang-name {
+            font-size: 1rem; font-weight: 700;
+            color: var(--yellow); line-height: 1;
+        }
+        .lang-note {
+            font-size: .72rem; font-weight: 500;
+            letter-spacing: .06em; text-transform: uppercase;
+            color: rgba(255,255,255,.35);
+            margin-top: .2rem;
+        }
+        .lang-sep {
+            width: 1px; height: 40px;
+            background: rgba(255,255,255,.08);
+        }
 
-    /* ── Shared form inputs ── */
-    .fi { width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.11);border-radius:6px;padding:.875rem 1.125rem;color:#fff;font-family:var(--ss);font-size:.95rem;font-weight:400;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none; }
-    .fi:focus { border-color:var(--y); }
-    .fi::placeholder { color:rgba(255,255,255,.22); }
-    .fs { width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.11);border-radius:6px;padding:.875rem 2.5rem .875rem 1.125rem;color:#fff;font-family:var(--ss);font-size:.9rem;outline:none;cursor:pointer;transition:border-color .2s;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,0.3)'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center; }
-    .fs:focus { border-color:var(--y); }
-    .fs option { background:#1a1c22;color:#fff; }
-    .fs optgroup { color:rgba(255,235,153,.5);font-size:.75rem; }
-    .fl-sm { display:block;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.4rem; }
+        /* ── SHARED SECTION ──────────────────────────────────── */
+        .section { padding: 7rem 4rem; }
 
-    /* Radio / checkbox pills */
-    .radio-grp,.chk-grp { display:flex;flex-wrap:wrap;gap:.5rem; }
-    .r-opt,.c-opt { display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.25rem;border:1px solid rgba(255,255,255,.14);border-radius:100px;cursor:pointer;font-family:var(--ss);font-size:.875rem;font-weight:500;color:rgba(255,255,255,.55);transition:border-color .2s,background .2s,color .2s;user-select:none;background:transparent; }
-    .r-opt:hover,.c-opt:hover { border-color:rgba(255,235,153,.35);color:rgba(255,255,255,.8); }
-    .r-opt.sel,.c-opt.sel { background:rgba(255,235,153,.1);border-color:var(--y);color:var(--y); }
-    .c-opt.sel::before { content:'✓';font-size:.72rem;font-weight:900; }
-    .chk-grp.col { flex-direction:column;align-items:flex-start; }
-    .chk-grp.col .c-opt { width:100%; }
+        .kicker {
+            font-size: .7rem; font-weight: 700;
+            letter-spacing: .13em; text-transform: uppercase;
+            color: var(--text-soft); margin-bottom: .875rem;
+        }
+        .kicker.light { color: rgba(255,235,153,.42); }
 
-    /* Conditional reveal */
-    .cond { max-height:0;overflow:hidden;opacity:0;transition:max-height .32s ease,opacity .32s ease,margin .32s ease; }
-    .cond.show { max-height:400px;opacity:1;margin-top:.875rem; }
+        .sh2 {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 3.5vw, 3.6rem);
+            font-weight: 400; line-height: 1.1;
+            margin-bottom: .875rem;
+        }
+        .sh2 em { font-style: italic; }
+        .sh2.light { color: #fff; }
 
-    /* 2-col grid */
-    .fg-2 { display:grid;grid-template-columns:1fr 1fr;gap:1rem; }
+        .ssub {
+            font-size: .975rem; font-weight: 300;
+            color: var(--text-mid); line-height: 1.75;
+            max-width: 530px;
+        }
+        .ssub.light { color: rgba(255,255,255,.45); }
 
-    /* Language level builder */
-    .lang-section { border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:1rem 1.25rem;margin-top:.875rem; }
-    .lang-section-hd { font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,235,153,.65);margin-bottom:.875rem; }
-    .lang-level-row { display:flex;align-items:center;flex-wrap:wrap;gap:.625rem;margin-top:.75rem; }
-    .lang-level-label { font-size:.78rem;color:rgba(255,255,255,.45);min-width:150px;flex-shrink:0; }
-    .lang-level-opts { display:flex;flex-wrap:wrap;gap:.35rem; }
-    .lvl-btn { padding:.3rem .75rem;border:1px solid rgba(255,255,255,.14);border-radius:100px;font-size:.72rem;font-weight:600;color:rgba(255,255,255,.45);background:transparent;cursor:pointer;transition:all .15s; }
-    .lvl-btn:hover { border-color:rgba(255,235,153,.35);color:rgba(255,255,255,.75); }
-    .lvl-btn.sel { background:rgba(255,235,153,.1);border-color:var(--y);color:var(--y); }
+        .reveal {
+            opacity: 0; transform: translateY(22px);
+            transition: opacity .65s ease, transform .65s ease;
+        }
+        .reveal.in { opacity: 1; transform: translateY(0); }
 
-    /* Dual-handle range slider */
-    .rslider { position:relative;padding:2rem 0 .25rem;user-select:none; }
-    .rslider-track { position:relative;height:4px;background:rgba(255,255,255,.1);border-radius:2px;cursor:pointer;margin:0 11px; }
-    .rslider-fill { position:absolute;height:100%;background:var(--y);border-radius:2px;pointer-events:none; }
-    .rslider-handle { position:absolute;top:50%;width:22px;height:22px;border-radius:50%;background:var(--y);cursor:grab;box-shadow:0 0 0 5px rgba(255,235,153,.14);transition:box-shadow .15s;touch-action:none;z-index:3;transform:translate(-50%,-50%); }
-    .rslider-handle:hover { box-shadow:0 0 0 9px rgba(255,235,153,.16); }
-    .rslider-handle.dragging { cursor:grabbing;box-shadow:0 0 0 12px rgba(255,235,153,.18); }
-    .rslider-lbl { position:absolute;bottom:calc(100% + 11px);left:50%;transform:translateX(-50%);font-size:.7rem;font-weight:800;color:var(--y);white-space:nowrap;pointer-events:none;background:rgba(10,11,14,.92);padding:.2rem .5rem;border-radius:3px;border:1px solid rgba(255,235,153,.22);min-width:2rem;text-align:center; }
-    .slider-ends { display:flex;justify-content:space-between;margin-top:.625rem;font-size:.68rem;color:rgba(255,255,255,.2); }
-    .rs-value { margin-top:1.25rem;font-size:.95rem;font-weight:500;color:rgba(255,255,255,.5); }
-    .rs-value strong { color:var(--y);font-weight:700; }
+        /* ── JOURNEY MAP (services) ──────────────────────────────
+           Three "regions" (Explore/Business/Professional), each a
+           mini metro-line of clickable destination stops, joined by
+           a decorative flight path with a looping traveler icon. */
+        .jmap-intro { max-width: 640px; margin-bottom: 3.5rem; }
 
-    /* File upload */
-    .file-zone { display:block;border:1.5px dashed rgba(255,255,255,.1);border-radius:6px;padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s; }
-    .file-zone:hover { border-color:rgba(255,235,153,.25);background:rgba(255,235,153,.02); }
-    .file-zone.has-file { border-color:rgba(255,235,153,.3); }
-    .fz-icon { display:block;font-size:1.25rem;opacity:.3;margin-bottom:.375rem; }
-    .fz-txt { font-size:.8rem;color:rgba(255,255,255,.28); }
-    .file-zone.has-file .fz-txt { color:rgba(255,235,153,.7); }
+        .jmap-wrap { position: relative; }
 
-    /* Review page */
-    .review-section { margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.06); }
-    .review-section:last-child { border-bottom:none;margin-bottom:0; }
-    .review-section-hd { display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem; }
-    .review-section-title { font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,235,153,.6); }
-    .review-edit { background:none;border:1px solid rgba(255,255,255,.15);border-radius:100px;padding:.3rem .875rem;font-size:.72rem;font-weight:600;color:rgba(255,255,255,.4);cursor:pointer;transition:all .2s; }
-    .review-edit:hover { color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.3); }
-    .review-row { display:flex;flex-direction:column;gap:.2rem;margin-bottom:.875rem; }
-    .review-row:last-child { margin-bottom:0; }
-    .review-label { font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.22); }
-    .review-value { font-size:.88rem;font-weight:500;color:rgba(255,255,255,.72);line-height:1.5; }
-    .review-submit { background:var(--y);color:#111;border:none;padding:1rem 2.5rem;font-family:var(--ss);font-size:.95rem;font-weight:800;letter-spacing:.04em;cursor:pointer;border-radius:4px;transition:background .2s,transform .2s;margin-top:2rem; }
-    .review-submit:hover { background:var(--ym);transform:translateY(-2px); }
+        .jmap-flightpath {
+            position: relative;
+            height: 84px;
+            margin-bottom: 1.5rem;
+            border-top: 2px dashed rgba(17,18,22,.16);
+        }
+        .jmap-hubdot {
+            position: absolute; top: -5px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--dark); transform: translateX(-50%);
+        }
+        .jmap-plane {
+            position: absolute; top: -13px; left: 0;
+            width: 26px; height: 26px; border-radius: 50%;
+            background: var(--dark);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 6px 14px rgba(17,18,22,.22);
+            transform: translate(-50%, 0);
+            animation: jmapFly 9s ease-in-out infinite;
+        }
+        .jmap-plane svg { width: 13px; height: 13px; }
+        @keyframes jmapFly {
+            0%   { left: 0%;   opacity: 0; }
+            8%   { opacity: 1; }
+            48%  { left: 100%; opacity: 1; }
+            50%  { opacity: 0; }
+            50.1%{ left: 0%; }
+            58%  { opacity: 1; }
+            100% { left: 100%; opacity: 1; }
+        }
+        .jmap-bubble {
+            position: absolute; top: 18px;
+            font-size: .72rem; font-weight: 600; color: var(--text-mid);
+            background: #fff; border: 1px solid var(--border-sub);
+            padding: .3rem .65rem; border-radius: 100px;
+            white-space: nowrap; pointer-events: none;
+            animation: floatUp 4.5s ease-in-out infinite;
+        }
 
-    /* Language pair (translator) */
-    .lang-pair-row { display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem; }
-    .lang-pair-sep { font-size:.8rem;font-weight:700;color:rgba(255,255,255,.3);flex-shrink:0; }
-    .add-pair-btn { background:none;border:1px solid rgba(255,255,255,.14);border-radius:100px;padding:.55rem 1.25rem;color:rgba(255,255,255,.4);font-family:var(--ss);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;margin-top:.5rem; }
-    .add-pair-btn:hover { color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.3); }
-    .remove-pair-btn { background:none;border:none;color:rgba(255,255,255,.25);font-size:1rem;cursor:pointer;padding:.25rem;transition:color .2s;flex-shrink:0; }
-    .remove-pair-btn:hover { color:rgba(255,70,70,.6); }
+        .jmap-regions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.75rem;
+        }
+        .jmap-region {
+            border-radius: 26px;
+            padding: 2.25rem 2rem 2rem;
+            position: relative;
+        }
+        .jmap-region.explore { background: var(--yellow); color: var(--dark); }
+        .jmap-region.business { background: var(--dark); color: rgba(255,255,255,.92); }
+        .jmap-region.professional { background: var(--cream-white); color: var(--dark); border: 1px solid var(--border); }
 
-    /* ── WELCOME OVERLAY ── */
-    #s-welcome { position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;background:rgba(13,14,17,.9);backdrop-filter:blur(18px);opacity:0;pointer-events:none;transition:opacity .5s ease; }
-    #s-welcome.show { opacity:1;pointer-events:all; }
-    .wlc-card { background:var(--y);padding:4rem 5rem;text-align:center;max-width:560px;width:90%;border-radius:4px; }
-    .wlc-en { font-family:var(--sr);font-style:italic;font-size:clamp(2rem,5vw,3.5rem);font-weight:400;color:var(--dk);margin-bottom:.625rem;opacity:0;animation:fadeUp .55s ease forwards .15s; }
-    .wlc-en strong { font-family:var(--ss);font-style:normal;font-weight:900;letter-spacing:-.03em; }
-    .wlc-zh { font-size:1.875rem;font-weight:700;color:var(--dk);font-family:'PingFang SC','Noto Sans SC','Microsoft YaHei',var(--ss);margin-bottom:.625rem;opacity:0;animation:fadeUp .55s ease forwards .5s; }
-    .wlc-ar { font-size:1.625rem;font-weight:700;color:var(--dk);font-family:'Noto Sans Arabic','Arial Unicode MS',var(--ss);direction:rtl;margin-bottom:2rem;opacity:0;animation:fadeUp .55s ease forwards .85s; }
-    .wlc-note { font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(17,18,22,.4);opacity:0;animation:fadeUp .55s ease forwards 1.2s; }
-    .wlc-bar { width:0;height:2px;background:rgba(17,18,22,.2);margin:1.125rem auto 0;border-radius:1px;animation:barFill 3.2s linear forwards 1.4s; }
-    .wlc-skip { display:inline-block;margin-top:1.25rem;background:none;border:1px solid rgba(17,18,22,.2);border-radius:100px;padding:.5rem 1.5rem;font-family:var(--ss);font-size:.78rem;font-weight:600;letter-spacing:.04em;color:rgba(17,18,22,.45);cursor:pointer;transition:background .2s,color .2s,border-color .2s;opacity:0;animation:fadeUp .4s ease forwards 1.5s; }
-    .wlc-skip:hover { background:rgba(17,18,22,.08);color:rgba(17,18,22,.75);border-color:rgba(17,18,22,.35); }
-    @keyframes barFill { to { width:100%; } }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+        .jmap-hub { display: flex; align-items: center; gap: .7rem; margin-bottom: 1rem; }
+        .jmap-hub-icon {
+            width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; background: rgba(17,18,22,.07);
+        }
+        .jmap-region.business .jmap-hub-icon { background: rgba(255,255,255,.1); }
+        .jmap-hub-eyebrow { font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; opacity: .6; }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width:900px) {
-      .fp-bar,.form-nav { padding-left:1.5rem;padding-right:1.5rem; }
-    }
-    @media (max-width:768px) {
-      .sect-nav { display:none; }
-    }
-    @media (max-width:680px) {
-      .app-hdr { padding:1.25rem 1.5rem; }
-      .s-zh { top:16%;right:4%; }
-      .s-ar { bottom:18%;left:4%; }
-      .fstep-inner { padding:2rem 1.25rem 1rem; }
-      .fg-2 { grid-template-columns:1fr; }
-      .wlc-card { padding:3rem 2rem; }
-    }
-    @media (max-height:620px) {
-      .fstep-inner { justify-content:flex-start;padding-top:1.5rem; }
-    }
-  </style>
+        .jmap-tagline {
+            font-family: var(--font-serif); font-size: 1.28rem; line-height: 1.28;
+            margin-bottom: 1.875rem;
+        }
+        .jmap-tagline .hl { font-style: italic; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+        .jmap-region.explore .jmap-tagline .hl, .jmap-region.professional .jmap-tagline .hl { text-decoration-color: rgba(17,18,22,.35); }
+        .jmap-region.business .jmap-tagline .hl { text-decoration-color: var(--yellow); }
+
+        .jmap-line {
+            margin-left: 10px; padding-left: 1.75rem;
+            border-left: 2px dashed rgba(17,18,22,.22);
+            display: flex; flex-direction: column; gap: 1.5rem;
+            transition: border-color .3s;
+        }
+        .jmap-region.business .jmap-line { border-left-color: rgba(255,255,255,.22); }
+        .jmap-line:has(.jmap-dest:hover) { border-left-color: currentColor; }
+
+        .jmap-dest { position: relative; text-decoration: none; color: inherit; display: block; }
+        .jmap-dest-dot {
+            position: absolute; top: .32rem; left: -1.75rem; margin-left: -6px;
+            width: 12px; height: 12px; border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 0 3px rgba(255,255,255,.5);
+            transition: transform .25s ease;
+        }
+        .jmap-region.business .jmap-dest-dot { box-shadow: 0 0 0 3px rgba(255,255,255,.12); }
+        .jmap-dest:hover .jmap-dest-dot, .jmap-dest:focus-visible .jmap-dest-dot { transform: scale(1.45); }
+
+        .jmap-dest-name { font-weight: 700; font-size: .95rem; display: flex; align-items: center; gap: .55rem; }
+        .jmap-dest-icon {
+            width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(17,18,22,.06);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+        .jmap-region.business .jmap-dest-icon { background: rgba(255,255,255,.1); }
+        .jmap-dest:hover .jmap-dest-icon, .jmap-dest:focus-visible .jmap-dest-icon {
+            transform: scale(1.14) rotate(-4deg);
+            box-shadow: 0 8px 18px rgba(17,18,22,.16);
+        }
+
+        .jmap-dest-desc {
+            font-size: .78rem; line-height: 1.6; opacity: 0; max-height: 0;
+            overflow: hidden; margin-top: 0; margin-left: calc(30px + .55rem);
+            transition: max-height .35s ease, opacity .3s ease, margin-top .35s ease;
+        }
+        .jmap-dest:hover .jmap-dest-desc, .jmap-dest:focus-visible .jmap-dest-desc {
+            max-height: 90px; opacity: .8; margin-top: .4rem;
+        }
+        @media (hover: none) {
+            .jmap-dest-desc { max-height: 90px; opacity: .8; margin-top: .4rem; }
+        }
+
+        /* ── HOW IT WORKS ─────────────────────────────────────── */
+        .how { background: var(--dark); }
+        .how-head { text-align: center; margin-bottom: 5rem; }
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4rem; }
+        .step { padding-top: 2.375rem; border-top: 1px solid rgba(255,255,255,.08); }
+        .step-n {
+            font-family: var(--font-serif); font-style: italic;
+            font-size: 5.5rem; font-weight: 400;
+            color: var(--yellow); opacity: .12;
+            line-height: 1; margin-bottom: .875rem;
+        }
+        .step-t { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: .55rem; }
+        .step-d { font-size: .85rem; font-weight: 300; color: rgba(255,255,255,.45); line-height: 1.75; }
+        .step-eg {
+            margin-top: 1.5rem; padding: 1.125rem;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: 2px;
+        }
+        .step-eg-l {
+            font-size: .62rem; font-weight: 700;
+            letter-spacing: .1em; text-transform: uppercase;
+            color: rgba(255,235,153,.42); margin-bottom: .45rem;
+        }
+        .step-eg-t {
+            font-family: var(--font-serif); font-style: italic;
+            font-size: .95rem; color: rgba(255,255,255,.75); line-height: 1.5;
+        }
+        .step-eg-t[dir="rtl"] {
+            font-family: 'Noto Sans Arabic', 'Arial Unicode MS', serif;
+            font-style: normal;
+        }
+
+        /* ── COMPARISON ───────────────────────────────────────── */
+        .comparison { background: var(--lavender); }
+        .cmp-head { text-align: center; margin-bottom: 4rem; }
+        .cmp-cols {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 2px; background: var(--border);
+            max-width: 880px; margin: 0 auto;
+        }
+        .cmp-col { padding: 3.25rem; background: var(--lavender); }
+        .cmp-col.better { background: #fff; }
+        .cmp-badge {
+            display: inline-block;
+            font-size: .66rem; font-weight: 700;
+            letter-spacing: .1em; text-transform: uppercase;
+            padding: .3rem .7rem; margin-bottom: 2rem;
+        }
+        .cmp-col.worse .cmp-badge { background: var(--cream); color: var(--text-soft); }
+        .cmp-col.better .cmp-badge { background: var(--yellow); color: #6a5800; }
+        .cmp-title {
+            font-family: var(--font-serif);
+            font-size: 1.3rem; font-weight: 400;
+            line-height: 1.35; margin-bottom: 1.875rem;
+        }
+        .cmp-col.worse .cmp-title { color: var(--text-soft); }
+        .cmp-list { list-style: none; display: flex; flex-direction: column; gap: .7rem; }
+        .cmp-list li { display: flex; gap: .7rem; font-size: .875rem; line-height: 1.5; }
+        .cmp-col.worse .cmp-list li { color: var(--text-soft); }
+        .cmp-col.better .cmp-list li { color: var(--text-mid); }
+        .cmp-icon { flex-shrink: 0; font-size: .8rem; margin-top: .12rem; }
+        .cmp-col.worse  .cmp-icon { color: var(--text-soft); opacity: .4; }
+        .cmp-col.better .cmp-icon { color: var(--blue); }
+
+        /* ── TESTIMONIALS ─────────────────────────────────────── */
+
+        /* ── CTA ──────────────────────────────────────────────── */
+        .cta-section {
+            background: var(--yellow);
+            padding: 9rem 4rem 8rem;
+            text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .cta-section::before, .cta-section::after {
+            content: '';
+            position: absolute; border-radius: 50%;
+            border: 1px solid rgba(17,18,22,.05);
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            pointer-events: none;
+        }
+        .cta-section::before { width: 560px; height: 560px; }
+        .cta-section::after  { width: 880px; height: 880px; }
+        .cta-eyebrow {
+            font-size: .7rem; font-weight: 700;
+            letter-spacing: .14em; text-transform: uppercase;
+            color: var(--text-mid); margin-bottom: 1rem;
+            position: relative; z-index: 1;
+        }
+        .cta-h2 {
+            font-family: var(--font-serif);
+            font-size: clamp(2.75rem, 5.5vw, 5.5rem);
+            font-weight: 400; line-height: 1.05;
+            color: var(--dark); margin-bottom: 1.375rem;
+            position: relative; z-index: 1;
+        }
+        .cta-h2 em { font-style: italic; }
+        .cta-sub {
+            font-size: .975rem; font-weight: 300;
+            color: var(--text-mid); max-width: 460px;
+            margin: 0 auto 2.75rem; line-height: 1.75;
+            position: relative; z-index: 1;
+        }
+        .cta-actions {
+            display: flex; gap: 1rem;
+            justify-content: center; align-items: center;
+            position: relative; z-index: 1;
+        }
+        .cta-note {
+            margin-top: 1.25rem; font-size: .76rem;
+            color: var(--text-soft);
+            position: relative; z-index: 1;
+        }
+
+        /* ── ANIMATIONS ───────────────────────────────────────── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0);    }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        @keyframes floatUp {
+            0%,100% { transform: translateY(0);    }
+            50%      { transform: translateY(-10px); }
+        }
+
+        /* ── RESPONSIVE ───────────────────────────────────────── */
+        @media (max-width: 1100px) {
+            .hero { grid-template-columns: 1fr; padding: 7rem 2.5rem 4rem; gap: 3rem; }
+            .hero-visual { height: 400px; }
+            .orbit-ring { width: 320px; height: 320px; margin: -160px 0 0 -160px; }
+            .orbit-item { transform: rotate(var(--a)) translateX(160px); }
+            .globe-illust svg { width: 150px; height: 150px; }
+            .steps { grid-template-columns: 1fr; gap: 2.5rem; }
+            .lang-banner { gap: 1.5rem; flex-wrap: wrap; padding: 1.5rem 2.5rem; }
+            .jmap-regions { grid-template-columns: 1fr; gap: 1.25rem; }
+            .jmap-flightpath { display: none; }
+        }
+        @media (max-width: 768px) {
+            .hero { padding: 6rem 1.5rem 3.5rem; }
+            .hero-visual { display: none; }
+            .section { padding: 4.5rem 1.5rem; }
+            .cmp-cols { grid-template-columns: 1fr; }
+            .cta-section { padding: 6rem 1.5rem; }
+        }
+    </style>
 </head>
 <body>
 
-<!-- BG -->
-<div class="bg" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
-<div class="grain" aria-hidden="true"></div>
+<div id="site-header"></div>
 
-<!-- ═══ INTRO ══════════════════════════════════════════════════ -->
-<section class="screen" id="s-intro">
-  <header class="app-hdr">
-    <a href="landing.html" class="logo"><span class="lr">Real</span><span class="ll">lingo</span></a>
-    <button class="skip-btn" onclick="goLanding()">skip →</button>
-  </header>
-  <div class="sticker s-zh">中文</div>
-  <div class="sticker s-ar">عربي</div>
-  <div class="intro-body">
-    <h1 class="intro-h1" id="introH1"><span class="intro-over" id="introLine1">Beyond Words</span><span id="introLine2">Into Worlds</span></h1>
-    <button class="btn-start" onclick="showForm()">start quiz</button>
-  </div>
-</section>
-
-<!-- ═══ FORM — multi-section questionnaire ═══════════════════ -->
-<section class="screen off" id="s-form">
-
-  <header class="app-hdr">
-    <a href="landing.html" class="logo"><span class="lr">Real</span><span class="ll">lingo</span></a>
-    <button class="skip-btn" onclick="goLanding()">skip →</button>
-  </header>
-
-  <div class="form-body">
-    <!-- Left sidebar: section progress -->
-    <nav class="sect-nav" id="sectNav" aria-label="Form sections"></nav>
-
-    <!-- Main content -->
-    <div class="form-main">
-      <!-- Progress bar -->
-      <div class="fp-bar">
-        <div class="fp-meta">
-          <span class="fp-step" id="fpStep">Step 1</span>
-          <span class="fp-title" id="fpTitle"></span>
+<!-- ═══ HERO ══════════════════════════════════════════════════ -->
+<section class="hero">
+    <div>
+        <div class="hero-lang-pill">
+            <span>Arabic</span> &amp; <span>Chinese</span> &amp; <span>Korean</span> · Language Services Since 2026
         </div>
-        <div class="fp-track"><div class="fp-fill" id="fpFill" style="width:0%"></div></div>
-      </div>
-
-      <!-- Scrollable step area -->
-      <div class="fstep-area" id="fstepArea">
-        <div class="fstep-inner" id="fstepInner"></div>
-      </div>
-
-      <!-- Navigation -->
-      <div class="form-nav">
-        <button class="fbn-back" id="fBtnBack" onclick="prevStep()">← Back</button>
-        <button class="fbn-next" id="fBtnNext" onclick="nextStep()">Next →</button>
-      </div>
+        <h1 class="hero-h1"><em>Real</em> Experiences,<br><em>Right</em> at Your<br>Fingertips.</h1>
+        <p class="hero-sub">
+            At RealLingo, every language opens a door, every journey tells a story, every conversation builds a bridge, and every connection brings the world a little closer.
+        </p>
+        <div class="hero-ctas">
+            <a href="signup/" class="btn-dark">Find Your Match</a>
+            <a href="#features" class="btn-ghost">See how it works</a>
+        </div>
     </div>
-  </div>
 
+    <div class="hero-visual">
+        <div class="orbit-ring"></div>
+
+        <div class="globe-illust">
+            <svg viewBox="0 0 200 200" width="190" height="190">
+                <circle cx="100" cy="100" r="82" fill="none" stroke="var(--dark)" stroke-width="2"/>
+                <ellipse cx="100" cy="100" rx="82" ry="28" fill="none" stroke="var(--dark)" stroke-width="1.2" opacity=".5"/>
+                <ellipse cx="100" cy="100" rx="36" ry="82" fill="none" stroke="var(--dark)" stroke-width="1.2" opacity=".5"/>
+                <path d="M18,100 H182" stroke="var(--dark)" stroke-width="1.2" opacity=".5"/>
+                <path class="node-line" d="M66,58 L138,72 M138,72 L128,140 M128,140 L58,134 M58,134 L66,58" stroke="var(--dark)" stroke-width="1" opacity=".28" stroke-dasharray="3 4"/>
+                <circle class="node n1" cx="66" cy="58" r="4" fill="var(--dark)"/>
+                <circle class="node n2" cx="138" cy="72" r="4" fill="var(--dark)"/>
+                <circle class="node n3" cx="58" cy="134" r="4" fill="var(--dark)"/>
+                <circle class="node n4" cx="128" cy="140" r="4" fill="var(--dark)"/>
+            </svg>
+        </div>
+
+        <div class="orbit-spinner">
+            <div class="orbit-item" style="--a:-18deg"><div class="lang-chip has-variant" lang="zh" data-variants="Mandarin,Cantonese,Taiwanese,Hokkien"><span class="cf-row"><span class="cf">🇨🇳</span>中文</span><span class="chip-variant">Mandarin</span></div></div>
+            <div class="orbit-item" style="--a:54deg"><div class="lang-chip has-variant" data-variants="Fusha (MSA),Gulf,Egyptian,Levantine,Maghrebi"><span class="cf-row"><span class="cf">🇸🇦</span>العربية</span><span class="chip-variant">Fusha (MSA)</span></div></div>
+            <div class="orbit-item" style="--a:126deg"><div class="lang-chip" lang="ko"><span class="cf">🇰🇷</span>한국어</div></div>
+            <div class="orbit-item" style="--a:198deg"><div class="lang-chip has-variant" data-variants="France,Québec,Belgian,Swiss"><span class="cf-row"><span class="cf">🇫🇷</span>Français</span><span class="chip-variant">France</span></div></div>
+            <div class="orbit-item" style="--a:270deg"><div class="lang-chip has-variant" data-variants="Castilian,Mexican,Andean,Caribbean" ><span class="cf-row"><span class="cf">🇪🇸</span>Español</span><span class="chip-variant">Castilian</span></div></div>
+        </div>
+
+        <div class="accent-icon a-plane" title="Travel">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--dark)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l7-1 5-8 2 1-3 7 6-1 2 2-7 3-2 6-2-1 1-6-6 1z"/></svg>
+        </div>
+        <div class="accent-icon a-chat" title="Cross-cultural communication">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--dark)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>
+        </div>
+        <div class="accent-icon a-people" title="Community">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--dark)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.6"/><path d="M2 20c0-3.3 2.7-6 6-6s6 2.7 6 6M13 15c2.8 0 5 2 5 5"/></svg>
+        </div>
+    </div>
 </section>
 
-<!-- ═══ WELCOME OVERLAY ════════════════════════════════════════ -->
-<div id="s-welcome">
-  <div class="wlc-card">
-    <div class="wlc-en">Welcome to <strong>Real</strong>lingo!</div>
-    <div class="wlc-zh">欢迎加入！</div>
-    <div class="wlc-ar">أهلاً وسهلاً بك!</div>
-    <div class="wlc-note">Taking you to the platform...</div>
-    <div class="wlc-bar"></div>
-    <button class="wlc-skip" onclick="skipWelcome()">Skip →</button>
-  </div>
+<!-- ═══ LANGUAGE BANNER ══════════════════════════════════════ -->
+<div class="lang-banner">
+    <div class="lang-pill">
+        <div class="lang-flag">🌍</div>
+        <div class="lang-info">
+            <div class="lang-name">Arabic</div>
+            <div class="lang-note">MSA · Gulf · Egyptian · Levantine · Maghrebi</div>
+        </div>
+    </div>
+    <div class="lang-sep"></div>
+    <div class="lang-pill">
+        <div class="lang-flag">🌏</div>
+        <div class="lang-info">
+            <div class="lang-name">Chinese</div>
+            <div class="lang-note">Mandarin · Cantonese · Hokkien · Taiwanese</div>
+        </div>
+    </div>
+    <div class="lang-sep"></div>
+    <div class="lang-pill">
+        <div class="lang-flag">🇰🇷</div>
+        <div class="lang-info">
+            <div class="lang-name">Korean</div>
+            <div class="lang-note">Standard · Everyday Spoken Korean</div>
+        </div>
+    </div>
 </div>
 
-<script>
-/* ════════════════════════════════════════════════════════════
-   SCREEN SWITCHER
-════════════════════════════════════════════════════════════ */
-const ALL_SCREENS = ['s-intro','s-form'];
-function showScreen(id) {
-  ALL_SCREENS.forEach(sid =>
-    document.getElementById(sid)?.classList.toggle('off', sid !== id)
-  );
-}
-
-/* ════════════════════════════════════════════════════════════
-   CONSTANTS & REFERENCE DATA
-════════════════════════════════════════════════════════════ */
-
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-const ROLE_KEYS = [
-  'tutor','translator','languageTalent','influencer',
-  'learner','hiring','tourGuide','traveler','languageEvent','communityMember'
-];
-
-const ROLE_DISPLAY = {
-  tutor:           'a tutor',
-  translator:      'a translator / interpreter',
-  languageTalent:  'a language talent',
-  influencer:      'an influencer',
-  learner:         'a language learner',
-  hiring:          'a hiring manager / HR',
-  tourGuide:       'a tour guide',
-  traveler:        'a traveler',
-  languageEvent:   'a language event organizer / community leader',
-  communityMember: 'a language community member',
-};
-
-const SECTION_LABEL = {
-  general:         'General',
-  tutor:           'Tutor',
-  translator:      'Translator',
-  languageTalent:  'Language Talent',
-  influencer:      'Influencer',
-  learner:         'Learner',
-  hiring:          'Hiring / HR',
-  tourGuide:       'Tour Guide',
-  traveler:        'Traveler',
-  languageEvent:   'Language Event',
-  communityMember: 'Community',
-  final:           'Final',
-  review:          'Review',
-};
-
-const LANGUAGES = [
-  {key:'arabic',  label:'Arabic', variants:[
-    {key:'fusha',     label:'Fusha / MSA'},
-    {key:'gulf',      label:'Gulf Arabic'},
-    {key:'egyptian',  label:'Egyptian Arabic'},
-    {key:'levantine', label:'Levantine Arabic'},
-    {key:'maghrebi',  label:'Maghrebi Arabic'},
-    {key:'other_ar',  label:'Other variants'},
-  ]},
-  {key:'chinese', label:'Chinese', variants:[
-    {key:'mandarin',  label:'Mandarin Chinese'},
-    {key:'cantonese', label:'Cantonese'},
-    {key:'taiwanese', label:'Taiwanese Mandarin'},
-    {key:'hokkien',   label:'Hokkien / Taiwanese'},
-    {key:'other_zh',  label:'Other varieties'},
-  ]},
-  {key:'korean',  label:'Korean',  variants:[]},
-  {key:'french',  label:'French',  variants:[]},
-  {key:'spanish', label:'Spanish', variants:[]},
-];
-
-const LANG_LEVELS = [
-  {k:'beginner',     l:'Beginner'},
-  {k:'intermediate', l:'Intermediate'},
-  {k:'working',      l:'Working Professional'},
-  {k:'fluent',       l:'Fluent'},
-  {k:'native',       l:'Native'},
-];
-
-const PAIR_LANGUAGES = ['Arabic','Chinese','Korean','French','Spanish','English'];
-
-const CURRENCIES = [
-  {g:'Gulf',      opts:[['SAR','Saudi Riyal'],['AED','UAE Dirham'],['QAR','Qatari Riyal'],['KWD','Kuwaiti Dinar'],['BHD','Bahraini Dinar'],['OMR','Omani Rial']]},
-  {g:'Asia',      opts:[['CNY','Chinese Yuan'],['SGD','Singapore Dollar'],['KRW','Korean Won']]},
-  {g:'Americas',  opts:[['USD','US Dollar'],['CAD','Canadian Dollar']]},
-];
-
-const PLATFORMS = [
-  {key:'instagram', label:'Instagram',      ph:'@yourhandle'},
-  {key:'tiktok',    label:'TikTok',         ph:'@yourhandle'},
-  {key:'snapchat',  label:'Snapchat',       ph:'@yourhandle'},
-  {key:'youtube',   label:'YouTube',        ph:'Channel name or URL'},
-  {key:'red',       label:'RED (Xiaohongshu)', ph:'@yourhandle'},
-  {key:'wechat',    label:'WeChat',         ph:'WeChat ID'},
-];
-
-const INDUSTRIES = [
-  'Technology','Finance','Healthcare','Legal','Marketing','Education',
-  'Entertainment','Tourism & Hospitality','Media & Journalism','Government',
-  'Non-profit','Retail','Manufacturing','Real Estate','Consulting',
-  'Sports','Fashion','Food & Beverage','Aviation','Logistics & Supply Chain',
-];
-
-const COUNTRIES = [
-  'Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia',
-  'Australia','Austria','Azerbaijan','Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium',
-  'Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria',
-  'Burkina Faso','Burundi','Cabo Verde','Cambodia','Cameroon','Canada','Central African Republic',
-  'Chad','Chile','China','Colombia','Comoros','Congo (Democratic Republic)','Congo (Republic)',
-  'Costa Rica','Croatia','Cuba','Cyprus','Czech Republic','Denmark','Djibouti','Dominica',
-  'Dominican Republic','Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia',
-  'Eswatini','Ethiopia','Fiji','Finland','France','Gabon','Gambia','Georgia','Germany','Ghana',
-  'Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana','Haiti','Honduras','Hungary',
-  'Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Jamaica','Japan','Jordan',
-  'Kazakhstan','Kenya','Kiribati','Korea (North)','Korea (South)','Kosovo','Kuwait','Kyrgyzstan',
-  'Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania','Luxembourg',
-  'Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Mauritania',
-  'Mauritius','Mexico','Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique',
-  'Myanmar','Namibia','Nauru','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria',
-  'North Macedonia','Norway','Oman','Pakistan','Palau','Palestine','Panama','Papua New Guinea',
-  'Paraguay','Peru','Philippines','Poland','Portugal','Qatar','Romania','Russia','Rwanda',
-  'Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Samoa','San Marino',
-  'São Tomé and Príncipe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore',
-  'Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','South Sudan','Spain','Sri Lanka',
-  'Sudan','Suriname','Sweden','Switzerland','Syria','Taiwan','Tajikistan','Tanzania','Thailand',
-  'Timor-Leste','Togo','Tonga','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Tuvalu',
-  'Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan',
-  'Vanuatu','Vatican City','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe'
-];
-
-/* ════════════════════════════════════════════════════════════
-   FORM STATE
-════════════════════════════════════════════════════════════ */
-const formData = {};
-let selectedRoles = new Set();
-let _cachedSections = null;
-let sectIdx = 0;
-let stepIdx = 0;
-
-function getActiveSections() {
-  if (!_cachedSections) {
-    _cachedSections = ['general'];
-    ROLE_KEYS.forEach(r => { if (selectedRoles.has(r)) _cachedSections.push(r); });
-    _cachedSections.push('final','review');
-  }
-  return _cachedSections;
-}
-function invalidateSections() { _cachedSections = null; }
-
-function getSectionSteps(key) {
-  return ALL_SECTION_STEPS[key] || [];
-}
-function currentSectionKey() { return getActiveSections()[sectIdx]; }
-function currentSteps() { return getSectionSteps(currentSectionKey()); }
-
-/* ════════════════════════════════════════════════════════════
-   HTML HELPERS
-════════════════════════════════════════════════════════════ */
-function currencyHtml(id, saved) {
-  const s = saved || 'SAR';
-  return `<select class="fs" id="${id}">${
-    CURRENCIES.map(g =>
-      `<optgroup label="${g.g}">${
-        g.opts.map(([v,l]) => `<option value="${v}"${s===v?' selected':''}>${v} – ${l}</option>`).join('')
-      }</optgroup>`
-    ).join('')
-  }</select>`;
-}
-
-function sliderHtml(tid, min, max, smin, smax) {
-  return `
-    <div class="rslider">
-      <div class="rslider-track" id="${tid}">
-        <div class="rslider-fill" id="${tid}-fill"></div>
-        <div class="rslider-handle" id="${tid}-hmin"><div class="rslider-lbl" id="${tid}-lmin"></div></div>
-        <div class="rslider-handle" id="${tid}-hmax"><div class="rslider-lbl" id="${tid}-lmax"></div></div>
-      </div>
-      <div class="slider-ends"><span>${(min).toLocaleString()}</span><span>${(max).toLocaleString()}+</span></div>
+<!-- ═══ FEATURES ═════════════════════════════════════════════ -->
+<section class="section" id="features">
+    <div class="jmap-intro reveal">
+        <div class="kicker">The RealLingo Journey</div>
+        <h2 class="sh2">Choose your <em>adventure</em></h2>
+        <p class="ssub" style="margin-top:.875rem">
+            One ecosystem, three journeys. Pick a destination below to start exploring, growing your business, or joining the RealLingo team.
+        </p>
     </div>
-    <div class="rs-value" id="${tid}-value"></div>`;
-}
 
-function initSlider(tid, min, max, snapStep, minKey, maxKey, currId) {
-  const track = document.getElementById(tid);
-  if (!track) return;
-  let vMin = Math.max(min, formData[minKey] ?? min);
-  let vMax = Math.min(max, formData[maxKey] ?? Math.round((min+max)/2));
-  if (vMin >= vMax) { vMin = min; vMax = Math.round((min+max)/2); }
-  const fill = document.getElementById(`${tid}-fill`);
-  const hMin = document.getElementById(`${tid}-hmin`);
-  const hMax = document.getElementById(`${tid}-hmax`);
-  const lMin = document.getElementById(`${tid}-lmin`);
-  const lMax = document.getElementById(`${tid}-lmax`);
-  const valEl = document.getElementById(`${tid}-value`);
-  const snap = v => Math.round(v/snapStep)*snapStep;
-  const pct  = v => ((v-min)/(max-min))*100;
-  const fmt  = v => v>=max ? v.toLocaleString()+'+' : v.toLocaleString();
-  const curr = () => currId ? (document.getElementById(currId)?.value||'') : '';
-  function render() {
-    const p1=pct(vMin), p2=pct(vMax);
-    hMin.style.left=p1+'%'; hMax.style.left=p2+'%';
-    fill.style.left=p1+'%'; fill.style.width=(p2-p1)+'%';
-    lMin.textContent=fmt(vMin); lMax.textContent=fmt(vMax);
-    if (valEl) valEl.innerHTML=`<strong>${fmt(vMin)} – ${fmt(vMax)}</strong> ${curr()}`;
-    formData[minKey]=vMin; formData[maxKey]=vMax;
-    requestAnimationFrame(()=>{
-      const r1=lMin.getBoundingClientRect(), r2=lMax.getBoundingClientRect();
-      const ov=r1.right+10-r2.left;
-      if(ov>0){const p=ov/2+2;lMin.style.transform=`translateX(calc(-50% - ${p}px))`;lMax.style.transform=`translateX(calc(-50% + ${p}px))`;}
-      else{lMin.style.transform='translateX(-50%)';lMax.style.transform='translateX(-50%)';}
-    });
-  }
-  function fromX(cx) {
-    const r=track.getBoundingClientRect();
-    return snap(min+Math.max(0,Math.min(1,(cx-r.left)/r.width))*(max-min));
-  }
-  hMin.addEventListener('pointerdown',e=>{hMin.setPointerCapture(e.pointerId);hMin.classList.add('dragging');e.preventDefault();});
-  hMin.addEventListener('pointermove',e=>{if(!hMin.hasPointerCapture(e.pointerId))return;vMin=Math.max(min,Math.min(fromX(e.clientX),vMax-snapStep));render();});
-  hMin.addEventListener('pointerup',()=>hMin.classList.remove('dragging'));
-  hMax.addEventListener('pointerdown',e=>{hMax.setPointerCapture(e.pointerId);hMax.classList.add('dragging');e.preventDefault();});
-  hMax.addEventListener('pointermove',e=>{if(!hMax.hasPointerCapture(e.pointerId))return;vMax=Math.min(max,Math.max(fromX(e.clientX),vMin+snapStep));render();});
-  hMax.addEventListener('pointerup',()=>hMax.classList.remove('dragging'));
-  track.addEventListener('click',e=>{
-    if(e.target.classList.contains('rslider-handle'))return;
-    const v=fromX(e.clientX);
-    if(Math.abs(v-vMin)<=Math.abs(v-vMax)){vMin=Math.max(min,Math.min(v,vMax-snapStep));}
-    else{vMax=Math.min(max,Math.max(v,vMin+snapStep));}
-    render();
-  });
-  if (currId) document.getElementById(currId)?.addEventListener('change',()=>{formData[currId]=curr();render();});
-  render();
-}
-
-function radioGroupHtml(id, opts, saved) {
-  return `<div class="radio-grp" id="${id}">${
-    opts.map(o=>`<button type="button" class="r-opt${saved===o.v?' sel':''}" data-val="${o.v}" onclick="pickR(this,'${id}')">${o.t}</button>`).join('')
-  }</div>`;
-}
-
-function checkboxGroupHtml(id, opts, saved, cls) {
-  const classes = cls || '';
-  return `<div class="chk-grp${classes?' '+classes:''}" id="${id}">${
-    opts.map(o=>`<button type="button" class="c-opt${(saved||[]).includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')
-  }</div>`;
-}
-
-function countrySelectHtml(id, saved) {
-  return `<select class="fs" id="${id}">
-    <option value="">Select country...</option>
-    ${COUNTRIES.map(c=>`<option value="${c}"${saved===c?' selected':''}>${c}</option>`).join('')}
-  </select>`;
-}
-
-function multiCountryHtml(id, saved) {
-  const savedArr = saved || [];
-  return `<select class="fs" id="${id}" multiple style="height:180px;padding:.5rem .75rem;background-image:none">${
-    COUNTRIES.map(c=>`<option value="${c}"${savedArr.includes(c)?' selected':''}>${c}</option>`).join('')
-  }</select>
-  <p style="margin-top:.5rem;font-size:.72rem;color:rgba(255,255,255,.3)">Hold Ctrl / Cmd to select multiple countries</p>`;
-}
-
-/* ════════════════════════════════════════════════════════════
-   LANGUAGE LEVEL BUILDER
-════════════════════════════════════════════════════════════ */
-function buildLangLevelHtml() {
-  if (!formData.languages) formData.languages = {};
-  const selKeys = Object.keys(formData.languages);
-  return `
-    <p class="fl-sm" style="margin-bottom:.75rem">Select language(s)</p>
-    <div class="chk-grp" id="langPickerGrp">
-      ${LANGUAGES.map(l=>`<button type="button" class="c-opt${selKeys.includes(l.key)?' sel':''}" data-lang="${l.key}" onclick="toggleLang('${l.key}')">${l.label}</button>`).join('')}
-    </div>
-    <div id="langDetails">
-      ${LANGUAGES.filter(l=>selKeys.includes(l.key)).map(l=>renderLangSection(l)).join('')}
-    </div>`;
-}
-
-function renderLangSection(langDef) {
-  const lk = langDef.key;
-  const ld = formData.languages?.[lk] ?? (langDef.variants.length===0 ? '' : {});
-  if (langDef.variants.length===0) {
-    const level = typeof ld==='string' ? ld : '';
-    return `<div class="lang-section" id="langSect-${lk}">
-      <div class="lang-section-hd">${langDef.label}</div>
-      <div class="lang-level-opts">
-        ${LANG_LEVELS.map(lv=>`<button type="button" class="lvl-btn${level===lv.k?' sel':''}" onclick="setLangLevel('${lk}',null,'${lv.k}')">${lv.l}</button>`).join('')}
-      </div>
-    </div>`;
-  }
-  const selVars = typeof ld==='object' ? ld : {};
-  return `<div class="lang-section" id="langSect-${lk}">
-    <div class="lang-section-hd">${langDef.label}</div>
-    <p class="fl-sm" style="margin-bottom:.625rem">Select variant(s)</p>
-    <div class="chk-grp" id="varGrp-${lk}">
-      ${langDef.variants.map(v=>`<button type="button" class="c-opt${v.key in selVars?' sel':''}" data-variant="${v.key}" onclick="toggleVariant('${lk}','${v.key}')">${v.label}</button>`).join('')}
-    </div>
-    <div id="varLevels-${lk}">
-      ${langDef.variants.filter(v=>v.key in selVars).map(v=>`
-        <div class="lang-level-row" id="vrow-${lk}-${v.key}">
-          <span class="lang-level-label">${v.label}</span>
-          <div class="lang-level-opts">
-            ${LANG_LEVELS.map(lv=>`<button type="button" class="lvl-btn${selVars[v.key]===lv.k?' sel':''}" onclick="setLangLevel('${lk}','${v.key}','${lv.k}')">${lv.l}</button>`).join('')}
-          </div>
-        </div>`).join('')}
-    </div>
-  </div>`;
-}
-
-function toggleLang(lk) {
-  if (!formData.languages) formData.languages = {};
-  if (lk in formData.languages) {
-    delete formData.languages[lk];
-  } else {
-    const def = LANGUAGES.find(l=>l.key===lk);
-    formData.languages[lk] = def.variants.length===0 ? '' : {};
-  }
-  document.querySelector(`#langPickerGrp [data-lang="${lk}"]`)?.classList.toggle('sel', lk in formData.languages);
-  document.getElementById('langDetails').innerHTML =
-    LANGUAGES.filter(l=>l.key in formData.languages).map(l=>renderLangSection(l)).join('');
-}
-
-function toggleVariant(lk, vk) {
-  if (!formData.languages) formData.languages = {};
-  if (typeof formData.languages[lk] !== 'object') formData.languages[lk] = {};
-  const ld = formData.languages[lk];
-  if (vk in ld) { delete ld[vk]; } else { ld[vk] = ''; }
-  document.querySelector(`#varGrp-${lk} [data-variant="${vk}"]`)?.classList.toggle('sel', vk in ld);
-  const langDef = LANGUAGES.find(l=>l.key===lk);
-  document.getElementById(`varLevels-${lk}`).innerHTML =
-    langDef.variants.filter(v=>v.key in ld).map(v=>`
-      <div class="lang-level-row" id="vrow-${lk}-${v.key}">
-        <span class="lang-level-label">${v.label}</span>
-        <div class="lang-level-opts">
-          ${LANG_LEVELS.map(lv=>`<button type="button" class="lvl-btn${ld[v.key]===lv.k?' sel':''}" onclick="setLangLevel('${lk}','${v.key}','${lv.k}')">${lv.l}</button>`).join('')}
+    <div class="jmap-wrap reveal" style="transition-delay:.1s">
+        <div class="jmap-flightpath" aria-hidden="true">
+            <div class="jmap-hubdot" style="left:16.667%"></div>
+            <div class="jmap-hubdot" style="left:50%"></div>
+            <div class="jmap-hubdot" style="left:83.333%"></div>
+            <div class="jmap-plane">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l7-1 5-8 2 1-3 7 6-1 2 2-7 3-2 6-2-1 1-6-6 1z"/></svg>
+            </div>
+            <div class="jmap-bubble" style="left:1%; top:14px; animation-delay:0s">本場</div>
+            <div class="jmap-bubble" style="left:26%; top:44px; animation-delay:.4s">地道</div>
+            <div class="jmap-bubble" style="left:38%; top:8px; animation-delay:1.1s" dir="rtl">أصيل</div>
+            <div class="jmap-bubble" style="left:60%; top:46px; animation-delay:.7s">authentique</div>
+            <div class="jmap-bubble" style="left:73%; top:10px; animation-delay:1.6s">auténtico</div>
+            <div class="jmap-bubble" style="left:88%; top:44px; animation-delay:2s">진짜</div>
         </div>
-      </div>`).join('');
-}
 
-function setLangLevel(lk, vk, level) {
-  if (!formData.languages) formData.languages = {};
-  if (vk===null) {
-    formData.languages[lk] = level;
-  } else {
-    if (typeof formData.languages[lk] !== 'object') formData.languages[lk] = {};
-    formData.languages[lk][vk] = level;
-  }
-  const langDef = LANGUAGES.find(l=>l.key===lk);
-  const sect = document.getElementById(`langSect-${lk}`);
-  if (sect && langDef) {
-    const tmp = document.createElement('div');
-    tmp.innerHTML = renderLangSection(langDef);
-    sect.replaceWith(tmp.firstElementChild);
-  }
-}
-
-/* ════════════════════════════════════════════════════════════
-   ROLE / CHECKBOX INTERACTIONS
-════════════════════════════════════════════════════════════ */
-function toggleRole(btn) {
-  const k = btn.dataset.val;
-  if (selectedRoles.has(k)) { selectedRoles.delete(k); btn.classList.remove('sel'); }
-  else { selectedRoles.add(k); btn.classList.add('sel'); }
-  invalidateSections();
-  clearErr();
-}
-
-function pickR(btn, groupId) {
-  document.querySelectorAll(`#${groupId} .r-opt`).forEach(o=>{
-    o.classList.remove('sel');
-    const rid = o.dataset.reveal;
-    if (rid) document.getElementById(rid)?.classList.remove('show');
-  });
-  btn.classList.add('sel');
-  const rid = btn.dataset.reveal;
-  if (rid) document.getElementById(rid)?.classList.add('show');
-  clearErr();
-}
-
-function toggleChk(btn) { btn.classList.toggle('sel'); clearErr(); }
-
-function toggleChkReveal(btn, condId) {
-  toggleChk(btn);
-  document.getElementById(condId)?.classList.toggle('show', btn.classList.contains('sel'));
-}
-
-function toggleQual(btn) {
-  const key = btn.dataset.val;
-  if (!formData.qualifications) formData.qualifications = {};
-  const q = formData.qualifications;
-  if (key==='noQualification') {
-    q.noQualification = !q.noQualification;
-    if (q.noQualification) { q.hasCertificate=false; q.hasEducation=false; }
-    document.querySelectorAll('#qualGrp .c-opt').forEach(b=>b.classList.remove('sel'));
-    if (q.noQualification) btn.classList.add('sel');
-  } else {
-    if (q[key]) { q[key]=false; btn.classList.remove('sel'); }
-    else { q.noQualification=false; document.querySelector('#qualGrp [data-val="noQualification"]')?.classList.remove('sel'); q[key]=true; btn.classList.add('sel'); }
-  }
-  document.getElementById('certQualRev')?.classList.toggle('show',!!q.hasCertificate);
-  document.getElementById('eduQualRev')?.classList.toggle('show',!!q.hasEducation);
-  clearErr();
-}
-
-/* Influencer platforms */
-function togglePlatform(btn) {
-  const k = btn.dataset.val;
-  if (!formData.platforms) formData.platforms = {};
-  if (k in formData.platforms) { delete formData.platforms[k]; btn.classList.remove('sel'); }
-  else { formData.platforms[k]=formData.platforms[k]||''; btn.classList.add('sel'); }
-  renderPlatformHandles();
-  clearErr();
-}
-
-function renderPlatformHandles() {
-  const c = document.getElementById('platformHandles');
-  if (!c) return;
-  const selPl = PLATFORMS.filter(p=>p.key in (formData.platforms||{}));
-  if (!selPl.length) { c.className='cond'; c.innerHTML=''; return; }
-  c.className='cond show';
-  c.style.maxHeight='500px';
-  c.innerHTML = selPl.map(p=>`
-    <div style="margin-bottom:.75rem">
-      <label class="fl-sm">Your ${esc(p.label)} handle</label>
-      <input type="text" class="fi" id="plh-${p.key}" placeholder="${esc(p.ph)}"
-        value="${esc((formData.platforms||{})[p.key]||'')}"
-        oninput="if(!formData.platforms)formData.platforms={};formData.platforms['${p.key}']=this.value">
-    </div>`).join('');
-}
-
-/* Language pairs (translator) */
-function addLangPair() {
-  if (!formData.langPairs) formData.langPairs=[];
-  if (formData.langPairs.length>=2) return;
-  formData.langPairs.push({from:'',to:''});
-  renderLangPairs();
-}
-
-function removeLangPair(i) {
-  if (!formData.langPairs) return;
-  formData.langPairs.splice(i,1);
-  renderLangPairs();
-}
-
-function renderLangPairs() {
-  const c = document.getElementById('langPairsWrap');
-  if (!c) return;
-  if (!formData.langPairs||formData.langPairs.length===0) formData.langPairs=[{from:'',to:''}];
-  const pairLangOpts = PAIR_LANGUAGES.map(l=>`<option value="${l}">${l}</option>`).join('');
-  c.innerHTML = formData.langPairs.map((pair,i)=>`
-    <div class="lang-pair-row">
-      <select class="fs" id="pair-from-${i}" style="flex:1" onchange="savePairLang(${i},'from',this.value)">
-        <option value="">From...</option>${PAIR_LANGUAGES.map(l=>`<option value="${l}"${pair.from===l?' selected':''}>${l}</option>`).join('')}
-      </select>
-      <span class="lang-pair-sep">→</span>
-      <select class="fs" id="pair-to-${i}" style="flex:1" onchange="savePairLang(${i},'to',this.value)">
-        <option value="">To...</option>${PAIR_LANGUAGES.map(l=>`<option value="${l}"${pair.to===l?' selected':''}>${l}</option>`).join('')}
-      </select>
-      ${formData.langPairs.length>1?`<button class="remove-pair-btn" onclick="removeLangPair(${i})">×</button>`:''}
-    </div>`).join('') +
-    (formData.langPairs.length<2?`<button class="add-pair-btn" onclick="addLangPair()">+ Add another pair</button>`:'');
-}
-
-function savePairLang(i, dir, val) {
-  if (!formData.langPairs) formData.langPairs=[];
-  if (!formData.langPairs[i]) formData.langPairs[i]={from:'',to:''};
-  formData.langPairs[i][dir]=val;
-}
-
-/* Hiring company reveal */
-function pickHiringType(btn) {
-  pickR(btn, 'hiringTypeGrp');
-  document.getElementById('companyRev')?.classList.toggle('show', btn.dataset.val==='company');
-}
-
-/* Learner / Hiring others */
-function toggleChkOther(btn, condId) {
-  toggleChk(btn);
-  document.getElementById(condId)?.classList.toggle('show', btn.classList.contains('sel'));
-}
-
-/* Final profile toggle */
-function pickProfileComplete(btn) {
-  pickR(btn,'profileGrp');
-  document.getElementById('profileFields')?.classList.toggle('show', btn.dataset.val==='yes');
-}
-
-/* ════════════════════════════════════════════════════════════
-   SECTION STEP DEFINITIONS
-════════════════════════════════════════════════════════════ */
-const ALL_SECTION_STEPS = {
-
-  /* ── General (5 questions) ── */
-  general: [
-    {
-      tag:'General', q:"How should we call you?",
-      html() { return `<input type="text" class="fi" id="inp-name" placeholder="Your full name" value="${esc(formData.name||'')}"`+` autocomplete="name">`; },
-      validate() { return document.getElementById('inp-name')?.value?.trim() ? null : 'Please enter your name'; },
-      save() { formData.name = document.getElementById('inp-name')?.value?.trim()||''; }
-    },
-    {
-      tag:'General', q:"I am...", hint:"Select all that apply",
-      html() {
-        return `<div class="chk-grp col" id="rolesGrp">${
-          ROLE_KEYS.map(k=>`<button type="button" class="c-opt${selectedRoles.has(k)?' sel':''}" data-val="${k}" onclick="toggleRole(this)">${esc(ROLE_DISPLAY[k])}</button>`).join('')
-        }</div>`;
-      },
-      validate() { return selectedRoles.size>0 ? null : 'Please select at least one role'; },
-      save() { /* selectedRoles updated live via toggleRole */ invalidateSections(); }
-    },
-    {
-      tag:'General', q:"My language level...", hint:"Select language(s) and proficiency",
-      html() { return buildLangLevelHtml(); },
-      validate() {
-        const langs = formData.languages||{};
-        if (!Object.keys(langs).length) return 'Please select at least one language';
-        for (const [lk,lv] of Object.entries(langs)) {
-          const def = LANGUAGES.find(l=>l.key===lk);
-          if (!def) continue;
-          if (def.variants.length===0) { if (!lv) return `Please select your level for ${def.label}`; }
-          else {
-            if (!lv||typeof lv!=='object'||!Object.keys(lv).length) return `Please select a variant for ${def.label}`;
-            for (const [,vl] of Object.entries(lv)) { if (!vl) return `Please select a level for each ${def.label} variant`; }
-          }
-        }
-        return null;
-      },
-      save() { /* formData.languages updated live */ }
-    },
-    {
-      tag:'General', q:"I'm currently based in...",
-      html() {
-        return `
-          <div style="margin-bottom:1rem">
-            <label class="fl-sm">Country</label>
-            ${countrySelectHtml('inp-country', formData.country||'')}
-          </div>
-          <div>
-            <label class="fl-sm">City</label>
-            <input type="text" class="fi" id="inp-city" placeholder="Your city" value="${esc(formData.city||'')}">
-          </div>`;
-      },
-      validate() { return document.getElementById('inp-country')?.value ? null : 'Please select your country'; },
-      save() { formData.country=document.getElementById('inp-country')?.value||''; formData.city=document.getElementById('inp-city')?.value?.trim()||''; }
-    },
-    {
-      tag:'General', q:"I have professional qualifications...", hint:"Select all that apply",
-      html() {
-        const q = formData.qualifications||{};
-        return `
-          <div class="chk-grp col" id="qualGrp">
-            <button type="button" class="c-opt${q.hasCertificate?' sel':''}" data-val="hasCertificate" onclick="toggleQual(this)">Certificate</button>
-            <button type="button" class="c-opt${q.hasEducation?' sel':''}" data-val="hasEducation" onclick="toggleQual(this)">Education</button>
-            <button type="button" class="c-opt${q.noQualification?' sel':''}" data-val="noQualification" onclick="toggleQual(this)">No professional qualification</button>
-          </div>
-          <div class="cond${q.hasCertificate?' show':''}" id="certQualRev">
-            <label class="fl-sm">Certificate name</label>
-            <input type="text" class="fi" id="inp-cert-name" placeholder="e.g. HSK Level 6" value="${esc(q.certName||'')}" style="margin-bottom:.75rem">
-            <label class="fl-sm">Score (optional)</label>
-            <input type="text" class="fi" id="inp-cert-score" placeholder="e.g. 300/300" value="${esc(q.certScore||'')}">
-          </div>
-          <div class="cond${q.hasEducation?' show':''}" id="eduQualRev" style="margin-top:.75rem">
-            <label style="display:flex;align-items:center;gap:.75rem;cursor:pointer;margin-bottom:.875rem">
-              <input type="checkbox" id="inp-enrolled" style="accent-color:var(--y);width:1rem;height:1rem" ${q.enrolled?'checked':''}>
-              <span style="font-size:.875rem;color:rgba(255,255,255,.6)">Currently enrolled</span>
-            </label>
-            <div class="fg-2">
-              <div>
-                <label class="fl-sm">University</label>
-                <input type="text" class="fi" id="inp-university" placeholder="University name" value="${esc(q.university||'')}">
-              </div>
-              <div>
-                <label class="fl-sm">Department / Field</label>
-                <input type="text" class="fi" id="inp-department" placeholder="e.g. Chinese Studies" value="${esc(q.department||'')}">
-              </div>
+        <div class="jmap-regions">
+            <!-- ═══ EXPLORE ═══ -->
+            <div class="jmap-region explore">
+                <div class="jmap-hub">
+                    <div class="jmap-hub-icon">🌍</div>
+                    <div class="jmap-hub-eyebrow">Explore</div>
+                </div>
+                <h3 class="jmap-tagline"><span class="hl">R</span>eal Experience <span class="hl">R</span>ight at Fingertips</h3>
+                <div class="jmap-line">
+                    <a href="explore/learn/" class="jmap-dest">
+                        <div class="jmap-dest-dot"></div>
+                        <div class="jmap-dest-name">
+                            <span class="jmap-dest-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c2-1 5-1 7 1 2-2 5-2 7-1v13c-2-1-5-1-7 1-2-2-5-2-7-1z"/></svg></span>
+                            Learn with RealLingo
+                        </div>
+                        <p class="jmap-dest-desc">Affordable online one-on-one matching with native language tutors.</p>
+                    </a>
+                    <a href="explore/travel/" class="jmap-dest">
+                        <div class="jmap-dest-dot"></div>
+                        <div class="jmap-dest-name">
+                            <span class="jmap-dest-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l7-1 5-8 2 1-3 7 6-1 2 2-7 3-2 6-2-1 1-6-6 1z"/></svg></span>
+                            Travel with RealLingo
+                        </div>
+                        <p class="jmap-dest-desc">Travel services emphasizing cultural immersion, eco-friendly tourism, and community empowerment.</p>
+                    </a>
+                    <a href="explore/event/" class="jmap-dest">
+                        <div class="jmap-dest-dot"></div>
+                        <div class="jmap-dest-name">
+                            <span class="jmap-dest-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.6"/><path d="M2 20c0-3.3 2.7-6 6-6s6 2.7 6 6M13 15c2.8 0 5 2 5 5"/></svg></span>
+                            Community with RealLingo
+                        </div>
+                        <p class="jmap-dest-desc">Building the world's largest language-learning community through online and offline events.</p>
+                    </a>
+                </div>
             </div>
-          </div>`;
-      },
-      validate() {
-        const q = formData.qualifications||{};
-        if (!q.hasCertificate&&!q.hasEducation&&!q.noQualification) return 'Please select at least one option';
-        if (q.hasCertificate&&!document.getElementById('inp-cert-name')?.value?.trim()) return 'Please enter the certificate name';
-        return null;
-      },
-      save() {
-        if (!formData.qualifications) formData.qualifications={};
-        const q=formData.qualifications;
-        if(q.hasCertificate){q.certName=document.getElementById('inp-cert-name')?.value?.trim()||'';q.certScore=document.getElementById('inp-cert-score')?.value?.trim()||'';}
-        if(q.hasEducation){q.enrolled=document.getElementById('inp-enrolled')?.checked??false;q.university=document.getElementById('inp-university')?.value?.trim()||'';q.department=document.getElementById('inp-department')?.value?.trim()||'';}
-      }
-    },
-  ],
 
-  /* ── Tutor (4 questions) ── */
-  tutor: [
-    {
-      tag:'Tutor', q:"I teach...", hint:"Select all that apply",
-      html() { return checkboxGroupHtml('tutorLangGrp',[{v:'arabic',t:'Arabic'},{v:'chinese',t:'Chinese'},{v:'korean',t:'Korean'},{v:'french',t:'French'},{v:'spanish',t:'Spanish'}],formData.tutorLanguages||[]); },
-      validate() { return document.querySelectorAll('#tutorLangGrp .c-opt.sel').length>0?null:'Please select at least one language'; },
-      save() { formData.tutorLanguages=Array.from(document.querySelectorAll('#tutorLangGrp .c-opt.sel')).map(e=>e.dataset.val); }
-    },
-    {
-      tag:'Tutor', q:"I teach students at...", hint:"Select all that apply",
-      html() { return checkboxGroupHtml('tutorLevelGrp',[{v:'beginner',t:'Beginner'},{v:'intermediate',t:'Intermediate'},{v:'advanced',t:'Advanced'}],formData.tutorStudentLevels||[]); },
-      validate() { return document.querySelectorAll('#tutorLevelGrp .c-opt.sel').length>0?null:'Please select at least one level'; },
-      save() { formData.tutorStudentLevels=Array.from(document.querySelectorAll('#tutorLevelGrp .c-opt.sel')).map(e=>e.dataset.val); }
-    },
-    {
-      tag:'Tutor', q:"I teach through...",
-      html() { return radioGroupHtml('tutorModeGrp',[{v:'online',t:'Online'},{v:'offline',t:'Offline'},{v:'both',t:'Both'}],formData.tutorMode||''); },
-      validate() { return document.querySelector('#tutorModeGrp .r-opt.sel')?null:'Please select one option'; },
-      save() { formData.tutorMode=document.querySelector('#tutorModeGrp .r-opt.sel')?.dataset.val||''; }
-    },
-    {
-      tag:'Tutor', q:"I charge...",
-      html() {
-        return `
-          ${checkboxGroupHtml('tutorChargeGrp',[{v:'hourly',t:'Hourly'},{v:'freetrial',t:'Free Trial'}],formData.tutorChargeTypes||[])}
-          <div style="margin-top:1.25rem">
-            <label class="fl-sm">Currency</label>
-            ${currencyHtml('tutorCur',formData.tutorCurrency||'SAR')}
-          </div>
-          <label class="fl-sm" style="margin-top:1rem;display:block">Rate Range (per hour)</label>
-          ${sliderHtml('tutorSlider',0,1000,formData.tutorRateMin??0,formData.tutorRateMax??200)}`;
-      },
-      validate() { return null; },
-      save() {
-        formData.tutorChargeTypes=Array.from(document.querySelectorAll('#tutorChargeGrp .c-opt.sel')).map(e=>e.dataset.val);
-        formData.tutorCurrency=document.getElementById('tutorCur')?.value||'SAR';
-      },
-      postRender() { initSlider('tutorSlider',0,1000,10,'tutorRateMin','tutorRateMax','tutorCur'); }
-    },
-  ],
-
-  /* ── Translator (5 questions) ── */
-  translator: [
-    {
-      tag:'Translator', q:"I translate between...", hint:"Maximum two language pairs",
-      html() {
-        if(!formData.langPairs||!formData.langPairs.length) formData.langPairs=[{from:'',to:''}];
-        return `<div id="langPairsWrap"></div>`;
-      },
-      validate() {
-        const pairs=formData.langPairs||[];
-        if(!pairs.length||!pairs[0].from||!pairs[0].to) return 'Please fill in at least one language pair';
-        for(const p of pairs){if(p.from&&p.to&&p.from===p.to)return 'From and To languages must be different';}
-        return null;
-      },
-      save() {
-        if(!formData.langPairs) formData.langPairs=[];
-        formData.langPairs.forEach((_,i)=>{
-          const f=document.getElementById(`pair-from-${i}`);
-          const t=document.getElementById(`pair-to-${i}`);
-          if(f)formData.langPairs[i].from=f.value;
-          if(t)formData.langPairs[i].to=t.value;
-        });
-        formData.langPairs=formData.langPairs.filter(p=>p.from||p.to);
-      },
-      postRender() { renderLangPairs(); }
-    },
-    {
-      tag:'Translator', q:"I specialize in...", hint:"Select all that apply",
-      html() {
-        const opts=[{v:'legal',t:'Legal'},{v:'medical',t:'Medical'},{v:'business',t:'Business'},{v:'marketing',t:'Marketing'},{v:'technical',t:'Technical'},{v:'finance',t:'Finance'},{v:'education',t:'Education'},{v:'gaming',t:'Gaming'},{v:'general',t:'General'}];
-        return checkboxGroupHtml('transSpecGrp',opts,formData.transSpecializations||[]);
-      },
-      validate() { return document.querySelectorAll('#transSpecGrp .c-opt.sel').length>0?null:'Please select at least one specialization'; },
-      save() { formData.transSpecializations=Array.from(document.querySelectorAll('#transSpecGrp .c-opt.sel')).map(e=>e.dataset.val); }
-    },
-    {
-      tag:'Translator', q:"I'm available for...", hint:"Select all that apply",
-      html() {
-        const opts=[{v:'freelance',t:'Freelance'},{v:'fulltime',t:'Full-time'},{v:'parttime',t:'Part-time'},{v:'project',t:'Project-based'}];
-        return checkboxGroupHtml('transAvailGrp',opts,formData.transAvailability||[]);
-      },
-      validate() { return document.querySelectorAll('#transAvailGrp .c-opt.sel').length>0?null:'Please select at least one option'; },
-      save() { formData.transAvailability=Array.from(document.querySelectorAll('#transAvailGrp .c-opt.sel')).map(e=>e.dataset.val); }
-    },
-    {
-      tag:'Translator', q:"I provide...", hint:"Select all that apply",
-      html() {
-        const opts=[{v:'translation',t:'Translation'},{v:'interpretation',t:'Interpretation'},{v:'localization',t:'Localization'},{v:'transcription',t:'Transcription / Subtitling / Proofreading'}];
-        return checkboxGroupHtml('transPrvdGrp',opts,formData.transProvides||[]);
-      },
-      validate() { return document.querySelectorAll('#transPrvdGrp .c-opt.sel').length>0?null:'Please select at least one service'; },
-      save() { formData.transProvides=Array.from(document.querySelectorAll('#transPrvdGrp .c-opt.sel')).map(e=>e.dataset.val); }
-    },
-    {
-      tag:'Translator', q:"I charge...",
-      html() {
-        const opts=[{v:'hourly',t:'Hourly'},{v:'daily',t:'Daily'},{v:'project',t:'Per Project'}];
-        return `
-          ${checkboxGroupHtml('transChargeGrp',opts,formData.transChargeTypes||[])}
-          <div style="margin-top:1.25rem">
-            <label class="fl-sm">Currency</label>
-            ${currencyHtml('transCur',formData.transCurrency||'SAR')}
-          </div>
-          <label class="fl-sm" style="margin-top:1rem;display:block">Rate Range</label>
-          ${sliderHtml('transSlider',0,10000,formData.transRateMin??0,formData.transRateMax??2000)}`;
-      },
-      validate() { return null; },
-      save() {
-        formData.transChargeTypes=Array.from(document.querySelectorAll('#transChargeGrp .c-opt.sel')).map(e=>e.dataset.val);
-        formData.transCurrency=document.getElementById('transCur')?.value||'SAR';
-      },
-      postRender() { initSlider('transSlider',0,10000,100,'transRateMin','transRateMax','transCur'); }
-    },
-  ],
-
-  /* ── Language Talent (2 questions) ── */
-  languageTalent: [
-    {
-      tag:'Language Talent', q:"I'm interested in...", hint:"Select all that apply",
-      html() {
-        const saved=formData.talentIndustries||[];
-        return `<div class="chk-grp" id="talentIndGrp">${
-          INDUSTRIES.map(ind=>`<button type="button" class="c-opt${saved.includes(ind)?' sel':''}" data-val="${ind}" onclick="toggleChk(this)">${esc(ind)}</button>`).join('')
-        }</div>`;
-      },
-      validate() { return document.querySelectorAll('#talentIndGrp .c-opt.sel').length>0?null:'Please select at least one industry'; },
-      save() { formData.talentIndustries=Array.from(document.querySelectorAll('#talentIndGrp .c-opt.sel')).map(e=>e.dataset.val); }
-    },
-    {
-      tag:'Language Talent', q:"My expected salary...",
-      html() {
-        return `
-          <div style="margin-bottom:1rem">
-            <label class="fl-sm">Currency</label>
-            ${currencyHtml('talentCur',formData.talentCurrency||'SAR')}
-          </div>
-          <label class="fl-sm" style="display:block">Monthly Salary Range</label>
-          ${sliderHtml('talentSlider',0,10000,formData.talentSalMin??0,formData.talentSalMax??3000)}`;
-      },
-      validate() { return null; },
-      save() { formData.talentCurrency=document.getElementById('talentCur')?.value||'SAR'; },
-      postRender() { initSlider('talentSlider',0,10000,100,'talentSalMin','talentSalMax','talentCur'); }
-    },
-  ],
-
-  /* ── Influencer (3 questions) ── */
-  influencer: [
-    {
-      tag:'Influencer', q:"I create content on...", hint:"Select all platforms",
-      html() {
-        if(!formData.platforms)formData.platforms={};
-        return `
-          <div class="chk-grp" id="platformGrp">
-            ${PLATFORMS.map(p=>`<button type="button" class="c-opt${p.key in formData.platforms?' sel':''}" data-val="${p.key}" onclick="togglePlatform(this)">${esc(p.label)}</button>`).join('')}
-          </div>
-          <div class="cond" id="platformHandles"></div>`;
-      },
-      validate() { return Object.keys(formData.platforms||{}).length>0?null:'Please select at least one platform'; },
-      save() {
-        PLATFORMS.forEach(p=>{
-          const el=document.getElementById(`plh-${p.key}`);
-          if(el&&p.key in (formData.platforms||{})) formData.platforms[p.key]=el.value;
-        });
-      },
-      postRender() { renderPlatformHandles(); }
-    },
-    {
-      tag:'Influencer', q:"I'm open to...", hint:"Select all that apply",
-      html() {
-        const opts=[{v:'sponsored',t:'Create sponsored videos'},{v:'mention',t:'Be paid for brand mentioning'},{v:'analytics',t:'Share my account analytics'}];
-        return checkboxGroupHtml('inflOpenGrp',opts,formData.inflOpenTo||[],'col');
-      },
-      validate() { return document.querySelectorAll('#inflOpenGrp .c-opt.sel').length>0?null:'Please select at least one option'; },
-      save() { formData.inflOpenTo=Array.from(document.querySelectorAll('#inflOpenGrp .c-opt.sel')).map(e=>e.dataset.val); }
-    },
-    {
-      tag:'Influencer', q:"My experience in paid collaboration...",
-      html() {
-        const opts=[{v:'none',t:'None'},{v:'0-1yr',t:'0–1 years'},{v:'1-3yr',t:'1–3 years'},{v:'3plus',t:'3+ years'}];
-        return radioGroupHtml('inflExpGrp',opts,formData.inflExperience||'');
-      },
-      validate() { return document.querySelector('#inflExpGrp .r-opt.sel')?null:'Please select one option'; },
-      save() { formData.inflExperience=document.querySelector('#inflExpGrp .r-opt.sel')?.dataset.val||''; }
-    },
-  ],
-
-  /* ── Learner (2 questions) ── */
-  learner: [
-    {
-      tag:'Learner', q:"I'm learning for...", hint:"Select all that apply",
-      html() {
-        const saved=formData.learnerPurpose||[];
-        const others=formData.learnerPurposeOther||'';
-        return `
-          <div class="chk-grp" id="learnerPurpGrp">
-            ${[{v:'work',t:'Work / Business'},{v:'academia',t:'Academia'},{v:'travel',t:'Travel'},{v:'immigration',t:'Immigration'},{v:'personal',t:'Personal Interest'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
-            <button type="button" class="c-opt${saved.includes('others')?' sel':''}" data-val="others" onclick="toggleChkOther(this,'learnerPurpOtherRev')">Others</button>
-          </div>
-          <div class="cond${saved.includes('others')?' show':''}" id="learnerPurpOtherRev">
-            <input type="text" class="fi" id="inp-learnerPurpOther" placeholder="Please specify..." value="${esc(others)}">
-          </div>`;
-      },
-      validate() { return document.querySelectorAll('#learnerPurpGrp .c-opt.sel').length>0?null:'Please select at least one option'; },
-      save() {
-        formData.learnerPurpose=Array.from(document.querySelectorAll('#learnerPurpGrp .c-opt.sel')).map(e=>e.dataset.val);
-        formData.learnerPurposeOther=document.getElementById('inp-learnerPurpOther')?.value?.trim()||'';
-      }
-    },
-    {
-      tag:'Learner', q:"I'm looking for...", hint:"Select all that apply",
-      html() {
-        const saved=formData.learnerLooking||[];
-        const others=formData.learnerLookingOther||'';
-        return `
-          <div class="chk-grp" id="learnerLookGrp">
-            ${[{v:'tutor',t:'Tutor'},{v:'event',t:'Language Community Event'},{v:'study',t:'Study Group'},{v:'buddy',t:'Language Buddy'},{v:'resources',t:'Educational Resources'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
-            <button type="button" class="c-opt${saved.includes('others')?' sel':''}" data-val="others" onclick="toggleChkOther(this,'learnerLookOtherRev')">Others</button>
-          </div>
-          <div class="cond${saved.includes('others')?' show':''}" id="learnerLookOtherRev">
-            <input type="text" class="fi" id="inp-learnerLookOther" placeholder="Please specify..." value="${esc(others)}">
-          </div>`;
-      },
-      validate() { return document.querySelectorAll('#learnerLookGrp .c-opt.sel').length>0?null:'Please select at least one option'; },
-      save() {
-        formData.learnerLooking=Array.from(document.querySelectorAll('#learnerLookGrp .c-opt.sel')).map(e=>e.dataset.val);
-        formData.learnerLookingOther=document.getElementById('inp-learnerLookOther')?.value?.trim()||'';
-      }
-    },
-  ],
-
-  /* ── Hiring Manager / HR (2 questions) ── */
-  hiring: [
-    {
-      tag:'Hiring / HR', q:"I'm hiring as...",
-      html() {
-        const saved=formData.hiringAs||'';
-        return `
-          <div class="radio-grp" id="hiringTypeGrp">
-            <button type="button" class="r-opt${saved==='individual'?' sel':''}" data-val="individual" onclick="pickHiringType(this)">An individual</button>
-            <button type="button" class="r-opt${saved==='company'?' sel':''}" data-val="company" onclick="pickHiringType(this)">A company</button>
-          </div>
-          <div class="cond${saved==='company'?' show':''}" id="companyRev">
-            <div class="fg-2" style="margin-top:0">
-              <div>
-                <label class="fl-sm">Company name</label>
-                <input type="text" class="fi" id="inp-companyName" placeholder="Company name" value="${esc(formData.companyName||'')}">
-              </div>
-              <div>
-                <label class="fl-sm">Industry</label>
-                <select class="fs" id="inp-companyInd">
-                  <option value="">Select industry...</option>
-                  ${INDUSTRIES.map(i=>`<option value="${i}"${formData.companyIndustry===i?' selected':''}>${esc(i)}</option>`).join('')}
-                </select>
-              </div>
+            <!-- ═══ BUSINESS ═══ -->
+            <div class="jmap-region business">
+                <div class="jmap-hub">
+                    <div class="jmap-hub-icon">💼</div>
+                    <div class="jmap-hub-eyebrow">Business</div>
+                </div>
+                <h3 class="jmap-tagline">Turning <span class="hl">G</span>aps to <span class="hl">G</span>rowth</h3>
+                <div class="jmap-line">
+                    <a href="business/translator/" class="jmap-dest">
+                        <div class="jmap-dest-dot"></div>
+                        <div class="jmap-dest-name">
+                            <span class="jmap-dest-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg></span>
+                            Find a Translator
+                        </div>
+                        <p class="jmap-dest-desc">Localized transcreation and real-time remote interpretation.</p>
+                    </a>
+                    <a href="business/marketing/" class="jmap-dest">
+                        <div class="jmap-dest-dot"></div>
+                        <div class="jmap-dest-name">
+                            <span class="jmap-dest-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4h3l5 4V6l-5 4z"/><path d="M14 8a4 4 0 010 8"/></svg></span>
+                            Find a KOL/KOC
+                        </div>
+                        <p class="jmap-dest-desc">Collaborate with local influencers to reach niche markets.</p>
+                    </a>
+                    <a href="business/talent/" class="jmap-dest">
+                        <div class="jmap-dest-dot"></div>
+                        <div class="jmap-dest-name">
+                            <span class="jmap-dest-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6z"/></svg></span>
+                            Find a Talent
+                        </div>
+                        <p class="jmap-dest-desc">Empower professionals with cross-cultural fluency and redefine the value of language skills.</p>
+                    </a>
+                </div>
             </div>
-          </div>`;
-      },
-      validate() {
-        const v=document.querySelector('#hiringTypeGrp .r-opt.sel')?.dataset.val;
-        if(!v) return 'Please select one option';
-        if(v==='company'&&!document.getElementById('inp-companyName')?.value?.trim()) return 'Please enter the company name';
-        return null;
-      },
-      save() {
-        formData.hiringAs=document.querySelector('#hiringTypeGrp .r-opt.sel')?.dataset.val||'';
-        formData.companyName=document.getElementById('inp-companyName')?.value?.trim()||'';
-        formData.companyIndustry=document.getElementById('inp-companyInd')?.value||'';
-      }
-    },
-    {
-      tag:'Hiring / HR', q:"I'm looking for...", hint:"Select all that apply",
-      html() {
-        const saved=formData.hiringLooking||[];
-        const others=formData.hiringLookingOther||'';
-        return `
-          <div class="chk-grp" id="hiringLookGrp">
-            ${[{v:'translator',t:'A translator / interpreter'},{v:'tourguide',t:'A tour guide'},{v:'eventmgr',t:'An event manager'},{v:'employee',t:'An employee'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
-            <button type="button" class="c-opt${saved.includes('others')?' sel':''}" data-val="others" onclick="toggleChkOther(this,'hiringLookOtherRev')">Others</button>
-          </div>
-          <div class="cond${saved.includes('others')?' show':''}" id="hiringLookOtherRev">
-            <input type="text" class="fi" id="inp-hiringLookOther" placeholder="Please specify..." value="${esc(others)}">
-          </div>`;
-      },
-      validate() { return document.querySelectorAll('#hiringLookGrp .c-opt.sel').length>0?null:'Please select at least one option'; },
-      save() {
-        formData.hiringLooking=Array.from(document.querySelectorAll('#hiringLookGrp .c-opt.sel')).map(e=>e.dataset.val);
-        formData.hiringLookingOther=document.getElementById('inp-hiringLookOther')?.value?.trim()||'';
-      }
-    },
-  ],
 
-  /* ── Tour Guide (2 questions) ── */
-  tourGuide: [
-    {
-      tag:'Tour Guide', q:"I work in...", hint:"Hold Ctrl / Cmd to select multiple countries",
-      html() { return multiCountryHtml('inp-tourCountries',formData.tourCountries||[]); },
-      validate() {
-        const sel=Array.from(document.getElementById('inp-tourCountries')?.selectedOptions||[]).map(o=>o.value);
-        return sel.length>0?null:'Please select at least one country';
-      },
-      save() { formData.tourCountries=Array.from(document.getElementById('inp-tourCountries')?.selectedOptions||[]).map(o=>o.value); }
-    },
-    {
-      tag:'Tour Guide', q:"I charge...",
-      html() {
-        const saved=formData.tourChargeTypes||[];
-        const period=formData.tourPeriodSpec||'';
-        return `
-          <div class="chk-grp" id="tourChargeGrp">
-            ${[{v:'hourly',t:'Hourly'},{v:'daily',t:'Daily'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
-            <button type="button" class="c-opt${saved.includes('period')?' sel':''}" data-val="period" onclick="toggleChkOther(this,'tourPeriodRev')">Per Period of Time</button>
-          </div>
-          <div class="cond${saved.includes('period')?' show':''}" id="tourPeriodRev">
-            <input type="text" class="fi" id="inp-tourPeriod" placeholder="e.g. per tour, half-day package" value="${esc(period)}">
-          </div>
-          <div style="margin-top:1.25rem">
-            <label class="fl-sm">Currency</label>
-            ${currencyHtml('tourCur',formData.tourCurrency||'SAR')}
-          </div>
-          <label class="fl-sm" style="margin-top:1rem;display:block">Rate Range</label>
-          ${sliderHtml('tourSlider',0,10000,formData.tourRateMin??0,formData.tourRateMax??1000)}`;
-      },
-      validate() { return null; },
-      save() {
-        formData.tourChargeTypes=Array.from(document.querySelectorAll('#tourChargeGrp .c-opt.sel')).map(e=>e.dataset.val);
-        formData.tourPeriodSpec=document.getElementById('inp-tourPeriod')?.value?.trim()||'';
-        formData.tourCurrency=document.getElementById('tourCur')?.value||'SAR';
-      },
-      postRender() { initSlider('tourSlider',0,10000,100,'tourRateMin','tourRateMax','tourCur'); }
-    },
-  ],
-
-  /* ── Traveler (2 questions) ── */
-  traveler: [
-    {
-      tag:'Traveler', q:"I'm traveling to...", hint:"Hold Ctrl / Cmd to select multiple countries",
-      html() { return multiCountryHtml('inp-travelCountries',formData.travelCountries||[]); },
-      validate() {
-        const sel=Array.from(document.getElementById('inp-travelCountries')?.selectedOptions||[]).map(o=>o.value);
-        return sel.length>0?null:'Please select at least one destination';
-      },
-      save() { formData.travelCountries=Array.from(document.getElementById('inp-travelCountries')?.selectedOptions||[]).map(o=>o.value); }
-    },
-    {
-      tag:'Traveler', q:"My hiring budget is...",
-      html() {
-        const saved=formData.travelBudgetTypes||[];
-        const period=formData.travelPeriodSpec||'';
-        return `
-          <div class="chk-grp" id="travelBudgetGrp">
-            ${[{v:'hourly',t:'Hourly'},{v:'daily',t:'Daily'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
-            <button type="button" class="c-opt${saved.includes('period')?' sel':''}" data-val="period" onclick="toggleChkOther(this,'travelPeriodRev')">Per Period of Time</button>
-          </div>
-          <div class="cond${saved.includes('period')?' show':''}" id="travelPeriodRev">
-            <input type="text" class="fi" id="inp-travelPeriod" placeholder="e.g. per trip, 3-day package" value="${esc(period)}">
-          </div>
-          <div style="margin-top:1.25rem">
-            <label class="fl-sm">Currency</label>
-            ${currencyHtml('travelCur',formData.travelCurrency||'SAR')}
-          </div>
-          <label class="fl-sm" style="margin-top:1rem;display:block">Budget Range</label>
-          ${sliderHtml('travelSlider',0,10000,formData.travelBudMin??0,formData.travelBudMax??1000)}`;
-      },
-      validate() { return null; },
-      save() {
-        formData.travelBudgetTypes=Array.from(document.querySelectorAll('#travelBudgetGrp .c-opt.sel')).map(e=>e.dataset.val);
-        formData.travelPeriodSpec=document.getElementById('inp-travelPeriod')?.value?.trim()||'';
-        formData.travelCurrency=document.getElementById('travelCur')?.value||'SAR';
-      },
-      postRender() { initSlider('travelSlider',0,10000,100,'travelBudMin','travelBudMax','travelCur'); }
-    },
-  ],
-
-  /* ── Language Event / Community Leader (2 questions) ── */
-  languageEvent: [
-    {
-      tag:'Language Event', q:"My community / event is mostly based in...",
-      html() { return countrySelectHtml('inp-eventCountry',formData.eventCountry||''); },
-      validate() { return document.getElementById('inp-eventCountry')?.value?null:'Please select a country'; },
-      save() { formData.eventCountry=document.getElementById('inp-eventCountry')?.value||''; }
-    },
-    {
-      tag:'Language Event', q:"My language community speaks...", hint:"Select all that apply",
-      html() {
-        const opts=[{v:'arabic',t:'Arabic'},{v:'chinese',t:'Chinese'},{v:'korean',t:'Korean'},{v:'french',t:'French'},{v:'spanish',t:'Spanish'}];
-        return checkboxGroupHtml('eventLangGrp',opts,formData.eventLanguages||[]);
-      },
-      validate() { return document.querySelectorAll('#eventLangGrp .c-opt.sel').length>0?null:'Please select at least one language'; },
-      save() { formData.eventLanguages=Array.from(document.querySelectorAll('#eventLangGrp .c-opt.sel')).map(e=>e.dataset.val); }
-    },
-  ],
-
-  /* ── Community Member (2 questions) ── */
-  communityMember: [
-    {
-      tag:'Community', q:"I'm available for...",
-      html() { return radioGroupHtml('memberAvailGrp',[{v:'online',t:'Online Events'},{v:'offline',t:'In-person Events'},{v:'both',t:'Both'}],formData.memberAvailability||''); },
-      validate() { return document.querySelector('#memberAvailGrp .r-opt.sel')?null:'Please select one option'; },
-      save() { formData.memberAvailability=document.querySelector('#memberAvailGrp .r-opt.sel')?.dataset.val||''; }
-    },
-    {
-      tag:'Community', q:"I'm interested in...", hint:"Select all that apply",
-      html() {
-        const opts=[{v:'culture',t:'Culture'},{v:'networking',t:'Networking'},{v:'business',t:'Business'},{v:'entertainment',t:'Entertainment'},{v:'others',t:'Others'}];
-        return checkboxGroupHtml('memberIntGrp',opts,formData.memberInterests||[]);
-      },
-      validate() { return document.querySelectorAll('#memberIntGrp .c-opt.sel').length>0?null:'Please select at least one interest'; },
-      save() { formData.memberInterests=Array.from(document.querySelectorAll('#memberIntGrp .c-opt.sel')).map(e=>e.dataset.val); }
-    },
-  ],
-
-  /* ── Final (2 questions) ── */
-  final: [
-    {
-      tag:'Almost done!', q:"Do you want to complete your professional profile?",
-      html() {
-        const v=formData.profileComplete||'';
-        return `
-          <div class="radio-grp" id="profileGrp">
-            <button type="button" class="r-opt${v==='yes'?' sel':''}" data-val="yes" onclick="pickProfileComplete(this)">Yes, let me add more</button>
-            <button type="button" class="r-opt${v==='skip'?' sel':''}" data-val="skip" onclick="pickProfileComplete(this)">Skip for now</button>
-          </div>
-          <div class="cond${v==='yes'?' show':''}" id="profileFields">
-            <div style="margin-bottom:1rem">
-              <label class="fl-sm">Upload CV (optional)</label>
-              <label class="file-zone" id="cvZone">
-                <input type="file" accept=".pdf,.doc,.docx" onchange="updateFileZone(this,'cvZone','cvTxt')" style="display:none">
-                <span class="fz-icon">↑</span>
-                <span class="fz-txt" id="cvTxt">${esc(formData.cvFileName||'PDF, DOC · max 10 MB')}</span>
-              </label>
+            <!-- ═══ PROFESSIONAL ═══ -->
+            <div class="jmap-region professional">
+                <div class="jmap-hub">
+                    <div class="jmap-hub-icon">🚀</div>
+                    <div class="jmap-hub-eyebrow">Professional</div>
+                </div>
+                <h3 class="jmap-tagline">Transforming <span class="hl">P</span>assion to <span class="hl">P</span>urpose</h3>
+                <div class="jmap-line">
+                    <a href="join-us/team/" class="jmap-dest">
+                        <div class="jmap-dest-dot"></div>
+                        <div class="jmap-dest-name">
+                            <span class="jmap-dest-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.6"/><path d="M2 20c0-3.3 2.7-6 6-6s6 2.7 6 6M13 15c2.8 0 5 2 5 5"/></svg></span>
+                            Team
+                        </div>
+                        <p class="jmap-dest-desc">Meet the team behind the scenes and build the future of the global language community with us.</p>
+                    </a>
+                    <a href="join-us/professional/" class="jmap-dest">
+                        <div class="jmap-dest-dot"></div>
+                        <div class="jmap-dest-name">
+                            <span class="jmap-dest-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6v16H9z"/><path d="M15 12h5m-2-2l2 2-2 2"/></svg></span>
+                            Join Us
+                        </div>
+                        <p class="jmap-dest-desc">Join our professional talent pool.</p>
+                    </a>
+                </div>
             </div>
-            <div style="margin-bottom:1rem">
-              <label class="fl-sm">LinkedIn profile URL (optional)</label>
-              <input type="url" class="fi" id="inp-linkedin" placeholder="https://linkedin.com/in/your-profile" value="${esc(formData.linkedin||'')}">
+        </div>
+    </div>
+</section>
+
+<!-- ═══ TEAM ══════════════════════════════════════════════════ -->
+<section class="section" id="team">
+    <div class="reveal">
+        <div class="kicker">Our Team</div>
+        <h2 class="sh2">The people behind <em>RealLingo</em></h2>
+    </div>
+    <div class="team-grid">
+        <div class="team-card reveal">
+            <img class="team-av" src="assets/img/team/huayi-shen.jpg" alt="Huayi Shen">
+            <div class="team-name">Huayi Shen</div>
+            <div class="team-title">Founder &amp; Executive Director</div>
+            <a href="mailto:hyshen@thereallingo.com" class="team-email">hyshen@thereallingo.com</a>
+            <div class="team-origin">
+                <div class="team-origin-row"><span class="team-origin-label">From</span> 🇨🇳 China</div>
+                <div class="team-origin-row"><span class="team-origin-label">Based in</span> 🇸🇦 Saudi Arabia</div>
             </div>
-            <div>
-              <label class="fl-sm">Upload certificate (optional)</label>
-              <label class="file-zone" id="certFZone">
-                <input type="file" accept=".pdf,.jpg,.png,.jpeg" onchange="updateFileZone(this,'certFZone','certFTxt')" style="display:none">
-                <span class="fz-icon">↑</span>
-                <span class="fz-txt" id="certFTxt">${esc(formData.certFileName||'PDF, JPG or PNG · max 10 MB')}</span>
-              </label>
+            <p class="team-bio">Leads RealLingo's overall vision, strategy, and day-to-day operations.</p>
+            <div class="team-links">
+                <a href="mailto:hyshen@thereallingo.com" class="team-link" title="Email hyshen@thereallingo.com" aria-label="Email Huayi Shen">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
+                </a>
+                <a href="https://www.linkedin.com/in/huayishen" target="_blank" rel="noopener" class="team-link" title="LinkedIn" aria-label="Huayi Shen on LinkedIn">
+                    <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
+                </a>
+                <a href="https://github.com/huayishen" target="_blank" rel="noopener" class="team-link" title="GitHub" aria-label="Huayi Shen on GitHub">
+                    <svg viewBox="0 0 24 24"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.79-.25.79-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.16.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.1 11.1 0 015.8 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .3.21.66.79.55A11.5 11.5 0 0023.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+                </a>
             </div>
-          </div>`;
-      },
-      validate() { return document.querySelector('#profileGrp .r-opt.sel')?null:'Please select one option'; },
-      save() {
-        formData.profileComplete=document.querySelector('#profileGrp .r-opt.sel')?.dataset.val||'';
-        formData.linkedin=document.getElementById('inp-linkedin')?.value?.trim()||'';
-      }
-    },
-    {
-      tag:'Almost done!', q:"How can we contact you?", hint:"At least one contact method required",
-      html() {
-        return `
-          <div style="margin-bottom:1rem">
-            <label class="fl-sm">Email address</label>
-            <input type="email" class="fi" id="inp-email" placeholder="you@example.com" value="${esc(formData.email||'')}" autocomplete="email">
-          </div>
-          <div>
-            <label class="fl-sm">Phone number</label>
-            <input type="tel" class="fi" id="inp-phone" placeholder="+1 234 567 8900" value="${esc(formData.phone||'')}" autocomplete="tel">
-          </div>`;
-      },
-      validate() {
-        const email=document.getElementById('inp-email')?.value?.trim();
-        const phone=document.getElementById('inp-phone')?.value?.trim();
-        if(!email&&!phone) return 'Please provide at least one contact method';
-        if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address';
-        return null;
-      },
-      save() {
-        formData.email=document.getElementById('inp-email')?.value?.trim()||'';
-        formData.phone=document.getElementById('inp-phone')?.value?.trim()||'';
-      }
-    },
-  ],
-};
+        </div>
+        <div class="team-card reveal" style="transition-delay:.05s">
+            <img class="team-av" src="assets/img/team/samia-azmery.jpg" alt="Samia Azmery">
+            <div class="team-name">Samia Azmery</div>
+            <div class="team-title">Marketing Director</div>
+            <a href="mailto:sazmery@thereallingo.com" class="team-email">sazmery@thereallingo.com</a>
+            <div class="team-origin">
+                <div class="team-origin-row"><span class="team-origin-label">From</span> 🇧🇩 Bangladesh</div>
+                <div class="team-origin-row"><span class="team-origin-label">Based in</span> 🇨🇳 China</div>
+            </div>
+            <p class="team-bio">Shapes how RealLingo tells its story and reaches new communities.</p>
+            <div class="team-links">
+                <a href="mailto:sazmery@thereallingo.com" class="team-link" title="Email sazmery@thereallingo.com" aria-label="Email Samia Azmery">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
+                </a>
+                <a href="https://linkedin.com/in/samia-azmery-16793123b" target="_blank" rel="noopener" class="team-link" title="LinkedIn" aria-label="Samia Azmery on LinkedIn">
+                    <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="team-card reveal" style="transition-delay:.1s">
+            <img class="team-av" src="assets/img/team/ebraam-labib.jpg" alt="Ebraam Labib">
+            <div class="team-name">Ebraam Labib</div>
+            <div class="team-title">Product Engineer</div>
+            <a href="mailto:ewlabib@thereallingo.com" class="team-email">ewlabib@thereallingo.com</a>
+            <div class="team-origin">
+                <div class="team-origin-row"><span class="team-origin-label">From</span> 🇪🇬 Egypt</div>
+                <div class="team-origin-row"><span class="team-origin-label">Based in</span> 🇸🇦 Saudi Arabia</div>
+            </div>
+            <p class="team-bio">Designs the RealLingo experience end to end, from product to platform.</p>
+            <div class="team-links">
+                <a href="mailto:ewlabib@thereallingo.com" class="team-link" title="Email ewlabib@thereallingo.com" aria-label="Email Ebraam Labib">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
+                </a>
+                <a href="https://linkedin.com/in/ebraam-wadee" target="_blank" rel="noopener" class="team-link" title="LinkedIn" aria-label="Ebraam Labib on LinkedIn">
+                    <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
+                </a>
+                <a href="https://github.com/bero288" target="_blank" rel="noopener" class="team-link" title="GitHub" aria-label="Ebraam Labib on GitHub">
+                    <svg viewBox="0 0 24 24"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.79-.25.79-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.16.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.1 11.1 0 015.8 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .3.21.66.79.55A11.5 11.5 0 0023.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="team-card reveal" style="transition-delay:.15s">
+            <img class="team-av" src="assets/img/team/xuanbo-jia.jpg" alt="Xuanbo Jia">
+            <div class="team-name">Xuanbo Jia</div>
+            <div class="team-title">Technology Advisor</div>
+            <a href="mailto:xbjia@thereallingo.com" class="team-email">xbjia@thereallingo.com</a>
+            <div class="team-origin">
+                <div class="team-origin-row"><span class="team-origin-label">From</span> 🇨🇳 China</div>
+                <div class="team-origin-row"><span class="team-origin-label">Based in</span> 🇺🇸 USA</div>
+            </div>
+            <p class="team-bio">Advises on RealLingo's technical direction and platform architecture.</p>
+            <div class="team-links">
+                <a href="mailto:xbjia@thereallingo.com" class="team-link" title="Email xbjia@thereallingo.com" aria-label="Email Xuanbo Jia">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
+                </a>
+                <a href="https://linkedin.com/in/xuanbo-jia-4a72b0338" target="_blank" rel="noopener" class="team-link" title="LinkedIn" aria-label="Xuanbo Jia on LinkedIn">
+                    <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
+                </a>
+                <a href="https://github.com/XuanboJia" target="_blank" rel="noopener" class="team-link" title="GitHub" aria-label="Xuanbo Jia on GitHub">
+                    <svg viewBox="0 0 24 24"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.79-.25.79-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.16.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.1 11.1 0 015.8 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14 0 1.54-.01 2.79-.01 3.17 0 .3.21.66.79.55A11.5 11.5 0 0023.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+                </a>
+                <a href="https://www.xuanbojia.com" target="_blank" rel="noopener" class="team-link" title="Website" aria-label="Xuanbo Jia's website">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="team-card reveal" style="transition-delay:.2s">
+            <img class="team-av" src="assets/img/team/yasser-mejia.jpg" alt="Yasser Mejía">
+            <div class="team-name">Yasser Mejía</div>
+            <div class="team-title">Public Relations Director</div>
+            <a href="mailto:yamejia@thereallingo.com" class="team-email">yamejia@thereallingo.com</a>
+            <div class="team-origin">
+                <div class="team-origin-row"><span class="team-origin-label">From</span> 🇳🇮 Nicaragua</div>
+                <div class="team-origin-row"><span class="team-origin-label">Based in</span> 🇨🇳 China</div>
+            </div>
+            <p class="team-bio">Leads RealLingo's public relations and external communications.</p>
+            <div class="team-links">
+                <a href="mailto:yamejia@thereallingo.com" class="team-link" title="Email yamejia@thereallingo.com" aria-label="Email Yasser Mejía">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 6l9 7 9-7"/></svg>
+                </a>
+                <a href="https://linkedin.com/in/yasser-mejía-299072420" target="_blank" rel="noopener" class="team-link" title="LinkedIn" aria-label="Yasser Mejía on LinkedIn">
+                    <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3V8.98zM9 8.98h3.84v1.64h.05c.53-1 1.85-2.06 3.81-2.06 4.08 0 4.83 2.69 4.83 6.19V21h-4v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96V21H9V8.98z"/></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 
-function updateFileZone(inp, zoneId, txtId) {
-  if(!inp.files.length)return;
-  document.getElementById(zoneId)?.classList.add('has-file');
-  const el=document.getElementById(txtId); if(el) el.textContent=inp.files[0].name;
-  if(zoneId==='cvZone') formData.cvFileName=inp.files[0].name;
-  if(zoneId==='certFZone') formData.certFileName=inp.files[0].name;
-}
+<!-- ═══ CTA ════════════════════════════════════════════════════ -->
+<section class="cta-section" id="cta">
+    <div class="reveal">
+        <div class="cta-eyebrow">Arabic &amp; Chinese &amp; Korean · Ready when you are</div>
+        <h2 class="cta-h2">Stop studying.<br>Start <em>speaking.</em></h2>
+        <p class="cta-sub">One ecosystem for language learning, travel hosting, community events, and an influencer &amp; talent network — all built specifically for Arabic, Chinese, and Korean.</p>
+        <div class="cta-actions">
+            <a href="signup/" class="btn-dark" style="padding:1.1rem 2.75rem;font-size:1rem;">Find Your Language Shortcut</a>
+        </div>
+        <p class="cta-note">Learners &amp; tutors · Travel hosts &amp; travelers · Businesses &amp; talent · Community organizers</p>
+    </div>
+</section>
 
-/* ════════════════════════════════════════════════════════════
-   FORM ENGINE — SHOW / NAVIGATE
-════════════════════════════════════════════════════════════ */
-function showForm() {
-  showScreen('s-form');
-  invalidateSections();
-  sectIdx=0; stepIdx=0;
-  renderFormPage('none');
-}
+<div id="site-footer"></div>
 
-function renderFormPage(direction) {
-  const inner=document.getElementById('fstepInner');
-  const isReview = currentSectionKey()==='review';
+<script>
+    window.SITE_ROOT = "./";
+    window.SITE_SECTION = null;
+    window.SITE_PAGE = "";
+</script>
+<script src="assets/js/nav.js" defer></script>
 
-  // Update sidebar
-  renderSidebar();
-  // Update progress bar
-  updateProgressBar();
-  // Update nav buttons
-  updateNavButtons();
-  // Scroll top
-  document.getElementById('fstepArea').scrollTop=0;
+<script>
+    // Scroll reveal
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+    }, { threshold: .1, rootMargin: '0px 0px -28px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  if (direction==='none') {
-    if(isReview) inner.innerHTML=buildReviewHtml();
-    else { inner.innerHTML=buildStepHtml(); postRenderStep(); }
-    return;
-  }
-  const outClass=direction==='fwd'?'s-out-l':'s-out-r';
-  const inClass=direction==='fwd'?'s-in-r':'s-in-l';
-  inner.classList.add(outClass);
-  setTimeout(()=>{
-    inner.classList.remove(outClass);
-    if(isReview) inner.innerHTML=buildReviewHtml();
-    else { inner.innerHTML=buildStepHtml(); postRenderStep(); }
-    inner.classList.add(inClass);
-    setTimeout(()=>inner.classList.remove(inClass),260);
-  },240);
-}
-
-function buildStepHtml() {
-  const step=currentSteps()[stepIdx];
-  return `
-    <div class="fstep-tag">${esc(step.tag)}</div>
-    <h2 class="fstep-q">${esc(step.q)}</h2>
-    ${step.hint?`<p class="fstep-hint">${esc(step.hint)}</p>`:''}
-    <div class="fstep-inputs">${step.html()}</div>
-    <div class="ferr" id="fErr"></div>`;
-}
-
-function postRenderStep() {
-  const step=currentSteps()[stepIdx];
-  step.postRender?.();
-}
-
-function updateProgressBar() {
-  const sections=getActiveSections();
-  const totalSects=sections.length;
-  const sKey=currentSectionKey();
-  const sLabel=SECTION_LABEL[sKey]||sKey;
-  const isReview=sKey==='review';
-  const steps=isReview?null:currentSteps();
-  const totalSteps=steps?steps.length:0;
-
-  let overallDone=0, overallTotal=0;
-  sections.forEach((sk,si)=>{
-    if(sk==='review'){overallTotal+=1;if(si<sectIdx)overallDone+=1;}
-    else{const st=getSectionSteps(sk)||[];overallTotal+=st.length;if(si<sectIdx)overallDone+=st.length;else if(si===sectIdx)overallDone+=stepIdx;}
-  });
-
-  document.getElementById('fpStep').textContent = isReview
-    ? 'Review & Submit'
-    : `${sLabel} — Step ${stepIdx+1} of ${totalSteps}`;
-  document.getElementById('fpTitle').textContent = isReview ? '' : esc(currentSteps()[stepIdx]?.tag||'');
-  document.getElementById('fpFill').style.width = `${(overallDone/Math.max(1,overallTotal))*100}%`;
-}
-
-function updateNavButtons() {
-  const back=document.getElementById('fBtnBack');
-  const next=document.getElementById('fBtnNext');
-  const isFirst=(sectIdx===0&&stepIdx===0);
-  const isReview=currentSectionKey()==='review';
-  back.disabled=isFirst;
-  back.textContent=isFirst?'← Back':'← Back';
-  next.textContent=isReview?'Submit →':'Next →';
-  // Hide next on review (handled by review submit button)
-  next.style.display=isReview?'none':'';
-}
-
-function renderSidebar() {
-  const nav=document.getElementById('sectNav');
-  if(!nav)return;
-  const sections=getActiveSections();
-  nav.innerHTML=`<div class="sn-hd">Progress</div>`+sections.map((key,i)=>{
-    const isDone=i<sectIdx;
-    const isCur=i===sectIdx;
-    const cls=isDone?'done':isCur?'cur':'pending';
-    const dot=isDone?'✓':isCur?'→':'';
-    return `<div class="sn-item ${cls}"><div class="sn-dot ${cls}">${dot}</div><span class="sn-label">${esc(SECTION_LABEL[key]||key)}</span></div>`;
-  }).join('');
-}
-
-function nextStep() {
-  const sKey=currentSectionKey();
-  if(sKey==='review'){submitForm();return;}
-  const steps=currentSteps();
-  const step=steps[stepIdx];
-  step.save();
-  const err=step.validate();
-  if(err){showErr(err);return;}
-  clearErr();
-  const sections=getActiveSections();
-  if(stepIdx<steps.length-1){
-    stepIdx++;
-    renderFormPage('fwd');
-  } else {
-    // Move to next section
-    sectIdx++;
-    stepIdx=0;
-    renderFormPage('fwd');
-  }
-}
-
-function prevStep() {
-  const steps=currentSteps();
-  if(steps&&stepIdx>0){
-    steps[stepIdx]?.save?.();
-    clearErr();
-    stepIdx--;
-    renderFormPage('back');
-  } else if(sectIdx>0){
-    clearErr();
-    sectIdx--;
-    const prevSteps=getSectionSteps(currentSectionKey());
-    stepIdx=prevSteps?prevSteps.length-1:0;
-    renderFormPage('back');
-  }
-}
-
-function jumpToSection(targetSectIdx) {
-  sectIdx=targetSectIdx;
-  stepIdx=0;
-  renderFormPage('none');
-}
-
-function showErr(msg) {
-  const el=document.getElementById('fErr');
-  if(!el)return;
-  el.textContent=msg;
-  el.classList.remove('shake');
-  void el.offsetWidth;
-  el.classList.add('shake');
-}
-function clearErr() { const el=document.getElementById('fErr'); if(el)el.textContent=''; }
-
-/* ════════════════════════════════════════════════════════════
-   LABEL HELPERS FOR REVIEW
-════════════════════════════════════════════════════════════ */
-function lbl(v) {
-  const M = {
-    'arabic':'Arabic','chinese':'Chinese','korean':'Korean','french':'French','spanish':'Spanish',
-    'beginner':'Beginner','intermediate':'Intermediate','advanced':'Advanced',
-    'online':'Online','offline':'Offline / In-person','both':'Both',
-    'hourly':'Hourly','daily':'Daily','freetrial':'Free Trial','period':'Per Period of Time','project':'Project-based',
-    'freelance':'Freelance','fulltime':'Full-time','parttime':'Part-time',
-    'translation':'Translation','interpretation':'Interpretation','localization':'Localization','transcription':'Transcription / Subtitling / Proofreading',
-    'legal':'Legal','medical':'Medical','business':'Business','marketing':'Marketing','technical':'Technical',
-    'finance':'Finance','education':'Education','gaming':'Gaming','general':'General',
-    'sponsored':'Sponsored videos','mention':'Brand mentioning','analytics':'Share account analytics',
-    'none':'None','0-1yr':'0–1 years','1-3yr':'1–3 years','3plus':'3+ years',
-    'work':'Work / Business','academia':'Academia','travel':'Travel','immigration':'Immigration','personal':'Personal Interest',
-    'event':'Language Community Event','study':'Study Group','buddy':'Language Buddy','resources':'Educational Resources',
-    'translator':'Translator / interpreter','tourguide':'Tour guide','eventmgr':'Event manager','employee':'Employee',
-    'culture':'Culture','networking':'Networking','entertainment':'Entertainment',
-  };
-  return M[v] || (v ? String(v).charAt(0).toUpperCase()+String(v).slice(1) : '');
-}
-function lbls(arr) { return (arr||[]).map(lbl).filter(Boolean).join(', '); }
-
-/* ════════════════════════════════════════════════════════════
-   REVIEW PAGE
-════════════════════════════════════════════════════════════ */
-function buildReviewHtml() {
-  const sections=getActiveSections().filter(s=>s!=='review');
-  let html=`<div class="fstep-tag">Review</div><h2 class="fstep-q" style="margin-bottom:2rem">Almost there!</h2>`;
-  sections.forEach((sKey,i)=>{
-    const rows=getReviewRows(sKey);
-    if(!rows.length)return;
-    html+=`<div class="review-section">
-      <div class="review-section-hd">
-        <span class="review-section-title">${esc(SECTION_LABEL[sKey]||sKey)}</span>
-        <button class="review-edit" onclick="jumpToSection(${i})">Edit</button>
-      </div>
-      ${rows.map(r=>`<div class="review-row"><span class="review-label">${esc(r.l)}</span><span class="review-value">${esc(r.v)}</span></div>`).join('')}
-    </div>`;
-  });
-  html+=`<button class="review-submit" onclick="submitForm()">Sign Up →</button>`;
-  return html;
-}
-
-function getReviewRows(sKey) {
-  const rows=[];
-  const add=(l,v)=>{ if(v&&String(v).trim()) rows.push({l,v:String(v)}); };
-  switch(sKey) {
-    case 'general':
-      add('Name', formData.name);
-      add('Role(s)', Array.from(selectedRoles).map(r=>ROLE_DISPLAY[r]).join(', '));
-      add('Language(s)', formatLangsReview(formData.languages));
-      add('Location', [formData.city,formData.country].filter(Boolean).join(', '));
-      add('Qualifications', formatQualReview(formData.qualifications));
-      break;
-    case 'tutor':
-      add('Teaches', lbls(formData.tutorLanguages));
-      add('Student level(s)', lbls(formData.tutorStudentLevels));
-      add('Teaching mode', lbl(formData.tutorMode));
-      add('Charge type(s)', lbls(formData.tutorChargeTypes));
-      if(formData.tutorRateMin!=null) add('Rate range', `${formData.tutorRateMin?.toLocaleString()} – ${formData.tutorRateMax?.toLocaleString()} ${formData.tutorCurrency||''}`);
-      break;
-    case 'translator':
-      add('Language pairs', (formData.langPairs||[]).map(p=>`${p.from} → ${p.to}`).filter(s=>s.trim()!=='→').join('; '));
-      add('Specializations', lbls(formData.transSpecializations));
-      add('Availability', lbls(formData.transAvailability));
-      add('Services', lbls(formData.transProvides));
-      if(formData.transRateMin!=null) add('Rate range', `${formData.transRateMin?.toLocaleString()} – ${formData.transRateMax?.toLocaleString()} ${formData.transCurrency||''}`);
-      break;
-    case 'languageTalent':
-      add('Industries', (formData.talentIndustries||[]).join(', '));
-      if(formData.talentSalMin!=null) add('Expected salary', `${formData.talentSalMin?.toLocaleString()} – ${formData.talentSalMax?.toLocaleString()} ${formData.talentCurrency||''} / month`);
-      break;
-    case 'influencer':
-      add('Platforms', Object.entries(formData.platforms||{}).map(([k,v])=>{const p=PLATFORMS.find(x=>x.key===k);return `${p?.label||k}${v?' ('+v+')':''}`;}).join(', '));
-      add('Open to', lbls(formData.inflOpenTo));
-      add('Paid collab experience', lbl(formData.inflExperience));
-      break;
-    case 'learner':
-      add('Learning for', [...(formData.learnerPurpose||[]).map(lbl),formData.learnerPurposeOther].filter(Boolean).join(', '));
-      add('Looking for', [...(formData.learnerLooking||[]).map(lbl),formData.learnerLookingOther].filter(Boolean).join(', '));
-      break;
-    case 'hiring':
-      add('Hiring as', formData.hiringAs==='company'?`Company — ${formData.companyName||''}${formData.companyIndustry?' ('+formData.companyIndustry+')':''}`:lbl(formData.hiringAs));
-      add('Looking for', [...(formData.hiringLooking||[]).map(lbl),formData.hiringLookingOther].filter(Boolean).join(', '));
-      break;
-    case 'tourGuide':
-      add('Work countries', (formData.tourCountries||[]).join(', '));
-      add('Charge type(s)', lbls(formData.tourChargeTypes));
-      if(formData.tourRateMin!=null) add('Rate range', `${formData.tourRateMin?.toLocaleString()} – ${formData.tourRateMax?.toLocaleString()} ${formData.tourCurrency||''}`);
-      break;
-    case 'traveler':
-      add('Traveling to', (formData.travelCountries||[]).join(', '));
-      add('Budget type(s)', lbls(formData.travelBudgetTypes));
-      if(formData.travelBudMin!=null) add('Budget range', `${formData.travelBudMin?.toLocaleString()} – ${formData.travelBudMax?.toLocaleString()} ${formData.travelCurrency||''}`);
-      break;
-    case 'languageEvent':
-      add('Based in', formData.eventCountry);
-      add('Community language(s)', lbls(formData.eventLanguages));
-      break;
-    case 'communityMember':
-      add('Availability', lbl(formData.memberAvailability));
-      add('Interests', lbls(formData.memberInterests));
-      break;
-    case 'final':
-      add('Profile completion', formData.profileComplete==='yes'?'Completed':'Skipped');
-      if(formData.linkedin) add('LinkedIn', formData.linkedin);
-      add('Email', formData.email);
-      add('Phone', formData.phone);
-      break;
-  }
-  return rows;
-}
-
-function formatLangsReview(langs) {
-  if(!langs||!Object.keys(langs).length)return '';
-  return Object.entries(langs).map(([lk,lv])=>{
-    const def=LANGUAGES.find(l=>l.key===lk);
-    if(!def)return '';
-    if(typeof lv==='string'){
-      const ll=LANG_LEVELS.find(l=>l.k===lv);
-      return `${def.label}${ll?' ('+ll.l+')':''}`;
-    }
-    const parts=Object.entries(lv).map(([vk,vl])=>{
-      const vd=def.variants.find(v=>v.key===vk);
-      const ll=LANG_LEVELS.find(l=>l.k===vl);
-      return `${vd?.label||vk}${ll?': '+ll.l:''}`;
+    // Cycle each hero chip's regional-variant label independently
+    document.querySelectorAll('.lang-chip[data-variants]').forEach((chip, i) => {
+        const variants = chip.dataset.variants.split(',');
+        const label = chip.querySelector('.chip-variant');
+        let idx = 0;
+        setInterval(() => {
+            label.style.opacity = '0';
+            setTimeout(() => {
+                idx = (idx + 1) % variants.length;
+                label.textContent = variants[idx];
+                label.style.opacity = '1';
+            }, 300);
+        }, 2600 + i * 550);
     });
-    return `${def.label} — ${parts.join(', ')}`;
-  }).filter(Boolean).join('; ');
-}
-
-function formatQualReview(q) {
-  if(!q)return '';
-  const parts=[];
-  if(q.noQualification)return 'No professional qualification';
-  if(q.hasCertificate)parts.push(`Certificate: ${q.certName||''}${q.certScore?' ('+q.certScore+')':''}`);
-  if(q.hasEducation)parts.push(`Education: ${q.university||''}${q.department?', '+q.department:''}${q.enrolled?' (enrolled)':''}`);
-  return parts.join('; ');
-}
-
-/* ════════════════════════════════════════════════════════════
-   SUBMIT
-════════════════════════════════════════════════════════════ */
-let _welcomeTimer=null;
-
-function submitForm() {
-  console.log('Submitted:', {roles:Array.from(selectedRoles), form:formData});
-  document.getElementById('s-welcome').classList.add('show');
-  _welcomeTimer=setTimeout(()=>{ window.location.href='landing.html'; },3600);
-}
-
-function skipWelcome() {
-  clearTimeout(_welcomeTimer);
-  window.location.href='landing.html';
-}
-
-/* ════════════════════════════════════════════════════════════
-   INTRO — SLOGAN ANIMATION
-════════════════════════════════════════════════════════════ */
-const SLOGANS = [
-  ['Beyond Words','Into Worlds'],
-  ['Authentic Experiences','Powered by People'],
-  ['Unlock Your','Linguistic Journey'],
-  ['Explore Your','Real-Life Stories'],
-  ['Discover Your','Unique Adventure'],
-  ['Uncover Your','Perfect Match'],
-];
-let _sloganIdx=0;
-(function(){
-  const h1=document.getElementById('introH1');
-  const l1=document.getElementById('introLine1');
-  const l2=document.getElementById('introLine2');
-  setInterval(()=>{
-    _sloganIdx=(_sloganIdx+1)%SLOGANS.length;
-    h1.classList.add('slogan-out');
-    setTimeout(()=>{
-      l1.textContent=SLOGANS[_sloganIdx][0];
-      l2.textContent=SLOGANS[_sloganIdx][1];
-      h1.classList.remove('slogan-out');
-    },300);
-  },4000);
-})();
-
-function goLanding() { window.location.href='landing.html'; }
 </script>
 </body>
 </html>

@@ -1,0 +1,49 @@
+/* ══════════════════════════════════════════════════════════
+   RealLingo — shared "Our Team" profile grid.
+   Used on the homepage (#team) and join-us/team/.
+══════════════════════════════════════════════════════════ */
+.team-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 4rem;
+}
+.team-card {
+    background: #fff; padding: 2.125rem;
+    border: 1px solid var(--border-sub);
+    display: flex; flex-direction: column; gap: .75rem;
+}
+.team-av {
+    width: 92px; height: 92px; border-radius: 50%;
+    background: var(--yellow);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-serif); font-style: italic;
+    font-size: 1.9rem; color: var(--dark); flex-shrink: 0;
+    object-fit: cover; object-position: center top;
+    margin-bottom: .375rem;
+}
+.team-name  { font-size: 1.02rem; font-weight: 700; color: var(--dark); }
+.team-title { font-size: .78rem; font-weight: 700; color: #6a5800; letter-spacing: .02em; }
+.team-email { font-size: .78rem; color: var(--text-mid); text-decoration: none; }
+.team-email:hover { color: var(--dark); text-decoration: underline; }
+.team-origin { font-size: .78rem; color: var(--text-mid); display: flex; flex-direction: column; gap: .2rem; }
+.team-origin-row { display: flex; align-items: center; gap: .35rem; }
+.team-origin-label { font-weight: 700; font-size: .66rem; letter-spacing: .06em; text-transform: uppercase; color: var(--text-soft); min-width: 4.6em; }
+.team-bio { font-size: .84rem; line-height: 1.65; color: var(--text-mid); flex: 1; }
+.team-links {
+    display: flex; align-items: center; gap: .6rem;
+    padding-top: 1rem; border-top: 1px solid var(--border-sub);
+}
+.team-link {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border); color: var(--text-mid);
+    transition: background .2s, color .2s, border-color .2s;
+}
+.team-link:hover { background: var(--dark); color: var(--yellow); border-color: var(--dark); }
+.team-link svg { width: 15px; height: 15px; fill: currentColor; }
+
+@media (max-width: 1100px) {
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+    .team-grid { grid-template-columns: 1fr; }
+}

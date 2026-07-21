@@ -1,0 +1,87 @@
+/* ══════════════════════════════════════════════════════════
+   RealLingo — reusable "gateway" transition screen.
+   A full-screen, emotional pause-and-confirm moment used before
+   committing to an onboarding flow (currently: professional
+   sign-up). Built to be reused for future onboarding gateways.
+══════════════════════════════════════════════════════════ */
+.gw-hero {
+    min-height: calc(100vh - 82px);
+    background: var(--cream-white);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 5rem 2rem;
+    opacity: 0; transform: scale(.98);
+    animation: gwEnter .7s cubic-bezier(.2,.7,.2,1) forwards;
+    transition: opacity .38s ease, transform .38s ease;
+}
+.gw-hero.leaving { opacity: 0; transform: scale(.97); transition: opacity .38s ease, transform .38s ease; }
+@keyframes gwEnter { to { opacity: 1; transform: scale(1); } }
+
+.gw-bg-gradient {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(circle at 50% 38%, var(--yellow) 0%, var(--cream-white) 68%);
+    opacity: .55;
+}
+
+.gw-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+.gw-lines path { fill: none; stroke: rgba(17,18,22,.16); stroke-width: 1; stroke-dasharray: 3 7; opacity: 0; animation: gwLinePulse 7s ease-in-out infinite; }
+.gw-lines path:nth-child(2) { animation-delay: 2.3s; }
+.gw-lines path:nth-child(3) { animation-delay: 4.6s; }
+@keyframes gwLinePulse { 0%, 78%, 100% { opacity: 0; } 88% { opacity: 1; } }
+
+.gw-greeting {
+    position: absolute; z-index: 1; pointer-events: none;
+    font-size: .78rem; font-weight: 600; color: rgba(17,18,22,.32);
+    animation: floatUp 5s ease-in-out infinite;
+}
+
+.gw-content { position: relative; z-index: 3; max-width: 780px; }
+.gw-eyebrow {
+    font-size: .7rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--text-mid); margin-bottom: 1.25rem;
+}
+.gw-h1 {
+    font-family: var(--font-serif); font-weight: 400;
+    font-size: clamp(2rem, 4.6vw, 3.6rem); line-height: 1.22; color: var(--dark);
+    margin-bottom: 1.25rem;
+}
+.gw-h1 em { font-style: italic; }
+.gw-sub { font-size: 1rem; color: var(--text-mid); line-height: 1.7; max-width: 46ch; margin: 0 auto; }
+
+/* Floating role badges scattered around the headline */
+.gw-badge {
+    position: absolute; z-index: 2;
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: #fff; border: 1px solid rgba(17,18,22,.1);
+    padding: .55rem .95rem; border-radius: 100px;
+    font-size: .82rem; font-weight: 700; color: var(--dark);
+    box-shadow: 0 10px 24px rgba(17,18,22,.08);
+    white-space: nowrap; cursor: default;
+    transition: box-shadow .3s ease, transform .3s ease;
+}
+.gw-badge:hover { box-shadow: 0 0 0 6px rgba(255,235,153,.55), 0 14px 30px rgba(17,18,22,.14); transform: translateY(-3px) scale(1.05); }
+
+@keyframes gwDrift1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(10px,-14px); } }
+@keyframes gwDrift2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-12px,10px); } }
+@keyframes gwDrift3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(8px,12px); } }
+@keyframes gwDrift4 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-9px,-11px); } }
+@keyframes gwDrift5 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(6px,9px); } }
+
+/* CTAs */
+.gw-ctas { position: relative; z-index: 3; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 3rem; }
+.gw-cta {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: 1rem 2.25rem; font-family: var(--font-sans);
+    font-size: .95rem; font-weight: 700; text-decoration: none; border-radius: 100px;
+    transition: background .2s, transform .2s, box-shadow .2s, border-color .2s;
+}
+.gw-cta-primary { background: var(--dark); color: var(--yellow); }
+.gw-cta-primary:hover { background: #1e2028; transform: translateY(-2px); box-shadow: 0 12px 26px rgba(17,18,22,.2); }
+.gw-cta-secondary { background: transparent; color: var(--text-mid); border: 1.5px solid rgba(17,18,22,.22); }
+.gw-cta-secondary:hover { border-color: var(--dark); color: var(--dark); background: rgba(17,18,22,.04); }
+.gw-cta:focus-visible { outline: 3px solid var(--dark); outline-offset: 3px; }
+
+@media (max-width: 900px) {
+    .gw-badge { display: none; }
+    .gw-h1 { font-size: clamp(1.7rem, 6vw, 2.4rem); }
+}

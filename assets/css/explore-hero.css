@@ -1,0 +1,213 @@
+/* ══════════════════════════════════════════════════════════
+   RealLingo — yellow "Explore" hero (explore/learn/, explore/travel/,
+   explore/event/). Same layout/copy/demo-card content as the homepage
+   hero — Explore's theme color already IS the homepage's yellow.
+══════════════════════════════════════════════════════════ */
+.ex-hero {
+    background: var(--yellow);
+    min-height: calc(100vh - 82px);
+    padding: 5rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.ex-hero::before, .ex-hero::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(17,18,22,.06);
+    pointer-events: none;
+}
+.ex-hero::before { width: 540px; height: 540px; top: -140px; right: -120px; }
+.ex-hero::after  { width: 320px; height: 320px; top:   30px; right:   60px; }
+
+.ex-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text-mid);
+    margin-bottom: 1.75rem;
+    padding: .35rem 1rem;
+    border: 1px solid rgba(17,18,22,.15);
+    border-radius: 100px;
+}
+.ex-pill span { color: var(--dark); font-weight: 800; }
+
+.ex-h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 5.5vw, 5.75rem);
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -.025em;
+    color: var(--dark);
+    margin-bottom: 1.625rem;
+}
+.ex-h1 em { font-style: italic; }
+
+.ex-sub {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 1.75;
+    max-width: 460px;
+    margin-bottom: 2.625rem;
+}
+
+.ex-advantage {
+    max-width: 460px;
+    margin: -.75rem 0 1.75rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid rgba(17, 18, 22, .12);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, .4);
+}
+.ex-advantage-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; font-size: .82rem; line-height: 1.6; }
+.ex-advantage-row + .ex-advantage-row { margin-top: .35rem; }
+.ex-advantage-tag {
+    flex-shrink: 0; font-weight: 800; font-size: .66rem; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--text-mid);
+}
+.ex-advantage-val { color: var(--dark); font-weight: 600; }
+
+.ex-ctas { display: flex; gap: 1.125rem; align-items: center; flex-wrap: wrap; }
+.ex-cta {
+    background: var(--dark);
+    color: var(--yellow);
+    padding: 1rem 2.25rem;
+    font-family: var(--font-sans);
+    font-size: .95rem; font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+    transition: background .2s, transform .2s, box-shadow .2s;
+}
+.ex-cta:hover {
+    background: #1e2028;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(17,18,22,.18);
+}
+
+/* ── DEMO CARDS (unchanged from homepage) ── */
+.ex-visual { position: relative; height: 520px; }
+.ex-visual .demo-card {
+    position: absolute;
+    background: #fff;
+    border: 1px solid rgba(17,18,22,.08);
+    box-shadow: 0 20px 56px rgba(17,18,22,.11), 0 4px 12px rgba(17,18,22,.06);
+    border-radius: 3px;
+}
+.ex-visual .demo-card.main-card { top: 0; left: 0; right: 4%; padding: 1.625rem; }
+.ex-visual .demo-card.fc1 { bottom: 36px; right: 0; width: 230px; padding: 1.125rem 1.25rem; animation: exFloat 4s ease-in-out infinite; }
+.ex-visual .demo-card.fc2 { top: 180px; left: -18px; width: 196px; padding: 1rem 1.125rem; animation: exFloat 5.2s ease-in-out infinite 1.3s; }
+.ex-visual .demo-card.fc3 { top: -18px; right: 12%; width: 188px; padding: 1rem 1.125rem; animation: exFloat 4.6s ease-in-out infinite .6s; }
+@keyframes exFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+.ex-visual .demo-lang-badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    padding: .25rem .6rem; background: rgba(255,235,153,.55); color: #6a5800;
+    margin-bottom: 1.125rem; border-radius: 1px;
+}
+.ex-visual .demo-row { margin-bottom: .875rem; }
+.ex-visual .demo-row-label { font-size: .63rem; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; margin-bottom: .35rem; }
+.ex-visual .demo-row-label.old { color: var(--text-soft); }
+.ex-visual .demo-row-label.new { color: #5a72e8; }
+.ex-visual .demo-phrase { font-size: .9rem; line-height: 1.45; padding: .65rem .9rem; border-radius: 2px; }
+.ex-visual .demo-phrase.old-p { background: var(--cream); color: var(--text-soft); text-decoration: line-through; text-decoration-color: rgba(138,136,120,.4); }
+.ex-visual .demo-phrase.new-p { background: #eef0ff; color: var(--dark); border-left: 2px solid var(--blue); }
+.ex-visual .demo-phrase small { display: block; font-size: .71rem; color: var(--text-soft); margin-top: .2rem; font-style: italic; }
+.ex-visual .demo-phrase[dir="rtl"] { font-family: 'Noto Sans Arabic', 'Arial Unicode MS', serif; }
+.ex-visual .demo-phrase[lang="ko"] { font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', var(--font-sans); }
+.ex-visual .demo-tip { margin-top: .875rem; padding: .75rem .9rem; background: #fffbee; border-left: 2px solid var(--yellow-mid); font-size: .78rem; line-height: 1.55; color: var(--text-mid); }
+.ex-visual .demo-tip strong { color: var(--dark); }
+.ex-visual .float-phrase { font-family: var(--font-serif); font-style: italic; font-size: 1.05rem; color: var(--dark); margin-bottom: .25rem; }
+.ex-visual .float-phrase[dir="rtl"] { font-family: 'Noto Sans Arabic', 'Arial Unicode MS', serif; font-style: normal; font-size: 1rem; }
+.ex-visual .float-phrase[lang="ko"] { font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', var(--font-sans); font-style: normal; font-size: 1rem; }
+.ex-visual .float-meta { font-size: .66rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--text-soft); }
+
+@media (max-width: 1100px) {
+    .ex-hero { grid-template-columns: 1fr; padding: 4rem 2.5rem; gap: 3rem; }
+    .ex-visual { height: 400px; }
+}
+@media (max-width: 768px) {
+    .ex-hero { padding: 3.5rem 1.5rem; }
+    .ex-visual { display: none; }
+}
+
+/* ── Optional full-bleed background video (currently used by explore/event/) ──
+   .ex-hero already provides the plain --yellow background as a fallback for
+   pages/browsers that never get/play the video. */
+.ex-hero-bg-video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; z-index: 0; pointer-events: none;
+    background: var(--yellow) center/cover no-repeat;
+}
+.ex-hero-bg-overlay {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: rgba(255, 235, 153, .16); /* light branded wash — the glass content panel carries the real contrast boost */
+}
+.ex-hero.has-bg-video::before, .ex-hero.has-bg-video::after { z-index: 1; }
+.ex-hero-content, .ex-hero.has-bg-video .ex-visual { position: relative; z-index: 2; }
+
+/* ── Centered variant (currently only explore/event/) ──
+   Full-bleed background (video/photo) behind a single centered content
+   column: eyebrow pill, wordmark, headline, subtitle, two pill CTAs. */
+.ex-hero.ex-hero-centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    grid-template-columns: none;
+    padding: 7rem 2rem;
+}
+.ex-hero-centered .ex-hero-content {
+    display: flex; flex-direction: column; align-items: center;
+    width: 54%; min-width: 340px; max-width: 620px;
+    background: rgba(255, 235, 153, .13);
+    backdrop-filter: blur(20px) saturate(1.1);
+    -webkit-backdrop-filter: blur(20px) saturate(1.1);
+    border: 1px solid rgba(255, 255, 255, .4);
+    border-radius: 22px;
+    box-shadow: 0 30px 70px rgba(17, 18, 22, .28), 0 2px 10px rgba(17, 18, 22, .1);
+    padding: 3.25rem 3rem;
+}
+.ex-hero-centered .ex-pill { margin-bottom: 1.5rem; background: rgba(255,255,255,.5); }
+.ex-hero-centered .ex-wordmark { margin-bottom: 1.75rem; }
+.ex-hero-centered .ex-wordmark-img { height: 30px; width: auto; display: block; }
+.ex-hero-centered .ex-h1 { text-align: center; }
+.ex-hero-centered .ex-sub { text-align: center; margin-left: auto; margin-right: auto; }
+.ex-hero-centered .ex-ctas { justify-content: center; }
+.ex-hero-centered .ex-cta, .ex-hero-centered .ex-cta-outline {
+    border-radius: 100px;
+    padding: 1rem 2.25rem;
+    font-family: var(--font-sans);
+    font-size: .95rem; font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+    transition: background .2s, transform .2s, box-shadow .2s, border-color .2s;
+}
+.ex-hero-centered .ex-cta-outline {
+    background: transparent;
+    color: var(--dark);
+    border: 1.5px solid rgba(17, 18, 22, .35);
+}
+.ex-hero-centered .ex-cta-outline:hover {
+    background: rgba(17, 18, 22, .06);
+    border-color: rgba(17, 18, 22, .55);
+    transform: translateY(-2px);
+}
+@media (max-width: 900px) {
+    .ex-hero-centered .ex-hero-content { width: 88%; min-width: 0; padding: 2.5rem 1.75rem; }
+}
+@media (max-width: 640px) {
+    .ex-hero-centered .ex-hero-content { width: 100%; border-radius: 18px; padding: 2.25rem 1.5rem; }
+    .ex-hero-centered .ex-ctas { flex-direction: column; width: 100%; }
+    .ex-hero-centered .ex-cta, .ex-hero-centered .ex-cta-outline { width: 100%; text-align: center; }
+}

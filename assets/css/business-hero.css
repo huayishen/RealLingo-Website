@@ -1,0 +1,126 @@
+/* ══════════════════════════════════════════════════════════
+   RealLingo — dark "Business" hero, reused by business/translator,
+   business/marketing, business/talent. Same layout/copy/demo-card
+   content as the homepage hero, recolored for the dark Business theme.
+══════════════════════════════════════════════════════════ */
+.biz-hero {
+    background: var(--dark);
+    min-height: calc(100vh - 82px);
+    padding: 5rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.biz-hero::before, .biz-hero::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.07);
+    pointer-events: none;
+}
+.biz-hero::before { width: 540px; height: 540px; top: -140px; right: -120px; }
+.biz-hero::after  { width: 320px; height: 320px; top:   30px; right:   60px; }
+
+.biz-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.45);
+    margin-bottom: 1.75rem;
+    padding: .35rem 1rem;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 100px;
+}
+.biz-pill span { color: var(--yellow); font-weight: 800; }
+
+.biz-h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 5.5vw, 5.75rem);
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -.025em;
+    color: #fff;
+    margin-bottom: 1.625rem;
+}
+.biz-h1 em { font-style: italic; color: var(--yellow); }
+
+.biz-sub {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: rgba(255,255,255,.5);
+    line-height: 1.75;
+    max-width: 460px;
+    margin-bottom: 2.625rem;
+}
+
+.biz-ctas { display: flex; gap: 1.125rem; align-items: center; flex-wrap: wrap; }
+.biz-cta {
+    background: var(--yellow);
+    color: var(--dark);
+    padding: 1rem 2.25rem;
+    font-family: var(--font-sans);
+    font-size: .95rem; font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 100px;
+    transition: background .2s, transform .2s, box-shadow .2s;
+}
+.biz-cta:hover {
+    background: #f5d96a;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0,0,0,.28);
+}
+
+/* ── DEMO CARDS (unchanged from homepage — white cards read fine on dark) ── */
+.biz-visual { position: relative; height: 520px; }
+.biz-visual .demo-card {
+    position: absolute;
+    background: #fff;
+    border: 1px solid rgba(17,18,22,.08);
+    box-shadow: 0 20px 56px rgba(0,0,0,.35), 0 4px 12px rgba(0,0,0,.2);
+    border-radius: 3px;
+}
+.biz-visual .demo-card.main-card { top: 0; left: 0; right: 4%; padding: 1.625rem; }
+.biz-visual .demo-card.fc1 { bottom: 36px; right: 0; width: 230px; padding: 1.125rem 1.25rem; animation: bizFloat 4s ease-in-out infinite; }
+.biz-visual .demo-card.fc2 { top: 180px; left: -18px; width: 196px; padding: 1rem 1.125rem; animation: bizFloat 5.2s ease-in-out infinite 1.3s; }
+.biz-visual .demo-card.fc3 { top: -18px; right: 12%; width: 188px; padding: 1rem 1.125rem; animation: bizFloat 4.6s ease-in-out infinite .6s; }
+@keyframes bizFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+.biz-visual .demo-lang-badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    padding: .25rem .6rem; background: rgba(255,235,153,.55); color: #6a5800;
+    margin-bottom: 1.125rem; border-radius: 1px;
+}
+.biz-visual .demo-row { margin-bottom: .875rem; }
+.biz-visual .demo-row-label { font-size: .63rem; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; margin-bottom: .35rem; }
+.biz-visual .demo-row-label.old { color: var(--text-soft); }
+.biz-visual .demo-row-label.new { color: #5a72e8; }
+.biz-visual .demo-phrase { font-size: .9rem; line-height: 1.45; padding: .65rem .9rem; border-radius: 2px; }
+.biz-visual .demo-phrase.old-p { background: var(--cream); color: var(--text-soft); text-decoration: line-through; text-decoration-color: rgba(138,136,120,.4); }
+.biz-visual .demo-phrase.new-p { background: #eef0ff; color: var(--dark); border-left: 2px solid var(--blue); }
+.biz-visual .demo-phrase small { display: block; font-size: .71rem; color: var(--text-soft); margin-top: .2rem; font-style: italic; }
+.biz-visual .demo-phrase[dir="rtl"] { font-family: 'Noto Sans Arabic', 'Arial Unicode MS', serif; }
+.biz-visual .demo-phrase[lang="ko"] { font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', var(--font-sans); }
+.biz-visual .demo-tip { margin-top: .875rem; padding: .75rem .9rem; background: #fffbee; border-left: 2px solid var(--yellow-mid); font-size: .78rem; line-height: 1.55; color: var(--text-mid); }
+.biz-visual .demo-tip strong { color: var(--dark); }
+.biz-visual .float-phrase { font-family: var(--font-serif); font-style: italic; font-size: 1.05rem; color: var(--dark); margin-bottom: .25rem; }
+.biz-visual .float-phrase[dir="rtl"] { font-family: 'Noto Sans Arabic', 'Arial Unicode MS', serif; font-style: normal; font-size: 1rem; }
+.biz-visual .float-phrase[lang="ko"] { font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', var(--font-sans); font-style: normal; font-size: 1rem; }
+.biz-visual .float-meta { font-size: .66rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--text-soft); }
+
+@media (max-width: 1100px) {
+    .biz-hero { grid-template-columns: 1fr; padding: 4rem 2.5rem; gap: 3rem; }
+    .biz-visual { height: 400px; }
+}
+@media (max-width: 768px) {
+    .biz-hero { padding: 3.5rem 1.5rem; }
+    .biz-visual { display: none; }
+}
