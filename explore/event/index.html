@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Event with RealLingo — Real lingo</title>
+<title>Event Near Me — Real lingo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
@@ -41,6 +41,23 @@
     font-size: clamp(1.9rem, 4.4vw, 3.3rem); line-height: 1.22;
   }
   .ex-edit-title em { font-style: italic; color: var(--yellow); }
+
+  /* ── Dynamic language word: every variant is stacked in the same CSS Grid
+     cell, so the cell's auto-size always matches the widest one and the
+     surrounding sentence never shifts as shorter/longer words swap in. ── */
+  .ex-lang-stack { display: inline-grid; vertical-align: bottom; }
+  .ex-lang-item {
+    grid-area: 1 / 1;
+    display: inline-flex; align-items: baseline; gap: .35rem;
+    white-space: nowrap; pointer-events: none;
+    opacity: 0; transform: translateY(-10px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .ex-lang-item.active { opacity: 1; transform: translateY(0); }
+  .ex-lang-flag { font-size: .55em; }
+  @media (prefers-reduced-motion: reduce) {
+    .ex-lang-item { transition: opacity .3s ease; transform: none; }
+  }
 
   .ex-edit-ctas { display: flex; gap: 1rem; justify-content: center; margin-top: 2.25rem; flex-wrap: wrap; }
   .ex-edit-ctas .ex-cta-outline {
@@ -85,10 +102,17 @@
     <div class="ex-edit-content">
         <div>
             <div class="ex-edit-eyebrow">Arabic &amp; Chinese &amp; Korean · Since 2026</div>
-            <h1 class="ex-edit-title">Every city has a<br><em>language community</em><br>find yours now</h1>
+            <h1 class="ex-edit-title">Struggling to find<br><span class="ex-lang-stack" id="exLangStack">
+                <span class="ex-lang-item active" data-lang="ar"><em>an Arabic</em> <span class="ex-lang-flag">🇸🇦</span></span>
+                <span class="ex-lang-item" data-lang="zh"><em>a Chinese</em> <span class="ex-lang-flag">🇨🇳</span></span>
+                <span class="ex-lang-item" data-lang="ko"><em>a Korean</em> <span class="ex-lang-flag">🇰🇷</span></span>
+                <span class="ex-lang-item" data-lang="fr"><em>a French</em> <span class="ex-lang-flag">🇫🇷</span></span>
+                <span class="ex-lang-item" data-lang="es"><em>a Spanish</em> <span class="ex-lang-flag">🇪🇸</span></span>
+            </span> event near you?</h1>
             <div class="ex-edit-ctas">
                 <a href="../../signup/user/?sel=eventMember" class="ex-cta">Start Your Journey</a>
-                <a href="../../eventpartners/" class="ex-cta-outline">See how it works</a>
+                <a href="../../eventpartners/" class="ex-cta-outline">All Events</a>
+                <a href="../resources/" class="ex-cta-outline">Open Source</a>
             </div>
         </div>
 
@@ -118,6 +142,20 @@
     v.addEventListener('error', fallbackToImage);
     var playPromise = v.play();
     if (playPromise && playPromise.catch) playPromise.catch(fallbackToImage);
+  })();
+
+  // Cycle the hero's animated language word in an infinite loop.
+  (function () {
+    var stack = document.getElementById('exLangStack');
+    if (!stack) return;
+    var items = Array.prototype.slice.call(stack.querySelectorAll('.ex-lang-item'));
+    if (items.length < 2) return;
+    var idx = 0;
+    setInterval(function () {
+      items[idx].classList.remove('active');
+      idx = (idx + 1) % items.length;
+      items[idx].classList.add('active');
+    }, 2800);
   })();
 </script>
 <script src="../../assets/js/nav.js" defer></script>

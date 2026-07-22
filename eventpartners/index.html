@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Event Partners — Real lingo</title>
+<title>Event Directory — Real lingo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
@@ -26,11 +26,48 @@
   .ep-h2 em { font-style: italic; }
   .ep-list-sub { font-size: .92rem; color: var(--text-mid); line-height: 1.65; }
 
+  /* ── Filter bar ── */
+  .edf-filters {
+    display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;
+    background: #fff; border: 1px solid var(--border-sub); border-radius: 18px;
+    padding: 1.5rem 1.75rem; margin-bottom: 1.5rem;
+  }
+  .edf-field { display: flex; flex-direction: column; gap: .4rem; min-width: 150px; flex: 1 1 150px; }
+  .edf-field label { font-size: .66rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-soft); }
+  .edf-field select {
+    width: 100%; padding: .65rem .8rem; border: 1px solid var(--border); border-radius: 9px;
+    font-family: var(--font-sans); font-size: .85rem; color: var(--dark); background: var(--cream);
+    cursor: pointer;
+  }
+  .edf-field select:focus { outline: 2px solid var(--yellow-mid); outline-offset: 1px; }
+  .edf-clear {
+    flex: 0 0 auto; font-family: var(--font-sans); font-size: .8rem; font-weight: 700;
+    color: var(--text-mid); background: var(--cream); border: 1px solid var(--border);
+    border-radius: 100px; padding: .65rem 1.25rem; cursor: pointer; transition: background .2s, color .2s;
+    height: fit-content;
+  }
+  .edf-clear:hover { background: var(--border-sub); color: var(--dark); }
+
+  .edf-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: .5rem; }
+  .edf-count { font-size: .82rem; color: var(--text-mid); }
+  .edf-count strong { color: var(--dark); }
+
+  .edf-empty {
+    text-align: center; padding: 3.5rem 2rem; border: 1.5px dashed var(--border); border-radius: 18px;
+    color: var(--text-mid); font-size: .92rem;
+  }
+  .edf-empty button {
+    display: inline-block; margin-top: 1rem; font-family: var(--font-sans); font-size: .82rem; font-weight: 700;
+    color: var(--dark); background: var(--yellow); border: none; border-radius: 100px;
+    padding: .65rem 1.5rem; cursor: pointer; transition: background .2s;
+  }
+  .edf-empty button:hover { background: var(--yellow-mid); }
+
   .ep-cards { display: flex; flex-direction: column; gap: 1.5rem; }
   .ep-card {
     background: #fff; border: 1px solid var(--border-sub); border-radius: 18px;
     padding: 2.25rem 2.5rem; display: grid; grid-template-columns: 1.3fr 1fr .95fr 1fr; gap: 2rem; align-items: start;
-    transition: box-shadow .3s ease, transform .3s ease;
+    transition: box-shadow .3s ease, transform .3s ease, opacity .3s ease;
   }
   .ep-card:hover { box-shadow: 0 20px 44px rgba(17,18,22,.1); transform: translateY(-3px); }
   .ep-card.epn-active { box-shadow: 0 0 0 2px var(--yellow), 0 20px 44px rgba(17,18,22,.14); }
@@ -43,6 +80,12 @@
   .ep-loc-row { display: flex; align-items: center; gap: .65rem; }
   .ep-langs { display: flex; flex-wrap: wrap; gap: .4rem; }
   .ep-lang-chip { font-size: .72rem; font-weight: 700; background: var(--cream); color: var(--text-mid); padding: .28rem .65rem; border-radius: 100px; }
+
+  .ep-type-chip { display: inline-flex; align-items: center; gap: .4rem; font-size: .68rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--text-mid); margin-top: .6rem; }
+  .ep-type-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .ep-type-chip--online .ep-type-dot { background: #2f7dd6; }
+  .ep-type-chip--in-person .ep-type-dot { background: #2e9e5b; }
+  .ep-type-chip--hybrid .ep-type-dot { background: #8134af; }
 
   .ep-apply { background: var(--dark); padding: 5.5rem 2rem; text-align: center; }
   .ep-apply-inner { max-width: 560px; margin: 0 auto; }
@@ -62,6 +105,8 @@
 
   @media (max-width: 760px) {
     .ep-card { grid-template-columns: 1fr; gap: 1.25rem; padding: 1.75rem; }
+    .edf-filters { padding: 1.25rem; }
+    .edf-field { flex: 1 1 100%; }
   }
 </style>
 </head>
@@ -71,21 +116,22 @@
 
 <main>
   <section class="ep-hero">
-    <div class="ep-crumb">Explore / Event / Event Partners</div>
-    <h1 class="ep-h1">Meet our <em>event partners</em></h1>
-    <p class="ep-sub">RealLingo events happen through local partners who open their doors, stages, and communities to language learners everywhere.</p>
+    <div class="ep-crumb">Explore / Event Near Me / Event Directory</div>
+    <h1 class="ep-h1">Find your next <em>event</em></h1>
+    <p class="ep-sub">RealLingo events happen through local partners who open their doors, stages, and communities to language learners everywhere. Filter to find one near you.</p>
   </section>
 
   <section class="ep-list">
     <div class="ep-list-head">
-      <div class="ep-kicker">Current Partners</div>
+      <div class="ep-kicker">Event Directory</div>
       <h2 class="ep-h2">Where the <em>community</em> gathers</h2>
       <p class="ep-list-sub">Four partners are already hosting RealLingo language events — more join every season.</p>
     </div>
 
     <!-- Global Event Network: an abstract, animated map of connected hubs
          rather than a static pin repeated per city. Hover/focus a node to
-         see its event details and highlight its matching card below. -->
+         see its event details and highlight its matching card below. Nodes
+         dim when their event is filtered out of the directory below. -->
     <div class="epn-wrap" aria-label="RealLingo global event network">
       <svg class="epn-lines" viewBox="0 0 1000 210" preserveAspectRatio="none" aria-hidden="true">
         <path class="epn-path" data-idx="0" d="M 90 150 C 190 60, 260 40, 360 60"/>
@@ -95,132 +141,55 @@
         <circle class="epn-dot" r="3.2"><animateMotion dur="8s" begin="1.2s" repeatCount="indefinite" path="M 360 60 C 460 80, 550 170, 650 140"/></circle>
         <circle class="epn-dot" r="3.2"><animateMotion dur="6.4s" begin=".6s" repeatCount="indefinite" path="M 650 140 C 750 110, 820 40, 910 55"/></circle>
       </svg>
-      <div class="epn-nodes">
-        <button type="button" class="epn-node" data-key="koyee" style="left:9%;top:71%">
-          <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
-          <span class="epn-node-label">Khobar</span>
-        </button>
-        <button type="button" class="epn-node" data-key="sinogulf" style="left:36%;top:28.6%">
-          <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
-          <span class="epn-node-label">Multi-city</span>
-        </button>
-        <button type="button" class="epn-node" data-key="arabnetwork" style="left:65%;top:66.7%">
-          <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
-          <span class="epn-node-label">Singapore</span>
-        </button>
-        <button type="button" class="epn-node" data-key="igotone" style="left:91%;top:26.2%">
-          <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>
-          <span class="epn-node-label">Dammam</span>
-        </button>
-      </div>
+      <div class="epn-nodes" id="epnNodes"></div>
       <div class="epn-tooltip" id="epnTooltip" role="tooltip"></div>
     </div>
 
-    <div class="ep-cards">
-      <div class="ep-card" data-key="koyee">
-        <div class="ep-card-main">
-          <div class="ep-label">Partner</div>
-          <div class="ep-card-partner">Koyee Korean Cafe and Restaurant</div>
-          <div class="ep-card-event">Korean Workshop</div>
-        </div>
-        <div class="ep-card-field">
-          <div class="ep-label">Location</div>
-          <div class="ep-loc-row">
-            <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
-            <span class="ep-val">Khobar, Saudi Arabia</span>
-          </div>
-        </div>
-        <div class="ep-card-field">
-          <div class="ep-label">Upcoming Event</div>
-          <div class="ep-val">Ongoing partnership</div>
-        </div>
-        <div class="ep-card-field">
-          <div class="ep-label">Languages</div>
-          <div class="ep-langs">
-            <span class="ep-lang-chip">Korean</span>
-            <span class="ep-lang-chip">English</span>
-          </div>
-        </div>
+    <form class="edf-filters" id="edfFilters">
+      <div class="edf-field">
+        <label for="edf-type">Type</label>
+        <select id="edf-type">
+          <option value="">All Types</option>
+          <option value="online">Online</option>
+          <option value="in-person">In-Person</option>
+          <option value="hybrid">Hybrid</option>
+        </select>
       </div>
+      <div class="edf-field">
+        <label for="edf-location">Location</label>
+        <select id="edf-location"><option value="">All Locations</option></select>
+      </div>
+      <div class="edf-field">
+        <label for="edf-language">Language</label>
+        <select id="edf-language"><option value="">All Languages</option></select>
+      </div>
+      <div class="edf-field">
+        <label for="edf-month">Month</label>
+        <select id="edf-month"><option value="">All Months</option></select>
+      </div>
+      <div class="edf-field">
+        <label for="edf-community">Community</label>
+        <select id="edf-community"><option value="">All Communities</option></select>
+      </div>
+      <div class="edf-field">
+        <label for="edf-status">Upcoming / Past</label>
+        <select id="edf-status">
+          <option value="">All Events</option>
+          <option value="upcoming">Upcoming</option>
+          <option value="past">Past</option>
+        </select>
+      </div>
+      <button type="button" class="edf-clear" id="edfClear">Clear Filters</button>
+    </form>
 
-      <div class="ep-card" data-key="sinogulf">
-        <div class="ep-card-main">
-          <div class="ep-label">Partner</div>
-          <div class="ep-card-partner">Sino-Gulf Youth Network</div>
-          <div class="ep-card-event">Language Across Borders</div>
-        </div>
-        <div class="ep-card-field">
-          <div class="ep-label">Location</div>
-          <div class="ep-loc-row">
-            <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
-            <span class="ep-val">Jeddah + Khobar, KSA; Beijing + Yiwu, China</span>
-          </div>
-        </div>
-        <div class="ep-card-field">
-          <div class="ep-label">Upcoming Event</div>
-          <div class="ep-val">Ongoing partnership</div>
-        </div>
-        <div class="ep-card-field">
-          <div class="ep-label">Languages</div>
-          <div class="ep-langs">
-            <span class="ep-lang-chip">Chinese</span>
-            <span class="ep-lang-chip">Arabic</span>
-            <span class="ep-lang-chip">English</span>
-          </div>
-        </div>
-      </div>
+    <div class="edf-meta">
+      <p class="edf-count" id="edfCount"></p>
+    </div>
 
-      <div class="ep-card" data-key="arabnetwork">
-        <div class="ep-card-main">
-          <div class="ep-label">Partner</div>
-          <div class="ep-card-partner">Arab Network@Singapore</div>
-          <div class="ep-card-event">Arabic Language &amp; Culture Meetup</div>
-        </div>
-        <div class="ep-card-field">
-          <div class="ep-label">Location</div>
-          <div class="ep-loc-row">
-            <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
-            <span class="ep-val">Singapore</span>
-          </div>
-        </div>
-        <div class="ep-card-field">
-          <div class="ep-label">Upcoming Event</div>
-          <div class="ep-val">Aug 28–29 · 6–10 PM</div>
-        </div>
-        <div class="ep-card-field">
-          <div class="ep-label">Languages</div>
-          <div class="ep-langs">
-            <span class="ep-lang-chip">Arabic</span>
-            <span class="ep-lang-chip">English</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="ep-card" data-key="igotone">
-        <div class="ep-card-main">
-          <div class="ep-label">Partner</div>
-          <div class="ep-card-partner">I-Got-One Project</div>
-          <div class="ep-card-event">Language Across Borders</div>
-        </div>
-        <div class="ep-card-field">
-          <div class="ep-label">Location</div>
-          <div class="ep-loc-row">
-            <span class="loc-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>
-            <span class="ep-val">Dammam, Saudi Arabia</span>
-          </div>
-        </div>
-        <div class="ep-card-field">
-          <div class="ep-label">Upcoming Event</div>
-          <div class="ep-val">Jul 31</div>
-        </div>
-        <div class="ep-card-field">
-          <div class="ep-label">Languages</div>
-          <div class="ep-langs">
-            <span class="ep-lang-chip">Chinese</span>
-            <span class="ep-lang-chip">English</span>
-          </div>
-        </div>
-      </div>
+    <div class="ep-cards" id="epCards"></div>
+    <div class="edf-empty" id="edfEmpty" hidden>
+      No events match your filters.
+      <br><button type="button" id="edfEmptyClear">Clear filters</button>
     </div>
   </section>
 
@@ -242,32 +211,182 @@
   window.SITE_PAGE = "eventpartners";
 </script>
 <script>
+  /* ════════════════════════════════════════════════════════════
+     EVENT DIRECTORY — single data source driving the card list,
+     the filter bar's option lists, and the network-map tooltips.
+  ════════════════════════════════════════════════════════════ */
+  var ICONS = {
+    compass: '<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>',
+    network: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>',
+    plane: '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>'
+  };
+  function iconSvg(key) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICONS[key] + '</svg>';
+  }
+
+  var EVENTS = [
+    {
+      key: 'koyee', partner: 'Koyee Korean Cafe and Restaurant', event: 'Korean Workshop',
+      type: 'in-person', cities: ['Khobar'], locationLabel: 'Khobar, Saudi Arabia',
+      languages: ['Korean', 'English'], month: null, dateLabel: 'Ongoing partnership', status: 'upcoming',
+      icon: 'compass', nodeLabel: 'Khobar', nodePos: { left: '9%', top: '71%' }
+    },
+    {
+      key: 'sinogulf', partner: 'Sino-Gulf Youth Network', event: 'Language Across Borders',
+      type: 'hybrid', cities: ['Jeddah', 'Khobar', 'Beijing', 'Yiwu'], locationLabel: 'Jeddah + Khobar, KSA; Beijing + Yiwu, China',
+      languages: ['Chinese', 'Arabic', 'English'], month: null, dateLabel: 'Ongoing partnership', status: 'upcoming',
+      icon: 'network', nodeLabel: 'Multi-city', nodePos: { left: '36%', top: '28.6%' }
+    },
+    {
+      key: 'arabnetwork', partner: 'Arab Network@Singapore', event: 'Arabic Language & Culture Meetup',
+      type: 'in-person', cities: ['Singapore'], locationLabel: 'Singapore',
+      languages: ['Arabic', 'English'], month: 'August', dateLabel: 'Aug 28–29 · 6–10 PM', status: 'upcoming',
+      icon: 'compass', nodeLabel: 'Singapore', nodePos: { left: '65%', top: '66.7%' }
+    },
+    {
+      key: 'igotone', partner: 'I-Got-One Project', event: 'Language Across Borders',
+      type: 'in-person', cities: ['Dammam'], locationLabel: 'Dammam, Saudi Arabia',
+      languages: ['Chinese', 'English'], month: 'July', dateLabel: 'Jul 31', status: 'upcoming',
+      icon: 'plane', nodeLabel: 'Dammam', nodePos: { left: '91%', top: '26.2%' }
+    }
+  ];
+
+  var TYPE_LABEL = { online: 'Online', 'in-person': 'In-Person', hybrid: 'Hybrid' };
+
+  function uniqueSorted(values) {
+    return Array.from(new Set(values)).sort();
+  }
+
+  function populateSelect(select, values) {
+    values.forEach(function (v) {
+      var opt = document.createElement('option');
+      opt.value = v;
+      opt.textContent = v;
+      select.appendChild(opt);
+    });
+  }
+
+  var locationSelect = document.getElementById('edf-location');
+  var languageSelect = document.getElementById('edf-language');
+  var monthSelect = document.getElementById('edf-month');
+  var communitySelect = document.getElementById('edf-community');
+
+  populateSelect(locationSelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(e.cities); }, [])));
+  populateSelect(languageSelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(e.languages); }, [])));
+  populateSelect(monthSelect, uniqueSorted(EVENTS.map(function (e) { return e.month; }).filter(Boolean)));
+  populateSelect(communitySelect, uniqueSorted(EVENTS.map(function (e) { return e.partner; })));
+
+  function cardHtml(ev) {
+    return (
+      '<div class="ep-card" data-key="' + ev.key + '">' +
+        '<div class="ep-card-main">' +
+          '<div class="ep-label">Partner</div>' +
+          '<div class="ep-card-partner">' + ev.partner + '</div>' +
+          '<div class="ep-card-event">' + ev.event + '</div>' +
+          '<div class="ep-type-chip ep-type-chip--' + ev.type + '"><span class="ep-type-dot"></span>' + TYPE_LABEL[ev.type] + '</div>' +
+        '</div>' +
+        '<div class="ep-card-field">' +
+          '<div class="ep-label">Location</div>' +
+          '<div class="ep-loc-row">' +
+            '<span class="loc-badge" aria-hidden="true">' + iconSvg(ev.icon) + '</span>' +
+            '<span class="ep-val">' + ev.locationLabel + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ep-card-field">' +
+          '<div class="ep-label">Upcoming Event</div>' +
+          '<div class="ep-val">' + ev.dateLabel + '</div>' +
+        '</div>' +
+        '<div class="ep-card-field">' +
+          '<div class="ep-label">Languages</div>' +
+          '<div class="ep-langs">' + ev.languages.map(function (l) { return '<span class="ep-lang-chip">' + l + '</span>'; }).join('') + '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  var epCards = document.getElementById('epCards');
+  var edfEmpty = document.getElementById('edfEmpty');
+  var edfCount = document.getElementById('edfCount');
+  var typeSelect = document.getElementById('edf-type');
+  var statusSelect = document.getElementById('edf-status');
+
+  function activeFilters() {
+    return {
+      type: typeSelect.value,
+      location: locationSelect.value,
+      language: languageSelect.value,
+      month: monthSelect.value,
+      community: communitySelect.value,
+      status: statusSelect.value
+    };
+  }
+
+  function matches(ev, f) {
+    if (f.type && ev.type !== f.type) return false;
+    if (f.location && ev.cities.indexOf(f.location) === -1) return false;
+    if (f.language && ev.languages.indexOf(f.language) === -1) return false;
+    // Ongoing partnerships (no fixed month) are always available, so they
+    // match whichever month a visitor picks rather than being hidden.
+    if (f.month && ev.month && ev.month !== f.month) return false;
+    if (f.community && ev.partner !== f.community) return false;
+    if (f.status && ev.status !== f.status) return false;
+    return true;
+  }
+
+  function render() {
+    var f = activeFilters();
+    var filtered = EVENTS.filter(function (ev) { return matches(ev, f); });
+
+    epCards.innerHTML = filtered.map(cardHtml).join('');
+    edfEmpty.hidden = filtered.length > 0;
+    edfCount.innerHTML = 'Showing <strong>' + filtered.length + '</strong> of ' + EVENTS.length + ' events';
+
+    var filteredKeys = filtered.map(function (ev) { return ev.key; });
+    document.querySelectorAll('.epn-node').forEach(function (node) {
+      node.classList.toggle('dimmed', filteredKeys.indexOf(node.dataset.key) === -1);
+    });
+  }
+
+  [typeSelect, locationSelect, languageSelect, monthSelect, communitySelect, statusSelect].forEach(function (sel) {
+    sel.addEventListener('change', render);
+  });
+  document.getElementById('edfClear').addEventListener('click', function () {
+    [typeSelect, locationSelect, languageSelect, monthSelect, communitySelect, statusSelect].forEach(function (sel) { sel.value = ''; });
+    render();
+  });
+  document.getElementById('edfEmptyClear').addEventListener('click', function () {
+    document.getElementById('edfClear').click();
+  });
+
+  render();
+
   /* Global Event Network: hovering/focusing a node lights up its adjoining
      connector paths, shows an event tooltip, and highlights the matching
      card in the list below — ties the abstract map to the concrete data. */
   (function () {
     var wrap = document.querySelector('.epn-wrap');
-    if (!wrap) return;
+    var nodesWrap = document.getElementById('epnNodes');
+    if (!wrap || !nodesWrap) return;
 
-    var EPN_DATA = {
-      koyee:       { event: 'Korean Workshop',              place: 'Khobar, Saudi Arabia',                          date: 'Ongoing partnership',    partner: 'Koyee Korean Cafe and Restaurant' },
-      sinogulf:    { event: 'Language Across Borders',       place: 'Jeddah + Khobar, KSA · Beijing + Yiwu, China',  date: 'Ongoing partnership',    partner: 'Sino-Gulf Youth Network' },
-      arabnetwork: { event: 'Arabic Language & Culture Meetup', place: 'Singapore',                                  date: 'Aug 28–29 · 6–10 PM',    partner: 'Arab Network@Singapore' },
-      igotone:     { event: 'Language Across Borders',       place: 'Dammam, Saudi Arabia',                          date: 'Jul 31',                 partner: 'I-Got-One Project' }
-    };
+    nodesWrap.innerHTML = EVENTS.map(function (ev) {
+      return '<button type="button" class="epn-node" data-key="' + ev.key + '" style="left:' + ev.nodePos.left + ';top:' + ev.nodePos.top + '">' +
+        '<span class="loc-badge" aria-hidden="true">' + iconSvg(ev.icon) + '</span>' +
+        '<span class="epn-node-label">' + ev.nodeLabel + '</span>' +
+      '</button>';
+    }).join('');
 
     var tooltip = document.getElementById('epnTooltip');
     var nodes = Array.prototype.slice.call(wrap.querySelectorAll('.epn-node'));
     var paths = Array.prototype.slice.call(wrap.querySelectorAll('.epn-path'));
 
     function showTip(node) {
-      var d = EPN_DATA[node.dataset.key];
-      if (!d) return;
+      var ev = EVENTS.filter(function (e) { return e.key === node.dataset.key; })[0];
+      if (!ev) return;
       tooltip.innerHTML =
-        '<div class="epn-tip-event">' + d.event + '</div>' +
-        '<div class="epn-tip-row"><strong>' + d.place + '</strong></div>' +
-        '<div class="epn-tip-row">' + d.date + '</div>' +
-        '<div class="epn-tip-row">' + d.partner + '</div>';
+        '<div class="epn-tip-event">' + ev.event + '</div>' +
+        '<div class="epn-tip-row"><strong>' + ev.locationLabel + '</strong></div>' +
+        '<div class="epn-tip-row">' + ev.dateLabel + '</div>' +
+        '<div class="epn-tip-row">' + ev.partner + '</div>';
 
       var wrapRect = wrap.getBoundingClientRect();
       var nodeRect = node.getBoundingClientRect();

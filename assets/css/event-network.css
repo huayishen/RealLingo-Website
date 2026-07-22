@@ -60,6 +60,7 @@
 }
 .epn-node:hover .epn-node-label, .epn-node:focus-visible .epn-node-label { color: var(--dark); }
 .epn-node:focus-visible { outline: 2px solid var(--dark); outline-offset: 4px; border-radius: 12px; }
+.epn-node.dimmed { opacity: .25; pointer-events: none; transition: opacity .3s ease; }
 
 .epn-tooltip {
     position: absolute; z-index: 20; min-width: 210px; max-width: 250px;

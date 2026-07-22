@@ -1,23 +1,9 @@
 [
-  {
-    "route": "explore/learn",
-    "title": "Learn with RealLingo",
-    "crumb": "Explore / Learn with RealLingo",
-    "section": "explore",
-    "theme": "explore",
-    "children": [
-      { "label": "Tutor Page", "href": "explore/learn/tutor/" },
-      { "label": "Language Learning App", "href": "explore/learn/app/" }
-    ]
-  },
-  { "route": "explore/learn/tutor", "title": "Tutor", "crumb": "Explore / Learn with RealLingo / Tutor", "section": "explore", "theme": "explore" },
-  { "route": "explore/learn/app", "title": "Language Learning App", "crumb": "Explore / Learn with RealLingo / Language Learning App", "section": "explore", "theme": "explore" },
-  { "route": "explore/travel", "title": "Travel with RealLingo", "crumb": "Explore / Travel with RealLingo", "section": "explore", "theme": "explore" },
-  { "route": "explore/event", "title": "Event with RealLingo", "crumb": "Explore / Event with RealLingo", "section": "explore", "theme": "explore" },
+  { "route": "explore/event", "title": "Event Near Me", "crumb": "Explore / Event Near Me", "section": "explore", "theme": "explore" },
   {
     "route": "explore/resources",
-    "title": "Resources with RealLingo",
-    "crumb": "Explore / Resources with RealLingo",
+    "title": "Open Source",
+    "crumb": "Explore / Open Source",
     "section": "explore",
     "theme": "explore",
     "children": [
@@ -25,12 +11,26 @@
       { "label": "Prompt Repository", "href": "explore/resources/prompt/" }
     ]
   },
-  { "route": "explore/resources/scholarship", "title": "Scholarship", "crumb": "Explore / Resources / Scholarship", "section": "explore", "theme": "explore" },
-  { "route": "explore/resources/prompt", "title": "Prompt Repository", "crumb": "Explore / Resources / Prompt Repository", "section": "explore", "theme": "explore" },
+  { "route": "explore/resources/scholarship", "title": "Scholarship", "crumb": "Explore / Open Source / Scholarship", "section": "explore", "theme": "explore" },
+  { "route": "explore/resources/prompt", "title": "Prompt Repository", "crumb": "Explore / Open Source / Prompt Repository", "section": "explore", "theme": "explore" },
 
-  { "route": "business/translator", "title": "Find a Translator", "crumb": "Business / Find a Translator", "section": "business", "theme": "business" },
-  { "route": "business/marketing", "title": "Find a KOL/KOC", "crumb": "Business / Find a KOL/KOC", "section": "business", "theme": "business" },
-  { "route": "business/talent", "title": "Find a Talent", "crumb": "Business / Find a Talent · incl. SGYN Consultancy", "section": "business", "theme": "business" },
+  {
+    "route": "explore/learn",
+    "title": "Find a Tutor",
+    "crumb": "Find... / a Tutor",
+    "section": "business",
+    "theme": "business",
+    "children": [
+      { "label": "Tutor Page", "href": "explore/learn/tutor/" },
+      { "label": "Language Learning App", "href": "explore/learn/app/" }
+    ]
+  },
+  { "route": "explore/learn/tutor", "title": "Tutor", "crumb": "Find... / a Tutor / Tutor", "section": "business", "theme": "business" },
+  { "route": "explore/learn/app", "title": "Language Learning App", "crumb": "Find... / a Tutor / Language Learning App", "section": "business", "theme": "business" },
+  { "route": "explore/travel", "title": "Find a Tour Guide", "crumb": "Find... / a Tour Guide", "section": "business", "theme": "business" },
+  { "route": "business/marketing", "title": "Find a Trendsetter", "crumb": "Find... / a Trendsetter", "section": "business", "theme": "business" },
+  { "route": "business/talent", "title": "Find a Talent", "crumb": "Find... / a Talent · incl. SGYN Consultancy", "section": "business", "theme": "business" },
+  { "route": "business/translator", "title": "Find a Translator", "crumb": "Find... / a Translator", "section": "business", "theme": "business" },
 
   { "route": "join-us/team", "title": "Team", "crumb": "Join Us / Team", "section": "joinus", "theme": "joinus" },
   { "route": "join-us/professional", "title": "Sign Up as a Professional", "crumb": "Join Us / Sign Up as a Professional", "section": "joinus", "theme": "joinus" }
