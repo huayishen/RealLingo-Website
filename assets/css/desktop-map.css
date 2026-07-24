@@ -1,7 +1,8 @@
 /* ══════════════════════════════════════════════════════════
-   RealLingo — "Resources" level-select map (explore/resources/).
+   RealLingo — desktop-style level-select map, shared by any hub page
+   that routes to a handful of destinations (currently find/).
    A game-world-map style gateway: a single winding route connects
-   three "stops," with a traveling marker and clickable level nodes.
+   the "stops," with a traveling marker and clickable level nodes.
    RealLingo Explore palette only (yellow / dark / white).
 ══════════════════════════════════════════════════════════ */
 .rmap-hero {
@@ -20,13 +21,37 @@
 .rmap-intro { max-width: 640px; margin: 0 auto 3rem; text-align: center; position: relative; z-index: 2; }
 .rmap-crumb { font-size: .7rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: var(--text-mid); margin-bottom: 1.25rem; }
 .rmap-h1 { font-family: var(--font-serif); font-size: clamp(2.1rem, 4.4vw, 3.4rem); font-weight: 400; line-height: 1.15; color: var(--dark); margin-bottom: 1rem; }
-.rmap-h1 em { font-style: italic; }
+.rmap-h1 em { font-style: italic; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+/* ── Dynamic word: every variant is stacked in the same CSS Grid cell, so
+   the cell's auto-size always matches the widest one and the heading
+   never shifts as shorter/longer words swap in (same technique as the
+   Event page's animated language word). ── */
+.rmap-lang-stack { display: inline-grid; vertical-align: bottom; }
+.rmap-lang-item {
+    grid-area: 1 / 1;
+    white-space: nowrap; pointer-events: none;
+    opacity: 0; transform: translateY(-8px);
+    transition: opacity .4s ease, transform .4s ease;
+}
+.rmap-lang-item.active { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+    .rmap-lang-item { transition: opacity .25s ease; transform: none; }
+}
+
+/* Splits the heading into two equal-width halves around a fixed center
+   point, so the static "Find a" stays anchored at the midpoint (right-
+   aligned) while the animated word grows from that same point (left-
+   aligned) — the boundary never moves as shorter/longer words cycle in. */
+.rmap-h1-split { display: grid; grid-template-columns: 1fr 1fr; align-items: baseline; column-gap: .35em; }
+.rmap-h1-left { justify-self: end; }
+.rmap-h1-right.rmap-lang-stack { justify-self: start; }
 .rmap-sub { font-size: 1rem; color: var(--text-mid); line-height: 1.7; }
 
 /* ── Fixed-canvas game map (tablet & up) ── */
 .rmap-outer { position: relative; height: 460px; overflow: hidden; }
 .rmap-canvas {
-    position: relative; width: 900px; height: 460px; margin: 0 auto;
+    position: relative; width: 1100px; height: 460px; margin: 0 auto;
     transform-origin: top center;
 }
 .rmap-path { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
@@ -42,9 +67,8 @@
     border-radius: 50%; background: var(--dark);
     display: flex; align-items: center; justify-content: center;
     box-shadow: 0 8px 18px rgba(17,18,22,.28);
-    offset-path: path("M110,320 C280,320 230,90 450,90 C670,90 620,320 790,320");
     offset-rotate: 0deg;
-    animation: rmapTravel 7s ease-in-out infinite alternate;
+    animation: rmapTravel 8s ease-in-out infinite alternate;
     z-index: 1;
 }
 .rmap-marker svg { width: 15px; height: 15px; }
@@ -93,15 +117,17 @@
     .rmap-node-desc { max-height: 90px; opacity: 1; margin-top: .6rem; }
 }
 
-.rmap-node-1 { left: 110px; top: 320px; }
-.rmap-node-2 { left: 450px; top: 90px; }
-.rmap-node-3 { left: 790px; top: 320px; }
+.rmap-node-1 { left: 100px; top: 350px; }
+.rmap-node-2 { left: 325px; top: 110px; }
+.rmap-node-3 { left: 550px; top: 350px; }
+.rmap-node-4 { left: 775px; top: 110px; }
+.rmap-node-5 { left: 1000px; top: 350px; }
 
 .rmap-hint { text-align: center; font-size: .78rem; color: var(--text-mid); margin-top: 1.5rem; position: relative; z-index: 2; }
 
-@media (max-width: 1000px) and (min-width: 641px) {
+@media (max-width: 1100px) and (min-width: 641px) {
     .rmap-outer { height: 345px; }
-    .rmap-canvas { transform: scale(.75); }
+    .rmap-canvas { transform: scale(.65); }
 }
 
 /* ── Mobile fallback: simple vertical stop-list (no canvas map) ── */

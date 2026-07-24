@@ -1,69 +1,130 @@
 /* ══════════════════════════════════════════════════════════
-   RealLingo OS Gateway — a macOS-inspired lock screen + desktop
-   shell wrapping the existing interactive page content.
-   Currently used by explore/resources/ only.
+   RealLingo OS Gateway — a macOS-inspired desktop shell (menubar,
+   dock, floating icons) reused by find/, plus the Open Source Hub's
+   landing hero (explore/resources/).
 ══════════════════════════════════════════════════════════ */
 
-/* ── Lock screen ── */
+/* ── Open Source Hub landing hero ──
+   A bright, warm gateway (not a login screen): RealLingo Yellow + Light
+   Yellow + white, with small dark accents only where needed for contrast. */
 .os-lock {
-    position: fixed; inset: 0; z-index: 1000;
-    background: radial-gradient(circle at 30% 20%, #1c1f2b 0%, #0d0e13 55%, #08090c 100%);
+    position: relative;
+    background: radial-gradient(circle at 30% 15%, #fff7d6 0%, #fffff2 45%, #ffffff 100%);
     display: flex; flex-direction: column; align-items: center;
-    overflow: hidden; cursor: pointer;
-    transition: opacity .6s ease, transform .6s ease;
+    overflow: hidden;
 }
-.os-lock.unlocking { opacity: 0; transform: scale(1.04); pointer-events: none; }
 
-.os-aurora { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .4; will-change: transform; }
+.os-aurora { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; will-change: transform; }
 .os-aurora.a1 { width: 520px; height: 520px; background: radial-gradient(circle, #ffeb99, transparent 70%); top: -140px; left: -100px; animation: osDrift1 22s ease-in-out infinite; }
-.os-aurora.a2 { width: 460px; height: 460px; background: radial-gradient(circle, #99adff, transparent 70%); bottom: -160px; right: -80px; animation: osDrift2 26s ease-in-out infinite; }
+.os-aurora.a2 { width: 460px; height: 460px; background: radial-gradient(circle, #fff2b8, transparent 70%); bottom: -160px; right: -80px; animation: osDrift2 26s ease-in-out infinite; }
 .os-aurora.a3 { width: 380px; height: 380px; background: radial-gradient(circle, #f5d96a, transparent 70%); top: 40%; left: 55%; animation: osDrift3 19s ease-in-out infinite; }
 @keyframes osDrift1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(60px, 40px); } }
 @keyframes osDrift2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-50px, -30px); } }
 @keyframes osDrift3 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-40px, 30px) scale(1.1); } }
 
 .os-constellation { position: absolute; inset: 0; width: 100%; height: 100%; }
-.os-constellation circle { fill: rgba(255, 235, 153, .75); animation: osNodePulse 3.6s ease-in-out infinite; }
-.os-constellation line { stroke: rgba(255, 235, 153, .16); stroke-width: 1; }
-@keyframes osNodePulse { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+.os-constellation circle { fill: rgba(17, 18, 22, .3); animation: osNodePulse 3.6s ease-in-out infinite; }
+.os-constellation line { stroke: rgba(17, 18, 22, .08); stroke-width: 1; }
+@keyframes osNodePulse { 0%, 100% { opacity: .3; } 50% { opacity: .9; } }
 
-.os-greeting { position: absolute; font-size: .8rem; font-weight: 600; color: rgba(255, 255, 255, .35); animation: osFloatUp 5s ease-in-out infinite; }
-@keyframes osFloatUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+/* Ambient collaboration/knowledge symbols — texture, not content. */
+.os-bg-symbol {
+    position: absolute; font-size: 1.6rem; opacity: .22; pointer-events: none;
+    animation: osFloatUp 7s ease-in-out infinite;
+}
+@keyframes osFloatUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+/* Floating multilingual "Open Source" translations. */
+.os-lang-float {
+    position: absolute; font-size: .82rem; font-weight: 700; color: rgba(17, 18, 22, .4);
+    background: rgba(255, 255, 255, .55); padding: .35rem .75rem; border-radius: 100px;
+    box-shadow: 0 6px 18px rgba(17, 18, 22, .06);
+    animation: osWordFloat 6.5s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes osWordFloat {
+    0%, 100% { transform: translateY(0); opacity: .55; }
+    50%      { transform: translateY(-14px); opacity: 1; }
+}
 
 .os-lock-content {
-    position: relative; z-index: 2; width: 100%; max-width: 480px; margin: 0 auto;
+    position: relative; z-index: 2; width: 100%; max-width: 720px; margin: 0 auto;
     padding: 4rem 1.5rem 3rem; display: flex; flex-direction: column; align-items: center;
-    text-align: center; min-height: 100vh; min-height: 100dvh;
+    justify-content: center; text-align: center;
+    min-height: calc(100vh - 82px); min-height: calc(100dvh - 82px);
 }
-.os-clock-date { font-size: 1rem; font-weight: 700; color: rgba(255, 255, 255, .85); margin-bottom: .5rem; letter-spacing: .02em; }
-.os-clock-time { font-family: var(--font-sans); font-size: clamp(3.5rem, 11vw, 5.5rem); font-weight: 200; color: #fff; line-height: 1; letter-spacing: -.01em; }
+.os-hero-eyebrow {
+    font-size: .72rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
+    color: rgba(17, 18, 22, .5); margin-bottom: 1.25rem;
+    opacity: 0; animation: osFadeUp .8s ease forwards .1s;
+}
+.os-hero-title {
+    font-family: var(--font-serif); font-weight: 400; color: var(--dark);
+    font-size: clamp(2.4rem, 6vw, 4.6rem); line-height: 1.12; margin-bottom: 1.25rem;
+    opacity: 0; animation: osFadeUp .9s ease forwards .25s;
+}
+.os-hero-title em {
+    font-style: normal; color: var(--yellow);
+    -webkit-text-stroke: 1px rgba(17, 18, 22, .35);
+    text-shadow: 0 2px 12px rgba(17, 18, 22, .12);
+}
+.os-hero-sub {
+    font-size: 1rem; color: rgba(17, 18, 22, .6); max-width: 46ch; line-height: 1.6;
+    margin-bottom: 3rem;
+    opacity: 0; animation: osFadeUp .9s ease forwards .45s;
+}
+@keyframes osFadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
 
-.os-lock-spacer { flex: 1; min-height: 2.5rem; }
+/* Preview row: three non-interactive "coming up next" cards, connected by
+   lines that light up together when any one card is hovered/focused. */
+.os-preview-row {
+    position: relative; display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 3rem; width: 100%;
+    opacity: 0; animation: osFadeUp .9s ease forwards .65s;
+}
+.os-preview-lines { position: absolute; top: 50%; left: 0; width: 100%; height: 40px; transform: translateY(-50%); z-index: 0; overflow: visible; }
+.os-connect-line { stroke: rgba(17, 18, 22, .14); stroke-width: 1.5; transition: stroke .4s ease, filter .4s ease; }
+.os-preview-row:has(.os-preview-card:hover) .os-connect-line,
+.os-preview-row:has(.os-preview-card:focus-within) .os-connect-line {
+    stroke: var(--yellow-mid); filter: drop-shadow(0 0 4px rgba(245, 217, 106, .6));
+}
+.os-preview-card {
+    position: relative; z-index: 1; width: 190px; background: rgba(255, 255, 255, .8);
+    backdrop-filter: blur(8px); border: 1px solid rgba(17, 18, 22, .08); border-radius: 20px;
+    padding: 1.75rem 1.25rem; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center;
+    text-decoration: none; color: inherit;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, border-color .3s ease;
+}
+.os-preview-card, .os-preview-card * { text-decoration: none; }
+.os-preview-card:hover, .os-preview-card:focus-within {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 24px 50px rgba(245, 217, 106, .3);
+    border-color: rgba(245, 217, 106, .45);
+}
+.os-preview-row:has(.os-preview-card:hover) .os-preview-card:not(:hover) { opacity: .55; transform: scale(.97); }
+.os-preview-icon { font-size: 1.75rem; margin-bottom: .75rem; }
+.os-preview-label { font-size: .92rem; font-weight: 800; color: var(--dark); margin-bottom: .6rem; }
+.os-preview-desc {
+    font-size: .76rem; line-height: 1.55; color: rgba(17, 18, 22, .6);
+    max-height: 0; opacity: 0; overflow: hidden;
+    transition: max-height .4s ease, opacity .3s ease, margin-top .4s ease;
+}
+.os-preview-card:hover .os-preview-desc, .os-preview-card:focus-within .os-preview-desc {
+    max-height: 160px; opacity: 1; margin-top: .2rem;
+}
+@media (hover: none) { .os-preview-desc { max-height: 160px; opacity: 1; margin-top: .2rem; } }
 
-.os-avatar {
-    width: 64px; height: 64px; border-radius: 50%;
-    background: linear-gradient(135deg, #ffeb99, #f5d96a);
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-serif); font-style: italic; font-size: 1.5rem; color: #111216;
-    margin-bottom: .875rem; box-shadow: 0 10px 30px rgba(255, 235, 153, .25);
+@media (max-width: 700px) {
+    .os-lang-float { display: none; }
+    .os-bg-symbol { display: none; }
+    .os-preview-row { gap: 1rem; }
+    .os-preview-card { width: 44%; }
+    .os-preview-lines { display: none; }
 }
-.os-username { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: .25rem; }
-.os-userhandle { font-size: .8rem; color: rgba(255, 255, 255, .4); margin-bottom: 1.5rem; }
-.os-welcome { font-family: var(--font-serif); font-style: italic; font-size: 1.15rem; color: rgba(255, 255, 255, .85); max-width: 30ch; line-height: 1.4; margin-bottom: 2.25rem; }
-
-.os-unlock-btn {
-    display: inline-flex; align-items: center; gap: .6rem;
-    background: var(--yellow); color: #111216; border: none; border-radius: 100px;
-    padding: 1rem 2.25rem; font-family: var(--font-sans); font-size: .92rem; font-weight: 700;
-    cursor: pointer; transition: background .2s, transform .2s, box-shadow .2s;
-    animation: osUnlockPulse 2.6s ease-in-out infinite;
-}
-.os-unlock-btn:hover { background: var(--yellow-mid); transform: translateY(-2px); }
-@keyframes osUnlockPulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 235, 153, .4); }
-    50%      { box-shadow: 0 0 0 12px rgba(255, 235, 153, 0); }
-}
-.os-unlock-hint { margin-top: 1.25rem; font-size: .76rem; color: rgba(255, 255, 255, .3); letter-spacing: .04em; }
 
 /* ── Desktop shell ── */
 .os-menubar {
@@ -124,4 +185,13 @@
     .os-menubar-item { display: none; }
     .os-dock { display: none; }
     .os-float-icon { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .os-aurora, .os-constellation circle, .os-bg-symbol, .os-lang-float {
+        animation: none !important;
+    }
+    .os-hero-eyebrow, .os-hero-title, .os-hero-sub, .os-preview-row {
+        animation: none !important; opacity: 1 !important; transform: none !important;
+    }
 }

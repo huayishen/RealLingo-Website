@@ -13,6 +13,23 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font-sans); }
 
+  /* ── Dynamic language word (same technique as the Event page): every
+     variant is stacked in the same CSS Grid cell, so the cell's auto-size
+     always matches the widest one and the sentence never shifts. ── */
+  .ex-adv-lang-stack { display: inline-grid; vertical-align: bottom; }
+  .ex-adv-lang-item {
+    grid-area: 1 / 1;
+    white-space: nowrap; pointer-events: none;
+    opacity: 0; transform: translateY(-6px);
+    transition: opacity .4s ease, transform .4s ease;
+    font-style: italic; text-decoration: underline;
+    text-decoration-thickness: 2px; text-underline-offset: 3px;
+  }
+  .ex-adv-lang-item.active { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .ex-adv-lang-item { transition: opacity .25s ease; transform: none; }
+  }
+
   /* ── Travel-route illustration ─────────────────────────── */
   .travel-visual { position: relative; height: 520px; display: flex; align-items: center; justify-content: center; }
   .travel-illust { position: relative; width: 460px; height: 500px; flex-shrink: 0; }
@@ -73,14 +90,14 @@
 <main class="ex-hero">
     <div>
         <div class="ex-pill">
-            <span>Arabic</span> &amp; <span>Chinese</span> &amp; <span>Korean</span> · Language Services Since 2026
+            <span>5+ Languages</span> · Authenticity, since 2026
         </div>
-        <h1 class="ex-h1">Experience the world<br>like a <em>Local.</em></h1>
+        <h1 class="ex-h1">Experience<br>the world<br>like a <em>Local.</em></h1>
         <p class="ex-sub">
             At RealLingo, our community travel hosts are more than tour guides—they're local friends that help you experience through local eyes.
         </p>
         <div class="ex-advantage">
-            <div class="ex-advantage-row"><span class="ex-advantage-tag">Multilingual Guides</span><span class="ex-advantage-val">Every host speaks 2+ languages — Arabic, Chinese &amp; Korean, matched to how you actually travel</span></div>
+            <div class="ex-advantage-row"><span class="ex-advantage-tag">Multilingual Guides</span><span class="ex-advantage-val">Every host speaks 5+ languages — like <span class="ex-adv-lang-stack" id="exAdvLangStack"><span class="ex-adv-lang-item active" data-lang="ar">Arabic</span><span class="ex-adv-lang-item" data-lang="zh">Chinese</span><span class="ex-adv-lang-item" data-lang="ko">Korean</span><span class="ex-adv-lang-item" data-lang="fr">French</span><span class="ex-adv-lang-item" data-lang="es">Spanish</span></span>, matched to how you actually travel</span></div>
         </div>
         <div class="ex-ctas">
             <a href="../../signup/user/?sel=traveler" class="ex-cta">Start Your Journey</a>
@@ -123,6 +140,20 @@
   window.SITE_ROOT = "../../";
   window.SITE_SECTION = "business";
   window.SITE_PAGE = "explore/travel";
+
+  // Cycle the "every host speaks..." animated language word in an infinite loop.
+  (function () {
+    var stack = document.getElementById('exAdvLangStack');
+    if (!stack) return;
+    var items = Array.prototype.slice.call(stack.querySelectorAll('.ex-adv-lang-item'));
+    if (items.length < 2) return;
+    var idx = 0;
+    setInterval(function () {
+      items[idx].classList.remove('active');
+      idx = (idx + 1) % items.length;
+      items[idx].classList.add('active');
+    }, 2000);
+  })();
 </script>
 <script src="../../assets/js/nav.js" defer></script>
 </body>

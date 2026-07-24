@@ -19,11 +19,6 @@
   .ex-hero-editorial.ex-hero-centered { display: block; padding: 0; }
   .ex-hero-editorial .ex-hero-bg-overlay { background: rgba(17, 18, 22, .32); }
 
-  .ex-edit-divider {
-    position: absolute; z-index: 2; left: 50%; top: 9%; bottom: 11%;
-    width: 1px; background: rgba(255, 255, 255, .32);
-  }
-
   .ex-edit-content {
     position: relative; z-index: 3; min-height: calc(100vh - 82px);
     display: flex; flex-direction: column; align-items: center; justify-content: space-between;
@@ -40,7 +35,7 @@
     text-shadow: 0 6px 30px rgba(0,0,0,.35);
     font-size: clamp(1.9rem, 4.4vw, 3.3rem); line-height: 1.22;
   }
-  .ex-edit-title em { font-style: italic; color: var(--yellow); }
+  .ex-edit-title em { font-style: italic; color: var(--yellow); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
 
   /* ── Dynamic language word: every variant is stacked in the same CSS Grid
      cell, so the cell's auto-size always matches the widest one and the
@@ -51,12 +46,37 @@
     display: inline-flex; align-items: baseline; gap: .35rem;
     white-space: nowrap; pointer-events: none;
     opacity: 0; transform: translateY(-10px);
-    transition: opacity .6s ease, transform .6s ease;
+    transition: opacity .4s ease, transform .4s ease;
   }
   .ex-lang-item.active { opacity: 1; transform: translateY(0); }
-  .ex-lang-flag { font-size: .55em; }
+
+  /* Splits this line into two equal-width halves around a fixed center
+     point: the animated word (right-aligned) grows leftward from the
+     midpoint, "event near you?" (left-aligned) grows rightward from the
+     same midpoint — so the boundary never moves as words cycle in,
+     and the whole phrase reads as one stable, optically centered unit. */
+  .ex-title-split { display: grid; grid-template-columns: 1fr 1fr; align-items: baseline; column-gap: .3em; }
+  .ex-title-split .ex-lang-stack { justify-self: end; }
+  .ex-title-tail { justify-self: start; }
+
+  /* ── Subtitle: a synchronized second animation (same index, same cadence)
+     translating "Find it" into whichever language the headline is showing. ── */
+  .ex-hero-subline {
+    font-size: clamp(1rem, 2.2vw, 1.7rem); color: rgba(255,255,255,.82);
+    margin-top: 1.1rem; text-shadow: 0 4px 20px rgba(0,0,0,.3);
+  }
+  .ex-hero-subline .rl-mark { color: var(--yellow); }
+  .ex-zh-kaishu { font-family: "Kaiti SC", "STKaiti", "KaiTi", "Kai", serif; }
+  .ex-sub-stack { display: inline-grid; vertical-align: bottom; }
+  .ex-sub-item {
+    grid-area: 1 / 1; white-space: nowrap; pointer-events: none;
+    opacity: 0; transform: translateY(-8px);
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .ex-sub-item.active { opacity: 1; transform: translateY(0); }
+
   @media (prefers-reduced-motion: reduce) {
-    .ex-lang-item { transition: opacity .3s ease; transform: none; }
+    .ex-lang-item, .ex-sub-item { transition: opacity .25s ease; transform: none; }
   }
 
   .ex-edit-ctas { display: flex; gap: 1rem; justify-content: center; margin-top: 2.25rem; flex-wrap: wrap; }
@@ -69,6 +89,81 @@
   .ex-edit-ctas .ex-cta-outline:hover { background: rgba(255,255,255,.12); border-color: #fff; transform: translateY(-2px); }
   .ex-edit-ctas .ex-cta { border-radius: 100px; }
 
+  /* ── "Open Source" hover flyout: reveals its three routes without
+     navigating away, closing on a short delay so the cursor can travel
+     from the button down into the panel. ── */
+  .ex-cta-flyout-wrap { position: relative; display: inline-block; }
+  .ex-cta-flyout {
+    position: absolute; top: calc(100% + .6rem); left: 50%; transform: translateX(-50%) translateY(4px);
+    min-width: 210px; background: rgba(17,18,22,.94); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.18); border-radius: 14px; padding: .5rem;
+    box-shadow: 0 20px 44px rgba(0,0,0,.35);
+    opacity: 0; pointer-events: none; z-index: 20;
+    transition: opacity .18s ease .3s, transform .18s ease .3s;
+  }
+  .ex-cta-flyout-wrap:hover .ex-cta-flyout,
+  .ex-cta-flyout-wrap:focus-within .ex-cta-flyout {
+    opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0);
+    transition: opacity .18s ease, transform .18s ease;
+  }
+  .ex-cta-flyout a {
+    display: block; padding: .65rem .9rem; border-radius: 9px; color: #fff;
+    font-size: .82rem; font-weight: 600; text-decoration: none; transition: background .15s;
+  }
+  .ex-cta-flyout a:hover { background: rgba(255,255,255,.14); }
+
+  /* ── Quick filter bar: a floating glass panel, narrowing results before
+     handing off to the full Event Directory (which reads these same
+     choices from the URL). Its border reuses the weight/opacity that used
+     to be a plain center divider, now framing the panel instead. ── */
+  .ex-filters {
+    display: flex; flex-wrap: wrap; gap: .9rem; justify-content: center; align-items: flex-end;
+    margin: 1.75rem auto 3rem; max-width: 820px;
+    padding: 1.5rem 1.75rem;
+    background: rgba(255, 235, 153, .14);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, .32);
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .22);
+  }
+  .ex-filter-field { display: flex; flex-direction: column; gap: .35rem; min-width: 130px; flex: 1 1 130px; text-align: left; }
+  .ex-filter-field label { font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.65); }
+  .ex-filter-field select, .ex-filter-field input[type=text] {
+    width: 100%; padding: .6rem .75rem; border-radius: 9px; border: 1px solid rgba(255,255,255,.35);
+    background: rgba(255,255,255,.12); color: #fff; font-family: var(--font-sans); font-size: .82rem;
+    backdrop-filter: blur(6px);
+    transition: background .2s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+  .ex-filter-field input[type=text]::placeholder { color: rgba(255,255,255,.55); }
+  .ex-filter-field select { cursor: pointer; }
+  .ex-filter-field select:hover, .ex-filter-field input[type=text]:hover { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.5); }
+  .ex-filter-field select:focus, .ex-filter-field input[type=text]:focus {
+    outline: none; border-color: var(--yellow); background: rgba(255,255,255,.22);
+    box-shadow: 0 0 0 3px rgba(255,235,153,.32);
+  }
+  .ex-filter-field select option { color: #111; }
+  .ex-filter-search {
+    flex: 0 0 auto; background: var(--yellow); color: var(--dark); border: none; border-radius: 100px;
+    padding: .7rem 1.6rem; font-family: var(--font-sans); font-size: .85rem; font-weight: 700; cursor: pointer;
+    transition: background .2s, transform .2s, box-shadow .2s;
+  }
+  .ex-filter-search:hover { background: var(--yellow-mid); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(255,235,153,.35); }
+  @media (max-width: 760px) { .ex-filter-field { flex: 1 1 100%; } }
+
+  /* ── Search: full-width and visually larger than the other quick-filter
+     fields — the primary entry point for event discovery here too. ── */
+  .ex-filter-field--search { flex: 1 1 100%; order: -1; }
+  .ex-search-wrap { position: relative; }
+  .ex-search-icon { position: absolute; left: .9rem; top: 50%; transform: translateY(-50%); width: 17px; height: 17px; color: rgba(255,255,255,.6); pointer-events: none; }
+  .ex-filter-field--search input[type=text] { padding: .75rem 2.6rem; font-size: .92rem; }
+  .ex-search-clear {
+    position: absolute; right: .55rem; top: 50%; transform: translateY(-50%);
+    width: 22px; height: 22px; border-radius: 50%; border: none; background: rgba(255,255,255,.18);
+    color: #fff; font-size: .95rem; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: background .2s ease;
+  }
+  .ex-search-clear:hover { background: var(--yellow); color: var(--dark); }
+
   .ex-edit-bottom { display: flex; width: 100%; justify-content: space-between; align-items: flex-end; gap: 2rem; margin-top: auto; }
   .ex-edit-tagline {
     font-family: var(--font-serif); font-style: italic; color: #fff;
@@ -79,7 +174,6 @@
   .ex-edit-tagline.right { text-align: right; margin-left: auto; }
 
   @media (max-width: 760px) {
-    .ex-edit-divider { display: none; }
     .ex-edit-content { padding: 3.5rem 1.5rem 2.5rem; }
     .ex-edit-bottom { flex-direction: column; align-items: center; gap: 1.5rem; text-align: center; }
     .ex-edit-tagline.left, .ex-edit-tagline.right { text-align: center; max-width: 100%; margin-left: 0; }
@@ -97,23 +191,124 @@
         <img src="../../assets/video/explore-event-bg-poster.jpg" class="ex-hero-bg-video" alt="">
     </video>
     <div class="ex-hero-bg-overlay"></div>
-    <div class="ex-edit-divider" aria-hidden="true"></div>
 
     <div class="ex-edit-content">
         <div>
-            <div class="ex-edit-eyebrow">Arabic &amp; Chinese &amp; Korean · Since 2026</div>
-            <h1 class="ex-edit-title">Struggling to find<br><span class="ex-lang-stack" id="exLangStack">
-                <span class="ex-lang-item active" data-lang="ar"><em>an Arabic</em> <span class="ex-lang-flag">🇸🇦</span></span>
-                <span class="ex-lang-item" data-lang="zh"><em>a Chinese</em> <span class="ex-lang-flag">🇨🇳</span></span>
-                <span class="ex-lang-item" data-lang="ko"><em>a Korean</em> <span class="ex-lang-flag">🇰🇷</span></span>
-                <span class="ex-lang-item" data-lang="fr"><em>a French</em> <span class="ex-lang-flag">🇫🇷</span></span>
-                <span class="ex-lang-item" data-lang="es"><em>a Spanish</em> <span class="ex-lang-flag">🇪🇸</span></span>
-            </span> event near you?</h1>
+            <div class="ex-edit-eyebrow">5+ Languages · Since 2026</div>
+            <h1 class="ex-edit-title">Can't find<br><span class="ex-title-split">
+                <span class="ex-lang-stack" id="exLangStack">
+                    <span class="ex-lang-item active" data-lang="ar"><em>an Arabic</em></span>
+                    <span class="ex-lang-item" data-lang="zh"><em>a Chinese</em></span>
+                    <span class="ex-lang-item" data-lang="ko"><em>a Korean</em></span>
+                    <span class="ex-lang-item" data-lang="fr"><em>a French</em></span>
+                    <span class="ex-lang-item" data-lang="es"><em>a Spanish</em></span>
+                </span>
+                <span class="ex-title-tail">event near you?</span>
+            </span></h1>
+            <p class="ex-hero-subline">
+                <span class="ex-sub-stack" id="exSubStack">
+                    <span class="ex-sub-item active" data-lang="ar" dir="rtl">اعثر عليه على</span>
+                    <span class="ex-sub-item ex-zh-kaishu" data-lang="zh">尽在</span>
+                    <span class="ex-sub-item" data-lang="ko">찾아보세요</span>
+                    <span class="ex-sub-item" data-lang="fr">Trouvez-le sur</span>
+                    <span class="ex-sub-item" data-lang="es">Encuéntralo en</span>
+                </span> <span class="rl-mark"><span class="r">Real</span><span class="l">lingo</span></span>
+            </p>
             <div class="ex-edit-ctas">
-                <a href="../../signup/user/?sel=eventMember" class="ex-cta">Start Your Journey</a>
+                <a href="../../signup/user/?sel=eventMember" class="ex-cta">Sign Up Now</a>
                 <a href="../../eventpartners/" class="ex-cta-outline">All Events</a>
-                <a href="../resources/" class="ex-cta-outline">Open Source</a>
+                <div class="ex-cta-flyout-wrap">
+                    <a href="../resources/" class="ex-cta-outline">Learner Hub</a>
+                    <div class="ex-cta-flyout">
+                        <a href="../resources/scholarship/">Scholarship</a>
+                        <a href="../resources/prompt/">Online Resources</a>
+                        <a href="../resources/application-hub/">Application Hub</a>
+                    </div>
+                </div>
             </div>
+
+            <form class="ex-filters" id="exFilters">
+                <div class="ex-filter-field ex-filter-field--search">
+                    <label for="exf-search">Search</label>
+                    <div class="ex-search-wrap">
+                        <svg class="ex-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="exf-search" placeholder="Search by event name...">
+                        <button type="button" class="ex-search-clear" id="exfSearchClear" hidden aria-label="Clear search">×</button>
+                    </div>
+                </div>
+                <div class="ex-filter-field">
+                    <label for="exf-country">Country</label>
+                    <select id="exf-country">
+                        <option value="">All Countries</option>
+                        <option value="China">China</option>
+                        <option value="Saudi Arabia">Saudi Arabia</option>
+                        <option value="Singapore">Singapore</option>
+                    </select>
+                </div>
+                <div class="ex-filter-field">
+                    <label for="exf-city">City</label>
+                    <select id="exf-city">
+                        <option value="">All Cities</option>
+                        <option value="Beijing">Beijing</option>
+                        <option value="Dammam">Dammam</option>
+                        <option value="Dhahran">Dhahran</option>
+                        <option value="Jeddah">Jeddah</option>
+                        <option value="Khobar">Khobar</option>
+                        <option value="Singapore">Singapore</option>
+                        <option value="Yiwu">Yiwu</option>
+                    </select>
+                </div>
+                <div class="ex-filter-field">
+                    <label for="exf-language">Primary Language</label>
+                    <select id="exf-language">
+                        <option value="">All Languages</option>
+                        <option value="Arabic">Arabic</option>
+                        <option value="Chinese">Chinese</option>
+                        <option value="English">English</option>
+                        <option value="Korean">Korean</option>
+                        <option value="Malay">Malay</option>
+                    </select>
+                </div>
+                <div class="ex-filter-field">
+                    <label for="exf-type">Event Type</label>
+                    <select id="exf-type">
+                        <option value="">All Types</option>
+                        <option value="online">Online</option>
+                        <option value="in-person">In-Person</option>
+                        <option value="hybrid">Hybrid</option>
+                    </select>
+                </div>
+                <div class="ex-filter-field">
+                    <label for="exf-format">Event Format</label>
+                    <select id="exf-format">
+                        <option value="">All Formats</option>
+                        <option value="Experiential Workshop">Experiential Workshop</option>
+                        <option value="Language Exchange">Language Exchange</option>
+                        <option value="Community Meetup">Community Meetup</option>
+                        <option value="Experiential Booth">Experiential Booth</option>
+                        <option value="Policy Event">Policy Event</option>
+                    </select>
+                </div>
+                <div class="ex-filter-field">
+                    <label for="exf-series">Program Series</label>
+                    <select id="exf-series">
+                        <option value="">All Series</option>
+                        <option value="Language Across Borders (LAB)">Language Across Borders (LAB)</option>
+                        <option value="Korean Workshop">Korean Workshop</option>
+                        <option value="Silk-Road Roundtable">Silk-Road Roundtable</option>
+                    </select>
+                </div>
+                <div class="ex-filter-field">
+                    <label for="exf-community">Community</label>
+                    <select id="exf-community">
+                        <option value="">All Communities</option>
+                        <option value="Arab Network@Singapore">Arab Network@Singapore</option>
+                        <option value="Koyee Korean Cafe and Restaurant">Koyee Korean Cafe and Restaurant</option>
+                        <option value="Sino-Gulf Youth Network">Sino-Gulf Youth Network</option>
+                    </select>
+                </div>
+                <button type="submit" class="ex-filter-search">Search Events</button>
+            </form>
         </div>
 
         <div class="ex-edit-bottom">
@@ -144,18 +339,54 @@
     if (playPromise && playPromise.catch) playPromise.catch(fallbackToImage);
   })();
 
-  // Cycle the hero's animated language word in an infinite loop.
+  // Cycle the hero's animated language word and its synchronized subtitle
+  // translation together, in lockstep, in an infinite loop.
   (function () {
     var stack = document.getElementById('exLangStack');
+    var subStack = document.getElementById('exSubStack');
     if (!stack) return;
     var items = Array.prototype.slice.call(stack.querySelectorAll('.ex-lang-item'));
+    var subItems = subStack ? Array.prototype.slice.call(subStack.querySelectorAll('.ex-sub-item')) : [];
     if (items.length < 2) return;
     var idx = 0;
     setInterval(function () {
       items[idx].classList.remove('active');
+      if (subItems[idx]) subItems[idx].classList.remove('active');
       idx = (idx + 1) % items.length;
       items[idx].classList.add('active');
-    }, 2800);
+      if (subItems[idx]) subItems[idx].classList.add('active');
+    }, 2000);
+  })();
+
+  // Search field: show/hide the clear (×) button as text is typed.
+  (function () {
+    var input = document.getElementById('exf-search');
+    var clearBtn = document.getElementById('exfSearchClear');
+    if (!input || !clearBtn) return;
+    input.addEventListener('input', function () { clearBtn.hidden = !input.value; });
+    clearBtn.addEventListener('click', function () {
+      input.value = '';
+      clearBtn.hidden = true;
+      input.focus();
+    });
+  })();
+
+  // Hand the chosen filters off to the full Event Directory via the URL,
+  // so the same result set is already applied when it lands there.
+  (function () {
+    var form = document.getElementById('exFilters');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var keys = ['search', 'country', 'city', 'language', 'type', 'format', 'series', 'community'];
+      var params = new URLSearchParams();
+      keys.forEach(function (key) {
+        var el = document.getElementById('exf-' + key);
+        if (el && el.value) params.set(key, el.value);
+      });
+      var qs = params.toString();
+      window.location.href = '../../eventpartners/' + (qs ? '?' + qs : '');
+    });
   })();
 </script>
 <script src="../../assets/js/nav.js" defer></script>

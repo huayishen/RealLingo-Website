@@ -16,15 +16,25 @@
   .ep-hero { background: var(--yellow); padding: 6.5rem 2rem 5rem; text-align: center; }
   .ep-crumb { font-size: .7rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: var(--text-mid); margin-bottom: 1.25rem; }
   .ep-h1 { font-family: var(--font-serif); font-size: clamp(2.2rem, 4.6vw, 3.6rem); font-weight: 400; color: var(--dark); margin-bottom: 1.125rem; line-height: 1.15; }
-  .ep-h1 em { font-style: italic; }
+  .ep-h1 em { font-style: italic; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
   .ep-sub { max-width: 560px; margin: 0 auto; font-size: 1rem; color: var(--text-mid); line-height: 1.7; }
 
+  /* ── Dynamic language word: every variant is stacked in the same CSS Grid
+     cell, so the cell's auto-size always matches the widest one and the
+     surrounding sentence never shifts as shorter/longer words swap in. ── */
+  .ep-lang-stack { display: inline-grid; vertical-align: bottom; }
+  .ep-lang-item {
+    grid-area: 1 / 1;
+    white-space: nowrap; pointer-events: none;
+    opacity: 0; transform: translateY(-8px);
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .ep-lang-item.active { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .ep-lang-item { transition: opacity .25s ease; transform: none; }
+  }
+
   .ep-list { padding: 5.5rem 2rem; max-width: 980px; margin: 0 auto; }
-  .ep-list-head { text-align: center; max-width: 560px; margin: 0 auto 3.25rem; }
-  .ep-kicker { font-size: .7rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: var(--text-soft); margin-bottom: .875rem; }
-  .ep-h2 { font-family: var(--font-serif); font-size: clamp(1.8rem, 3.2vw, 2.4rem); font-weight: 400; color: var(--dark); margin-bottom: .75rem; }
-  .ep-h2 em { font-style: italic; }
-  .ep-list-sub { font-size: .92rem; color: var(--text-mid); line-height: 1.65; }
 
   /* ── Filter bar ── */
   .edf-filters {
@@ -34,12 +44,12 @@
   }
   .edf-field { display: flex; flex-direction: column; gap: .4rem; min-width: 150px; flex: 1 1 150px; }
   .edf-field label { font-size: .66rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-soft); }
-  .edf-field select {
+  .edf-field select, .edf-field input[type=text] {
     width: 100%; padding: .65rem .8rem; border: 1px solid var(--border); border-radius: 9px;
     font-family: var(--font-sans); font-size: .85rem; color: var(--dark); background: var(--cream);
-    cursor: pointer;
   }
-  .edf-field select:focus { outline: 2px solid var(--yellow-mid); outline-offset: 1px; }
+  .edf-field select { cursor: pointer; }
+  .edf-field select:focus, .edf-field input[type=text]:focus { outline: 2px solid var(--yellow-mid); outline-offset: 1px; }
   .edf-clear {
     flex: 0 0 auto; font-family: var(--font-sans); font-size: .8rem; font-weight: 700;
     color: var(--text-mid); background: var(--cream); border: 1px solid var(--border);
@@ -48,9 +58,50 @@
   }
   .edf-clear:hover { background: var(--border-sub); color: var(--dark); }
 
-  .edf-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: .5rem; }
+  /* ── Search: full-width and visually larger than the other filters —
+     it's the primary entry point for event discovery, not just one
+     field among many. ── */
+  .edf-field--search { flex: 1 1 100%; order: -1; }
+  .edf-search-wrap { position: relative; }
+  .edf-search-icon { position: absolute; left: .95rem; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--text-soft); pointer-events: none; }
+  .edf-field--search input[type=text] { padding: .95rem 2.75rem; font-size: 1rem; border-radius: 12px; }
+  .edf-search-clear {
+    position: absolute; right: .6rem; top: 50%; transform: translateY(-50%);
+    width: 24px; height: 24px; border-radius: 50%; border: none; background: var(--border-sub);
+    color: var(--text-mid); font-size: 1rem; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: background .2s ease, color .2s ease;
+  }
+  .edf-search-clear:hover { background: var(--yellow-mid); color: var(--dark); }
+
+  /* ── Time-based toolbar: status + sort, deliberately styled as a
+     separate strip (its own tinted background) rather than folded into
+     the white filter card above, so "when" reads as a distinct control
+     from "which". ── */
+  .edf-toolbar {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .85rem;
+    background: var(--cream); border: 1px solid var(--border-sub); border-radius: 14px;
+    padding: .9rem 1.25rem; margin-bottom: 1.5rem;
+  }
   .edf-count { font-size: .82rem; color: var(--text-mid); }
   .edf-count strong { color: var(--dark); }
+
+  .edf-sort-group { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .edf-status-pills { display: flex; gap: .4rem; flex-wrap: wrap; }
+  .edf-status-pill-btn {
+    font-family: var(--font-sans); font-size: .74rem; font-weight: 700;
+    color: var(--text-mid); background: #fff; border: 1px solid var(--border);
+    border-radius: 100px; padding: .4rem 1rem; cursor: pointer; transition: background .2s, color .2s, border-color .2s;
+  }
+  .edf-status-pill-btn:hover { border-color: var(--yellow-mid); }
+  .edf-status-pill-btn.active { background: var(--yellow); border-color: var(--yellow); color: var(--dark); }
+
+  .edf-sort-field { display: flex; align-items: center; gap: .55rem; }
+  .edf-sort-field label { font-size: .66rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-soft); }
+  .edf-sort-field select {
+    padding: .45rem .7rem; border: 1px solid var(--border); border-radius: 9px;
+    font-family: var(--font-sans); font-size: .82rem; color: var(--dark); background: #fff; cursor: pointer;
+  }
+  .edf-sort-field select:focus { outline: 2px solid var(--yellow-mid); outline-offset: 1px; }
 
   .edf-empty {
     text-align: center; padding: 3.5rem 2rem; border: 1.5px dashed var(--border); border-radius: 18px;
@@ -63,29 +114,96 @@
   }
   .edf-empty button:hover { background: var(--yellow-mid); }
 
-  .ep-cards { display: flex; flex-direction: column; gap: 1.5rem; }
-  .ep-card {
-    background: #fff; border: 1px solid var(--border-sub); border-radius: 18px;
-    padding: 2.25rem 2.5rem; display: grid; grid-template-columns: 1.3fr 1fr .95fr 1fr; gap: 2rem; align-items: start;
-    transition: box-shadow .3s ease, transform .3s ease, opacity .3s ease;
-  }
-  .ep-card:hover { box-shadow: 0 20px 44px rgba(17,18,22,.1); transform: translateY(-3px); }
-  .ep-card.epn-active { box-shadow: 0 0 0 2px var(--yellow), 0 20px 44px rgba(17,18,22,.14); }
-  .ep-card-main .ep-label { font-size: .66rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-soft); margin-bottom: .4rem; }
-  .ep-card-partner { font-size: 1.15rem; font-weight: 800; color: var(--dark); margin-bottom: .3rem; }
-  .ep-card-event { font-family: var(--font-serif); font-style: italic; font-size: 1.05rem; color: var(--text-mid); }
-  .ep-card-field { }
-  .ep-card-field .ep-label { font-size: .66rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-soft); margin-bottom: .5rem; }
-  .ep-card-field .ep-val { font-size: .88rem; color: var(--dark); line-height: 1.55; }
-  .ep-loc-row { display: flex; align-items: center; gap: .65rem; }
-  .ep-langs { display: flex; flex-wrap: wrap; gap: .4rem; }
-  .ep-lang-chip { font-size: .72rem; font-weight: 700; background: var(--cream); color: var(--text-mid); padding: .28rem .65rem; border-radius: 100px; }
+  /* ── Card grid: 3 columns desktop, 2 tablet, 1 mobile. Every card is the
+     same width and top-aligned (no masonry) so the grid reads as clean
+     rows even once individual cards expand to different heights. ── */
+  .ep-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; align-items: start; }
 
-  .ep-type-chip { display: inline-flex; align-items: center; gap: .4rem; font-size: .68rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--text-mid); margin-top: .6rem; }
+  .ep-card {
+    position: relative;
+    background: #fff; border: 1px solid var(--border-sub); border-radius: 20px;
+    box-shadow: 0 2px 12px rgba(17,18,22,.05);
+    transition: box-shadow .3s ease, transform .3s ease, border-color .3s ease;
+    overflow: hidden;
+  }
+  .ep-card:hover { box-shadow: 0 18px 40px rgba(17,18,22,.12); transform: translateY(-4px); border-color: var(--yellow-mid); }
+  .ep-card.epn-active { box-shadow: 0 0 0 2px var(--yellow), 0 18px 40px rgba(17,18,22,.14); }
+
+  /* ── Summary (collapsed) content — the only part visible until a card
+     is expanded. Program Series leads (primary identifier); Community
+     is a plain, label-less subtitle right beneath it (secondary). ── */
+  .ep-card-summary {
+    display: block; width: 100%; text-align: left; background: none; border: none;
+    padding: 1.85rem 1.9rem; cursor: pointer; font: inherit; color: inherit;
+  }
+  .ep-card-summary-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .ep-card-series { font-family: var(--font-serif); font-weight: 400; font-size: 1.22rem; line-height: 1.3; color: var(--dark); }
+  .ep-card-community { font-size: .82rem; font-weight: 600; color: var(--text-mid); margin-top: .35rem; }
+
+  .ep-card-chevron {
+    flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; margin-top: .1rem;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--cream); transition: background .25s ease, transform .25s ease;
+  }
+  .ep-card-chevron svg { width: 14px; height: 14px; color: var(--text-mid); transition: transform .35s cubic-bezier(.4,0,.2,1); }
+  .ep-card.expanded .ep-card-chevron { background: var(--yellow); }
+  .ep-card.expanded .ep-card-chevron svg { transform: rotate(180deg); }
+
+  .ep-card-meta { display: flex; flex-direction: column; gap: .5rem; margin-top: 1.15rem; }
+  .ep-card-meta-item { display: flex; align-items: center; gap: .55rem; font-size: .84rem; color: var(--text-mid); line-height: 1.4; }
+  .ep-card-meta-item svg { width: 15px; height: 15px; flex: 0 0 auto; color: var(--text-soft); }
+
+  .ep-card-tags { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1.1rem; }
+  .ep-tag { font-size: .72rem; font-weight: 700; background: var(--cream); color: var(--text-mid); padding: .32rem .75rem; border-radius: 100px; }
+  .ep-tag--lang { background: rgba(255, 235, 153, .55); color: var(--dark); }
+
+  /* ── Expandable details: a grid-rows 0fr→1fr transition animates the
+     height smoothly without any JS measuring the content's scrollHeight,
+     and keeps every other card's position in the grid untouched. ── */
+  .ep-card-details-wrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s cubic-bezier(.4,0,.2,1); }
+  .ep-card.expanded .ep-card-details-wrap { grid-template-rows: 1fr; }
+  .ep-card-details-inner { overflow: hidden; min-height: 0; }
+  .ep-card-details-content {
+    padding: 1.4rem 1.9rem 1.9rem; border-top: 1px solid var(--border-sub);
+    opacity: 0; transform: translateY(-6px);
+    transition: opacity .3s ease, transform .3s ease;
+  }
+  .ep-card.expanded .ep-card-details-content { opacity: 1; transform: translateY(0); transition-delay: .08s; }
+
+  .ep-label { font-size: .64rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-soft); margin-bottom: .45rem; }
+  .ep-card-overview { font-size: .85rem; color: var(--text-mid); line-height: 1.6; margin: 0 0 1.25rem; }
+
+  .ep-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1.3rem 1.25rem; }
+  .ep-card-field .ep-val { font-size: .86rem; color: var(--dark); line-height: 1.5; }
+  .ep-val--muted { color: var(--text-soft); }
+  .ep-langs { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .ep-lang-chip { font-size: .7rem; font-weight: 700; background: var(--cream); color: var(--text-mid); padding: .26rem .6rem; border-radius: 100px; }
+  .ep-lang-chip--support { background: transparent; border: 1px dashed var(--border); color: var(--text-soft); }
+
+  .ep-type-chip { display: inline-flex; align-items: center; gap: .4rem; font-size: .68rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--text-mid); }
   .ep-type-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
   .ep-type-chip--online .ep-type-dot { background: #2f7dd6; }
   .ep-type-chip--in-person .ep-type-dot { background: #2e9e5b; }
   .ep-type-chip--hybrid .ep-type-dot { background: #8134af; }
+
+  .ep-status-pill {
+    display: inline-block; font-size: .68rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+    padding: .32rem .8rem; border-radius: 100px; white-space: nowrap;
+  }
+  .ep-status-pill--upcoming { background: #eaf3ff; color: #2f5fa8; }
+  .ep-status-pill--ongoing { background: #e8f8ee; color: #237a45; }
+  .ep-status-pill--past { background: var(--cream); color: var(--text-soft); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ep-card, .ep-card-chevron, .ep-card-chevron svg, .ep-card-details-wrap, .ep-card-details-content { transition: none !important; }
+  }
+
+  @media (max-width: 1024px) {
+    .ep-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .ep-cards { grid-template-columns: 1fr; }
+  }
 
   .ep-apply { background: var(--dark); padding: 5.5rem 2rem; text-align: center; }
   .ep-apply-inner { max-width: 560px; margin: 0 auto; }
@@ -104,7 +222,9 @@
   .ep-apply-cta:hover { background: var(--yellow-mid); transform: translateY(-2px); box-shadow: 0 12px 26px rgba(0,0,0,.3); }
 
   @media (max-width: 760px) {
-    .ep-card { grid-template-columns: 1fr; gap: 1.25rem; padding: 1.75rem; }
+    .ep-card-summary { padding: 1.5rem 1.6rem; }
+    .ep-card-details-content { padding: 1.25rem 1.6rem 1.6rem; }
+    .ep-card-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.1rem; }
     .edf-filters { padding: 1.25rem; }
     .edf-field { flex: 1 1 100%; }
   }
@@ -117,17 +237,17 @@
 <main>
   <section class="ep-hero">
     <div class="ep-crumb">Explore / Event Near Me / Event Directory</div>
-    <h1 class="ep-h1">Find your next <em>event</em></h1>
+    <h1 class="ep-h1">Find your next <span class="ep-lang-stack" id="epLangStack">
+      <span class="ep-lang-item active" data-lang="zh"><em>Chinese</em></span>
+      <span class="ep-lang-item" data-lang="ar"><em>Arabic</em></span>
+      <span class="ep-lang-item" data-lang="ko"><em>Korean</em></span>
+      <span class="ep-lang-item" data-lang="fr"><em>French</em></span>
+      <span class="ep-lang-item" data-lang="es"><em>Spanish</em></span>
+    </span> event</h1>
     <p class="ep-sub">RealLingo events happen through local partners who open their doors, stages, and communities to language learners everywhere. Filter to find one near you.</p>
   </section>
 
   <section class="ep-list">
-    <div class="ep-list-head">
-      <div class="ep-kicker">Event Directory</div>
-      <h2 class="ep-h2">Where the <em>community</em> gathers</h2>
-      <p class="ep-list-sub">Four partners are already hosting RealLingo language events — more join every season.</p>
-    </div>
-
     <!-- Global Event Network: an abstract, animated map of connected hubs
          rather than a static pin repeated per city. Hover/focus a node to
          see its event details and highlight its matching card below. Nodes
@@ -146,8 +266,28 @@
     </div>
 
     <form class="edf-filters" id="edfFilters">
+      <div class="edf-field edf-field--search">
+        <label for="edf-search">Search</label>
+        <div class="edf-search-wrap">
+          <svg class="edf-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="edf-search" placeholder="Search by event name...">
+          <button type="button" class="edf-search-clear" id="edfSearchClear" hidden aria-label="Clear search">×</button>
+        </div>
+      </div>
       <div class="edf-field">
-        <label for="edf-type">Type</label>
+        <label for="edf-country">Country</label>
+        <select id="edf-country"><option value="">All Countries</option></select>
+      </div>
+      <div class="edf-field">
+        <label for="edf-city">City</label>
+        <select id="edf-city"><option value="">All Cities</option></select>
+      </div>
+      <div class="edf-field">
+        <label for="edf-language">Primary Language</label>
+        <select id="edf-language"><option value="">All Languages</option></select>
+      </div>
+      <div class="edf-field">
+        <label for="edf-type">Event Type</label>
         <select id="edf-type">
           <option value="">All Types</option>
           <option value="online">Online</option>
@@ -156,34 +296,79 @@
         </select>
       </div>
       <div class="edf-field">
-        <label for="edf-location">Location</label>
-        <select id="edf-location"><option value="">All Locations</option></select>
+        <label for="edf-format">Event Format</label>
+        <select id="edf-format"><option value="">All Formats</option></select>
       </div>
       <div class="edf-field">
-        <label for="edf-language">Language</label>
-        <select id="edf-language"><option value="">All Languages</option></select>
-      </div>
-      <div class="edf-field">
-        <label for="edf-month">Month</label>
-        <select id="edf-month"><option value="">All Months</option></select>
+        <label for="edf-series">Program Series</label>
+        <select id="edf-series"><option value="">All Series</option></select>
       </div>
       <div class="edf-field">
         <label for="edf-community">Community</label>
         <select id="edf-community"><option value="">All Communities</option></select>
       </div>
       <div class="edf-field">
-        <label for="edf-status">Upcoming / Past</label>
-        <select id="edf-status">
-          <option value="">All Events</option>
-          <option value="upcoming">Upcoming</option>
-          <option value="past">Past</option>
+        <label for="edf-month">Month</label>
+        <select id="edf-month"><option value="">All Months</option></select>
+      </div>
+      <div class="edf-field">
+        <label for="edf-supporting">Supporting Language</label>
+        <select id="edf-supporting"><option value="">All Languages</option></select>
+      </div>
+      <div class="edf-field">
+        <label for="edf-requirement">Language Requirement</label>
+        <select id="edf-requirement"><option value="">Any Level</option></select>
+      </div>
+      <div class="edf-field">
+        <label for="edf-moderator">Moderator</label>
+        <select id="edf-moderator">
+          <option value="">Any</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="Optional">Optional</option>
+        </select>
+      </div>
+      <div class="edf-field">
+        <label for="edf-networking">Networking Session</label>
+        <select id="edf-networking">
+          <option value="">Any</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="Optional">Optional</option>
+        </select>
+      </div>
+      <div class="edf-field">
+        <label for="edf-rsvp">RSVP Required</label>
+        <select id="edf-rsvp">
+          <option value="">Any</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
         </select>
       </div>
       <button type="button" class="edf-clear" id="edfClear">Clear Filters</button>
     </form>
 
-    <div class="edf-meta">
+    <!-- Time-based sorting is kept visually separate from the general
+         filter form above: it's a compact toolbar, not another field in
+         the big grid, since "when" to show events is a different kind
+         of question than "which" events match. -->
+    <div class="edf-toolbar">
       <p class="edf-count" id="edfCount"></p>
+      <div class="edf-sort-group">
+        <div class="edf-status-pills" id="edfStatusPills" role="group" aria-label="Filter by event status">
+          <button type="button" class="edf-status-pill-btn active" data-status="">All</button>
+          <button type="button" class="edf-status-pill-btn" data-status="upcoming">Upcoming</button>
+          <button type="button" class="edf-status-pill-btn" data-status="ongoing">Ongoing</button>
+          <button type="button" class="edf-status-pill-btn" data-status="past">Past</button>
+        </div>
+        <div class="edf-sort-field">
+          <label for="edf-sort">Sort</label>
+          <select id="edf-sort">
+            <option value="latest">Latest first</option>
+            <option value="oldest">Oldest first</option>
+          </select>
+        </div>
+      </div>
     </div>
 
     <div class="ep-cards" id="epCards"></div>
@@ -224,37 +409,159 @@
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICONS[key] + '</svg>';
   }
 
+  // Small inline glyphs for the card's collapsed meta row + expand chevron
+  // (distinct from the circular loc-badge icons used on the network map).
+  var PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+  var CAL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+  var CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+  /* Every event as synced from the Event Directory spreadsheet. Event
+     Status is intentionally NOT stored here — computeStatus() derives it
+     from startDate/startTime/endDate/endTime against the current time on
+     every render, per the spec ("calculated dynamically rather than
+     stored as a fixed value"). Community/city/language fields are arrays
+     since a single event can belong to multiple of each (e.g. a
+     co-hosted event, or a multi-venue metro-area location). */
   var EVENTS = [
     {
-      key: 'koyee', partner: 'Koyee Korean Cafe and Restaurant', event: 'Korean Workshop',
-      type: 'in-person', cities: ['Khobar'], locationLabel: 'Khobar, Saudi Arabia',
-      languages: ['Korean', 'English'], month: null, dateLabel: 'Ongoing partnership', status: 'upcoming',
-      icon: 'compass', nodeLabel: 'Khobar', nodePos: { left: '9%', top: '71%' }
+      key: 'lab-dammam-2026-07-31', series: 'Language Across Borders (LAB)',
+      communities: ['Sino-Gulf Youth Network'], type: 'hybrid', format: 'Experiential Workshop',
+      cities: ['Dammam', 'Khobar', 'Dhahran'], country: 'Saudi Arabia',
+      startDate: '2026-07-31', endDate: '2026-07-31', startTime: '15:00', endTime: '17:00',
+      dateLabel: 'Jul 31, 2026 · 3–5 PM', month: 'July',
+      languages: ['Chinese'], supportingLanguages: ['Arabic', 'English'], requirement: 'No Requirement',
+      moderator: 'Yes', networking: 'Optional', rsvp: 'Yes',
+      venue: 'Ithra (Aramco Library)', overview: 'Explore Chinese Characters through Ancient Chinese Oracle Bones',
+      icon: 'network'
     },
     {
-      key: 'sinogulf', partner: 'Sino-Gulf Youth Network', event: 'Language Across Borders',
-      type: 'hybrid', cities: ['Jeddah', 'Khobar', 'Beijing', 'Yiwu'], locationLabel: 'Jeddah + Khobar, KSA; Beijing + Yiwu, China',
-      languages: ['Chinese', 'Arabic', 'English'], month: null, dateLabel: 'Ongoing partnership', status: 'upcoming',
-      icon: 'network', nodeLabel: 'Multi-city', nodePos: { left: '36%', top: '28.6%' }
+      key: 'lab-yiwu-2026-05-17', series: 'Language Across Borders (LAB)',
+      communities: ['Sino-Gulf Youth Network'], type: 'hybrid', format: 'Language Exchange',
+      cities: ['Yiwu'], country: 'China',
+      startDate: '2026-05-17', endDate: '2026-05-17', startTime: '19:00', endTime: '21:00',
+      dateLabel: 'May 17, 2026 · 7–9 PM', month: 'May',
+      languages: ['Chinese', 'Arabic'], supportingLanguages: ['English'], requirement: 'Beginner',
+      moderator: 'Yes', networking: 'Yes', rsvp: 'Yes',
+      venue: 'Hilton Hotel / 国际商贸城希尔顿欢朋酒店', overview: 'Opportunities that learning Chinese/Arabic has brought me',
+      icon: 'network'
     },
     {
-      key: 'arabnetwork', partner: 'Arab Network@Singapore', event: 'Arabic Language & Culture Meetup',
-      type: 'in-person', cities: ['Singapore'], locationLabel: 'Singapore',
-      languages: ['Arabic', 'English'], month: 'August', dateLabel: 'Aug 28–29 · 6–10 PM', status: 'upcoming',
-      icon: 'compass', nodeLabel: 'Singapore', nodePos: { left: '65%', top: '66.7%' }
+      key: 'lab-beijing-2026-04-19', series: 'Language Across Borders (LAB)',
+      communities: ['Sino-Gulf Youth Network'], type: 'hybrid', format: 'Language Exchange',
+      cities: ['Beijing'], country: 'China',
+      startDate: '2026-04-19', endDate: '2026-04-19', startTime: '19:00', endTime: '21:00',
+      dateLabel: 'Apr 19, 2026 · 7–9 PM', month: 'April',
+      languages: ['Chinese', 'Arabic'], supportingLanguages: ['English'], requirement: 'Intermediate',
+      moderator: 'Yes', networking: 'Yes', rsvp: 'No',
+      venue: 'Mandi Khaleej Kitchen', overview: '',
+      icon: 'network'
     },
     {
-      key: 'igotone', partner: 'I-Got-One Project', event: 'Language Across Borders',
-      type: 'in-person', cities: ['Dammam'], locationLabel: 'Dammam, Saudi Arabia',
-      languages: ['Chinese', 'English'], month: 'July', dateLabel: 'Jul 31', status: 'upcoming',
-      icon: 'plane', nodeLabel: 'Dammam', nodePos: { left: '91%', top: '26.2%' }
+      key: 'lab-jeddah-2026-01-31', series: 'Language Across Borders (LAB)',
+      communities: ['Sino-Gulf Youth Network'], type: 'hybrid', format: 'Language Exchange',
+      cities: ['Jeddah'], country: 'Saudi Arabia',
+      startDate: '2026-01-31', endDate: '2026-01-31', startTime: '15:00', endTime: '17:00',
+      dateLabel: 'Jan 31, 2026 · 3–5 PM', month: 'January',
+      languages: ['Chinese', 'Arabic'], supportingLanguages: ['English'], requirement: 'Beginner',
+      moderator: 'Yes', networking: 'Yes', rsvp: 'No',
+      venue: 'AlMaqam Cafe', overview: '',
+      icon: 'network'
+    },
+    {
+      key: 'korean-workshop-2026-02-07', series: 'Korean Workshop',
+      communities: ['Koyee Korean Cafe and Restaurant', 'Sino-Gulf Youth Network'], type: 'in-person', format: 'Experiential Workshop',
+      cities: ['Dammam', 'Khobar', 'Dhahran'], country: 'Saudi Arabia',
+      startDate: '2026-02-07', endDate: '2026-02-07', startTime: '14:00', endTime: '16:00',
+      dateLabel: 'Feb 7, 2026 · 2–4 PM', month: 'February',
+      languages: ['Korean', 'Chinese'], supportingLanguages: ['Arabic', 'English'], requirement: 'No Requirement',
+      moderator: 'Yes', networking: 'Optional', rsvp: 'No',
+      venue: 'Koyee Korean Cafe and Cuisine', overview: '',
+      icon: 'compass'
+    },
+    {
+      key: 'lab-beijing-2026-09-26', series: 'Language Across Borders (LAB)',
+      communities: ['Sino-Gulf Youth Network'], type: 'hybrid', format: 'Language Exchange',
+      cities: ['Beijing'], country: 'China',
+      startDate: '2026-09-26', endDate: '2026-09-26', startTime: null, endTime: null,
+      dateLabel: 'Sep 26, 2026 · Time TBD', month: 'September',
+      languages: ['Chinese', 'Arabic'], supportingLanguages: ['English'], requirement: 'No Requirement',
+      moderator: 'Yes', networking: 'Yes', rsvp: 'No',
+      venue: 'TBD', overview: '',
+      icon: 'network'
+    },
+    {
+      key: 'lab-singapore-2026-08-28', series: 'Language Across Borders (LAB)',
+      communities: ['Arab Network@Singapore', 'Sino-Gulf Youth Network'], type: 'in-person', format: 'Experiential Booth',
+      cities: ['Singapore'], country: 'Singapore',
+      startDate: '2026-08-28', endDate: '2026-08-29', startTime: '18:00', endTime: '22:00',
+      dateLabel: 'Aug 28–29, 2026 · 6–10 PM', month: 'August',
+      languages: ['Chinese', 'Arabic', 'Malay'], supportingLanguages: ['English'], requirement: 'No Requirement',
+      moderator: 'Yes', networking: 'Yes', rsvp: 'No',
+      venue: 'Peranakan Museum', overview: '',
+      icon: 'plane'
+    },
+    {
+      key: 'korean-workshop-2026-07-27', series: 'Korean Workshop',
+      communities: ['Koyee Korean Cafe and Restaurant'], type: 'in-person', format: 'Community Meetup',
+      cities: ['Dammam', 'Khobar', 'Dhahran'], country: 'Saudi Arabia',
+      startDate: '2026-07-27', endDate: '2026-07-27', startTime: '19:00', endTime: '20:00',
+      dateLabel: 'Jul 27, 2026 · 7–8 PM', month: 'July',
+      languages: ['Korean'], supportingLanguages: ['Arabic', 'English'], requirement: 'No Requirement',
+      moderator: 'Optional', networking: 'Optional', rsvp: 'No',
+      venue: 'Koyee Korean Cafe and Cuisine', overview: '',
+      icon: 'compass'
+    },
+    {
+      key: 'korean-workshop-2026-07-29', series: 'Korean Workshop',
+      communities: ['Koyee Korean Cafe and Restaurant'], type: 'in-person', format: 'Community Meetup',
+      cities: ['Dammam', 'Khobar', 'Dhahran'], country: 'Saudi Arabia',
+      startDate: '2026-07-29', endDate: '2026-07-29', startTime: '19:00', endTime: '20:00',
+      dateLabel: 'Jul 29, 2026 · 7–8 PM', month: 'July',
+      languages: ['Korean'], supportingLanguages: ['Arabic', 'English'], requirement: 'No Requirement',
+      moderator: 'Optional', networking: 'Optional', rsvp: 'No',
+      venue: 'Koyee Korean Cafe and Cuisine', overview: '',
+      icon: 'compass'
+    },
+    {
+      key: 'silkroad-beijing-2026-06-18', series: 'Silk-Road Roundtable',
+      communities: ['Sino-Gulf Youth Network'], type: 'hybrid', format: 'Policy Event',
+      cities: ['Beijing'], country: 'China',
+      startDate: '2026-06-18', endDate: '2026-06-18', startTime: '17:00', endTime: '19:00',
+      dateLabel: 'Jun 18, 2026 · 5–7 PM', month: 'June',
+      languages: ['English'], supportingLanguages: ['English'], requirement: 'Intermediate',
+      moderator: 'Yes', networking: 'Yes', rsvp: 'No',
+      venue: 'Yenching Academy', overview: '',
+      icon: 'network'
     }
   ];
 
+  /* Communities get their own nodes on the network map (grouped, not
+     one-per-event, since several events above share the same community
+     and a 10-node map would be unreadable). Positions echo the map's
+     original 3-hub layout. */
+  var COMMUNITY_NODES = [
+    { community: 'Sino-Gulf Youth Network', label: 'Sino-Gulf Youth Network', icon: 'network', pos: { left: '36%', top: '28.6%' } },
+    { community: 'Koyee Korean Cafe and Restaurant', label: 'Koyee Korean Cafe', icon: 'compass', pos: { left: '9%', top: '71%' } },
+    { community: 'Arab Network@Singapore', label: 'Arab Network@Singapore', icon: 'plane', pos: { left: '65%', top: '66.7%' } }
+  ];
+
   var TYPE_LABEL = { online: 'Online', 'in-person': 'In-Person', hybrid: 'Hybrid' };
+  var STATUS_LABEL = { upcoming: 'Upcoming', ongoing: 'Ongoing', past: 'Past' };
+
+  // Event Status is always derived live from the clock — never stored —
+  // so a page left open across an event's start/end time re-labels itself
+  // on the next render without any data edit.
+  function computeStatus(ev) {
+    var now = new Date();
+    var start = new Date(ev.startDate + 'T' + (ev.startTime || '00:00') + ':00');
+    var end = new Date((ev.endDate || ev.startDate) + 'T' + (ev.endTime || '23:59') + ':00');
+    if (now < start) return 'upcoming';
+    if (now > end) return 'past';
+    return 'ongoing';
+  }
 
   function uniqueSorted(values) {
-    return Array.from(new Set(values)).sort();
+    return Array.from(new Set(values)).filter(Boolean).sort();
   }
 
   function populateSelect(select, values) {
@@ -266,39 +573,111 @@
     });
   }
 
-  var locationSelect = document.getElementById('edf-location');
-  var languageSelect = document.getElementById('edf-language');
-  var monthSelect = document.getElementById('edf-month');
+  var seriesSelect = document.getElementById('edf-series');
   var communitySelect = document.getElementById('edf-community');
+  var typeSelect = document.getElementById('edf-type');
+  var formatSelect = document.getElementById('edf-format');
+  var citySelect = document.getElementById('edf-city');
+  var countrySelect = document.getElementById('edf-country');
+  var monthSelect = document.getElementById('edf-month');
+  var languageSelect = document.getElementById('edf-language');
+  var supportingSelect = document.getElementById('edf-supporting');
+  var requirementSelect = document.getElementById('edf-requirement');
+  var moderatorSelect = document.getElementById('edf-moderator');
+  var networkingSelect = document.getElementById('edf-networking');
+  var rsvpSelect = document.getElementById('edf-rsvp');
+  var searchInput = document.getElementById('edf-search');
+  var searchClearBtn = document.getElementById('edfSearchClear');
 
-  populateSelect(locationSelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(e.cities); }, [])));
+  // Event Status + sort order live in their own toolbar (not the general
+  // filter form), so their state is tracked separately and Clear Filters
+  // deliberately leaves them untouched.
+  var statusPillsWrap = document.getElementById('edfStatusPills');
+  var sortSelect = document.getElementById('edf-sort');
+  var currentStatus = '';
+
+  var MONTH_ORDER = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  populateSelect(seriesSelect, uniqueSorted(EVENTS.map(function (e) { return e.series; })));
+  populateSelect(communitySelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(e.communities); }, [])));
+  populateSelect(formatSelect, uniqueSorted(EVENTS.map(function (e) { return e.format; })));
+  populateSelect(citySelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(e.cities); }, [])));
+  populateSelect(countrySelect, uniqueSorted(EVENTS.map(function (e) { return e.country; })));
+  populateSelect(monthSelect, uniqueSorted(EVENTS.map(function (e) { return e.month; })).sort(function (a, b) { return MONTH_ORDER.indexOf(a) - MONTH_ORDER.indexOf(b); }));
   populateSelect(languageSelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(e.languages); }, [])));
-  populateSelect(monthSelect, uniqueSorted(EVENTS.map(function (e) { return e.month; }).filter(Boolean)));
-  populateSelect(communitySelect, uniqueSorted(EVENTS.map(function (e) { return e.partner; })));
+  populateSelect(supportingSelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(e.supportingLanguages); }, [])));
+  populateSelect(requirementSelect, uniqueSorted(EVENTS.map(function (e) { return e.requirement; })));
 
   function cardHtml(ev) {
+    var status = computeStatus(ev);
+    var primaryLangTags = ev.languages.map(function (l) { return '<span class="ep-tag ep-tag--lang">' + l + '</span>'; }).join('');
+    var supportChips = ev.supportingLanguages.length
+      ? ev.supportingLanguages.map(function (l) { return '<span class="ep-lang-chip ep-lang-chip--support">' + l + '</span>'; }).join('')
+      : '<span class="ep-val ep-val--muted">None</span>';
     return (
       '<div class="ep-card" data-key="' + ev.key + '">' +
-        '<div class="ep-card-main">' +
-          '<div class="ep-label">Partner</div>' +
-          '<div class="ep-card-partner">' + ev.partner + '</div>' +
-          '<div class="ep-card-event">' + ev.event + '</div>' +
-          '<div class="ep-type-chip ep-type-chip--' + ev.type + '"><span class="ep-type-dot"></span>' + TYPE_LABEL[ev.type] + '</div>' +
-        '</div>' +
-        '<div class="ep-card-field">' +
-          '<div class="ep-label">Location</div>' +
-          '<div class="ep-loc-row">' +
-            '<span class="loc-badge" aria-hidden="true">' + iconSvg(ev.icon) + '</span>' +
-            '<span class="ep-val">' + ev.locationLabel + '</span>' +
+        // ── Collapsed summary: the only content visible until expanded.
+        // Program Series leads as the primary identifier; Community is a
+        // plain, label-less subtitle right beneath it (secondary emphasis).
+        '<button type="button" class="ep-card-summary" aria-expanded="false">' +
+          '<div class="ep-card-summary-top">' +
+            '<div>' +
+              '<div class="ep-card-series">' + ev.series + '</div>' +
+              '<div class="ep-card-community">' + ev.communities.join(' + ') + '</div>' +
+            '</div>' +
+            '<span class="ep-card-chevron" aria-hidden="true">' + CHEVRON_SVG + '</span>' +
           '</div>' +
-        '</div>' +
-        '<div class="ep-card-field">' +
-          '<div class="ep-label">Upcoming Event</div>' +
-          '<div class="ep-val">' + ev.dateLabel + '</div>' +
-        '</div>' +
-        '<div class="ep-card-field">' +
-          '<div class="ep-label">Languages</div>' +
-          '<div class="ep-langs">' + ev.languages.map(function (l) { return '<span class="ep-lang-chip">' + l + '</span>'; }).join('') + '</div>' +
+          '<div class="ep-card-meta">' +
+            '<div class="ep-card-meta-item">' + PIN_SVG + '<span>' + ev.cities.join(' / ') + ', ' + ev.country + '</span></div>' +
+            '<div class="ep-card-meta-item">' + CAL_SVG + '<span>' + ev.dateLabel + '</span></div>' +
+          '</div>' +
+          '<div class="ep-card-tags">' +
+            '<span class="ep-tag">' + ev.format + '</span>' +
+            primaryLangTags +
+          '</div>' +
+        '</button>' +
+        // ── Expanded details: everything else from the spreadsheet, only
+        // rendered visible once .expanded is toggled on the card.
+        '<div class="ep-card-details-wrap">' +
+          '<div class="ep-card-details-inner">' +
+            '<div class="ep-card-details-content">' +
+              (ev.overview ? '<p class="ep-card-overview">' + ev.overview + '</p>' : '') +
+              '<div class="ep-card-grid">' +
+                '<div class="ep-card-field">' +
+                  '<div class="ep-label">Event Type</div>' +
+                  '<div class="ep-type-chip ep-type-chip--' + ev.type + '"><span class="ep-type-dot"></span>' + TYPE_LABEL[ev.type] + '</div>' +
+                '</div>' +
+                '<div class="ep-card-field">' +
+                  '<div class="ep-label">Status</div>' +
+                  '<div class="ep-status-pill ep-status-pill--' + status + '">' + STATUS_LABEL[status] + '</div>' +
+                '</div>' +
+                '<div class="ep-card-field">' +
+                  '<div class="ep-label">Venue</div>' +
+                  '<div class="ep-val">' + ev.venue + '</div>' +
+                '</div>' +
+                '<div class="ep-card-field">' +
+                  '<div class="ep-label">Supporting Language</div>' +
+                  '<div class="ep-langs">' + supportChips + '</div>' +
+                '</div>' +
+                '<div class="ep-card-field">' +
+                  '<div class="ep-label">Requirement</div>' +
+                  '<div class="ep-val">' + ev.requirement + '</div>' +
+                '</div>' +
+                '<div class="ep-card-field">' +
+                  '<div class="ep-label">Moderator</div>' +
+                  '<div class="ep-val">' + ev.moderator + '</div>' +
+                '</div>' +
+                '<div class="ep-card-field">' +
+                  '<div class="ep-label">Networking</div>' +
+                  '<div class="ep-val">' + ev.networking + '</div>' +
+                '</div>' +
+                '<div class="ep-card-field">' +
+                  '<div class="ep-label">RSVP Required</div>' +
+                  '<div class="ep-val">' + ev.rsvp + '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
         '</div>' +
       '</div>'
     );
@@ -307,71 +686,182 @@
   var epCards = document.getElementById('epCards');
   var edfEmpty = document.getElementById('edfEmpty');
   var edfCount = document.getElementById('edfCount');
-  var typeSelect = document.getElementById('edf-type');
-  var statusSelect = document.getElementById('edf-status');
+
+  var ALL_SELECTS = [
+    countrySelect, citySelect, languageSelect, typeSelect, formatSelect, seriesSelect,
+    communitySelect, monthSelect, supportingSelect, requirementSelect,
+    moderatorSelect, networkingSelect, rsvpSelect
+  ];
 
   function activeFilters() {
     return {
-      type: typeSelect.value,
-      location: locationSelect.value,
+      search: searchInput.value.trim().toLowerCase(),
+      country: countrySelect.value,
+      city: citySelect.value,
       language: languageSelect.value,
-      month: monthSelect.value,
+      type: typeSelect.value,
+      format: formatSelect.value,
+      series: seriesSelect.value,
       community: communitySelect.value,
-      status: statusSelect.value
+      status: currentStatus,
+      month: monthSelect.value,
+      supporting: supportingSelect.value,
+      requirement: requirementSelect.value,
+      moderator: moderatorSelect.value,
+      networking: networkingSelect.value,
+      rsvp: rsvpSelect.value
     };
   }
 
   function matches(ev, f) {
-    if (f.type && ev.type !== f.type) return false;
-    if (f.location && ev.cities.indexOf(f.location) === -1) return false;
+    // Free-text search matches the program series, community name(s), or
+    // overview blurb, so visitors can find something by typing any of them.
+    if (f.search) {
+      var haystack = (ev.series + ' ' + ev.communities.join(' ') + ' ' + ev.overview).toLowerCase();
+      if (haystack.indexOf(f.search) === -1) return false;
+    }
+    if (f.country && ev.country !== f.country) return false;
+    if (f.city && ev.cities.indexOf(f.city) === -1) return false;
+    if (f.status && computeStatus(ev) !== f.status) return false;
+    if (f.series && ev.series !== f.series) return false;
+    if (f.community && ev.communities.indexOf(f.community) === -1) return false;
+    // A "Hybrid" event offers both formats, so it should still surface when
+    // someone filters specifically for Online or In-Person; only picking
+    // "Hybrid" itself narrows down to hybrid-only events.
+    if (f.type) {
+      var typeMatch = ev.type === f.type || (ev.type === 'hybrid' && f.type !== 'hybrid');
+      if (!typeMatch) return false;
+    }
+    if (f.format && ev.format !== f.format) return false;
+    if (f.month && ev.month !== f.month) return false;
     if (f.language && ev.languages.indexOf(f.language) === -1) return false;
-    // Ongoing partnerships (no fixed month) are always available, so they
-    // match whichever month a visitor picks rather than being hidden.
-    if (f.month && ev.month && ev.month !== f.month) return false;
-    if (f.community && ev.partner !== f.community) return false;
-    if (f.status && ev.status !== f.status) return false;
+    if (f.supporting && ev.supportingLanguages.indexOf(f.supporting) === -1) return false;
+    if (f.requirement && ev.requirement !== f.requirement) return false;
+    if (f.moderator && ev.moderator !== f.moderator) return false;
+    if (f.networking && ev.networking !== f.networking) return false;
+    if (f.rsvp && ev.rsvp !== f.rsvp) return false;
     return true;
+  }
+
+  function eventTimestamp(ev) {
+    return new Date(ev.startDate + 'T' + (ev.startTime || '00:00') + ':00').getTime();
   }
 
   function render() {
     var f = activeFilters();
     var filtered = EVENTS.filter(function (ev) { return matches(ev, f); });
 
+    // Time-based sort is independent of the general filters — default is
+    // latest-first, with an explicit toggle for oldest-first.
+    var sortOrder = sortSelect.value;
+    filtered.sort(function (a, b) {
+      return sortOrder === 'oldest' ? eventTimestamp(a) - eventTimestamp(b) : eventTimestamp(b) - eventTimestamp(a);
+    });
+
     epCards.innerHTML = filtered.map(cardHtml).join('');
     edfEmpty.hidden = filtered.length > 0;
     edfCount.innerHTML = 'Showing <strong>' + filtered.length + '</strong> of ' + EVENTS.length + ' events';
 
-    var filteredKeys = filtered.map(function (ev) { return ev.key; });
+    var filteredCommunities = {};
+    filtered.forEach(function (ev) { ev.communities.forEach(function (c) { filteredCommunities[c] = true; }); });
     document.querySelectorAll('.epn-node').forEach(function (node) {
-      node.classList.toggle('dimmed', filteredKeys.indexOf(node.dataset.key) === -1);
+      node.classList.toggle('dimmed', !filteredCommunities[node.dataset.community]);
     });
   }
 
-  [typeSelect, locationSelect, languageSelect, monthSelect, communitySelect, statusSelect].forEach(function (sel) {
-    sel.addEventListener('change', render);
+  ALL_SELECTS.forEach(function (sel) { sel.addEventListener('change', render); });
+  searchInput.addEventListener('input', function () {
+    searchClearBtn.hidden = !searchInput.value;
+    render();
+  });
+  searchClearBtn.addEventListener('click', function () {
+    searchInput.value = '';
+    searchClearBtn.hidden = true;
+    searchInput.focus();
+    render();
   });
   document.getElementById('edfClear').addEventListener('click', function () {
-    [typeSelect, locationSelect, languageSelect, monthSelect, communitySelect, statusSelect].forEach(function (sel) { sel.value = ''; });
+    ALL_SELECTS.forEach(function (sel) { sel.value = ''; });
+    searchInput.value = '';
+    searchClearBtn.hidden = true;
     render();
   });
   document.getElementById('edfEmptyClear').addEventListener('click', function () {
     document.getElementById('edfClear').click();
   });
 
+  // Status pills + sort selector: their own toolbar, on purpose kept out
+  // of ALL_SELECTS/Clear Filters so "when" stays independent of "which".
+  statusPillsWrap.addEventListener('click', function (e) {
+    var btn = e.target.closest('.edf-status-pill-btn');
+    if (!btn) return;
+    Array.prototype.forEach.call(statusPillsWrap.querySelectorAll('.edf-status-pill-btn'), function (b) {
+      b.classList.toggle('active', b === btn);
+    });
+    currentStatus = btn.dataset.status;
+    render();
+  });
+  sortSelect.addEventListener('change', render);
+
+  // Accordion expand/collapse. Delegated on the container (rather than
+  // bound per-card) since render() replaces every card's markup whenever
+  // filters change — a per-card listener would be lost on each re-render.
+  epCards.addEventListener('click', function (e) {
+    var summary = e.target.closest('.ep-card-summary');
+    if (!summary) return;
+    var card = summary.closest('.ep-card');
+    var expanded = card.classList.toggle('expanded');
+    summary.setAttribute('aria-expanded', String(expanded));
+  });
+
+  // Pre-apply any filters handed off via the URL (e.g. from the "Search
+  // Events" form on the Event Near Me page) before the first render.
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var searchVal = params.get('search');
+    if (searchVal) {
+      searchInput.value = searchVal;
+      searchClearBtn.hidden = false;
+    }
+    var selectByKey = {
+      series: seriesSelect, community: communitySelect, type: typeSelect,
+      format: formatSelect, city: citySelect, country: countrySelect, month: monthSelect,
+      language: languageSelect, supporting: supportingSelect, requirement: requirementSelect,
+      moderator: moderatorSelect, networking: networkingSelect, rsvp: rsvpSelect
+    };
+    Object.keys(selectByKey).forEach(function (key) {
+      var val = params.get(key);
+      if (!val) return;
+      var sel = selectByKey[key];
+      var hasOption = Array.prototype.some.call(sel.options, function (o) { return o.value === val; });
+      if (hasOption) sel.value = val;
+    });
+    var statusVal = params.get('status');
+    if (statusVal) {
+      var statusBtn = statusPillsWrap.querySelector('.edf-status-pill-btn[data-status="' + statusVal + '"]');
+      if (statusBtn) statusBtn.click();
+    }
+  })();
+
   render();
 
-  /* Global Event Network: hovering/focusing a node lights up its adjoining
-     connector paths, shows an event tooltip, and highlights the matching
-     card in the list below — ties the abstract map to the concrete data. */
+  // Keep Event Status pills (and Ongoing/Upcoming/Past filtering) correct
+  // for anyone who leaves the tab open across an event's start/end time.
+  setInterval(render, 60000);
+
+  /* Global Event Network: hovering/focusing a community node lights up its
+     adjoining connector paths, shows an aggregate tooltip, and highlights
+     every card for that community below — ties the abstract map to the
+     concrete event list. */
   (function () {
     var wrap = document.querySelector('.epn-wrap');
     var nodesWrap = document.getElementById('epnNodes');
     if (!wrap || !nodesWrap) return;
 
-    nodesWrap.innerHTML = EVENTS.map(function (ev) {
-      return '<button type="button" class="epn-node" data-key="' + ev.key + '" style="left:' + ev.nodePos.left + ';top:' + ev.nodePos.top + '">' +
-        '<span class="loc-badge" aria-hidden="true">' + iconSvg(ev.icon) + '</span>' +
-        '<span class="epn-node-label">' + ev.nodeLabel + '</span>' +
+    nodesWrap.innerHTML = COMMUNITY_NODES.map(function (node) {
+      return '<button type="button" class="epn-node" data-community="' + node.community + '" style="left:' + node.pos.left + ';top:' + node.pos.top + '">' +
+        '<span class="loc-badge" aria-hidden="true">' + iconSvg(node.icon) + '</span>' +
+        '<span class="epn-node-label">' + node.label + '</span>' +
       '</button>';
     }).join('');
 
@@ -380,13 +870,13 @@
     var paths = Array.prototype.slice.call(wrap.querySelectorAll('.epn-path'));
 
     function showTip(node) {
-      var ev = EVENTS.filter(function (e) { return e.key === node.dataset.key; })[0];
-      if (!ev) return;
+      var community = node.dataset.community;
+      var evs = EVENTS.filter(function (e) { return e.communities.indexOf(community) !== -1; });
+      var upcomingCount = evs.filter(function (e) { return computeStatus(e) !== 'past'; }).length;
       tooltip.innerHTML =
-        '<div class="epn-tip-event">' + ev.event + '</div>' +
-        '<div class="epn-tip-row"><strong>' + ev.locationLabel + '</strong></div>' +
-        '<div class="epn-tip-row">' + ev.dateLabel + '</div>' +
-        '<div class="epn-tip-row">' + ev.partner + '</div>';
+        '<div class="epn-tip-event">' + community + '</div>' +
+        '<div class="epn-tip-row"><strong>' + evs.length + ' event' + (evs.length === 1 ? '' : 's') + '</strong> in the directory</div>' +
+        '<div class="epn-tip-row">' + upcomingCount + ' upcoming or ongoing</div>';
 
       var wrapRect = wrap.getBoundingClientRect();
       var nodeRect = node.getBoundingClientRect();
@@ -396,15 +886,16 @@
 
       var idx = nodes.indexOf(node);
       paths.forEach(function (p, i) { p.classList.toggle('lit', i === idx - 1 || i === idx); });
-      var card = document.querySelector('.ep-card[data-key="' + node.dataset.key + '"]');
-      if (card) card.classList.add('epn-active');
+      evs.forEach(function (ev) {
+        var card = document.querySelector('.ep-card[data-key="' + ev.key + '"]');
+        if (card) card.classList.add('epn-active');
+      });
     }
 
     function hideTip(node) {
       tooltip.classList.remove('show');
       paths.forEach(function (p) { p.classList.remove('lit'); });
-      var card = document.querySelector('.ep-card[data-key="' + node.dataset.key + '"]');
-      if (card) card.classList.remove('epn-active');
+      document.querySelectorAll('.ep-card.epn-active').forEach(function (card) { card.classList.remove('epn-active'); });
     }
 
     nodes.forEach(function (node) {
@@ -413,6 +904,20 @@
       node.addEventListener('focus', function () { showTip(node); });
       node.addEventListener('blur', function () { hideTip(node); });
     });
+  })();
+
+  // Cycle the hero's animated language word in an infinite loop.
+  (function () {
+    var stack = document.getElementById('epLangStack');
+    if (!stack) return;
+    var items = Array.prototype.slice.call(stack.querySelectorAll('.ep-lang-item'));
+    if (items.length < 2) return;
+    var idx = 0;
+    setInterval(function () {
+      items[idx].classList.remove('active');
+      idx = (idx + 1) % items.length;
+      items[idx].classList.add('active');
+    }, 2000);
   })();
 </script>
 <script src="../assets/js/nav.js" defer></script>

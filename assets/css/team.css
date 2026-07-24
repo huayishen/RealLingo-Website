@@ -90,12 +90,36 @@
     width: 30px; height: 30px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     border: 1px solid var(--border); color: var(--text-mid);
+    background: none; padding: 0; font: inherit; cursor: pointer;
     transition: background .2s, color .2s, border-color .2s;
 }
 .tg-link:hover { background: var(--dark); color: var(--yellow); border-color: var(--dark); }
 .tg-link svg { width: 14px; height: 14px; fill: currentColor; }
 .tg-email { font-size: .74rem; color: var(--text-mid); text-decoration: none; display: block; margin-bottom: .5rem; }
 .tg-email:hover { color: var(--dark); text-decoration: underline; }
+
+/* Clicking a team member's email icon reveals this floating popover
+   (address + copy button) instead of navigating to a mailto: link. It's
+   fixed-position so it's never clipped by the horizontally-scrolling
+   gallery viewport's overflow. */
+.tg-email-popover {
+    position: fixed; z-index: 200; transform: translate(-50%, -8px);
+    background: var(--dark); color: #fff; border-radius: 12px;
+    padding: .55rem .6rem .55rem .85rem;
+    display: flex; align-items: center; gap: .5rem;
+    box-shadow: 0 16px 34px rgba(17,18,22,.3);
+    opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+}
+.tg-email-popover.show { opacity: 1; pointer-events: auto; transform: translate(-50%, -14px); }
+.tg-email-popover-text { font-size: .78rem; font-weight: 600; white-space: nowrap; user-select: all; }
+.tg-email-popover-copy {
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    width: 24px; height: 24px; border-radius: 7px;
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.75);
+    cursor: pointer; transition: background .2s, color .2s, border-color .2s;
+}
+.tg-email-popover-copy:hover { background: rgba(255,255,255,.18); color: #fff; }
+.tg-email-popover-copy.copied { background: var(--yellow); border-color: var(--yellow); color: #111216; }
 
 @media (max-width: 900px) {
     .tg-arrow { display: none; }

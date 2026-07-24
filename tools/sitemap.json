@@ -8,12 +8,28 @@
     "theme": "explore",
     "children": [
       { "label": "Scholarship Page", "href": "explore/resources/scholarship/" },
-      { "label": "Prompt Repository", "href": "explore/resources/prompt/" }
+      { "label": "Online Resources", "href": "explore/resources/prompt/" },
+      { "label": "Application Hub", "href": "explore/resources/application-hub/" }
     ]
   },
   { "route": "explore/resources/scholarship", "title": "Scholarship", "crumb": "Explore / Open Source / Scholarship", "section": "explore", "theme": "explore" },
-  { "route": "explore/resources/prompt", "title": "Prompt Repository", "crumb": "Explore / Open Source / Prompt Repository", "section": "explore", "theme": "explore" },
+  { "route": "explore/resources/prompt", "title": "Online Resources", "crumb": "Explore / Open Source / Online Resources", "section": "explore", "theme": "explore" },
+  { "route": "explore/resources/application-hub", "title": "Application Hub", "crumb": "Explore / Open Source / Application Hub", "section": "explore", "theme": "explore" },
 
+  {
+    "route": "find",
+    "title": "Find...",
+    "crumb": "Find...",
+    "section": "business",
+    "theme": "business",
+    "children": [
+      { "label": "a Tutor", "href": "explore/learn/" },
+      { "label": "a Tour Guide", "href": "explore/travel/" },
+      { "label": "a Trendsetter", "href": "business/marketing/" },
+      { "label": "a Talent", "href": "business/talent/" },
+      { "label": "a Translator", "href": "business/translator/" }
+    ]
+  },
   {
     "route": "explore/learn",
     "title": "Find a Tutor",

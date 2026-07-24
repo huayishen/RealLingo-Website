@@ -334,13 +334,8 @@ const ALL_SECTION_STEPS = {
         const other = formData.partnerCommunityOther||'';
         return `
           <div class="radio-grp" id="partnerMemberGrp">
-            <button type="button" class="r-opt${saved==='no'?' sel':''}" data-val="no" data-reveal="partnerNoRev" onclick="pickR(this,'partnerMemberGrp')">No</button>
+            <button type="button" class="r-opt${saved==='no'?' sel':''}" data-val="no" onclick="pickR(this,'partnerMemberGrp')">No</button>
             <button type="button" class="r-opt${saved==='yes'?' sel':''}" data-val="yes" data-reveal="partnerYesRev" onclick="pickR(this,'partnerMemberGrp')">Yes</button>
-          </div>
-          <div class="cond${saved==='no'?' show':''}" id="partnerNoRev" style="margin-top:1rem">
-            <div style="background:rgba(255,235,153,.08);border-left:2px solid var(--y);padding:.75rem .9rem;font-size:.85rem;color:rgba(255,255,255,.6);border-radius:2px">
-              Explore in our <a href="${SITE_ROOT}eventpartners/" style="color:var(--y)" target="_blank" rel="noopener">community page</a>.
-            </div>
           </div>
           <div class="cond${saved==='yes'?' show':''}" id="partnerYesRev" style="margin-top:1rem">
             <div class="chk-grp col" id="partnerCommGrp">

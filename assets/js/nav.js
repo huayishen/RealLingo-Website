@@ -135,8 +135,41 @@
     });
   }
 
+  function initFooter(target) {
+    var btn = target.querySelector('#ftrEmailBtn');
+    var reveal = target.querySelector('#ftrEmailReveal');
+    var copyBtn = target.querySelector('#ftrCopyBtn');
+    var text = target.querySelector('.site-ftr-email-text');
+    if (!btn || !reveal) return;
+    btn.addEventListener('click', function () {
+      reveal.hidden = !reveal.hidden;
+    });
+    if (copyBtn && text) {
+      copyBtn.addEventListener('click', function () {
+        var email = text.textContent;
+        var done = function () {
+          copyBtn.classList.add('copied');
+          setTimeout(function () { copyBtn.classList.remove('copied'); }, 1500);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(email).then(done, done);
+        } else {
+          done();
+        }
+      });
+    }
+
+    var backTop = target.querySelector('#ftrBackTop');
+    if (backTop) {
+      backTop.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     loadPartial('nav.html', 'site-header', initHeader);
-    loadPartial('footer.html', 'site-footer');
+    loadPartial('footer.html', 'site-footer', initFooter);
   });
 })();
