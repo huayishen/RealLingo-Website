@@ -11,9 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/quiz.css">
 <style>
-  /* Unlock the quiz.css fullscreen lock so the dashboard scrolls normally */
   html, body { position: static; height: auto; min-height: 100%; overflow-y: auto; }
-
   .dash-top { position: sticky; top: 0; z-index: 40; display: flex; align-items: center; justify-content: space-between;
               padding: 1rem 1.75rem; background: rgba(13,14,17,.82); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,.06); }
   .dash-logo { font-size: 1.25rem; text-decoration: none; color: rgba(255,255,255,.7); display: flex; align-items: baseline; gap: .06em; }
@@ -23,15 +21,20 @@
   .dash-hi { font-size: .84rem; color: rgba(255,255,255,.5); }
   .dash-hi b { color: var(--y); font-weight: 700; }
   .dash-btn { border: 1px solid rgba(255,255,255,.16); background: none; color: rgba(255,255,255,.75); border-radius: 100px;
-              padding: .5rem 1.15rem; font-family: var(--ss); font-size: .8rem; font-weight: 600; cursor: pointer; transition: border-color .2s, color .2s; }
+              padding: .5rem 1.15rem; font-family: var(--ss); font-size: .8rem; font-weight: 600; cursor: pointer; transition: border-color .2s, color .2s; text-decoration: none; display: inline-block; }
   .dash-btn:hover { color: #fff; border-color: rgba(255,255,255,.4); }
   .dash-btn-danger:hover { color: #ff8f8f; border-color: rgba(255,120,120,.5); }
+  .dash-btn-solid { background: var(--y); color: #111216; border-color: var(--y); font-weight: 700; }
+  .dash-btn-solid:hover { color: #111216; background: #fff; border-color: #fff; }
 
   .dash-wrap { position: relative; z-index: 10; max-width: 1080px; margin: 0 auto; padding: 2.25rem 1.5rem 5rem; }
   .dash-h1 { font-size: 1.9rem; font-weight: 800; letter-spacing: -.02em; margin-bottom: .3rem; }
   .dash-lead { color: rgba(255,255,255,.45); font-size: .9rem; margin-bottom: 2rem; }
 
-  .dash-complete { margin-top: 1rem; }
+  .rev-avatar-actions { margin-top: .6rem; display: flex; gap: .5rem; flex-wrap: wrap; }
+  .dash-actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: 1.25rem; }
+
+  .dash-complete { margin-top: 1.25rem; }
   .dash-complete-top { display: flex; justify-content: space-between; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.4); margin-bottom: .4rem; }
   .dash-complete-track { height: 7px; border-radius: 100px; background: rgba(255,255,255,.08); overflow: hidden; }
   .dash-complete-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--ym), var(--y)); transition: width .6s ease; }
@@ -49,12 +52,20 @@
   .dash-app-meta { font-size: .78rem; color: rgba(255,255,255,.45); margin-top: .25rem; }
   .dash-app-status { display: inline-block; margin-top: .6rem; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--y); background: rgba(255,235,153,.1); padding: .2rem .6rem; border-radius: 100px; }
 
-  .dash-settings { display: grid; gap: .75rem; max-width: 520px; }
-  .dash-set-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .95rem 1.15rem; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; }
-  .dash-set-row .lbl { font-size: .88rem; font-weight: 600; }
-  .dash-set-row .soon { font-size: .72rem; color: rgba(255,255,255,.35); }
-  .dash-set-link { color: var(--y); font-size: .8rem; font-weight: 700; text-decoration: none; }
-  .dash-set-link:hover { text-decoration: underline; }
+  .dash-settings { display: grid; gap: .75rem; max-width: 620px; }
+  .dash-set { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; overflow: hidden; }
+  .dash-set-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .95rem 1.15rem; }
+  .dash-set-row .lbl { font-size: .9rem; font-weight: 600; }
+  .dash-set-row .sub { font-size: .76rem; color: rgba(255,255,255,.4); margin-top: .15rem; }
+  .dash-set-panel { display: none; padding: 0 1.15rem 1.15rem; }
+  .dash-set-panel.open { display: block; }
+  .dash-set-panel .fi, .dash-set-panel .fs { margin-bottom: .75rem; }
+  .dash-set-msg { font-size: .8rem; font-weight: 600; min-height: 1.05em; margin-bottom: .5rem; }
+  .dash-set-msg.err { color: #ff8f8f; } .dash-set-msg.ok { color: #7bd88f; }
+  .dash-check { display: flex; align-items: center; gap: .5rem; font-size: .86rem; color: rgba(255,255,255,.7); margin-bottom: .6rem; cursor: pointer; }
+  .dash-check input { width: 16px; height: 16px; accent-color: var(--y); }
+  .uname-status { font-size: .8rem; font-weight: 600; min-height: 1.05em; margin: -.4rem 0 .6rem; }
+  .uname-status.ok { color: #7bd88f; } .uname-status.bad { color: #ff8f8f; }
 
   .dash-loading { text-align: center; padding: 5rem 1rem; color: rgba(255,255,255,.5); }
 </style>
@@ -74,177 +85,232 @@
 <main class="dash-wrap">
   <div id="dashLoading" class="dash-loading">Loading your dashboard…</div>
   <div id="dashContent" style="display:none;"></div>
+  <input type="file" id="avatarInput" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
 </main>
 
-<script>
-  window.SITE_ROOT = "../";
-</script>
+<script> window.SITE_ROOT = "../"; </script>
 <script src="../assets/js/supabase-client.js"></script>
 <script src="../assets/js/auth.js"></script>
+<script src="../assets/js/quiz-data.js"></script>
 <script>
 (function () {
   const ROLE_META = {
-    learner:{label:'Language Learner', icon:'🎓'},
-    traveler:{label:'Traveler', icon:'✈️'},
-    eventMember:{label:'Event Member', icon:'🎉'},
-    tutor:{label:'Tutor', icon:'📚'},
-    translator:{label:'Translator / Interpreter', icon:'💬'},
-    influencer:{label:'Influencer', icon:'📣'},
-    tourGuide:{label:'Tour Guide', icon:'🧭'},
-    languageEvent:{label:'Event Organizer', icon:'🌐'},
-    languageTalent:{label:'Language Talent', icon:'🌟'},
-    hireTranslator:{label:'Hiring: Translator', icon:'💬'},
-    hireInfluencer:{label:'Hiring: Influencer', icon:'📣'},
-    hireLanguageEvent:{label:'Hiring: Event Organizer', icon:'🌐'},
-    hireLanguageTalent:{label:'Hiring: Language Talent', icon:'🌟'}
+    learner:{label:'Language Learner', icon:'🎓'}, traveler:{label:'Traveler', icon:'✈️'}, eventMember:{label:'Event Member', icon:'🎉'},
+    tutor:{label:'Tutor', icon:'📚'}, translator:{label:'Translator / Interpreter', icon:'💬'}, influencer:{label:'Influencer', icon:'📣'},
+    tourGuide:{label:'Tour Guide', icon:'🧭'}, languageEvent:{label:'Event Organizer', icon:'🌐'}, languageTalent:{label:'Language Talent', icon:'🌟'},
+    hireTranslator:{label:'Hiring: Translator', icon:'💬'}, hireInfluencer:{label:'Hiring: Influencer', icon:'📣'},
+    hireLanguageEvent:{label:'Hiring: Event Organizer', icon:'🌐'}, hireLanguageTalent:{label:'Hiring: Language Talent', icon:'🌟'}
   };
-
-  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  function cap(s){ return s ? String(s).charAt(0).toUpperCase()+String(s).slice(1) : s; }
-
+  const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const cap = s => s ? String(s).charAt(0).toUpperCase()+String(s).slice(1) : s;
   function formatLanguages(rows){
     if(!rows || !rows.length) return '—';
-    const by = {};
-    rows.forEach(r => { (by[r.language] = by[r.language] || []).push(r); });
-    return Object.entries(by).map(([lang, items]) => {
-      if(items.length === 1 && !items[0].variant) return cap(lang) + ' (' + cap(items[0].level) + ')';
-      const parts = items.map(i => i.variant ? (cap(i.variant) + ': ' + cap(i.level)) : cap(i.level));
-      return cap(lang) + ' — ' + parts.join(', ');
-    }).join('; ');
+    const by = {}; rows.forEach(r => { (by[r.language] = by[r.language] || []).push(r); });
+    return Object.entries(by).map(([lang, items]) =>
+      (items.length === 1 && !items[0].variant) ? cap(lang)+' ('+cap(items[0].level)+')'
+        : cap(lang)+' — '+items.map(i => i.variant ? cap(i.variant)+': '+cap(i.level) : cap(i.level)).join(', ')
+    ).join('; ');
   }
-  function memberSince(iso){ if(!iso) return '—'; try { return new Date(iso).toLocaleDateString(undefined,{month:'long',year:'numeric'}); } catch(e){ return '—'; } }
-
+  const memberSince = iso => { if(!iso) return '—'; try { return new Date(iso).toLocaleDateString(undefined,{month:'long',year:'numeric'}); } catch(e){ return '—'; } };
   function completion(p, languages, roles){
-    const checks = [
-      !!(p && p.full_name), !!(p && p.username), !!(p && p.email), !!(p && p.country),
-      !!(p && p.city), !!(p && p.phone), (languages && languages.length > 0), (roles && roles.length > 0), !!(p && p.avatar_url)
-    ];
-    return Math.round(checks.filter(Boolean).length / checks.length * 100);
+    const c = [!!(p&&p.full_name),!!(p&&p.username),!!(p&&p.email),!!(p&&p.country),!!(p&&p.city),!!(p&&p.phone),(languages&&languages.length>0),(roles&&roles.length>0),!!(p&&p.avatar_url)];
+    return Math.round(c.filter(Boolean).length / c.length * 100);
   }
+  function countryOptions(sel){
+    const list = (typeof COUNTRIES !== 'undefined') ? COUNTRIES : [];
+    return '<option value="">Select country…</option>' + list.map(c => '<option value="'+esc(c)+'"'+(sel===c?' selected':'')+'>'+esc(c)+'</option>').join('');
+  }
+
+  let DATA = null;
 
   async function render(data) {
+    DATA = data;
     const p = data.profile;
     const loading = document.getElementById('dashLoading');
     const content = document.getElementById('dashContent');
 
-    // No profile yet → prompt to finish onboarding.
     if (!p) {
-      loading.style.display = 'none';
-      content.style.display = 'block';
-      content.innerHTML =
-        '<h1 class="dash-h1">Almost there</h1>' +
-        '<p class="dash-lead">Your account is verified, but your profile isn\'t set up yet.</p>' +
-        '<div class="dash-empty">Finish the onboarding quiz to build your profile. <a class="dash-set-link" href="' + SITE_ROOT + 'signup/">Start now →</a></div>';
+      loading.style.display = 'none'; content.style.display = 'block';
+      content.innerHTML = '<h1 class="dash-h1">Almost there</h1><p class="dash-lead">Your account is verified, but your profile isn\'t set up yet.</p>' +
+        '<div class="dash-empty">Finish the onboarding quiz to build your profile. <a class="dash-set-link" style="color:var(--y);font-weight:700" href="'+SITE_ROOT+'signup/">Start now →</a></div>';
       return;
     }
 
     document.getElementById('dashHi').innerHTML = 'Hi, <b>' + esc(p.username || 'there') + '</b>';
-
     const avatarUrl = p.avatar_url ? await RA.avatarPublicUrl(p.avatar_url) : (SITE_ROOT + 'assets/img/logo-yellow.png');
     const isDefault = !p.avatar_url;
     const pct = completion(p, data.languages, data.roles);
+    const editFlow = p.onboarding_flow || 'all';
 
     const chips = [
-      ['Username', p.username || '—'],
-      ['Email', p.email || '—'],
+      ['Username', p.username || '—'], ['Email', p.email || '—'],
       ['Country', [p.city, p.country].filter(Boolean).join(', ') || '—'],
-      ['Languages', formatLanguages(data.languages)],
-      ['Member since', memberSince(p.created_at)]
+      ['Languages', formatLanguages(data.languages)], ['Member since', memberSince(p.created_at)]
     ];
 
-    // Profile summary card (reuses .rev-* styles)
     let html = '<h1 class="dash-h1">Your Dashboard</h1><p class="dash-lead">Manage your profile, roles, and applications.</p>';
     html += '<div class="rev-general-card">' +
       '<div class="rev-avatar-wrap">' +
-        '<img class="rev-avatar" src="' + esc(avatarUrl) + '" alt="Profile photo"' + (isDefault ? ' data-default="1"' : '') + '>' +
+        '<img class="rev-avatar" id="dashAvatar" src="'+esc(avatarUrl)+'" alt="Profile photo"'+(isDefault?' data-default="1"':'')+'>' +
+        '<div class="rev-avatar-actions">' +
+          '<button type="button" class="rev-avatar-btn" id="avatarUploadBtn">'+(isDefault?'Upload':'Replace')+' photo</button>' +
+          (isDefault?'':'<button type="button" class="rev-avatar-btn rev-avatar-remove" id="avatarRemoveBtn">Remove</button>') +
+        '</div>' +
       '</div>' +
       '<div class="rev-general-info">' +
         '<div class="rev-card-hd"><span class="rev-card-title">Profile Summary</span></div>' +
-        '<div class="rev-chip-grid">' +
-          chips.map(c => '<div class="rev-chip"><span class="rev-chip-lbl">' + esc(c[0]) + '</span><span class="rev-chip-val">' + esc(c[1]) + '</span></div>').join('') +
-        '</div>' +
-        '<div class="dash-complete">' +
-          '<div class="dash-complete-top"><span>Profile completion</span><span>' + pct + '%</span></div>' +
-          '<div class="dash-complete-track"><div class="dash-complete-fill" style="width:' + pct + '%"></div></div>' +
+        '<div class="rev-chip-grid">' + chips.map(c => '<div class="rev-chip"><span class="rev-chip-lbl">'+esc(c[0])+'</span><span class="rev-chip-val">'+esc(c[1])+'</span></div>').join('') + '</div>' +
+        '<div class="dash-complete"><div class="dash-complete-top"><span>Profile completion</span><span>'+pct+'%</span></div><div class="dash-complete-track"><div class="dash-complete-fill" style="width:'+pct+'%"></div></div></div>' +
+        '<div class="dash-actions">' +
+          '<a class="dash-btn dash-btn-solid" href="'+SITE_ROOT+'signup/'+esc(editFlow)+'/?edit=1">Edit profile &amp; roles</a>' +
+          '<a class="dash-btn" href="'+SITE_ROOT+'u/?u='+encodeURIComponent(p.username||'')+'" target="_blank" rel="noopener">View public profile ↗</a>' +
         '</div>' +
       '</div>' +
     '</div>';
 
     // My Roles
     html += '<div class="dash-section"><div class="dash-section-hd"><h2>My Roles</h2></div>';
-    if (!data.roles.length) {
-      html += '<div class="dash-empty">No roles selected yet.</div>';
-    } else {
-      html += '<div class="rev-role-grid">';
-      html += data.roles.map(rr => {
-        const r = rr.role_key;
-        const meta = ROLE_META[r] || { label: r, icon: '⭐' };
+    if (!data.roles.length) html += '<div class="dash-empty">No roles selected yet.</div>';
+    else {
+      html += '<div class="rev-role-grid">' + data.roles.map(rr => {
+        const r = rr.role_key, meta = ROLE_META[r] || {label:r, icon:'⭐'};
         const detail = data.roleDetails[r];
         const rows = (detail && detail.details && detail.details.display_rows) || [];
-        return '<div class="rev-role-card">' +
-          '<div class="rev-role-card-hd"><span class="rev-role-icon">' + meta.icon + '</span><span class="rev-role-title">' + esc(meta.label) + '</span></div>' +
-          '<div class="rev-role-rows">' +
-            (rows.length ? rows.map(row => '<div class="rev-role-row"><span class="rev-role-row-lbl">' + esc(row.l) + '</span><span class="rev-role-row-val">' + esc(row.v) + '</span></div>').join('')
-                         : '<div class="rev-role-row"><span class="rev-role-row-val">No details provided.</span></div>') +
-          '</div>' +
-        '</div>';
-      }).join('');
-      html += '</div>';
+        return '<div class="rev-role-card"><div class="rev-role-card-hd"><span class="rev-role-icon">'+meta.icon+'</span><span class="rev-role-title">'+esc(meta.label)+'</span></div>' +
+          '<div class="rev-role-rows">' + (rows.length ? rows.map(x => '<div class="rev-role-row"><span class="rev-role-row-lbl">'+esc(x.l)+'</span><span class="rev-role-row-val">'+esc(x.v)+'</span></div>').join('') : '<div class="rev-role-row"><span class="rev-role-row-val">No details provided.</span></div>') + '</div></div>';
+      }).join('') + '</div>';
     }
     html += '</div>';
 
     // My Applications
     html += '<div class="dash-section"><div class="dash-section-hd"><h2>My Applications</h2></div>';
-    if (!data.applications.length) {
-      html += '<div class="dash-empty">No applications yet. Scholarship, partner, and event applications will appear here.</div>';
-    } else {
-      html += '<div class="dash-app-grid">';
-      html += data.applications.map(a =>
-        '<div class="dash-app-card">' +
-          '<div class="dash-app-type">' + esc(a.type) + ' application</div>' +
-          '<div class="dash-app-meta">' + memberSince(a.created_at) + '</div>' +
-          '<span class="dash-app-status">' + esc(a.status || 'submitted') + '</span>' +
-        '</div>').join('');
-      html += '</div>';
-    }
+    if (!data.applications.length) html += '<div class="dash-empty">No applications yet. Scholarship, partner, and event applications will appear here.</div>';
+    else html += '<div class="dash-app-grid">' + data.applications.map(a => '<div class="dash-app-card"><div class="dash-app-type">'+esc(a.type)+' application</div><div class="dash-app-meta">'+memberSince(a.created_at)+'</div><span class="dash-app-status">'+esc(a.status||'submitted')+'</span></div>').join('') + '</div>';
     html += '</div>';
 
-    // Settings (Phase 1: log out; editing coming soon)
-    html += '<div class="dash-section"><div class="dash-section-hd"><h2>Settings</h2></div>';
-    html += '<div class="dash-settings">' +
-      '<div class="dash-set-row"><span class="lbl">Change password</span><a class="dash-set-link" href="' + SITE_ROOT + 'forgot-password/">Reset via email →</a></div>' +
-      '<div class="dash-set-row"><span class="lbl">Edit profile &amp; roles</span><span class="soon">Coming soon</span></div>' +
-      '<div class="dash-set-row"><span class="lbl">Profile picture</span><span class="soon">Coming soon</span></div>' +
-      '<div class="dash-set-row"><span class="lbl">Notification preferences</span><span class="soon">Coming soon</span></div>' +
-      '<div class="dash-set-row"><span class="lbl">Log out of your account</span><button class="dash-btn dash-btn-danger" id="dashLogout2">Log out</button></div>' +
-    '</div>';
-    html += '</div>';
+    // Settings
+    const np = p.notification_prefs || {};
+    html += '<div class="dash-section"><div class="dash-section-hd"><h2>Settings</h2></div><div class="dash-settings">' +
+      settingBlock('username', 'Username', '@'+esc(p.username||''),
+        '<label class="fl-sm">New username</label><input class="fi" id="set-username" value="'+esc(p.username||'')+'" maxlength="20" autocomplete="off">' +
+        '<div class="uname-status" id="set-uname-status"></div><button class="dash-btn dash-btn-solid" id="save-username">Save username</button>') +
+      settingBlock('personal', 'Personal information', 'Name, location, phone',
+        '<label class="fl-sm">Full name</label><input class="fi" id="set-name" value="'+esc(p.full_name||'')+'">' +
+        '<label class="fl-sm">Country</label><select class="fs" id="set-country">'+countryOptions(p.country||'')+'</select>' +
+        '<label class="fl-sm">City</label><input class="fi" id="set-city" value="'+esc(p.city||'')+'">' +
+        '<label class="fl-sm">Phone</label><input class="fi" id="set-phone" value="'+esc(p.phone||'')+'" placeholder="+966 5xxxxxxxx">' +
+        '<button class="dash-btn dash-btn-solid" id="save-personal">Save changes</button>') +
+      settingBlock('password', 'Password', 'Change your password',
+        '<label class="fl-sm">New password</label><input class="fi" id="set-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password">' +
+        '<label class="fl-sm">Confirm password</label><input class="fi" id="set-pass2" type="password" autocomplete="new-password">' +
+        '<button class="dash-btn dash-btn-solid" id="save-password">Update password</button>') +
+      settingBlock('notif', 'Notification preferences', 'Emails you receive',
+        '<label class="dash-check"><input type="checkbox" id="np-product"'+(np.product?' checked':'')+'> Product updates</label>' +
+        '<label class="dash-check"><input type="checkbox" id="np-events"'+(np.events?' checked':'')+'> Event reminders</label>' +
+        '<label class="dash-check"><input type="checkbox" id="np-tips"'+(np.tips?' checked':'')+'> Tips &amp; offers</label>' +
+        '<button class="dash-btn dash-btn-solid" id="save-notif">Save preferences</button>') +
+      '<div class="dash-set"><div class="dash-set-row"><div><div class="lbl">Log out</div><div class="sub">Sign out of this device</div></div><button class="dash-btn dash-btn-danger" id="dashLogout2">Log out</button></div></div>' +
+    '</div></div>';
 
     loading.style.display = 'none';
     content.innerHTML = html;
     content.style.display = 'block';
-    const lo2 = document.getElementById('dashLogout2');
-    if (lo2) lo2.addEventListener('click', doLogout);
+    wireHandlers();
   }
 
-  async function doLogout() {
-    try { await RA.signOut(); } catch (e) {}
-    window.location.href = SITE_ROOT;
+  function settingBlock(key, label, sub, panelHtml) {
+    return '<div class="dash-set"><div class="dash-set-row"><div><div class="lbl">'+esc(label)+'</div><div class="sub">'+sub+'</div></div>' +
+      '<button class="dash-btn" data-toggle="'+key+'">Edit</button></div>' +
+      '<div class="dash-set-panel" id="panel-'+key+'"><div class="dash-set-msg" id="msg-'+key+'"></div>'+panelHtml+'</div></div>';
   }
+  function setMsg(key, text, ok){ const el=document.getElementById('msg-'+key); if(el){ el.textContent=text; el.className='dash-set-msg '+(ok?'ok':'err'); } }
+
+  function wireHandlers() {
+    document.getElementById('dashLogout2') && document.getElementById('dashLogout2').addEventListener('click', doLogout);
+    // toggle panels
+    document.querySelectorAll('[data-toggle]').forEach(btn => btn.addEventListener('click', () => {
+      const panel = document.getElementById('panel-'+btn.dataset.toggle);
+      const open = panel.classList.toggle('open');
+      btn.textContent = open ? 'Close' : 'Edit';
+    }));
+
+    // avatar
+    const fileInput = document.getElementById('avatarInput');
+    const upBtn = document.getElementById('avatarUploadBtn');
+    if (upBtn) upBtn.addEventListener('click', () => fileInput.click());
+    const rmBtn = document.getElementById('avatarRemoveBtn');
+    if (rmBtn) rmBtn.addEventListener('click', async () => { rmBtn.disabled = true; try { await RA.removeAvatar(); location.reload(); } catch(e){ rmBtn.disabled=false; alert('Could not remove photo: '+(e.message||e)); } });
+    fileInput.onchange = async () => {
+      const f = fileInput.files && fileInput.files[0]; if (!f) return;
+      if (f.size > 2*1024*1024) { alert('Image must be under 2 MB.'); return; }
+      if (upBtn) { upBtn.disabled = true; upBtn.textContent = 'Uploading…'; }
+      try { await RA.uploadAvatar(f); location.reload(); }
+      catch(e){ if(upBtn){upBtn.disabled=false; upBtn.textContent='Upload photo';} alert('Upload failed: '+(e.message||e)); }
+    };
+
+    // username
+    const unameInput = document.getElementById('set-username');
+    if (unameInput) {
+      let t=null;
+      unameInput.addEventListener('input', () => {
+        clearTimeout(t); const v=unameInput.value.trim(); const s=document.getElementById('set-uname-status');
+        if(!/^[a-zA-Z0-9_]{3,20}$/.test(v)){ s.textContent = v?'3–20 letters, numbers, underscores':''; s.className='uname-status bad'; return; }
+        if(v.toLowerCase()===(DATA.profile.username||'').toLowerCase()){ s.textContent=''; s.className='uname-status'; return; }
+        s.textContent='Checking…'; s.className='uname-status';
+        t=setTimeout(()=>RA.usernameAvailable(v).then(ok=>{ if(unameInput.value.trim()!==v)return; s.textContent=ok?'✓ Available':'✕ Taken'; s.className='uname-status '+(ok?'ok':'bad'); }).catch(()=>{s.textContent='';}), 400);
+      });
+      document.getElementById('save-username').addEventListener('click', async () => {
+        const v = unameInput.value.trim();
+        if(!/^[a-zA-Z0-9_]{3,20}$/.test(v)) return setMsg('username','Username must be 3–20 letters, numbers, or underscores.');
+        try { await RA.updateUsername(v); location.reload(); }
+        catch(e){ setMsg('username', e.code==='username_taken'?'That username is already taken.':(e.message||'Could not update.')); }
+      });
+    }
+
+    // personal info
+    const savePersonal = document.getElementById('save-personal');
+    if (savePersonal) savePersonal.addEventListener('click', async () => {
+      const phone = document.getElementById('set-phone').value.trim();
+      const country = document.getElementById('set-country').value;
+      const fields = { full_name: document.getElementById('set-name').value.trim()||null, country: country||null, city: document.getElementById('set-city').value.trim()||null, phone: phone||null, phone_country: country||null, phone_code: (typeof COUNTRY_DIAL_CODES!=='undefined'?COUNTRY_DIAL_CODES[country]:'')||null };
+      try { await RA.updateBasics(fields); location.reload(); }
+      catch(e){ setMsg('personal', e.message||'Could not save.'); }
+    });
+
+    // password
+    const savePass = document.getElementById('save-password');
+    if (savePass) savePass.addEventListener('click', async () => {
+      const p1 = document.getElementById('set-pass').value, p2 = document.getElementById('set-pass2').value;
+      if(p1.length<8) return setMsg('password','Password must be at least 8 characters.');
+      if(p1!==p2) return setMsg('password','Passwords do not match.');
+      savePass.disabled=true;
+      try { await RA.updatePassword(p1); setMsg('password','Password updated.', true); document.getElementById('set-pass').value=''; document.getElementById('set-pass2').value=''; }
+      catch(e){ setMsg('password', e.message||'Could not update password.'); }
+      finally { savePass.disabled=false; }
+    });
+
+    // notifications
+    const saveNotif = document.getElementById('save-notif');
+    if (saveNotif) saveNotif.addEventListener('click', async () => {
+      const prefs = { product: document.getElementById('np-product').checked, events: document.getElementById('np-events').checked, tips: document.getElementById('np-tips').checked };
+      saveNotif.disabled=true;
+      try { await RA.updateNotificationPrefs(prefs); setMsg('notif','Preferences saved.', true); }
+      catch(e){ setMsg('notif', e.message||'Could not save.'); }
+      finally { saveNotif.disabled=false; }
+    });
+  }
+
+  async function doLogout() { try { await RA.signOut(); } catch(e){} window.location.href = SITE_ROOT; }
 
   async function init() {
     document.getElementById('dashLogout').addEventListener('click', doLogout);
     const user = await RA.requireAuth(SITE_ROOT + 'login/');
-    if (!user) return; // redirected
-    try { await RA.flushPending(); } catch (e) { console.error('flushPending', e); } // save onboarding data if it just arrived
+    if (!user) return;
+    try { await RA.flushPending(); } catch (e) { console.error('flushPending', e); }
     const data = await RA.loadProfile();
     await render(data || { profile: null, languages: [], roles: [], roleDetails: {}, applications: [] });
   }
-
-  init().catch(err => {
-    console.error(err);
-    document.getElementById('dashLoading').textContent = 'Something went wrong loading your dashboard. Please reload.';
-  });
+  init().catch(err => { console.error(err); document.getElementById('dashLoading').textContent = 'Something went wrong loading your dashboard. Please reload.'; });
 })();
 </script>
 </body>

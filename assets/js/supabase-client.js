@@ -40,6 +40,11 @@
   // instance (one client => one session across the whole site).
   window.getSupabaseClient = getClient;
 
+  // Public config, so auth.js can make raw authenticated Storage REST calls
+  // (this supabase-js build doesn't reliably attach the user token to the
+  // storage client — see auth.js avatar helpers).
+  window.SUPABASE_CONFIG = { url: SUPABASE_URL, key: SUPABASE_PUBLISHABLE_KEY };
+
   /**
    * Insert one row into public.submissions.
    * We deliberately do NOT chain .select() — the anon role has no SELECT

@@ -28,6 +28,10 @@ let selectedRoles = new Set();
 let _cachedSections = null;
 let sectIdx = 0;
 let stepIdx = 0;
+// Edit mode (?edit=1): logged-in user editing an existing profile. Loads data
+// from Supabase instead of starting fresh, and skips the Create Account step.
+let EDIT_MODE = false;
+try { EDIT_MODE = new URLSearchParams(location.search).get('edit') === '1'; } catch (e) {}
 
 function getActiveSections() {
   if (!_cachedSections) {
@@ -35,7 +39,9 @@ function getActiveSections() {
     ROLE_KEYS.forEach(r => { if (selectedRoles.has(r)) _cachedSections.push(r); });
     // Contact (email/phone) is no longer a quiz step — it's folded into the
     // 'createAccount' step after review, so email is asked exactly once.
-    _cachedSections.push('review','createAccount');
+    // In edit mode the user already has an account, so we stop at review.
+    _cachedSections.push('review');
+    if (!EDIT_MODE) _cachedSections.push('createAccount');
   }
   return _cachedSections;
 }
@@ -706,8 +712,8 @@ function renderSidebar() {
 
 function nextStep() {
   const sKey=currentSectionKey();
-  // Review → advance to the Create Account step (the final section).
-  if(sKey==='review'){ sectIdx++; stepIdx=0; renderFormPage('fwd'); return; }
+  // Review → save (edit mode) or advance to the Create Account step.
+  if(sKey==='review'){ if(EDIT_MODE){ saveEdits(); return; } sectIdx++; stepIdx=0; renderFormPage('fwd'); return; }
   // Create Account has its own submit button (submitAccount); Next is hidden.
   if(sKey==='createAccount'){ return; }
   const steps=currentSteps();
@@ -816,7 +822,10 @@ function buildReviewHtml() {
     html += `</div>`;
   }
 
-  html += `<button class="review-submit" onclick="nextStep()">Continue to Create Account →</button>`;
+  html += `<div class="ferr" id="fErr" style="text-align:center;margin-top:1rem"></div>`;
+  html += EDIT_MODE
+    ? `<button class="review-submit" onclick="saveEdits()">Save changes</button>`
+    : `<button class="review-submit" onclick="nextStep()">Continue to Create Account →</button>`;
   return html;
 }
 
@@ -1057,9 +1066,11 @@ function initUsernameCheck() {
 ════════════════════════════════════════════════════════════ */
 function quizStateKey(){ return 'ra_quiz_'+(typeof QUIZ_FLOW!=='undefined'?QUIZ_FLOW:'x'); }
 function persistQuizState(){
+  if (EDIT_MODE) return;   // editing loads from Supabase, not the signup draft
   try { localStorage.setItem(quizStateKey(), JSON.stringify({ formData, roles:Array.from(selectedRoles) })); } catch(e){}
 }
 function restoreQuizState(){
+  if (EDIT_MODE) return;
   try {
     const raw=localStorage.getItem(quizStateKey()); if(!raw) return;
     const snap=JSON.parse(raw);
@@ -1199,6 +1210,54 @@ async function submitAccount() {
                     : (err && err.message) || 'Could not create your account. Please try again.');
   }
 }
+
+/* ════════════════════════════════════════════════════════════
+   EDIT MODE — load an existing profile, save updates (?edit=1)
+════════════════════════════════════════════════════════════ */
+let _origFlow = null;
+
+async function editBootstrap() {
+  if (!EDIT_MODE) return;
+  if (typeof RA === 'undefined') { console.error('auth.js not loaded — cannot edit'); return; }
+  const user = await RA.getUser();
+  if (!user) { window.location.href = SITE_ROOT + 'login/'; return; }
+  const data = await RA.loadProfile();
+  if (!data || !data.profile) { window.location.href = SITE_ROOT + 'dashboard/'; return; }
+  _origFlow = data.profile.onboarding_flow || null;
+  const mapped = RA.profileToFormData(data);
+  Object.keys(formData).forEach(k => delete formData[k]);
+  Object.assign(formData, mapped.formData);
+  selectedRoles = new Set(mapped.roles);
+  invalidateSections();
+  showForm();
+}
+
+async function saveEdits() {
+  if (typeof RA === 'undefined') return showErr('Editing is unavailable right now. Please reload.');
+  const roles = Array.from(selectedRoles);
+  if (!roles.length) return showErr('Please keep at least one role selected.');
+  const roleRows = {};
+  roles.forEach(r => { try { roleRows[r] = getReviewRows(r); } catch(e){ roleRows[r] = []; } });
+  const pending = {
+    flow: _origFlow || (typeof QUIZ_FLOW!=='undefined'?QUIZ_FLOW:'all'),
+    username: formData.username || null,
+    email: formData.email || null,
+    roles, roleRows,
+    formData: JSON.parse(JSON.stringify(formData))
+  };
+  const btn = document.querySelector('.review-submit');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+  try {
+    await RA.saveProfile(pending);
+    window.location.href = SITE_ROOT + 'dashboard/';
+  } catch (err) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Save changes'; }
+    showErr(err && err.code === 'username_taken' ? 'That username is already taken — pick another in the General section.' : ((err && err.message) || 'Could not save your changes.'));
+  }
+}
+
+// Runs after the flow page's inline config script (queued via setTimeout 0).
+setTimeout(() => { editBootstrap().catch(e => console.error('editBootstrap', e)); }, 0);
 
 /* ════════════════════════════════════════════════════════════
    SUBMIT (legacy anonymous path — no longer used by signup flows)

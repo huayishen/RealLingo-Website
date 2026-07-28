@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../assets/img/favicon.png">
+<link rel="apple-touch-icon" href="../assets/img/favicon.png">
+<title>Profile — Real lingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/quiz.css">
+<style>
+  html, body { position: static; height: auto; min-height: 100%; overflow-y: auto; }
+  .pp-top { position: sticky; top: 0; z-index: 40; display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 1.75rem; background: rgba(13,14,17,.82); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,.06); }
+  .pp-logo { font-size: 1.25rem; text-decoration: none; color: rgba(255,255,255,.7); display: flex; align-items: baseline; gap: .06em; }
+  .pp-logo .lr { font-family: var(--sr); font-style: italic; }
+  .pp-logo .ll { font-family: var(--ss); font-weight: 900; letter-spacing: -.03em; }
+  .pp-link { color: var(--y); font-size: .82rem; font-weight: 700; text-decoration: none; }
+  .pp-wrap { position: relative; z-index: 10; max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  .pp-card { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 2.25rem; display: flex; gap: 1.75rem; align-items: center; flex-wrap: wrap; }
+  .pp-avatar { width: 108px; height: 108px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,235,153,.35); background: #14151a; }
+  .pp-avatar[data-default="1"] { object-fit: contain; padding: 16px; }
+  .pp-id .pp-name { font-size: 1.6rem; font-weight: 800; letter-spacing: -.02em; }
+  .pp-id .pp-uname { color: var(--y); font-weight: 600; margin-top: .1rem; }
+  .pp-id .pp-meta { color: rgba(255,255,255,.5); font-size: .85rem; margin-top: .5rem; }
+  .pp-section { margin-top: 2rem; }
+  .pp-section h2 { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.4); margin-bottom: .75rem; }
+  .pp-langs { font-size: .95rem; line-height: 1.6; }
+  .pp-roles { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .pp-role { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem .95rem; border-radius: 100px; background: rgba(255,235,153,.08); border: 1px solid rgba(255,235,153,.18); font-size: .85rem; font-weight: 600; }
+  .pp-empty { text-align: center; padding: 5rem 1rem; color: rgba(255,255,255,.5); }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="pp-top">
+  <a class="pp-logo" href="../"><span class="lr">Real</span><span class="ll">lingo</span></a>
+  <a class="pp-link" href="../login/">Log in</a>
+</header>
+
+<main class="pp-wrap">
+  <div id="pp-content"><div class="pp-empty">Loading…</div></div>
+</main>
+
+<script> window.SITE_ROOT = "../"; </script>
+<script src="../assets/js/supabase-client.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script>
+(function () {
+  const ROLE_META = {
+    learner:{label:'Language Learner', icon:'🎓'}, traveler:{label:'Traveler', icon:'✈️'}, eventMember:{label:'Event Member', icon:'🎉'},
+    tutor:{label:'Tutor', icon:'📚'}, translator:{label:'Translator / Interpreter', icon:'💬'}, influencer:{label:'Influencer', icon:'📣'},
+    tourGuide:{label:'Tour Guide', icon:'🧭'}, languageEvent:{label:'Event Organizer', icon:'🌐'}, languageTalent:{label:'Language Talent', icon:'🌟'},
+    hireTranslator:{label:'Hiring: Translator', icon:'💬'}, hireInfluencer:{label:'Hiring: Influencer', icon:'📣'},
+    hireLanguageEvent:{label:'Hiring: Event Organizer', icon:'🌐'}, hireLanguageTalent:{label:'Hiring: Language Talent', icon:'🌟'}
+  };
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function cap(s){ return s ? String(s).charAt(0).toUpperCase()+String(s).slice(1) : s; }
+  function formatLanguages(rows){
+    if(!rows || !rows.length) return '—';
+    const by = {}; rows.forEach(r => { (by[r.language] = by[r.language] || []).push(r); });
+    return Object.entries(by).map(([lang, items]) => {
+      if(items.length === 1 && !items[0].variant) return cap(lang) + ' (' + cap(items[0].level) + ')';
+      return cap(lang) + ' — ' + items.map(i => i.variant ? (cap(i.variant)+': '+cap(i.level)) : cap(i.level)).join(', ');
+    }).join('; ');
+  }
+  function memberSince(iso){ if(!iso) return '—'; try { return new Date(iso).toLocaleDateString(undefined,{month:'long',year:'numeric'}); } catch(e){ return '—'; } }
+
+  const uname = new URLSearchParams(location.search).get('u');
+  const content = document.getElementById('pp-content');
+
+  async function run() {
+    if (!uname) { content.innerHTML = '<div class="pp-empty">No profile specified.</div>'; return; }
+    const sb = await window.getSupabaseClient();
+    const { data, error } = await sb.rpc('public_profile', { uname: uname });
+    if (error || !data) { content.innerHTML = '<div class="pp-empty">Profile <b>@' + esc(uname) + '</b> not found.</div>'; return; }
+
+    document.title = '@' + data.username + ' — Real lingo';
+    const avatar = data.avatar_url ? await RA.avatarPublicUrl(data.avatar_url) : (SITE_ROOT + 'assets/img/logo-yellow.png');
+    const isDefault = !data.avatar_url;
+
+    let html = '<div class="pp-card">' +
+      '<img class="pp-avatar" src="' + esc(avatar) + '"' + (isDefault ? ' data-default="1"' : '') + ' alt="Avatar">' +
+      '<div class="pp-id">' +
+        (data.full_name ? '<div class="pp-name">' + esc(data.full_name) + '</div>' : '') +
+        '<div class="pp-uname">@' + esc(data.username) + '</div>' +
+        '<div class="pp-meta">' + esc([data.city, data.country].filter(Boolean).join(', ') || '') +
+          (data.city || data.country ? ' · ' : '') + 'Member since ' + memberSince(data.member_since) + '</div>' +
+      '</div></div>';
+
+    if (data.languages && data.languages.length) {
+      html += '<div class="pp-section"><h2>Languages</h2><div class="pp-langs">' + esc(formatLanguages(data.languages)) + '</div></div>';
+    }
+    if (data.roles && data.roles.length) {
+      html += '<div class="pp-section"><h2>Roles</h2><div class="pp-roles">' +
+        data.roles.map(r => { const m = ROLE_META[r] || { label: r, icon: '⭐' }; return '<span class="pp-role">' + m.icon + ' ' + esc(m.label) + '</span>'; }).join('') +
+        '</div></div>';
+    }
+    content.innerHTML = html;
+  }
+  run().catch(err => { console.error(err); content.innerHTML = '<div class="pp-empty">Could not load this profile.</div>'; });
+})();
+</script>
+</body>
+</html>

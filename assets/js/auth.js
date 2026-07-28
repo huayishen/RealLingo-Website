@@ -134,35 +134,73 @@
 
   // ── Avatars ──────────────────────────────────────────────
   function randId() { return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now() + '-' + Math.round(Math.random() * 1e9)); }
-  async function uploadAvatar(file) {
+  // NOTE: this supabase-js build does not reliably attach the signed-in user's
+  // token to Storage requests (it falls back to the publishable key, so the
+  // owner-only RLS policy sees a null auth.uid()). We therefore do authenticated
+  // Storage writes/deletes with a raw fetch carrying an explicit Bearer token.
+  // Public reads (getPublicUrl) are plain URL construction and need no token.
+  async function sessionOrThrow() {
     const sb = await client();
-    const user = await getUser();
-    if (!user) throw new Error('Not authenticated');
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) throw new Error('Not authenticated');
+    return { sb, session };
+  }
+  // A persisted access token is sometimes rejected by Storage even when it
+  // looks valid; a freshly refreshed token works. So on 401/403 we refresh
+  // once and retry.
+  async function rawStorageFetch(method, path, body, contentType) {
+    const { sb, session } = await sessionOrThrow();
+    const cfg = window.SUPABASE_CONFIG;
+    const send = (tok) => {
+      // NOTE: no x-upsert — we always write a unique path, and upsert makes
+      // Storage evaluate RLS via the UPDATE path, which fails the owner check.
+      const headers = { apikey: cfg.key, Authorization: 'Bearer ' + tok };
+      if (method === 'POST') { headers['Content-Type'] = contentType || 'application/octet-stream'; }
+      return fetch(cfg.url + '/storage/v1/object/avatars/' + path, { method: method, headers: headers, body: body });
+    };
+    // This supabase-js build intermittently sends Storage a token it briefly
+    // won't accept (a background-refresh race; HTTP 400 w/ body statusCode 403).
+    // Retry a few times, refreshing the token and waiting a beat between tries.
+    let token = session.access_token;
+    let resp = await send(token);
+    for (let attempt = 0; attempt < 3 && !resp.ok; attempt++) {
+      try { const r = await sb.auth.refreshSession(); if (r && r.data && r.data.session) token = r.data.session.access_token; } catch (e) {}
+      await new Promise(res => setTimeout(res, 500 + attempt * 500));
+      resp = await send(token);
+    }
+    return resp;
+  }
+  async function rawStoragePut(path, body, contentType) {
+    const resp = await rawStorageFetch('POST', path, body, contentType);
+    if (!resp.ok) throw new Error('Upload failed (' + resp.status + '): ' + (await resp.text()));
+  }
+  async function uploadAvatar(file) {
+    const { sb, session } = await sessionOrThrow();
+    const uid = session.user.id;
     const ext = (file.name.split('.').pop() || 'png').toLowerCase();
-    const path = user.id + '/' + randId() + '.' + ext;
-    const { error: upErr } = await sb.storage.from('avatars').upload(path, file, { upsert: true, contentType: file.type || undefined });
-    if (upErr) throw upErr;
-    const { error } = await sb.from('profiles').update({ avatar_url: path }).eq('id', user.id);
+    const path = uid + '/' + randId() + '.' + ext;
+    await rawStoragePut(path, file, file.type || undefined);
+    const { error } = await sb.from('profiles').update({ avatar_url: path }).eq('id', uid);
     if (error) throw error;
     return sb.storage.from('avatars').getPublicUrl(path).data.publicUrl;
   }
   async function uploadAvatarDataUrl(dataUrl, uid) {
-    const sb = await client();
     const res = await fetch(dataUrl); const blob = await res.blob();
     const ext = (blob.type.split('/')[1] || 'png');
     const path = uid + '/' + randId() + '.' + ext;
-    const { error: upErr } = await sb.storage.from('avatars').upload(path, blob, { upsert: true, contentType: blob.type });
-    if (upErr) throw upErr;
+    await rawStoragePut(path, blob, blob.type);
+    const sb = await client();
     await sb.from('profiles').update({ avatar_url: path }).eq('id', uid);
     return path;
   }
   async function removeAvatar() {
-    const sb = await client();
-    const user = await getUser();
-    if (!user) throw new Error('Not authenticated');
-    const { data: prof } = await sb.from('profiles').select('avatar_url').eq('id', user.id).maybeSingle();
-    if (prof && prof.avatar_url) { await sb.storage.from('avatars').remove([prof.avatar_url]); }
-    await sb.from('profiles').update({ avatar_url: null }).eq('id', user.id);
+    const { sb, session } = await sessionOrThrow();
+    const uid = session.user.id;
+    const { data: prof } = await sb.from('profiles').select('avatar_url').eq('id', uid).maybeSingle();
+    if (prof && prof.avatar_url) {
+      await rawStorageFetch('DELETE', prof.avatar_url);
+    }
+    await sb.from('profiles').update({ avatar_url: null }).eq('id', uid);
   }
   async function avatarPublicUrl(path) {
     if (!path) return null;
@@ -317,6 +355,86 @@
     };
   }
 
+  // ── Settings updates (Phase 2) ───────────────────────────
+  async function updateUsername(newName) {
+    const sb = await client();
+    const user = await getUser();
+    if (!user) throw new Error('Not authenticated');
+    const { data: mine } = await sb.from('profiles').select('username').eq('id', user.id).maybeSingle();
+    if (mine && String(mine.username).toLowerCase() === String(newName).toLowerCase()) return; // unchanged
+    const ok = await usernameAvailable(newName);
+    if (!ok) { const e = new Error('That username is already taken.'); e.code = 'username_taken'; throw e; }
+    const { error } = await sb.from('profiles').update({ username: newName }).eq('id', user.id);
+    if (error) throw error;
+  }
+  async function updateBasics(fields) {
+    const sb = await client();
+    const user = await getUser();
+    if (!user) throw new Error('Not authenticated');
+    const allowed = {};
+    ['full_name','country','city','phone','phone_country','phone_code'].forEach(k => { if (k in fields) allowed[k] = fields[k]; });
+    const { error } = await sb.from('profiles').update(allowed).eq('id', user.id);
+    if (error) throw error;
+  }
+  async function updateNotificationPrefs(prefs) {
+    const sb = await client();
+    const user = await getUser();
+    if (!user) throw new Error('Not authenticated');
+    const { error } = await sb.from('profiles').update({ notification_prefs: prefs }).eq('id', user.id);
+    if (error) throw error;
+  }
+  async function submitApplication(type, details) {
+    const sb = await client();
+    const user = await getUser();
+    if (!user) throw new Error('Not authenticated');
+    const { error } = await sb.from('applications').insert({ user_id: user.id, type: type, details: details || {} });
+    if (error) throw error;
+  }
+
+  // ── Reverse mapper: normalized tables => formData (edit mode) ──
+  function rebuildLanguages(rows) {
+    const langs = {};
+    (rows || []).forEach(r => {
+      if (r.variant) { if (typeof langs[r.language] !== 'object' || langs[r.language] === null) langs[r.language] = {}; langs[r.language][r.variant] = r.level; }
+      else { langs[r.language] = r.level; }
+    });
+    return langs;
+  }
+  function profileToFormData(data) {
+    const fd = {};
+    const p = (data && data.profile) || {};
+    fd.name = p.full_name || '';
+    fd.username = p.username || '';
+    fd.email = p.email || '';
+    fd.country = p.country || '';
+    fd.city = p.city || '';
+    fd.phone = p.phone ? String(p.phone).replace(p.phone_code ? (p.phone_code + ' ') : '', '') : '';
+    fd.phoneCountry = p.phone_country || '';
+    fd.phoneCode = p.phone_code || '';
+    fd.hiringAs = p.hiring_as || '';
+    fd.companyName = p.company_name || '';
+    fd.companyIndustry = p.company_industry || '';
+    if (p.qualifications) fd.qualifications = p.qualifications;
+    fd.otherRole = p.other_role || '';
+    fd.languages = rebuildLanguages(data && data.languages);
+    const roles = ((data && data.roles) || []).map(r => r.role_key);
+    roles.forEach(r => {
+      const detail = data.roleDetails[r];
+      if (!detail) return;
+      if (HIRE_TARGET[r]) {
+        fd[r + 'Currency'] = detail.currency; fd[r + 'BudMin'] = detail.budget_min; fd[r + 'BudMax'] = detail.budget_max; fd[r + 'Note'] = detail.note;
+        const d = detail.details || {};
+        fd[r + 'Languages'] = d.languages; fd[r + 'BudgetTypes'] = d.budgetTypes; fd[r + 'PeriodSpec'] = d.periodSpec; fd[r + 'UseShared'] = d.useShared;
+      } else if (ROLE_TABLE[r]) {
+        const cfg = ROLE_TABLE[r];
+        for (const [dbCol, fdKey] of Object.entries(cfg.cols)) fd[fdKey] = detail[dbCol];
+        const d = detail.details || {};
+        Object.keys(d).forEach(k => { if (k !== 'display_rows') fd[k] = d[k]; });
+      }
+    });
+    return { formData: fd, roles: roles };
+  }
+
   // ── Public API ───────────────────────────────────────────
   window.RA = {
     ROLE_TABLE, HIRE_TARGET,
@@ -325,6 +443,7 @@
     uploadAvatar, removeAvatar, avatarPublicUrl,
     stashPending, getPending, clearPending, flushPending,
     saveProfile, loadProfile,
+    updateUsername, updateBasics, updateNotificationPrefs, submitApplication, profileToFormData,
     enforceRemember
   };
 })();
