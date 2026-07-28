@@ -33,7 +33,9 @@ function getActiveSections() {
   if (!_cachedSections) {
     _cachedSections = ['general'];
     ROLE_KEYS.forEach(r => { if (selectedRoles.has(r)) _cachedSections.push(r); });
-    _cachedSections.push('final','review');
+    // Contact (email/phone) is no longer a quiz step — it's folded into the
+    // 'createAccount' step after review, so email is asked exactly once.
+    _cachedSections.push('review','createAccount');
   }
   return _cachedSections;
 }
@@ -595,6 +597,8 @@ function updatePhoneCode(country) {
    FORM ENGINE — SHOW / NAVIGATE
 ════════════════════════════════════════════════════════════ */
 function showForm() {
+  injectUsernameStep();
+  restoreQuizState();
   showScreen('s-form');
   invalidateSections();
   sectIdx=0; stepIdx=0;
@@ -603,7 +607,9 @@ function showForm() {
 
 function renderFormPage(direction) {
   const inner=document.getElementById('fstepInner');
-  const isReview = currentSectionKey()==='review';
+  const sKey=currentSectionKey();
+  const isReview = sKey==='review';
+  const isAccount = sKey==='createAccount';
   // The review page is a dashboard (3-column role cards), not a single
   // narrow question, so it gets a wider container than every other step.
   inner.classList.toggle('fstep-inner--review', isReview);
@@ -612,19 +618,21 @@ function renderFormPage(direction) {
   updateProgressBar();
   updateNavButtons();
   document.getElementById('fstepArea').scrollTop=0;
+  persistQuizState();
 
-  if (direction==='none') {
+  const paint=()=>{
     if(isReview) { inner.innerHTML=buildReviewHtml(); postRenderReview(); }
+    else if(isAccount) { inner.innerHTML=buildAccountHtml(); postRenderAccount(); }
     else { inner.innerHTML=buildStepHtml(); postRenderStep(); }
-    return;
-  }
+  };
+
+  if (direction==='none') { paint(); return; }
   const outClass=direction==='fwd'?'s-out-l':'s-out-r';
   const inClass=direction==='fwd'?'s-in-r':'s-in-l';
   inner.classList.add(outClass);
   setTimeout(()=>{
     inner.classList.remove(outClass);
-    if(isReview) { inner.innerHTML=buildReviewHtml(); postRenderReview(); }
-    else { inner.innerHTML=buildStepHtml(); postRenderStep(); }
+    paint();
     inner.classList.add(inClass);
     setTimeout(()=>inner.classList.remove(inClass),260);
   },240);
@@ -650,19 +658,22 @@ function updateProgressBar() {
   const sKey=currentSectionKey();
   const sLabel=SECTION_LABEL[sKey]||sKey;
   const isReview=sKey==='review';
-  const steps=isReview?null:currentSteps();
+  const isAccount=sKey==='createAccount';
+  const isTerminal=isReview||isAccount;   // sections with no per-step questions
+  const steps=isTerminal?null:currentSteps();
   const totalSteps=steps?steps.length:0;
 
   let overallDone=0, overallTotal=0;
   sections.forEach((sk,si)=>{
-    if(sk==='review'){overallTotal+=1;if(si<sectIdx)overallDone+=1;}
+    if(sk==='review'||sk==='createAccount'){overallTotal+=1;if(si<sectIdx)overallDone+=1;}
     else{const st=getSectionSteps(sk)||[];overallTotal+=st.length;if(si<sectIdx)overallDone+=st.length;else if(si===sectIdx)overallDone+=stepIdx;}
   });
 
   document.getElementById('fpStep').textContent = isReview
-    ? 'Review & Submit'
+    ? 'Review Your Profile'
+    : isAccount ? 'Create Account'
     : `${sLabel} — Step ${stepIdx+1} of ${totalSteps}`;
-  document.getElementById('fpTitle').textContent = isReview ? '' : esc(currentSteps()[stepIdx]?.tag||'');
+  document.getElementById('fpTitle').textContent = isTerminal ? '' : esc(currentSteps()[stepIdx]?.tag||'');
   document.getElementById('fpFill').style.width = `${(overallDone/Math.max(1,overallTotal))*100}%`;
 }
 
@@ -670,10 +681,11 @@ function updateNavButtons() {
   const back=document.getElementById('fBtnBack');
   const next=document.getElementById('fBtnNext');
   const isFirst=(sectIdx===0&&stepIdx===0);
-  const isReview=currentSectionKey()==='review';
+  const sKey=currentSectionKey();
+  const isTerminal=sKey==='review'||sKey==='createAccount';  // own CTA button
   back.disabled=isFirst;
-  next.textContent=isReview?'Submit →':'Next →';
-  next.style.display=isReview?'none':'';
+  next.textContent='Next →';
+  next.style.display=isTerminal?'none':'';
 }
 
 function renderSidebar() {
@@ -694,7 +706,10 @@ function renderSidebar() {
 
 function nextStep() {
   const sKey=currentSectionKey();
-  if(sKey==='review'){submitForm();return;}
+  // Review → advance to the Create Account step (the final section).
+  if(sKey==='review'){ sectIdx++; stepIdx=0; renderFormPage('fwd'); return; }
+  // Create Account has its own submit button (submitAccount); Next is hidden.
+  if(sKey==='createAccount'){ return; }
   const steps=currentSteps();
   const step=steps[stepIdx];
   step.save();
@@ -801,7 +816,7 @@ function buildReviewHtml() {
     html += `</div>`;
   }
 
-  html += `<button class="review-submit" onclick="submitForm()">Sign Up →</button>`;
+  html += `<button class="review-submit" onclick="nextStep()">Continue to Create Account →</button>`;
   return html;
 }
 
@@ -990,7 +1005,203 @@ function formatQualReview(q) {
 }
 
 /* ════════════════════════════════════════════════════════════
-   SUBMIT
+   USERNAME STEP (injected into the General section) + live check
+════════════════════════════════════════════════════════════ */
+function injectUsernameStep() {
+  const g = (typeof ALL_SECTION_STEPS!=='undefined') && ALL_SECTION_STEPS.general;
+  if (!g || g.__unameInjected) return;
+  const step = {
+    tag:'General', q:'Choose a username', hint:"How you'll appear on RealLingo — you can change it later",
+    html() {
+      return `<input type="text" class="fi" id="inp-username" placeholder="e.g. yasmin_92" value="${esc(formData.username||'')}" autocomplete="off" spellcheck="false" maxlength="20">
+        <div class="uname-status" id="unameStatus"></div>`;
+    },
+    validate() {
+      const v=(document.getElementById('inp-username')?.value||'').trim();
+      if(!v) return 'Please choose a username';
+      if(!/^[a-zA-Z0-9_]{3,20}$/.test(v)) return 'Username must be 3–20 characters: letters, numbers, or underscores';
+      if(formData._usernameTaken) return 'That username is already taken — please pick another';
+      return null;
+    },
+    save() { formData.username=(document.getElementById('inp-username')?.value||'').trim(); },
+    postRender() { initUsernameCheck(); }
+  };
+  g.splice(1, 0, step);   // right after the name step: name → username → …
+  g.__unameInjected = true;
+}
+
+function initUsernameCheck() {
+  const inp=document.getElementById('inp-username');
+  const status=document.getElementById('unameStatus');
+  if(!inp||!status) return;
+  let t=null;
+  const run=()=>{
+    const v=(inp.value||'').trim();
+    formData._usernameTaken=false;
+    if(!v){ status.textContent=''; status.className='uname-status'; return; }
+    if(!/^[a-zA-Z0-9_]{3,20}$/.test(v)){ status.textContent='3–20 letters, numbers, or underscores'; status.className='uname-status bad'; return; }
+    status.textContent='Checking…'; status.className='uname-status';
+    if(typeof RA==='undefined') return;
+    RA.usernameAvailable(v).then(ok=>{
+      if((inp.value||'').trim()!==v) return;   // input changed since; ignore
+      if(ok){ status.textContent='✓ Available'; status.className='uname-status ok'; formData._usernameTaken=false; }
+      else  { status.textContent='✕ Already taken'; status.className='uname-status bad'; formData._usernameTaken=true; }
+    }).catch(()=>{ status.textContent=''; status.className='uname-status'; });
+  };
+  inp.addEventListener('input', ()=>{ clearTimeout(t); t=setTimeout(run, 400); });
+  if(inp.value) run();
+}
+
+/* ════════════════════════════════════════════════════════════
+   AUTOSAVE — survive reloads mid-quiz (localStorage per flow)
+════════════════════════════════════════════════════════════ */
+function quizStateKey(){ return 'ra_quiz_'+(typeof QUIZ_FLOW!=='undefined'?QUIZ_FLOW:'x'); }
+function persistQuizState(){
+  try { localStorage.setItem(quizStateKey(), JSON.stringify({ formData, roles:Array.from(selectedRoles) })); } catch(e){}
+}
+function restoreQuizState(){
+  try {
+    const raw=localStorage.getItem(quizStateKey()); if(!raw) return;
+    const snap=JSON.parse(raw);
+    if(snap && snap.formData) Object.assign(formData, snap.formData);
+    if(snap && Array.isArray(snap.roles)) snap.roles.forEach(r=>selectedRoles.add(r));
+    invalidateSections();
+  } catch(e){}
+}
+function clearQuizState(){ try { localStorage.removeItem(quizStateKey()); } catch(e){} }
+
+/* ════════════════════════════════════════════════════════════
+   CREATE ACCOUNT — final step (email + password + contact).
+   Email lives here only, so it's never asked twice.
+════════════════════════════════════════════════════════════ */
+function accountRedirectUrl(){
+  return new URL((typeof SITE_ROOT!=='undefined'?SITE_ROOT:'./')+'auth/callback/', location.href).href;
+}
+
+function buildAccountHtml() {
+  const savedCountry = formData.phoneCountry || formData.country || '';
+  const code = (typeof COUNTRY_DIAL_CODES!=='undefined' && COUNTRY_DIAL_CODES[savedCountry]) || '';
+  const optNote = `<span style="text-transform:none;font-weight:400;letter-spacing:0;color:rgba(255,255,255,.3)">(optional)</span>`;
+  return `
+    <div class="fstep-tag">Almost done!</div>
+    <h2 class="fstep-q">Create your account</h2>
+    <p class="fstep-hint">You'll verify this email before continuing — it's the only place we ask for it.</p>
+    <div class="fstep-inputs acct-form">
+      <div style="margin-bottom:1rem">
+        <label class="fl-sm">Email address</label>
+        <input type="email" class="fi" id="acc-email" placeholder="you@example.com" value="${esc(formData.email||'')}" autocomplete="email">
+      </div>
+      <div class="fg-2">
+        <div>
+          <label class="fl-sm">Password</label>
+          <div class="pw-row">
+            <input type="password" class="fi" id="acc-pass" placeholder="At least 8 characters" autocomplete="new-password">
+            <button type="button" class="pw-toggle" data-target="acc-pass">Show</button>
+          </div>
+        </div>
+        <div>
+          <label class="fl-sm">Confirm password</label>
+          <div class="pw-row">
+            <input type="password" class="fi" id="acc-pass2" placeholder="Re-enter password" autocomplete="new-password">
+            <button type="button" class="pw-toggle" data-target="acc-pass2">Show</button>
+          </div>
+        </div>
+      </div>
+      <div class="fg-2" style="margin-top:1rem">
+        <div>
+          <label class="fl-sm">Country</label>
+          <select class="fs" id="acc-phoneCountry" onchange="updatePhoneCode(this.value)">
+            <option value="">Select country...</option>
+            ${(typeof COUNTRIES!=='undefined'?COUNTRIES:[]).map(c=>`<option value="${c}"${savedCountry===c?' selected':''}>${c}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label class="fl-sm">Phone number ${optNote}</label>
+          <div class="phone-input-row">
+            <span class="phone-code-badge" id="phoneCodeBadge">${code||'+—'}</span>
+            <input type="tel" class="fi phone-num-input" id="acc-phone" placeholder="234 567 8900" value="${esc(formData.phone||'')}" autocomplete="tel">
+          </div>
+        </div>
+      </div>
+      <div class="ferr" id="fErr"></div>
+      <button class="review-submit acct-submit" id="accSubmitBtn" onclick="submitAccount()">Create Account →</button>
+      <p class="acct-alt">Already have an account? <a href="${(typeof SITE_ROOT!=='undefined'?SITE_ROOT:'')}login/">Log in</a></p>
+    </div>`;
+}
+
+function postRenderAccount() {
+  document.querySelectorAll('.pw-toggle').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const inp=document.getElementById(btn.dataset.target);
+      if(!inp) return;
+      const reveal = inp.type==='password';
+      inp.type = reveal ? 'text' : 'password';
+      btn.textContent = reveal ? 'Hide' : 'Show';
+    });
+  });
+}
+
+async function submitAccount() {
+  const email=(document.getElementById('acc-email')?.value||'').trim();
+  const pass=document.getElementById('acc-pass')?.value||'';
+  const pass2=document.getElementById('acc-pass2')?.value||'';
+  const phoneCountry=document.getElementById('acc-phoneCountry')?.value||'';
+  const phone=(document.getElementById('acc-phone')?.value||'').trim();
+
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showErr('Please enter a valid email address');
+  if(pass.length<8) return showErr('Password must be at least 8 characters');
+  if(pass!==pass2) return showErr('Passwords do not match');
+  if(phone && !phoneCountry) return showErr("Please select your phone number's country");
+  clearErr();
+
+  // Single source of truth for contact — no duplicate email question earlier.
+  formData.email=email;
+  formData.phoneCountry=phoneCountry;
+  formData.phoneCode=(typeof COUNTRY_DIAL_CODES!=='undefined'?COUNTRY_DIAL_CODES[phoneCountry]:'')||'';
+  formData.phone=phone;
+
+  if(typeof RA==='undefined'){ return showErr('Sign-up is unavailable right now. Please reload and try again.'); }
+
+  const btn=document.getElementById('accSubmitBtn');
+  if(btn){ btn.disabled=true; btn.textContent='Creating account…'; }
+
+  // Snapshot fully-resolved review rows so the dashboard renders identically
+  // (getReviewRows resolves shared-charge/labels; the callback won't have it).
+  const roles=Array.from(selectedRoles);
+  const roleRows={};
+  roles.forEach(r=>{ try{ roleRows[r]=getReviewRows(r); }catch(e){ roleRows[r]=[]; } });
+  const pending={
+    flow:(typeof QUIZ_FLOW!=='undefined'?QUIZ_FLOW:'unknown'),
+    username: formData.username||null,
+    email,
+    roles,
+    roleRows,
+    formData: JSON.parse(JSON.stringify(formData))
+  };
+
+  try {
+    RA.stashPending(pending);
+    const res = await RA.signUp(email, pass, accountRedirectUrl());
+    clearQuizState();
+    if(res && res.session){
+      // Email confirmation is disabled → we already have a session; flush now.
+      try { await RA.flushPending(); } catch(e){ console.error(e); }
+      window.location.href = SITE_ROOT+'dashboard/';
+    } else {
+      // Confirmation required → go explain and wait for the email click.
+      window.location.href = SITE_ROOT+'signup/verify/';
+    }
+  } catch(err) {
+    console.error('signUp failed', err);
+    if(btn){ btn.disabled=false; btn.textContent='Create Account →'; }
+    const already=/registered|already/i.test(err && err.message || '');
+    showErr(already ? 'An account with this email already exists — try logging in instead.'
+                    : (err && err.message) || 'Could not create your account. Please try again.');
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   SUBMIT (legacy anonymous path — no longer used by signup flows)
 ════════════════════════════════════════════════════════════ */
 let _welcomeTimer=null;
 

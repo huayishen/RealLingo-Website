@@ -20,19 +20,31 @@
 <div id="site-header"></div>
 
 <main class="login-wrap">
-  <form class="login-card" onsubmit="return false;">
+  <form class="login-card" id="loginForm" novalidate>
     <h1>Welcome back</h1>
     <p class="lc-sub">Log in to your Real lingo account.</p>
+
+    <div class="lc-msg" id="loginMsg"></div>
+
     <div class="lc-field">
       <label for="li-email">Email</label>
-      <input type="email" id="li-email" placeholder="you@example.com" disabled>
+      <input type="email" id="li-email" placeholder="you@example.com" autocomplete="email">
     </div>
     <div class="lc-field">
       <label for="li-pass">Password</label>
-      <input type="password" id="li-pass" placeholder="••••••••" disabled>
+      <div class="lc-pw-wrap">
+        <input type="password" id="li-pass" placeholder="••••••••" autocomplete="current-password">
+        <button type="button" class="lc-pw-toggle" data-target="li-pass">Show</button>
+      </div>
     </div>
-    <button type="submit" class="lc-submit" disabled>Log In — Coming Soon</button>
-    <p class="lc-note">Login isn't available yet. Check back soon, or <a href="../signup/">take the sign-up quiz</a> instead.</p>
+
+    <div class="lc-row">
+      <label class="lc-check"><input type="checkbox" id="li-remember" checked> Remember me</label>
+      <a class="lc-link" href="../forgot-password/">Forgot password?</a>
+    </div>
+
+    <button type="submit" class="lc-submit" id="li-submit">Log In</button>
+    <p class="lc-note">New to Real lingo? <a href="../signup/">Create an account</a></p>
   </form>
 </main>
 
@@ -44,5 +56,49 @@
   window.SITE_PAGE = "login";
 </script>
 <script src="../assets/js/nav.js" defer></script>
+<script src="../assets/js/supabase-client.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script>
+(function () {
+  const form = document.getElementById('loginForm');
+  const emailEl = document.getElementById('li-email');
+  const passEl = document.getElementById('li-pass');
+  const rememberEl = document.getElementById('li-remember');
+  const btn = document.getElementById('li-submit');
+  const msg = document.getElementById('loginMsg');
+
+  document.querySelectorAll('.lc-pw-toggle').forEach(t => t.addEventListener('click', () => {
+    const inp = document.getElementById(t.dataset.target);
+    const reveal = inp.type === 'password';
+    inp.type = reveal ? 'text' : 'password';
+    t.textContent = reveal ? 'Hide' : 'Show';
+  }));
+
+  function showMsg(text, ok) { msg.textContent = text; msg.className = 'lc-msg ' + (ok ? 'ok' : 'err'); }
+
+  // Already signed in? Go straight to the dashboard.
+  RA.getSession().then(s => { if (s) window.location.href = SITE_ROOT + 'dashboard/'; }).catch(()=>{});
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = emailEl.value.trim();
+    const pass = passEl.value;
+    if (!email || !pass) { showMsg('Please enter your email and password.'); return; }
+    msg.textContent = ''; msg.className = 'lc-msg';
+    btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Logging in…';
+    try {
+      await RA.signIn(email, pass, rememberEl.checked);
+      try { await RA.flushPending(); } catch (_) {}   // save onboarding data if it was pending
+      window.location.href = SITE_ROOT + 'dashboard/';
+    } catch (err) {
+      btn.disabled = false; btn.textContent = orig;
+      let m = (err && err.message) || 'Could not log in.';
+      if (/email not confirmed/i.test(m)) m = 'Please verify your email first — check your inbox for the confirmation link.';
+      else if (/invalid login credentials/i.test(m)) m = 'Incorrect email or password.';
+      showMsg(m);
+    }
+  });
+})();
+</script>
 </body>
 </html>

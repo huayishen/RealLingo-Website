@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+<link rel="apple-touch-icon" href="../../assets/img/favicon.png">
+<title>Verify your email — Real lingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main class="login-wrap">
+  <div class="login-card lc-center">
+    <div class="auth-icon">📬</div>
+    <h1>Check your email</h1>
+    <p class="lc-sub">We've sent a verification link to<br><span class="auth-email" id="vf-email">your email</span>.<br>Please verify your email before continuing.</p>
+
+    <div class="lc-msg" id="vf-msg"></div>
+
+    <button type="button" class="lc-submit" id="vf-resend">Resend email</button>
+    <button type="button" class="lc-btn-ghost" id="vf-change">Change email</button>
+
+    <!-- Change-email inline form (hidden until "Change email") -->
+    <form id="vf-changeForm" style="display:none; margin-top:1rem; text-align:left;" novalidate>
+      <div class="lc-field">
+        <label for="ce-email">New email</label>
+        <input type="email" id="ce-email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="lc-field">
+        <label for="ce-pass">Password</label>
+        <div class="lc-pw-wrap">
+          <input type="password" id="ce-pass" placeholder="At least 8 characters" autocomplete="new-password">
+          <button type="button" class="lc-pw-toggle" data-target="ce-pass">Show</button>
+        </div>
+      </div>
+      <div class="lc-field">
+        <label for="ce-pass2">Confirm password</label>
+        <input type="password" id="ce-pass2" placeholder="Re-enter password" autocomplete="new-password">
+      </div>
+      <button type="submit" class="lc-submit" id="ce-submit">Update &amp; resend</button>
+    </form>
+
+    <p class="lc-note"><a href="../../login/">Return to login</a></p>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+  window.SITE_ROOT = "../../";
+  window.SITE_SECTION = null;
+  window.SITE_PAGE = "verify";
+</script>
+<script src="../../assets/js/nav.js" defer></script>
+<script src="../../assets/js/supabase-client.js"></script>
+<script src="../../assets/js/auth.js"></script>
+<script>
+(function () {
+  const emailChip = document.getElementById('vf-email');
+  const msg = document.getElementById('vf-msg');
+  const resendBtn = document.getElementById('vf-resend');
+  const changeBtn = document.getElementById('vf-change');
+  const changeForm = document.getElementById('vf-changeForm');
+  const ceSubmit = document.getElementById('ce-submit');
+
+  const params = new URLSearchParams(location.search);
+  let email = params.get('email') || localStorage.getItem('ra_pending_email') || '';
+  emailChip.textContent = email || 'your email';
+
+  function callbackUrl() { return new URL(SITE_ROOT + 'auth/callback/', location.href).href; }
+  function showMsg(t, ok) { msg.textContent = t; msg.className = 'lc-msg ' + (ok ? 'ok' : 'err'); }
+
+  document.querySelectorAll('.lc-pw-toggle').forEach(t => t.addEventListener('click', () => {
+    const inp = document.getElementById(t.dataset.target);
+    const reveal = inp.type === 'password';
+    inp.type = reveal ? 'text' : 'password';
+    t.textContent = reveal ? 'Hide' : 'Show';
+  }));
+
+  resendBtn.addEventListener('click', async () => {
+    if (!email) { showMsg('No email on file — please sign up again.'); return; }
+    resendBtn.disabled = true; const o = resendBtn.textContent; resendBtn.textContent = 'Sending…';
+    try {
+      const sb = await window.getSupabaseClient();
+      const { error } = await sb.auth.resend({ type: 'signup', email: email, options: { emailRedirectTo: callbackUrl() } });
+      if (error) throw error;
+      showMsg('Verification email sent again. Check your inbox.', true);
+    } catch (err) {
+      showMsg((err && err.message) || 'Could not resend the email.');
+    } finally { resendBtn.disabled = false; resendBtn.textContent = o; }
+  });
+
+  changeBtn.addEventListener('click', () => {
+    const open = changeForm.style.display !== 'none';
+    changeForm.style.display = open ? 'none' : 'block';
+    changeBtn.textContent = open ? 'Change email' : 'Cancel';
+    if (!open) document.getElementById('ce-email').focus();
+  });
+
+  changeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const newEmail = document.getElementById('ce-email').value.trim();
+    const pass = document.getElementById('ce-pass').value;
+    const pass2 = document.getElementById('ce-pass2').value;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) { showMsg('Please enter a valid email address.'); return; }
+    if (pass.length < 8) { showMsg('Password must be at least 8 characters.'); return; }
+    if (pass !== pass2) { showMsg('Passwords do not match.'); return; }
+    ceSubmit.disabled = true; const o = ceSubmit.textContent; ceSubmit.textContent = 'Updating…';
+    try {
+      // Update the stashed profile's email, then re-create the account with it.
+      const pending = RA.getPending() || {};
+      pending.email = newEmail;
+      if (pending.formData) pending.formData.email = newEmail;
+      RA.stashPending(pending);
+      await RA.signUp(newEmail, pass, callbackUrl());
+      email = newEmail;
+      emailChip.textContent = newEmail;
+      changeForm.style.display = 'none';
+      changeBtn.textContent = 'Change email';
+      showMsg('Verification email sent to your new address.', true);
+    } catch (err) {
+      showMsg((err && err.message) || 'Could not update your email.');
+    } finally { ceSubmit.disabled = false; ceSubmit.textContent = o; }
+  });
+})();
+</script>
+</body>
+</html>

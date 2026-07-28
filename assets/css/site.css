@@ -285,5 +285,35 @@
 .lc-field { margin-bottom: 1.1rem; }
 .lc-field label { display: block; font-size: .76rem; font-weight: 700; color: var(--text-mid); margin-bottom: .4rem; }
 .lc-field input { width: 100%; padding: .75rem .9rem; border: 1px solid var(--border); border-radius: 9px; font-family: var(--font-sans); font-size: .88rem; background: var(--cream); }
-.lc-submit { width: 100%; margin-top: .5rem; padding: .85rem; border: none; border-radius: 100px; background: var(--dark); color: var(--yellow); font-family: var(--font-sans); font-weight: 700; font-size: .88rem; cursor: not-allowed; opacity: .6; }
+.lc-submit { width: 100%; margin-top: .5rem; padding: .85rem; border: none; border-radius: 100px; background: var(--dark); color: var(--yellow); font-family: var(--font-sans); font-weight: 700; font-size: .88rem; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; }
+.lc-submit:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 10px 24px -10px rgba(17,18,22,.4); }
+.lc-submit:disabled { cursor: not-allowed; opacity: .55; }
 .lc-note { margin-top: 1.25rem; font-size: .78rem; color: var(--text-soft); text-align: center; }
+.lc-note a, .lc-link { color: var(--text); font-weight: 700; text-decoration: none; }
+.lc-note a:hover, .lc-link:hover { text-decoration: underline; }
+
+/* Auth pages: password toggle inside a field */
+.lc-pw-wrap { position: relative; }
+.lc-pw-wrap input { padding-right: 3.4rem; }
+.lc-pw-toggle { position: absolute; right: .6rem; top: 50%; transform: translateY(-50%); background: none; border: none; padding: .25rem .4rem; font-family: var(--font-sans); font-size: .72rem; font-weight: 700; color: var(--text-soft); cursor: pointer; }
+.lc-pw-toggle:hover { color: var(--text); }
+
+/* Remember-me / forgot row */
+.lc-row { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin: -.2rem 0 1.1rem; }
+.lc-check { display: flex; align-items: center; gap: .45rem; font-size: .78rem; color: var(--text-mid); cursor: pointer; user-select: none; }
+.lc-check input { width: 15px; height: 15px; accent-color: var(--dark); cursor: pointer; }
+
+/* Inline status message */
+.lc-msg { margin: 0 0 1rem; font-size: .8rem; font-weight: 600; min-height: 1.05em; }
+.lc-msg.err { color: #c0392b; }
+.lc-msg.ok  { color: #1e824c; }
+
+/* Secondary / ghost button in auth cards */
+.lc-btn-ghost { width: 100%; margin-top: .6rem; padding: .8rem; border: 1px solid var(--border); border-radius: 100px; background: #fff; color: var(--text); font-family: var(--font-sans); font-weight: 700; font-size: .85rem; cursor: pointer; transition: background .12s; }
+.lc-btn-ghost:hover:not(:disabled) { background: var(--cream); }
+.lc-btn-ghost:disabled { opacity: .55; cursor: not-allowed; }
+
+/* Verify / status page icon + email chip */
+.auth-icon { font-size: 2.6rem; text-align: center; margin-bottom: .75rem; }
+.auth-email { font-weight: 700; color: var(--text); word-break: break-all; }
+.lc-center { text-align: center; }

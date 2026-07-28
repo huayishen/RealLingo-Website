@@ -24,12 +24,21 @@
       _clientPromise = import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm')
         .then(({ createClient }) =>
           createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-            auth: { persistSession: false }  // no auth on this site
+            auth: {
+              persistSession: true,       // keep the user signed in across pages
+              autoRefreshToken: true,     // refresh the access token in the background
+              detectSessionInUrl: true,   // handle email-verify / recovery links on load
+              flowType: 'pkce'            // recommended, secure email-link flow
+            }
           })
         );
     }
     return _clientPromise;
   }
+
+  // Expose the single shared client so assets/js/auth.js reuses the same
+  // instance (one client => one session across the whole site).
+  window.getSupabaseClient = getClient;
 
   /**
    * Insert one row into public.submissions.

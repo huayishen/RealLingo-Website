@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+<title>Verifying… — Real lingo</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .spin { width: 34px; height: 34px; border: 3px solid var(--border); border-top-color: var(--dark); border-radius: 50%; margin: 0 auto 1rem; animation: sp 0.8s linear infinite; }
+  @keyframes sp { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<main class="login-wrap">
+  <div class="login-card lc-center">
+    <div id="cb-spin" class="spin"></div>
+    <h1 id="cb-title">Verifying…</h1>
+    <p class="lc-sub" id="cb-sub">Hang tight while we finish setting up your account.</p>
+    <div class="lc-msg" id="cb-msg"></div>
+    <p class="lc-note" id="cb-links" style="display:none;"><a href="../../login/">Return to login</a></p>
+  </div>
+</main>
+
+<script>
+  window.SITE_ROOT = "../../";
+</script>
+<script src="../../assets/js/supabase-client.js"></script>
+<script src="../../assets/js/auth.js"></script>
+<script>
+(function () {
+  const title = document.getElementById('cb-title');
+  const sub = document.getElementById('cb-sub');
+  const msg = document.getElementById('cb-msg');
+  const spin = document.getElementById('cb-spin');
+  const links = document.getElementById('cb-links');
+
+  function fail(text) {
+    spin.style.display = 'none';
+    title.textContent = 'Something went wrong';
+    sub.textContent = '';
+    msg.className = 'lc-msg err'; msg.innerHTML = text;
+    links.style.display = 'block';
+  }
+
+  async function waitForSession(sb) {
+    let session = (await sb.auth.getSession()).data.session;
+    if (session) return session;
+    // detectSessionInUrl exchanges the code asynchronously — wait for it.
+    return new Promise((resolve) => {
+      const timer = setTimeout(() => resolve(null), 5000);
+      sb.auth.onAuthStateChange((_event, s) => { if (s) { clearTimeout(timer); resolve(s); } });
+    });
+  }
+
+  async function run() {
+    const sb = await window.getSupabaseClient();
+    const session = await waitForSession(sb);
+    if (!session) { fail('This verification link is invalid or has expired. Please <a href="../../login/">log in</a> or sign up again.'); return; }
+
+    // Persist the onboarding profile now that we have an authenticated session.
+    try {
+      await RA.flushPending();
+    } catch (err) {
+      if (err && err.code === 'username_taken') {
+        // Extremely rare race — auto-suffix the username and retry once so
+        // the account is never left without a profile.
+        try {
+          const p = RA.getPending() || {};
+          const suffix = Math.floor(1000 + Math.random() * 9000);
+          p.username = (p.username || 'user') + suffix;
+          if (p.formData) p.formData.username = p.username;
+          RA.stashPending(p);
+          await RA.flushPending();
+        } catch (e2) { console.error(e2); }
+      } else {
+        console.error('flushPending failed', err);
+        // Non-fatal: continue to the dashboard; profile may be completed later.
+      }
+    }
+    window.location.href = SITE_ROOT + 'dashboard/';
+  }
+
+  run().catch(err => { console.error(err); fail('We could not finish verifying your account. Please <a href="../../login/">log in</a>.'); });
+})();
+</script>
+</body>
+</html>

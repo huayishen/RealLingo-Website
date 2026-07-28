@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../assets/img/favicon.png">
+<link rel="apple-touch-icon" href="../assets/img/favicon.png">
+<title>Your Dashboard — Real lingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/quiz.css">
+<style>
+  /* Unlock the quiz.css fullscreen lock so the dashboard scrolls normally */
+  html, body { position: static; height: auto; min-height: 100%; overflow-y: auto; }
+
+  .dash-top { position: sticky; top: 0; z-index: 40; display: flex; align-items: center; justify-content: space-between;
+              padding: 1rem 1.75rem; background: rgba(13,14,17,.82); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,.06); }
+  .dash-logo { font-size: 1.25rem; text-decoration: none; color: rgba(255,255,255,.7); display: flex; align-items: baseline; gap: .06em; }
+  .dash-logo .lr { font-family: var(--sr); font-style: italic; }
+  .dash-logo .ll { font-family: var(--ss); font-weight: 900; letter-spacing: -.03em; }
+  .dash-top-right { display: flex; align-items: center; gap: 1rem; }
+  .dash-hi { font-size: .84rem; color: rgba(255,255,255,.5); }
+  .dash-hi b { color: var(--y); font-weight: 700; }
+  .dash-btn { border: 1px solid rgba(255,255,255,.16); background: none; color: rgba(255,255,255,.75); border-radius: 100px;
+              padding: .5rem 1.15rem; font-family: var(--ss); font-size: .8rem; font-weight: 600; cursor: pointer; transition: border-color .2s, color .2s; }
+  .dash-btn:hover { color: #fff; border-color: rgba(255,255,255,.4); }
+  .dash-btn-danger:hover { color: #ff8f8f; border-color: rgba(255,120,120,.5); }
+
+  .dash-wrap { position: relative; z-index: 10; max-width: 1080px; margin: 0 auto; padding: 2.25rem 1.5rem 5rem; }
+  .dash-h1 { font-size: 1.9rem; font-weight: 800; letter-spacing: -.02em; margin-bottom: .3rem; }
+  .dash-lead { color: rgba(255,255,255,.45); font-size: .9rem; margin-bottom: 2rem; }
+
+  .dash-complete { margin-top: 1rem; }
+  .dash-complete-top { display: flex; justify-content: space-between; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.4); margin-bottom: .4rem; }
+  .dash-complete-track { height: 7px; border-radius: 100px; background: rgba(255,255,255,.08); overflow: hidden; }
+  .dash-complete-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--ym), var(--y)); transition: width .6s ease; }
+
+  .dash-section { margin-top: 2.75rem; }
+  .dash-section-hd { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.1rem; }
+  .dash-section-hd h2 { font-size: 1.15rem; font-weight: 800; white-space: nowrap; }
+  .dash-section-hd::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,.08); }
+
+  .dash-empty { border: 1px dashed rgba(255,255,255,.14); border-radius: 14px; padding: 1.75rem; text-align: center; color: rgba(255,255,255,.4); font-size: .88rem; }
+
+  .dash-app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+  .dash-app-card { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 1.1rem 1.25rem; }
+  .dash-app-type { font-weight: 700; font-size: .92rem; text-transform: capitalize; }
+  .dash-app-meta { font-size: .78rem; color: rgba(255,255,255,.45); margin-top: .25rem; }
+  .dash-app-status { display: inline-block; margin-top: .6rem; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--y); background: rgba(255,235,153,.1); padding: .2rem .6rem; border-radius: 100px; }
+
+  .dash-settings { display: grid; gap: .75rem; max-width: 520px; }
+  .dash-set-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .95rem 1.15rem; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; }
+  .dash-set-row .lbl { font-size: .88rem; font-weight: 600; }
+  .dash-set-row .soon { font-size: .72rem; color: rgba(255,255,255,.35); }
+  .dash-set-link { color: var(--y); font-size: .8rem; font-weight: 700; text-decoration: none; }
+  .dash-set-link:hover { text-decoration: underline; }
+
+  .dash-loading { text-align: center; padding: 5rem 1rem; color: rgba(255,255,255,.5); }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="dash-top">
+  <a class="dash-logo" href="../"><span class="lr">Real</span><span class="ll">lingo</span></a>
+  <div class="dash-top-right">
+    <span class="dash-hi" id="dashHi"></span>
+    <button class="dash-btn dash-btn-danger" id="dashLogout">Log out</button>
+  </div>
+</header>
+
+<main class="dash-wrap">
+  <div id="dashLoading" class="dash-loading">Loading your dashboard…</div>
+  <div id="dashContent" style="display:none;"></div>
+</main>
+
+<script>
+  window.SITE_ROOT = "../";
+</script>
+<script src="../assets/js/supabase-client.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script>
+(function () {
+  const ROLE_META = {
+    learner:{label:'Language Learner', icon:'🎓'},
+    traveler:{label:'Traveler', icon:'✈️'},
+    eventMember:{label:'Event Member', icon:'🎉'},
+    tutor:{label:'Tutor', icon:'📚'},
+    translator:{label:'Translator / Interpreter', icon:'💬'},
+    influencer:{label:'Influencer', icon:'📣'},
+    tourGuide:{label:'Tour Guide', icon:'🧭'},
+    languageEvent:{label:'Event Organizer', icon:'🌐'},
+    languageTalent:{label:'Language Talent', icon:'🌟'},
+    hireTranslator:{label:'Hiring: Translator', icon:'💬'},
+    hireInfluencer:{label:'Hiring: Influencer', icon:'📣'},
+    hireLanguageEvent:{label:'Hiring: Event Organizer', icon:'🌐'},
+    hireLanguageTalent:{label:'Hiring: Language Talent', icon:'🌟'}
+  };
+
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function cap(s){ return s ? String(s).charAt(0).toUpperCase()+String(s).slice(1) : s; }
+
+  function formatLanguages(rows){
+    if(!rows || !rows.length) return '—';
+    const by = {};
+    rows.forEach(r => { (by[r.language] = by[r.language] || []).push(r); });
+    return Object.entries(by).map(([lang, items]) => {
+      if(items.length === 1 && !items[0].variant) return cap(lang) + ' (' + cap(items[0].level) + ')';
+      const parts = items.map(i => i.variant ? (cap(i.variant) + ': ' + cap(i.level)) : cap(i.level));
+      return cap(lang) + ' — ' + parts.join(', ');
+    }).join('; ');
+  }
+  function memberSince(iso){ if(!iso) return '—'; try { return new Date(iso).toLocaleDateString(undefined,{month:'long',year:'numeric'}); } catch(e){ return '—'; } }
+
+  function completion(p, languages, roles){
+    const checks = [
+      !!(p && p.full_name), !!(p && p.username), !!(p && p.email), !!(p && p.country),
+      !!(p && p.city), !!(p && p.phone), (languages && languages.length > 0), (roles && roles.length > 0), !!(p && p.avatar_url)
+    ];
+    return Math.round(checks.filter(Boolean).length / checks.length * 100);
+  }
+
+  async function render(data) {
+    const p = data.profile;
+    const loading = document.getElementById('dashLoading');
+    const content = document.getElementById('dashContent');
+
+    // No profile yet → prompt to finish onboarding.
+    if (!p) {
+      loading.style.display = 'none';
+      content.style.display = 'block';
+      content.innerHTML =
+        '<h1 class="dash-h1">Almost there</h1>' +
+        '<p class="dash-lead">Your account is verified, but your profile isn\'t set up yet.</p>' +
+        '<div class="dash-empty">Finish the onboarding quiz to build your profile. <a class="dash-set-link" href="' + SITE_ROOT + 'signup/">Start now →</a></div>';
+      return;
+    }
+
+    document.getElementById('dashHi').innerHTML = 'Hi, <b>' + esc(p.username || 'there') + '</b>';
+
+    const avatarUrl = p.avatar_url ? await RA.avatarPublicUrl(p.avatar_url) : (SITE_ROOT + 'assets/img/logo-yellow.png');
+    const isDefault = !p.avatar_url;
+    const pct = completion(p, data.languages, data.roles);
+
+    const chips = [
+      ['Username', p.username || '—'],
+      ['Email', p.email || '—'],
+      ['Country', [p.city, p.country].filter(Boolean).join(', ') || '—'],
+      ['Languages', formatLanguages(data.languages)],
+      ['Member since', memberSince(p.created_at)]
+    ];
+
+    // Profile summary card (reuses .rev-* styles)
+    let html = '<h1 class="dash-h1">Your Dashboard</h1><p class="dash-lead">Manage your profile, roles, and applications.</p>';
+    html += '<div class="rev-general-card">' +
+      '<div class="rev-avatar-wrap">' +
+        '<img class="rev-avatar" src="' + esc(avatarUrl) + '" alt="Profile photo"' + (isDefault ? ' data-default="1"' : '') + '>' +
+      '</div>' +
+      '<div class="rev-general-info">' +
+        '<div class="rev-card-hd"><span class="rev-card-title">Profile Summary</span></div>' +
+        '<div class="rev-chip-grid">' +
+          chips.map(c => '<div class="rev-chip"><span class="rev-chip-lbl">' + esc(c[0]) + '</span><span class="rev-chip-val">' + esc(c[1]) + '</span></div>').join('') +
+        '</div>' +
+        '<div class="dash-complete">' +
+          '<div class="dash-complete-top"><span>Profile completion</span><span>' + pct + '%</span></div>' +
+          '<div class="dash-complete-track"><div class="dash-complete-fill" style="width:' + pct + '%"></div></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    // My Roles
+    html += '<div class="dash-section"><div class="dash-section-hd"><h2>My Roles</h2></div>';
+    if (!data.roles.length) {
+      html += '<div class="dash-empty">No roles selected yet.</div>';
+    } else {
+      html += '<div class="rev-role-grid">';
+      html += data.roles.map(rr => {
+        const r = rr.role_key;
+        const meta = ROLE_META[r] || { label: r, icon: '⭐' };
+        const detail = data.roleDetails[r];
+        const rows = (detail && detail.details && detail.details.display_rows) || [];
+        return '<div class="rev-role-card">' +
+          '<div class="rev-role-card-hd"><span class="rev-role-icon">' + meta.icon + '</span><span class="rev-role-title">' + esc(meta.label) + '</span></div>' +
+          '<div class="rev-role-rows">' +
+            (rows.length ? rows.map(row => '<div class="rev-role-row"><span class="rev-role-row-lbl">' + esc(row.l) + '</span><span class="rev-role-row-val">' + esc(row.v) + '</span></div>').join('')
+                         : '<div class="rev-role-row"><span class="rev-role-row-val">No details provided.</span></div>') +
+          '</div>' +
+        '</div>';
+      }).join('');
+      html += '</div>';
+    }
+    html += '</div>';
+
+    // My Applications
+    html += '<div class="dash-section"><div class="dash-section-hd"><h2>My Applications</h2></div>';
+    if (!data.applications.length) {
+      html += '<div class="dash-empty">No applications yet. Scholarship, partner, and event applications will appear here.</div>';
+    } else {
+      html += '<div class="dash-app-grid">';
+      html += data.applications.map(a =>
+        '<div class="dash-app-card">' +
+          '<div class="dash-app-type">' + esc(a.type) + ' application</div>' +
+          '<div class="dash-app-meta">' + memberSince(a.created_at) + '</div>' +
+          '<span class="dash-app-status">' + esc(a.status || 'submitted') + '</span>' +
+        '</div>').join('');
+      html += '</div>';
+    }
+    html += '</div>';
+
+    // Settings (Phase 1: log out; editing coming soon)
+    html += '<div class="dash-section"><div class="dash-section-hd"><h2>Settings</h2></div>';
+    html += '<div class="dash-settings">' +
+      '<div class="dash-set-row"><span class="lbl">Change password</span><a class="dash-set-link" href="' + SITE_ROOT + 'forgot-password/">Reset via email →</a></div>' +
+      '<div class="dash-set-row"><span class="lbl">Edit profile &amp; roles</span><span class="soon">Coming soon</span></div>' +
+      '<div class="dash-set-row"><span class="lbl">Profile picture</span><span class="soon">Coming soon</span></div>' +
+      '<div class="dash-set-row"><span class="lbl">Notification preferences</span><span class="soon">Coming soon</span></div>' +
+      '<div class="dash-set-row"><span class="lbl">Log out of your account</span><button class="dash-btn dash-btn-danger" id="dashLogout2">Log out</button></div>' +
+    '</div>';
+    html += '</div>';
+
+    loading.style.display = 'none';
+    content.innerHTML = html;
+    content.style.display = 'block';
+    const lo2 = document.getElementById('dashLogout2');
+    if (lo2) lo2.addEventListener('click', doLogout);
+  }
+
+  async function doLogout() {
+    try { await RA.signOut(); } catch (e) {}
+    window.location.href = SITE_ROOT;
+  }
+
+  async function init() {
+    document.getElementById('dashLogout').addEventListener('click', doLogout);
+    const user = await RA.requireAuth(SITE_ROOT + 'login/');
+    if (!user) return; // redirected
+    try { await RA.flushPending(); } catch (e) { console.error('flushPending', e); } // save onboarding data if it just arrived
+    const data = await RA.loadProfile();
+    await render(data || { profile: null, languages: [], roles: [], roleDetails: {}, applications: [] });
+  }
+
+  init().catch(err => {
+    console.error(err);
+    document.getElementById('dashLoading').textContent = 'Something went wrong loading your dashboard. Please reload.';
+  });
+})();
+</script>
+</body>
+</html>
