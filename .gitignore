@@ -1,4 +1,5 @@
 .DS_Store
+.env
 .tmp/
 temporary_ss/
 screenshots/

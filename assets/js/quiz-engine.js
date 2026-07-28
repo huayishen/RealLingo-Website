@@ -994,10 +994,35 @@ function formatQualReview(q) {
 ════════════════════════════════════════════════════════════ */
 let _welcomeTimer=null;
 
-function submitForm() {
-  console.log('Submitted:', {flow: (typeof QUIZ_FLOW!=='undefined'?QUIZ_FLOW:'unknown'), roles:Array.from(selectedRoles), form:formData});
+async function submitForm() {
+  const flow = (typeof QUIZ_FLOW!=='undefined'?QUIZ_FLOW:'unknown');
+  const roles = Array.from(selectedRoles);
+  const phone = formData.phone ? `${formData.phoneCode||''} ${formData.phone}`.trim() : null;
+  const payload = {
+    flow,
+    name:    formData.name    || null,
+    email:   formData.email   || null,
+    phone,
+    country: formData.country || null,
+    roles,
+    data:    { ...formData, roles }
+  };
+  console.log('Submitting:', payload);
+
+  // Show the welcome overlay immediately for instant feedback, then persist
+  // to Supabase before redirecting so an in-flight insert isn't cancelled.
   document.getElementById('s-welcome')?.classList.add('show');
-  _welcomeTimer=setTimeout(()=>{ window.location.href=SITE_ROOT; },3600);
+  try {
+    if (typeof window.submitToSupabase === 'function') {
+      await window.submitToSupabase(payload);
+      console.log('Saved to Supabase.');
+    } else {
+      console.warn('Supabase client not loaded — submission was not persisted.');
+    }
+  } catch (err) {
+    console.error('Supabase submit failed:', err);
+  }
+  _welcomeTimer=setTimeout(()=>{ window.location.href=SITE_ROOT; },1500);
 }
 
 function skipWelcome() {

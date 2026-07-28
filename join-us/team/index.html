@@ -296,6 +296,7 @@
 
 <div id="site-footer"></div>
 
+<script src="../../assets/js/supabase-client.js"></script>
 <script>
   window.SITE_ROOT = "../../";
   window.SITE_SECTION = "joinus";
@@ -612,12 +613,40 @@
       if (!location) { errEl.textContent = 'Please enter your location.'; return; }
       errEl.textContent = '';
 
-      console.log('Team application submitted:', {
-        name: name, email: email, phone: phone || null, bio: bio,
-        roles: roleKeys, location: location,
-        affiliation: affiliation || null,
-        cvFileName: cvFile ? cvFile.name : null
-      });
+      // Upload the CV (if any) to Storage, then persist the application with
+      // the returned storage path. Runs in the background so the success
+      // screen shows immediately; the modal stays open long enough to finish.
+      (async function () {
+        var cvPath = null;
+        try {
+          if (cvFile && typeof window.uploadCV === 'function') {
+            cvPath = await window.uploadCV(cvFile);
+          }
+        } catch (err) {
+          console.error('CV upload failed:', err);  // don't block the submission
+        }
+        var payload = {
+          flow: 'team',
+          name: name,
+          email: email,
+          phone: phone || null,
+          country: location || null,
+          roles: roleKeys,
+          data: {
+            bio: bio,
+            roles: roleKeys,
+            location: location,
+            affiliation: affiliation || null,
+            cvFileName: cvFile ? cvFile.name : null,
+            cvPath: cvPath  // path within the private `cv-uploads` bucket
+          }
+        };
+        console.log('Team application submitted:', payload);
+        if (typeof window.submitToSupabase === 'function') {
+          try { await window.submitToSupabase(payload); }
+          catch (err) { console.error('Supabase submit failed:', err); }
+        }
+      })();
 
       formWrap.hidden = true;
       successWrap.hidden = false;

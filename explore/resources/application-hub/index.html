@@ -157,6 +157,7 @@
 
 <div id="site-footer"></div>
 
+<script src="../../../assets/js/supabase-client.js"></script>
 <script>
   window.SITE_ROOT = "../../../";
   window.SITE_SECTION = "explore";
@@ -188,6 +189,27 @@
     });
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+
+      var langs = Array.from(form.querySelectorAll('input[name="langs"]:checked')).map(function (c) { return c.value; });
+      var email = document.getElementById('appEmail').value.trim();
+      var payload = {
+        flow: 'application-hub',
+        name: document.getElementById('appName').value.trim() || null,
+        email: email || null,
+        data: {
+          appName: document.getElementById('appName').value.trim(),
+          appUrl: document.getElementById('appUrl').value.trim(),
+          appDesc: document.getElementById('appDesc').value.trim(),
+          appCategory: document.getElementById('appCategory').value,
+          languages: langs,
+          developer: document.getElementById('appDev').value.trim() || null,
+          contactEmail: email || null
+        }
+      };
+      if (typeof window.submitToSupabase === 'function') {
+        window.submitToSupabase(payload).catch(function (err) { console.error('Supabase submit failed:', err); });
+      }
+
       form.style.display = 'none';
       success.style.display = 'block';
     });
