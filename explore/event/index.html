@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+<link rel="apple-touch-icon" href="../../assets/img/favicon.png">
 <title>Event Near Me — Real lingo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -232,9 +234,20 @@
                     <label for="exf-search">Search</label>
                     <div class="ex-search-wrap">
                         <svg class="ex-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                        <input type="text" id="exf-search" placeholder="Search by event name...">
+                        <input type="text" id="exf-search" placeholder="Search by program series, community, or keyword...">
                         <button type="button" class="ex-search-clear" id="exfSearchClear" hidden aria-label="Clear search">×</button>
                     </div>
+                </div>
+                <div class="ex-filter-field">
+                    <label for="exf-language">Primary Language</label>
+                    <select id="exf-language">
+                        <option value="">All Languages</option>
+                        <option value="Arabic">Arabic</option>
+                        <option value="Chinese">Chinese</option>
+                        <option value="English">English</option>
+                        <option value="Korean">Korean</option>
+                        <option value="Malay">Malay</option>
+                    </select>
                 </div>
                 <div class="ex-filter-field">
                     <label for="exf-country">Country</label>
@@ -259,14 +272,11 @@
                     </select>
                 </div>
                 <div class="ex-filter-field">
-                    <label for="exf-language">Primary Language</label>
-                    <select id="exf-language">
-                        <option value="">All Languages</option>
-                        <option value="Arabic">Arabic</option>
-                        <option value="Chinese">Chinese</option>
-                        <option value="English">English</option>
-                        <option value="Korean">Korean</option>
-                        <option value="Malay">Malay</option>
+                    <label for="exf-fee">Entrance Fee</label>
+                    <select id="exf-fee">
+                        <option value="">Any Fee</option>
+                        <option value="Free">Free</option>
+                        <option value="Paid">Paid</option>
                     </select>
                 </div>
                 <div class="ex-filter-field">
@@ -378,7 +388,7 @@
     if (!form) return;
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var keys = ['search', 'country', 'city', 'language', 'type', 'format', 'series', 'community'];
+      var keys = ['search', 'language', 'country', 'city', 'fee', 'type', 'format', 'series', 'community'];
       var params = new URLSearchParams();
       keys.forEach(function (key) {
         var el = document.getElementById('exf-' + key);
