@@ -73,12 +73,24 @@ function currencyHtml(id, saved) {
 function sliderHtml(tid, min, max, smin, smax) {
   return `
     <div class="rslider">
-      <div class="rslider-track" id="${tid}">
-        <div class="rslider-fill" id="${tid}-fill"></div>
-        <div class="rslider-handle" id="${tid}-hmin"><div class="rslider-lbl" id="${tid}-lmin"></div></div>
-        <div class="rslider-handle" id="${tid}-hmax"><div class="rslider-lbl" id="${tid}-lmax"></div></div>
+      <div class="rslider-inputs">
+        <div class="rslider-input-field">
+          <label class="rslider-input-lbl" for="${tid}-min-input">Minimum</label>
+          <input type="number" inputmode="numeric" class="rslider-input" id="${tid}-min-input" min="${min}" max="${max}" placeholder="0">
+        </div>
+        <div class="rslider-input-field">
+          <label class="rslider-input-lbl" for="${tid}-max-input">Maximum</label>
+          <input type="number" inputmode="numeric" class="rslider-input" id="${tid}-max-input" min="${min}" max="${max}" placeholder="0">
+        </div>
       </div>
-      <div class="slider-ends"><span>${(min).toLocaleString()}</span><span>${(max).toLocaleString()}+</span></div>
+      <div class="rslider-track-wrap">
+        <div class="rslider-track" id="${tid}">
+          <div class="rslider-fill" id="${tid}-fill"></div>
+          <div class="rslider-handle" id="${tid}-hmin"><div class="rslider-lbl" id="${tid}-lmin"></div></div>
+          <div class="rslider-handle" id="${tid}-hmax"><div class="rslider-lbl" id="${tid}-lmax"></div></div>
+        </div>
+        <div class="slider-ends"><span>${(min).toLocaleString()}</span><span>${(max).toLocaleString()}+</span></div>
+      </div>
     </div>
     <div class="rs-value" id="${tid}-value"></div>`;
 }
@@ -95,16 +107,23 @@ function initSlider(tid, min, max, snapStep, minKey, maxKey, currId) {
   const lMin = document.getElementById(`${tid}-lmin`);
   const lMax = document.getElementById(`${tid}-lmax`);
   const valEl = document.getElementById(`${tid}-value`);
+  const minInput = document.getElementById(`${tid}-min-input`);
+  const maxInput = document.getElementById(`${tid}-max-input`);
   const snap = v => Math.round(v/snapStep)*snapStep;
   const pct  = v => ((v-min)/(max-min))*100;
   const fmt  = v => v>=max ? v.toLocaleString()+'+' : v.toLocaleString();
   const curr = () => currId ? (document.getElementById(currId)?.value||'') : '';
-  function render() {
+  // "skip" leaves whichever input the visitor is actively typing in alone —
+  // otherwise re-writing its value mid-keystroke (e.g. clamping "150" back
+  // to "100" as soon as a "1" is typed) would fight the visitor's typing.
+  function render(skip) {
     const p1=pct(vMin), p2=pct(vMax);
     hMin.style.left=p1+'%'; hMax.style.left=p2+'%';
     fill.style.left=p1+'%'; fill.style.width=(p2-p1)+'%';
     lMin.textContent=fmt(vMin); lMax.textContent=fmt(vMax);
-    if (valEl) valEl.innerHTML=`<strong>${fmt(vMin)} – ${fmt(vMax)}</strong> ${curr()}`;
+    if (minInput && skip!=='min') minInput.value = vMin;
+    if (maxInput && skip!=='max') maxInput.value = vMax;
+    if (valEl) valEl.innerHTML=`<span class="rs-value-lbl">Selected Range</span><strong>${fmt(vMin)} – ${fmt(vMax)}</strong> ${curr()}`;
     formData[minKey]=vMin; formData[maxKey]=vMax;
     requestAnimationFrame(()=>{
       const r1=lMin.getBoundingClientRect(), r2=lMax.getBoundingClientRect();
@@ -117,12 +136,17 @@ function initSlider(tid, min, max, snapStep, minKey, maxKey, currId) {
     const r=track.getBoundingClientRect();
     return snap(min+Math.max(0,Math.min(1,(cx-r.left)/r.width))*(max-min));
   }
-  hMin.addEventListener('pointerdown',e=>{hMin.setPointerCapture(e.pointerId);hMin.classList.add('dragging');e.preventDefault();});
+  // The track gets a "dragging-active" class while a handle is actively
+  // being dragged, so CSS can suppress the fill/handle position transition
+  // during the drag itself (it would otherwise lag behind the pointer) while
+  // keeping it for typed values and track clicks, where an animated jump
+  // to the new position reads as more polished than an instant snap.
+  hMin.addEventListener('pointerdown',e=>{hMin.setPointerCapture(e.pointerId);hMin.classList.add('dragging');track.classList.add('dragging-active');e.preventDefault();});
   hMin.addEventListener('pointermove',e=>{if(!hMin.hasPointerCapture(e.pointerId))return;vMin=Math.max(min,Math.min(fromX(e.clientX),vMax-snapStep));render();});
-  hMin.addEventListener('pointerup',()=>hMin.classList.remove('dragging'));
-  hMax.addEventListener('pointerdown',e=>{hMax.setPointerCapture(e.pointerId);hMax.classList.add('dragging');e.preventDefault();});
+  hMin.addEventListener('pointerup',()=>{hMin.classList.remove('dragging');track.classList.remove('dragging-active');});
+  hMax.addEventListener('pointerdown',e=>{hMax.setPointerCapture(e.pointerId);hMax.classList.add('dragging');track.classList.add('dragging-active');e.preventDefault();});
   hMax.addEventListener('pointermove',e=>{if(!hMax.hasPointerCapture(e.pointerId))return;vMax=Math.min(max,Math.max(fromX(e.clientX),vMin+snapStep));render();});
-  hMax.addEventListener('pointerup',()=>hMax.classList.remove('dragging'));
+  hMax.addEventListener('pointerup',()=>{hMax.classList.remove('dragging');track.classList.remove('dragging-active');});
   track.addEventListener('click',e=>{
     if(e.target.classList.contains('rslider-handle'))return;
     const v=fromX(e.clientX);
@@ -130,6 +154,22 @@ function initSlider(tid, min, max, snapStep, minKey, maxKey, currId) {
     else{vMax=Math.min(max,Math.max(v,vMin+snapStep));}
     render();
   });
+  // Typing moves the slider live; on blur/Enter the value snaps to a valid
+  // step and clamps into range, so the field always ends up in sync.
+  if (minInput) {
+    minInput.addEventListener('input', () => {
+      const v = parseFloat(minInput.value);
+      if (!isNaN(v)) { vMin = Math.max(min, Math.min(v, vMax-snapStep)); render('min'); }
+    });
+    minInput.addEventListener('change', () => { vMin = snap(vMin); render(); });
+  }
+  if (maxInput) {
+    maxInput.addEventListener('input', () => {
+      const v = parseFloat(maxInput.value);
+      if (!isNaN(v)) { vMax = Math.min(max, Math.max(v, vMin+snapStep)); render('max'); }
+    });
+    maxInput.addEventListener('change', () => { vMax = snap(vMax); render(); });
+  }
   if (currId) document.getElementById(currId)?.addEventListener('change',()=>{formData[currId]=curr();render();});
   render();
 }
@@ -160,6 +200,169 @@ function multiCountryHtml(id, saved) {
     COUNTRIES.map(c=>`<option value="${c}"${savedArr.includes(c)?' selected':''}>${c}</option>`).join('')
   }</select>
   <p style="margin-top:.5rem;font-size:.72rem;color:rgba(255,255,255,.3)">Hold Ctrl / Cmd to select multiple countries</p>`;
+}
+
+/* ════════════════════════════════════════════════════════════
+   CUSTOM CALENDAR DATE PICKER — replaces native <input type="date">
+   (whose browser-chrome popup can't be restyled) with a text field that
+   opens a RealLingo-styled calendar: month/year navigation, a Today
+   shortcut, min-date and range-aware day disabling, and range shading
+   between a Start and End field.
+════════════════════════════════════════════════════════════ */
+const CAL_MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const CAL_WEEKDAYS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+function calToday() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function calFormatDisplay(iso) {
+  if (!iso) return '';
+  const [y,m,d] = iso.split('-').map(Number);
+  if (!y||!m||!d) return '';
+  return `${CAL_MONTH_NAMES[m-1].slice(0,3)} ${d}, ${y}`;
+}
+
+// The text input + hidden ISO value + calendar-icon trigger button.
+// The ISO date lives in data-iso (read by validate()/save()); .value is
+// only ever the human-readable display string — nothing here is meant
+// to be typed, only picked, so the input stays readonly.
+function calInputHtml(id, isoValue, placeholder) {
+  return `
+    <div class="cal-field">
+      <input type="text" class="fi cal-input" id="${id}" readonly placeholder="${esc(placeholder||'Select date')}" value="${esc(calFormatDisplay(isoValue))}" data-iso="${esc(isoValue||'')}">
+      <button type="button" class="cal-icon-btn" tabindex="-1" aria-label="Open calendar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </button>
+    </div>`;
+}
+
+// Only one calendar panel is ever open at a time; opening a new one
+// closes whichever was already open.
+let _calActiveClose = null;
+
+function initCalendarPicker(inputId, opts) {
+  opts = opts || {};
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const field = input.closest('.cal-field');
+  if (!field) return;
+
+  let panel = null;
+  let viewYear, viewMonth; // 0-indexed month currently shown in the grid
+
+  const currentValue = () => input.dataset.iso || '';
+  const minDate = () => typeof opts.minDate === 'function' ? opts.minDate() : (opts.minDate || '');
+  const rangeStart = () => typeof opts.rangeStart === 'function' ? (opts.rangeStart() || '') : '';
+
+  function openCal() {
+    if (_calActiveClose && _calActiveClose !== closeCal) _calActiveClose();
+    const seed = currentValue() || minDate() || calToday();
+    const [y,m] = seed.split('-').map(Number);
+    viewYear = y; viewMonth = m-1;
+    render();
+    field.classList.add('cal-open');
+    _calActiveClose = closeCal;
+    document.addEventListener('click', onDocClick, true);
+    document.addEventListener('keydown', onKeydown, true);
+  }
+  function closeCal() {
+    field.classList.remove('cal-open');
+    if (_calActiveClose === closeCal) _calActiveClose = null;
+    document.removeEventListener('click', onDocClick, true);
+    document.removeEventListener('keydown', onKeydown, true);
+  }
+  function onDocClick(e) { if (!field.contains(e.target)) closeCal(); }
+  function onKeydown(e) {
+    if (e.key === 'Escape') { closeCal(); input.focus(); return; }
+    const focusable = Array.from(panel?.querySelectorAll('.cal-day:not(.cal-day--pad):not(.cal-day--disabled)') || []);
+    const curIdx = focusable.indexOf(document.activeElement);
+    if (curIdx === -1) return;
+    const deltas = { ArrowRight:1, ArrowLeft:-1, ArrowDown:7, ArrowUp:-7 };
+    if (e.key in deltas) {
+      e.preventDefault();
+      const next = focusable[curIdx + deltas[e.key]];
+      if (next) next.focus();
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      document.activeElement.click();
+    }
+  }
+
+  function selectDate(iso) {
+    input.dataset.iso = iso;
+    input.value = calFormatDisplay(iso);
+    clearErr();
+    closeCal();
+    if (opts.onSelect) opts.onSelect(iso);
+  }
+
+  function render() {
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.className = 'cal-panel';
+      field.appendChild(panel);
+    }
+    const min = minDate();
+    const rs = rangeStart();
+    const sel = currentValue();
+    const firstOfMonth = new Date(viewYear, viewMonth, 1);
+    const startWeekday = firstOfMonth.getDay();
+    const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+    const daysInPrevMonth = new Date(viewYear, viewMonth, 0).getDate();
+    const thisYear = new Date().getFullYear();
+    const yearOpts = []; for (let y=thisYear; y<=thisYear+4; y++) yearOpts.push(y);
+
+    let cells = '';
+    for (let i=0;i<startWeekday;i++) cells += `<span class="cal-day cal-day--pad">${daysInPrevMonth-startWeekday+1+i}</span>`;
+    for (let d=1; d<=daysInMonth; d++) {
+      const iso = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const isToday = iso===calToday(), isSel = iso===sel;
+      const disabled = !!((min && iso<min) || (rs && iso<rs));
+      const lo = rs && sel ? (rs<sel?rs:sel) : null, hi = rs && sel ? (rs<sel?sel:rs) : null;
+      const inRange = lo && iso>lo && iso<hi;
+      const cls = ['cal-day'];
+      if (isToday) cls.push('cal-day--today');
+      if (isSel) cls.push('cal-day--sel');
+      if (disabled) cls.push('cal-day--disabled');
+      if (inRange) cls.push('cal-day--inrange');
+      cells += `<button type="button" class="${cls.join(' ')}" ${disabled?'disabled':''} data-iso="${iso}" tabindex="${isSel||(!sel&&isToday)?'0':'-1'}">${d}</button>`;
+    }
+    const trailing = (7 - ((startWeekday+daysInMonth) % 7)) % 7;
+    for (let i=1;i<=trailing;i++) cells += `<span class="cal-day cal-day--pad">${i}</span>`;
+
+    panel.innerHTML = `
+      <div class="cal-hd">
+        <button type="button" class="cal-nav" data-nav="-1" aria-label="Previous month">‹</button>
+        <div class="cal-hd-mid">
+          <span class="cal-month-lbl">${CAL_MONTH_NAMES[viewMonth]}</span>
+          <select class="cal-year-sel" aria-label="Year">${yearOpts.map(y=>`<option value="${y}"${y===viewYear?' selected':''}>${y}</option>`).join('')}</select>
+        </div>
+        <button type="button" class="cal-nav" data-nav="1" aria-label="Next month">›</button>
+      </div>
+      <div class="cal-weekdays">${CAL_WEEKDAYS.map(w=>`<span>${w}</span>`).join('')}</div>
+      <div class="cal-days">${cells}</div>
+      <button type="button" class="cal-today-btn">Today</button>`;
+
+    panel.querySelectorAll('.cal-nav').forEach(btn => btn.addEventListener('click', () => {
+      viewMonth += parseInt(btn.dataset.nav, 10);
+      if (viewMonth<0) { viewMonth=11; viewYear--; } else if (viewMonth>11) { viewMonth=0; viewYear++; }
+      render();
+    }));
+    panel.querySelector('.cal-year-sel').addEventListener('change', e => { viewYear=parseInt(e.target.value,10); render(); });
+    panel.querySelectorAll('.cal-day:not(.cal-day--pad):not(.cal-day--disabled)').forEach(btn => {
+      btn.addEventListener('click', () => selectDate(btn.dataset.iso));
+    });
+    panel.querySelector('.cal-today-btn').addEventListener('click', () => {
+      const t = calToday();
+      if ((min && t<min) || (rs && t<rs)) return;
+      selectDate(t);
+    });
+  }
+
+  input.addEventListener('click', openCal);
+  input.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); openCal(); } });
+  field.querySelector('.cal-icon-btn')?.addEventListener('click', openCal);
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -359,7 +562,7 @@ function renderLangPairs() {
       <select class="fs" id="pair-from-${i}" style="flex:1" onchange="savePairLang(${i},'from',this.value)">
         <option value="">From...</option>${PAIR_LANGUAGES.map(l=>`<option value="${l}"${pair.from===l?' selected':''}>${l}</option>`).join('')}
       </select>
-      <span class="lang-pair-sep">→</span>
+      <span class="lang-pair-sep">↔</span>
       <select class="fs" id="pair-to-${i}" style="flex:1" onchange="savePairLang(${i},'to',this.value)">
         <option value="">To...</option>${PAIR_LANGUAGES.map(l=>`<option value="${l}"${pair.to===l?' selected':''}>${l}</option>`).join('')}
       </select>
@@ -380,6 +583,14 @@ function pickHiringType(btn) {
   document.getElementById('companyRev')?.classList.toggle('show', btn.dataset.val==='company');
 }
 
+/* Final step's phone field: picking a country auto-fills its dial code
+   badge next to the number input. */
+function updatePhoneCode(country) {
+  const badge = document.getElementById('phoneCodeBadge');
+  if (badge) badge.textContent = COUNTRY_DIAL_CODES[country] || '+—';
+  clearErr();
+}
+
 /* ════════════════════════════════════════════════════════════
    FORM ENGINE — SHOW / NAVIGATE
 ════════════════════════════════════════════════════════════ */
@@ -393,6 +604,9 @@ function showForm() {
 function renderFormPage(direction) {
   const inner=document.getElementById('fstepInner');
   const isReview = currentSectionKey()==='review';
+  // The review page is a dashboard (3-column role cards), not a single
+  // narrow question, so it gets a wider container than every other step.
+  inner.classList.toggle('fstep-inner--review', isReview);
 
   renderSidebar();
   updateProgressBar();
@@ -400,7 +614,7 @@ function renderFormPage(direction) {
   document.getElementById('fstepArea').scrollTop=0;
 
   if (direction==='none') {
-    if(isReview) inner.innerHTML=buildReviewHtml();
+    if(isReview) { inner.innerHTML=buildReviewHtml(); postRenderReview(); }
     else { inner.innerHTML=buildStepHtml(); postRenderStep(); }
     return;
   }
@@ -409,7 +623,7 @@ function renderFormPage(direction) {
   inner.classList.add(outClass);
   setTimeout(()=>{
     inner.classList.remove(outClass);
-    if(isReview) inner.innerHTML=buildReviewHtml();
+    if(isReview) { inner.innerHTML=buildReviewHtml(); postRenderReview(); }
     else { inner.innerHTML=buildStepHtml(); postRenderStep(); }
     inner.classList.add(inClass);
     setTimeout(()=>inner.classList.remove(inClass),260);
@@ -466,12 +680,15 @@ function renderSidebar() {
   const nav=document.getElementById('sectNav');
   if(!nav)return;
   const sections=getActiveSections();
+  // Every section is clickable — done, current, or still upcoming — so a
+  // visitor can jump straight to any question rather than only stepping
+  // through sequentially, same as the Review page's own "Edit" links.
   nav.innerHTML=`<div class="sn-hd">Progress</div>`+sections.map((key,i)=>{
     const isDone=i<sectIdx;
     const isCur=i===sectIdx;
     const cls=isDone?'done':isCur?'cur':'pending';
     const dot=isDone?'✓':isCur?'→':'';
-    return `<div class="sn-item ${cls}"><div class="sn-dot ${cls}">${dot}</div><span class="sn-label">${esc(SECTION_LABEL[key]||key)}</span></div>`;
+    return `<button type="button" class="sn-item ${cls}" onclick="jumpToSection(${i})"><div class="sn-dot ${cls}">${dot}</div><span class="sn-label">${esc(SECTION_LABEL[key]||key)}</span></button>`;
   }).join('');
 }
 
@@ -511,6 +728,11 @@ function prevStep() {
 }
 
 function jumpToSection(targetSectIdx) {
+  // Persist whatever's on the current step (e.g. a typed name/note that
+  // hasn't been blurred yet) before navigating away from it — otherwise
+  // jumping via the sidebar mid-edit would silently drop it. A no-op when
+  // called from the Review page, which has no step of its own to save.
+  currentSteps()[stepIdx]?.save?.();
   sectIdx=targetSectIdx;
   stepIdx=0;
   renderFormPage('none');
@@ -553,24 +775,105 @@ function serviceRoleLbl(k) { return (SERVICE_ROLES.find(s=>s.key===k)||{}).label
 function serviceRoleLbls(arr) { return (arr||[]).map(serviceRoleLbl).filter(Boolean).join(', '); }
 
 /* ════════════════════════════════════════════════════════════
-   REVIEW PAGE
+   REVIEW PAGE — a profile dashboard: one "General Information" card
+   (name/language/location/contact, with a profile photo) up top, then
+   every selected role as its own card in a responsive grid below.
 ════════════════════════════════════════════════════════════ */
+const ROLE_CARD_ICON = {
+  learner: '🎓', traveler: '✈️', eventMember: '🎉',
+  hireTranslator: '💬', hireInfluencer: '📣', hireLanguageEvent: '🌐', hireLanguageTalent: '🌟',
+  tutor: '📚', translator: '💬', influencer: '📣', tourGuide: '🧭', languageEvent: '🌐', languageTalent: '🌟',
+};
+
+function defaultAvatarSrc() { return (typeof SITE_ROOT!=='undefined'?SITE_ROOT:'') + 'assets/img/logo-yellow.png'; }
+
 function buildReviewHtml() {
-  const sections=getActiveSections().filter(s=>s!=='review');
-  let html=`<div class="fstep-tag">Review</div><h2 class="fstep-q" style="margin-bottom:2rem">Almost there!</h2>`;
-  sections.forEach((sKey,i)=>{
-    const rows=getReviewRows(sKey);
-    if(!rows.length)return;
-    html+=`<div class="review-section">
-      <div class="review-section-hd">
-        <span class="review-section-title">${esc(SECTION_LABEL[sKey]||sKey)}</span>
-        <button class="review-edit" onclick="jumpToSection(${i})">Edit</button>
-      </div>
-      ${rows.map(r=>`<div class="review-row"><span class="review-label">${esc(r.l)}</span><span class="review-value">${esc(r.v)}</span></div>`).join('')}
-    </div>`;
-  });
-  html+=`<button class="review-submit" onclick="submitForm()">Sign Up →</button>`;
+  const sections = getActiveSections().filter(s => s!=='review');
+  const roleSections = sections.filter(s => s!=='general' && s!=='final');
+
+  let html = `<div class="fstep-tag">Review</div><h2 class="fstep-q" style="margin-bottom:2rem">Review Your Profile</h2>`;
+  html += buildGeneralReviewCard(sections);
+
+  if (roleSections.length) {
+    html += `<div class="rev-section-hd"><h3>Your Selected Roles</h3></div>`;
+    html += `<div class="rev-role-grid">`;
+    html += roleSections.map(sKey => buildRoleReviewCard(sKey, sections.indexOf(sKey))).join('');
+    html += `</div>`;
+  }
+
+  html += `<button class="review-submit" onclick="submitForm()">Sign Up →</button>`;
   return html;
+}
+
+function buildGeneralReviewCard(sections) {
+  const generalIdx = sections.indexOf('general');
+  const finalIdx = sections.indexOf('final');
+  const rows = [
+    ...(generalIdx>=0 ? getReviewRows('general') : []),
+    ...(finalIdx>=0 ? getReviewRows('final') : []),
+  ];
+  const editIdx = generalIdx>=0 ? generalIdx : finalIdx;
+  const hasCustom = !!formData.avatarDataUrl;
+  const avatarSrc = hasCustom ? formData.avatarDataUrl : defaultAvatarSrc();
+
+  return `
+    <div class="rev-general-card">
+      <div class="rev-avatar-wrap">
+        <img class="rev-avatar" id="revAvatarImg" src="${avatarSrc}" alt="Profile photo"${hasCustom?'':' data-default="1"'}>
+        <input type="file" id="revAvatarInput" accept="image/*" hidden>
+        <div class="rev-avatar-actions">
+          <button type="button" class="rev-avatar-btn" onclick="document.getElementById('revAvatarInput').click()">${hasCustom?'Replace':'Upload'} photo</button>
+          ${hasCustom ? `<button type="button" class="rev-avatar-btn rev-avatar-remove" onclick="removeAvatar()">Remove</button>` : ''}
+        </div>
+      </div>
+      <div class="rev-general-info">
+        <div class="rev-card-hd">
+          <span class="rev-card-title">General Information</span>
+          ${editIdx>=0 ? `<button class="review-edit" onclick="jumpToSection(${editIdx})">Edit</button>` : ''}
+        </div>
+        <div class="rev-chip-grid">
+          ${rows.map(r=>`<div class="rev-chip"><span class="rev-chip-lbl">${esc(r.l)}</span><span class="rev-chip-val">${esc(r.v)}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildRoleReviewCard(sKey, idx) {
+  const rows = getReviewRows(sKey);
+  const icon = ROLE_CARD_ICON[sKey] || '⭐';
+  return `
+    <div class="rev-role-card">
+      <div class="rev-role-card-hd">
+        <span class="rev-role-icon">${icon}</span>
+        <span class="rev-role-title">${esc(SECTION_LABEL[sKey]||sKey)}</span>
+      </div>
+      <div class="rev-role-rows">
+        ${rows.map(r=>`<div class="rev-role-row"><span class="rev-role-row-lbl">${esc(r.l)}</span><span class="rev-role-row-val">${esc(r.v)}</span></div>`).join('')}
+      </div>
+      <button class="review-edit rev-role-edit" onclick="jumpToSection(${idx})">Edit</button>
+    </div>`;
+}
+
+// Wires the avatar file input once the review page's HTML is in the DOM
+// (there's no per-step postRender hook for the review "page", since it
+// isn't one of currentSteps() — renderFormPage() calls this directly).
+function postRenderReview() {
+  const input = document.getElementById('revAvatarInput');
+  if (!input) return;
+  input.addEventListener('change', () => {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      formData.avatarDataUrl = e.target.result;
+      renderFormPage('none');
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function removeAvatar() {
+  formData.avatarDataUrl = '';
+  renderFormPage('none');
 }
 
 function getReviewRows(sKey) {
@@ -584,6 +887,7 @@ function getReviewRows(sKey) {
       add('Location', [formData.city,formData.country].filter(Boolean).join(', '));
       add('Qualifications', formatQualReview(formData.qualifications));
       add('Hiring as', formData.hiringAs==='company'?`Company — ${formData.companyName||''}${formData.companyIndustry?' ('+formData.companyIndustry+')':''}`:lbl(formData.hiringAs));
+      add('Other role', formData.otherRole);
       break;
     case 'tutor':
       add('Teaches', lbls(formData.tutorLanguages));
@@ -591,13 +895,15 @@ function getReviewRows(sKey) {
       add('Teaching mode', lbl(formData.tutorMode));
       add('Charge type(s)', lbls(formData.tutorChargeTypes));
       if(formData.tutorRateMin!=null) add('Rate range', `${formData.tutorRateMin?.toLocaleString()} – ${formData.tutorRateMax?.toLocaleString()} ${formData.tutorCurrency||''}`);
+      add('Note', formData.tutorNote);
       break;
     case 'translator':
-      add('Language pairs', (formData.langPairs||[]).map(p=>`${p.from} → ${p.to}`).filter(s=>s.trim()!=='→').join('; '));
-      add('Specializations', lbls(formData.transSpecializations));
+      add('Language pairs', (formData.langPairs||[]).map(p=>`${p.from} ↔ ${p.to}`).filter(s=>s.trim()!=='↔').join('; '));
+      add('Specializations', [...(formData.transSpecializations||[]).map(lbl),formData.transSpecializationsOther].filter(Boolean).join(', '));
       add('Availability', lbls(formData.transAvailability));
       add('Services', lbls(formData.transProvides));
       if(formData.transRateMin!=null) add('Rate range', `${formData.transRateMin?.toLocaleString()} – ${formData.transRateMax?.toLocaleString()} ${formData.transCurrency||''}`);
+      add('Note', formData.transNote);
       break;
     case 'languageTalent':
       add('Industries', (formData.talentIndustries||[]).join(', '));
@@ -609,10 +915,12 @@ function getReviewRows(sKey) {
       add('Paid collab experience', lbl(formData.inflExperience));
       break;
     case 'learner':
+      add('Learning', lbls(formData.learnerLanguages));
       add('Learning for', [...(formData.learnerPurpose||[]).map(lbl),formData.learnerPurposeOther].filter(Boolean).join(', '));
       add('Looking for', [...(formData.learnerLooking||[]).map(lbl),formData.learnerLookingOther].filter(Boolean).join(', '));
       add('Budget type(s)', [...(formData.learnerBudgetTypes||[]).map(lbl),formData.learnerPeriodSpec].filter(Boolean).join(', '));
       if(formData.learnerBudMin!=null) add('Budget range', `${formData.learnerBudMin?.toLocaleString()} – ${formData.learnerBudMax?.toLocaleString()} ${formData.learnerCurrency||''}`);
+      add('Note', formData.learnerNote);
       break;
     case 'hireTutor': case 'hireTranslator': case 'hireInfluencer':
     case 'hireTourGuide': case 'hireLanguageEvent': case 'hireLanguageTalent': {
@@ -620,18 +928,21 @@ function getReviewRows(sKey) {
       add('Language(s) needed', lbls(formData[p+'Languages']));
       add('Budget type(s)', [...(formData[p+'BudgetTypes']||[]).map(lbl),formData[p+'PeriodSpec']].filter(Boolean).join(', '));
       if(formData[p+'BudMin']!=null) add('Budget range', `${formData[p+'BudMin']?.toLocaleString()} – ${formData[p+'BudMax']?.toLocaleString()} ${formData[p+'Currency']||''}`);
+      add('Note', formData[p+'Note']);
       break;
     }
     case 'tourGuide':
       add('Work countries', (formData.tourCountries||[]).join(', '));
       add('Charge type(s)', lbls(formData.tourChargeTypes));
       if(formData.tourRateMin!=null) add('Rate range', `${formData.tourRateMin?.toLocaleString()} – ${formData.tourRateMax?.toLocaleString()} ${formData.tourCurrency||''}`);
+      add('Note', formData.tourNote);
       break;
     case 'traveler':
       add('Traveling to', (formData.travelCountries||[]).join(', '));
       add('Trip dates', [formData.tripStart,formData.tripEnd].filter(Boolean).join(' → '));
       add('Budget type(s)', lbls(formData.travelBudgetTypes));
       if(formData.travelBudMin!=null) add('Budget range', `${formData.travelBudMin?.toLocaleString()} – ${formData.travelBudMax?.toLocaleString()} ${formData.travelCurrency||''}`);
+      add('Note', formData.travelNote);
       break;
     case 'languageEvent':
       add('Based in', formData.eventCountry);
@@ -639,13 +950,13 @@ function getReviewRows(sKey) {
       break;
     case 'eventMember':
       add('Availability', lbls(formData.memberAvailability));
-      add('Interests', lbls(formData.memberInterests));
+      add('Interests', [...(formData.memberInterests||[]).map(lbl),formData.memberInterestsOther].filter(Boolean).join(', '));
       add('Partner community member', formData.partnerMember==='yes' ? [...(formData.partnerCommunities||[]).map(lbl),formData.partnerCommunityOther].filter(Boolean).join(', ') : lbl(formData.partnerMember));
       add('Language(s) interested in', [...(formData.memberLangInterest||[]).map(lbl),formData.memberLangInterestOther].filter(Boolean).join(', '));
       break;
     case 'final':
       add('Email', formData.email);
-      add('Phone', formData.phone);
+      add('Phone', formData.phone ? `${formData.phoneCode||''} ${formData.phone}`.trim() : '');
       break;
   }
   return rows;

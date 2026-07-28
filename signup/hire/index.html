@@ -192,12 +192,109 @@ if (!_hasPreset) {
    that speaks..." (no proficiency level needed — that's the candidate's,
    not the employer's) + a budget question. Built once and reused per role
    instead of hand-duplicating six near-identical blocks. */
+/* ── Shared hiring budget across multiple roles ───────────────────
+   The first selected hiring role's confirmed budget becomes the default
+   for every later role: instead of re-asking "My hiring budget is..."
+   from scratch each time, later roles show a checkbox to reuse it (with
+   a live editable fallback if the visitor unchecks it to customize). */
+function selectedHireRoleOrder() { return HIRE_ROLES.filter(r => selectedRoles.has(r.sect)); }
+function isFirstHireRole(prefix) {
+  const order = selectedHireRoleOrder();
+  return order.length > 0 && order[0].sect === prefix;
+}
+function hireUsesShared(prefix) {
+  if (isFirstHireRole(prefix) || !formData.hireBudgetShared) return false;
+  return formData[prefix+'UseShared'] !== false;
+}
+
+function buildHireBudgetFields(prefix, useShared) {
+  const budgetGrpId = prefix+'BudgetGrp', periodRevId = prefix+'PeriodRev', periodInputId = 'inp-'+prefix+'Period';
+  const curId = prefix+'Cur', sliderId = prefix+'Slider';
+  const typesField = prefix+'BudgetTypes', periodField = prefix+'PeriodSpec';
+  const currField = prefix+'Currency', minField = prefix+'BudMin', maxField = prefix+'BudMax';
+  const noteField = prefix+'Note', noteInputId = 'inp-'+prefix+'Note';
+
+  if (useShared) {
+    const s = formData.hireBudgetShared || {};
+    const typeLabels = { hourly:'Hourly', daily:'Daily', period:'Per Period of Time' };
+    const typesText = (s.types||[]).map(t=>typeLabels[t]||t).join(', ') || '—';
+    const rangeText = (s.min!=null && s.max!=null)
+      ? `${s.min.toLocaleString()} – ${s.max>=10000? s.max.toLocaleString()+'+' : s.max.toLocaleString()}`
+      : '—';
+    return `
+      <div class="hire-shared-summary" id="${prefix}SharedSummary">
+        <div class="hire-shared-summary-row"><span>Charge type</span><strong>${esc(typesText)}</strong></div>
+        <div class="hire-shared-summary-row"><span>Budget range</span><strong>${esc(rangeText)} ${esc(s.currency||'')}</strong></div>
+        ${s.periodSpec ? `<div class="hire-shared-summary-row"><span>Details</span><strong>${esc(s.periodSpec)}</strong></div>` : ''}
+      </div>`;
+  }
+
+  const shared = formData.hireBudgetShared || {};
+  const saved = (formData[typesField] && formData[typesField].length) ? formData[typesField] : (shared.types||[]);
+  const period = formData[periodField] || shared.periodSpec || '';
+  const currency = formData[currField] || shared.currency || 'SAR';
+  const bMin = formData[minField] ?? shared.min ?? 0;
+  const bMax = formData[maxField] ?? shared.max ?? 1000;
+
+  return `
+    <div class="chk-grp" id="${budgetGrpId}">
+      ${[{v:'hourly',t:'Hourly'},{v:'daily',t:'Daily'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
+      <button type="button" class="c-opt${saved.includes('period')?' sel':''}" data-val="period" onclick="toggleChkOther(this,'${periodRevId}')">Per Period of Time</button>
+    </div>
+    <div class="cond${saved.includes('period')?' show':''}" id="${periodRevId}">
+      <input type="text" class="fi" id="${periodInputId}" placeholder="e.g. per project, 1-month engagement" value="${esc(period)}">
+    </div>
+    <div style="margin-top:1.25rem">
+      <label class="fl-sm">Currency</label>
+      ${currencyHtml(curId, currency)}
+    </div>
+    <label class="fl-sm" style="margin-top:1rem;display:block">Budget Range</label>
+    ${sliderHtml(sliderId, 0, 10000, bMin, bMax)}
+    <div style="margin-top:1.25rem">
+      <label class="fl-sm">Note <span style="text-transform:none;font-weight:400;letter-spacing:0;color:rgba(255,255,255,.25)">(optional)</span></label>
+      <input type="text" class="fi" id="${noteInputId}" placeholder="Any details you'd like to clarify..." value="${esc(formData[noteField]||'')}">
+    </div>`;
+}
+
+function initHireBudgetInteractive(prefix) {
+  initSlider(prefix+'Slider', 0, 10000, 100, prefix+'BudMin', prefix+'BudMax', prefix+'Cur');
+}
+
+function toggleHireSharedBudget(prefix) {
+  const chk = document.getElementById(prefix+'UseSharedChk');
+  const body = document.getElementById(prefix+'BudgetBody');
+  if (!chk || !body) return;
+  formData[prefix+'UseShared'] = chk.checked;
+  if (chk.checked) {
+    // Lock in whatever this role's fields currently hold (which may be a
+    // value just customized) as the new shared default for every role
+    // still to come.
+    formData.hireBudgetShared = {
+      types: formData[prefix+'BudgetTypes'] || formData.hireBudgetShared?.types || [],
+      periodSpec: formData[prefix+'PeriodSpec'] || formData.hireBudgetShared?.periodSpec || '',
+      currency: formData[prefix+'Currency'] || formData.hireBudgetShared?.currency || 'SAR',
+      min: formData[prefix+'BudMin'] ?? formData.hireBudgetShared?.min ?? 0,
+      max: formData[prefix+'BudMax'] ?? formData.hireBudgetShared?.max ?? 1000,
+    };
+  }
+  body.classList.remove('hire-budget-body-anim'); void body.offsetWidth;
+  body.innerHTML = buildHireBudgetFields(prefix, chk.checked);
+  body.classList.add('hire-budget-body-anim');
+  if (chk.checked) {
+    document.getElementById(prefix+'SharedSummary')?.classList.add('flash');
+  } else {
+    initHireBudgetInteractive(prefix);
+  }
+  clearErr();
+}
+
 function hireRoleSteps(tag, prefix, questionText) {
   const langGrpId = prefix+'LangGrp', budgetGrpId = prefix+'BudgetGrp';
-  const periodRevId = prefix+'PeriodRev', periodInputId = 'inp-'+prefix+'Period';
-  const curId = prefix+'Cur', sliderId = prefix+'Slider';
+  const periodInputId = 'inp-'+prefix+'Period';
+  const curId = prefix+'Cur';
   const langField = prefix+'Languages', typesField = prefix+'BudgetTypes', periodField = prefix+'PeriodSpec';
   const currField = prefix+'Currency', minField = prefix+'BudMin', maxField = prefix+'BudMax';
+  const noteField = prefix+'Note', noteInputId = 'inp-'+prefix+'Note';
   return [
     {
       tag, q: questionText, hint:"Select all that apply",
@@ -211,30 +308,40 @@ function hireRoleSteps(tag, prefix, questionText) {
     {
       tag, q:"My hiring budget is...",
       html() {
-        const saved=formData[typesField]||[];
-        const period=formData[periodField]||'';
-        return `
-          <div class="chk-grp" id="${budgetGrpId}">
-            ${[{v:'hourly',t:'Hourly'},{v:'daily',t:'Daily'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
-            <button type="button" class="c-opt${saved.includes('period')?' sel':''}" data-val="period" onclick="toggleChkOther(this,'${periodRevId}')">Per Period of Time</button>
-          </div>
-          <div class="cond${saved.includes('period')?' show':''}" id="${periodRevId}">
-            <input type="text" class="fi" id="${periodInputId}" placeholder="e.g. per project, 1-month engagement" value="${esc(period)}">
-          </div>
-          <div style="margin-top:1.25rem">
-            <label class="fl-sm">Currency</label>
-            ${currencyHtml(curId, formData[currField]||'SAR')}
-          </div>
-          <label class="fl-sm" style="margin-top:1rem;display:block">Budget Range</label>
-          ${sliderHtml(sliderId, 0, 10000, formData[minField]??0, formData[maxField]??1000)}`;
+        const showToggle = !isFirstHireRole(prefix) && !!formData.hireBudgetShared;
+        const useShared = hireUsesShared(prefix);
+        const toggleHtml = showToggle ? `
+          <div class="hire-shared-toggle">
+            <label class="chk-inline">
+              <input type="checkbox" id="${prefix}UseSharedChk" ${useShared?'checked':''} onchange="toggleHireSharedBudget('${prefix}')">
+              <span>Apply previous hiring budget to all remaining roles</span>
+            </label>
+            <p class="hire-shared-hint">You can still customize the budget for individual roles later.</p>
+          </div>` : '';
+        return `${toggleHtml}<div class="hire-budget-body-anim" id="${prefix}BudgetBody">${buildHireBudgetFields(prefix, useShared)}</div>`;
       },
-      validate() { return null; },
+      validate() {
+        if (hireUsesShared(prefix)) return null;
+        return document.querySelectorAll(`#${budgetGrpId} .c-opt.sel`).length>0?null:'Please select at least one charge type';
+      },
       save() {
-        formData[typesField]=Array.from(document.querySelectorAll(`#${budgetGrpId} .c-opt.sel`)).map(e=>e.dataset.val);
-        formData[periodField]=document.getElementById(periodInputId)?.value?.trim()||'';
-        formData[currField]=document.getElementById(curId)?.value||'SAR';
+        if (hireUsesShared(prefix)) {
+          const s = formData.hireBudgetShared||{};
+          formData[typesField]=s.types||[]; formData[periodField]=s.periodSpec||''; formData[currField]=s.currency||'SAR';
+          formData[minField]=s.min; formData[maxField]=s.max;
+        } else {
+          formData[typesField]=Array.from(document.querySelectorAll(`#${budgetGrpId} .c-opt.sel`)).map(e=>e.dataset.val);
+          formData[periodField]=document.getElementById(periodInputId)?.value?.trim()||'';
+          formData[currField]=document.getElementById(curId)?.value||'SAR';
+        }
+        formData[noteField]=document.getElementById(noteInputId)?.value?.trim()||'';
+        // The first hiring role's confirmed budget establishes the shared
+        // default for every later role.
+        if (isFirstHireRole(prefix)) {
+          formData.hireBudgetShared = { types: formData[typesField], periodSpec: formData[periodField], currency: formData[currField], min: formData[minField], max: formData[maxField] };
+        }
       },
-      postRender() { initSlider(sliderId,0,10000,100,minField,maxField,curId); }
+      postRender() { if (!hireUsesShared(prefix)) initHireBudgetInteractive(prefix); }
     },
   ];
 }
@@ -251,25 +358,43 @@ const ALL_SECTION_STEPS = {
     {
       tag:'Almost done!', q:"How can we contact you?", hint:"At least one contact method required",
       html() {
+        const savedCountry = formData.phoneCountry || formData.country || '';
+        const code = COUNTRY_DIAL_CODES[savedCountry] || '';
         return `
           <div style="margin-bottom:1rem">
             <label class="fl-sm">Email address</label>
             <input type="email" class="fi" id="inp-email" placeholder="you@example.com" value="${esc(formData.email||'')}" autocomplete="email">
           </div>
-          <div>
-            <label class="fl-sm">Phone number</label>
-            <input type="tel" class="fi" id="inp-phone" placeholder="+1 234 567 8900" value="${esc(formData.phone||'')}" autocomplete="tel">
+          <div class="fg-2">
+            <div>
+              <label class="fl-sm">Country</label>
+              <select class="fs" id="inp-phoneCountry" onchange="updatePhoneCode(this.value)">
+                <option value="">Select country...</option>
+                ${COUNTRIES.map(c=>`<option value="${c}"${savedCountry===c?' selected':''}>${c}</option>`).join('')}
+              </select>
+            </div>
+            <div>
+              <label class="fl-sm">Phone number</label>
+              <div class="phone-input-row">
+                <span class="phone-code-badge" id="phoneCodeBadge">${code||'+—'}</span>
+                <input type="tel" class="fi phone-num-input" id="inp-phone" placeholder="234 567 8900" value="${esc(formData.phone||'')}" autocomplete="tel">
+              </div>
+            </div>
           </div>`;
       },
       validate() {
         const email=document.getElementById('inp-email')?.value?.trim();
         const phone=document.getElementById('inp-phone')?.value?.trim();
+        const phoneCountry=document.getElementById('inp-phoneCountry')?.value;
         if(!email&&!phone) return 'Please provide at least one contact method';
         if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address';
+        if(phone&&!phoneCountry) return 'Please select your phone number\'s country';
         return null;
       },
       save() {
         formData.email=document.getElementById('inp-email')?.value?.trim()||'';
+        formData.phoneCountry=document.getElementById('inp-phoneCountry')?.value||'';
+        formData.phoneCode=COUNTRY_DIAL_CODES[formData.phoneCountry]||'';
         formData.phone=document.getElementById('inp-phone')?.value?.trim()||'';
       }
     },

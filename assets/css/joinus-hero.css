@@ -143,7 +143,10 @@
 .jn-path-btn:hover { background: #1e2028; transform: translateX(3px); }
 
 /* ── Confirmation dialog for the partner proposal download ── */
-dialog.jn-confirm { border: none; border-radius: 18px; padding: 0; width: min(420px, 90vw); box-shadow: 0 30px 70px rgba(17,18,22,.3); }
+/* Same fix as dialog.tja-modal in team.css: the page's universal
+   `* { margin: 0 }` reset also strips the browser's default `margin:
+   auto` centering for a modal <dialog>, so it must be restored here. */
+dialog.jn-confirm { margin: auto; border: none; border-radius: 18px; padding: 0; width: min(420px, 90vw); box-shadow: 0 30px 70px rgba(17,18,22,.3); }
 dialog.jn-confirm::backdrop { background: rgba(17,18,22,.5); backdrop-filter: blur(2px); }
 .jn-confirm-inner { padding: 2rem 1.875rem; text-align: center; }
 .jn-confirm-icon { font-size: 2rem; margin-bottom: .875rem; }

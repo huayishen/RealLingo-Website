@@ -27,9 +27,10 @@
    the cell's auto-size always matches the widest one and the heading
    never shifts as shorter/longer words swap in (same technique as the
    Event page's animated language word). ── */
-.rmap-lang-stack { display: inline-grid; vertical-align: bottom; }
+.rmap-lang-stack { display: inline-grid; vertical-align: bottom; justify-items: start; }
 .rmap-lang-item {
     grid-area: 1 / 1;
+    justify-self: start; text-align: left;
     white-space: nowrap; pointer-events: none;
     opacity: 0; transform: translateY(-8px);
     transition: opacity .4s ease, transform .4s ease;
@@ -42,10 +43,14 @@
 /* Splits the heading into two equal-width halves around a fixed center
    point, so the static "Find a" stays anchored at the midpoint (right-
    aligned) while the animated word grows from that same point (left-
-   aligned) — the boundary never moves as shorter/longer words cycle in. */
+   aligned) — the boundary never moves as shorter/longer words cycle in.
+   text-align is set explicitly on each side (not just justify-self) so
+   the word itself hugs the boundary rather than centering within its
+   half — a shrink-to-fit box can still leave inherited centered text
+   sitting away from the edge it's meant to be flush against. */
 .rmap-h1-split { display: grid; grid-template-columns: 1fr 1fr; align-items: baseline; column-gap: .35em; }
-.rmap-h1-left { justify-self: end; }
-.rmap-h1-right.rmap-lang-stack { justify-self: start; }
+.rmap-h1-left { justify-self: end; text-align: right; }
+.rmap-h1-right.rmap-lang-stack { justify-self: start; text-align: left; }
 .rmap-sub { font-size: 1rem; color: var(--text-mid); line-height: 1.7; }
 
 /* ── Fixed-canvas game map (tablet & up) ── */
@@ -134,6 +139,12 @@
 .rmap-list { display: none; }
 @media (max-width: 640px) {
     .rmap-outer { display: none; }
+    /* The heading's font-size otherwise floors at 2.1rem regardless of
+       viewport width, so the longest role ("Trendsetter") can outgrow its
+       half of the fixed-midpoint split and get clipped by this section's
+       overflow:hidden. Shrinking it here keeps every role's width inside
+       its half at any phone size the split itself is still designed for. */
+    .rmap-h1 { font-size: 1.6rem; }
     .rmap-list {
         display: flex; flex-direction: column; gap: 1.5rem;
         margin-left: 12px; padding-left: 1.75rem;

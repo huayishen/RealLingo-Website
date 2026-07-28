@@ -38,7 +38,6 @@
     }
     .bs-section.active::before { border-color: var(--y); box-shadow: 0 0 10px 3px rgba(255,235,153,.55); }
     .bs-section.active { border-color: rgba(255,235,153,.3); }
-    .bs-section.disabled { opacity: .32; filter: grayscale(1); pointer-events: none; }
     .bs-sec-title { font-family: var(--ss); font-weight: 800; font-size: 1.15rem; margin-bottom: .3rem; display: flex; align-items: center; gap: .75rem; }
     .bs-sec-hint { font-size: .78rem; color: rgba(255,255,255,.35); margin-bottom: 1.1rem; }
 
@@ -48,15 +47,6 @@
       border-radius: 100px; padding: .3rem .75rem; cursor: pointer; transition: background .2s;
     }
     .bs-clear:hover { background: rgba(255,235,153,.2); }
-
-    .bs-lock-hint {
-      display: none; align-items: center; gap: .6rem; margin-top: 1rem;
-      font-size: .78rem; color: rgba(255,255,255,.45);
-    }
-    .bs-section.disabled .bs-lock-hint { display: flex; }
-    .bs-lock-hint .bs-clear { pointer-events: auto; }
-    .bs-section.disabled { pointer-events: none; }
-    .bs-section.disabled .bs-lock-hint { pointer-events: auto; }
 
     .bs-other-wrap { margin-top: 1rem; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .3s ease, opacity .3s ease, margin-top .3s ease; }
     .bs-other-wrap.show { max-height: 80px; opacity: 1; }
@@ -105,7 +95,7 @@
 
 <main class="bs-main">
   <h1 class="bs-h1">How do you describe yourself?</h1>
-  <p class="bs-sub">Choose one category — you can select multiple options inside it. Picking a category locks the other two until you clear it.</p>
+  <p class="bs-sub">Choose any that apply — select options across as many categories as you like.</p>
 
   <div class="bs-route">
     <section class="bs-section" id="sec1">
@@ -115,7 +105,6 @@
       </div>
       <div class="bs-sec-hint">Select all that apply</div>
       <div class="chk-grp" id="sec1-opts"></div>
-      <div class="bs-lock-hint"><span>Locked — you're selecting in another section.</span> <button type="button" class="bs-clear" onclick="clearActive()">✕ Clear that selection</button></div>
     </section>
 
     <section class="bs-section" id="sec2">
@@ -125,7 +114,6 @@
       </div>
       <div class="bs-sec-hint">Select all that apply</div>
       <div class="chk-grp" id="sec2-opts"></div>
-      <div class="bs-lock-hint"><span>Locked — you're selecting in another section.</span> <button type="button" class="bs-clear" onclick="clearActive()">✕ Clear that selection</button></div>
     </section>
 
     <section class="bs-section" id="sec3">
@@ -138,7 +126,6 @@
       <div class="bs-other-wrap" id="sec3-other-wrap">
         <input type="text" id="sec3-other-input" class="bs-other-input" placeholder="Tell us what you do…" maxlength="80">
       </div>
-      <div class="bs-lock-hint"><span>Locked — you're selecting in another section.</span> <button type="button" class="bs-clear" onclick="clearActive()">✕ Clear that selection</button></div>
     </section>
   </div>
 
@@ -163,10 +150,7 @@ Object.keys(SECTION_OPTS).forEach(n => {
   ).join('');
 });
 
-let activeSection = null;
-
 function selectOption(el, n) {
-  if (activeSection && String(activeSection) !== String(n)) return;
   el.classList.toggle('sel');
   if (el.dataset.other) {
     const wrap = document.getElementById('sec3-other-wrap');
@@ -188,52 +172,77 @@ function clearSection(n) {
   refresh();
 }
 
-function clearActive() {
-  if (activeSection) clearSection(activeSection);
-}
-
+// Sections are independent — picking in one no longer locks the others,
+// so a visitor can select "a learner" AND "hiring a translator" AND
+// "a tour guide" all at once, and continue through all three in turn.
 function refresh() {
-  const counts = {};
   Object.keys(SECTION_OPTS).forEach(n => {
-    counts[n] = document.querySelectorAll(`#sec${n}-opts .c-opt.sel`).length;
-  });
-  activeSection = Object.keys(counts).find(n => counts[n] > 0) || null;
-
-  Object.keys(SECTION_OPTS).forEach(n => {
-    const sec = document.getElementById(`sec${n}`);
-    const isActive = activeSection !== null && String(activeSection) === String(n);
-    sec.classList.toggle('disabled', activeSection !== null && !isActive);
-    sec.classList.toggle('active', isActive);
-    document.getElementById(`clear${n}`).style.display = isActive ? 'inline-flex' : 'none';
+    const count = document.querySelectorAll(`#sec${n}-opts .c-opt.sel`).length;
+    document.getElementById(`sec${n}`).classList.toggle('active', count > 0);
+    document.getElementById(`clear${n}`).style.display = count > 0 ? 'inline-flex' : 'none';
   });
 
   const otherSelected = document.querySelector('#sec3-opts .c-opt.sel[data-other]');
   const otherFilled = document.getElementById('sec3-other-input').value.trim().length > 0;
-  const blockedByEmptyOther = String(activeSection) === '3' && otherSelected && !otherFilled;
+  const blockedByEmptyOther = !!otherSelected && !otherFilled;
+
+  const anySelected = Object.keys(SECTION_OPTS).some(n => document.querySelectorAll(`#sec${n}-opts .c-opt.sel`).length > 0);
 
   const btn = document.getElementById('continueBtn');
   const note = document.getElementById('continueNote');
-  btn.style.display = activeSection ? 'inline-flex' : 'none';
+  btn.style.display = anySelected ? 'inline-flex' : 'none';
   btn.disabled = !!blockedByEmptyOther;
   note.classList.toggle('show', !!blockedByEmptyOther);
 }
 
 document.getElementById('sec3-other-input').addEventListener('input', refresh);
 
-function goContinue() {
-  if (!activeSection) return;
-  const cfg = SECTION_OPTS[activeSection];
-  let vals = Array.from(document.querySelectorAll(`#sec${activeSection}-opts .c-opt.sel`)).map(e => e.dataset.val);
+// One entry per section that has selections: { param, vals, other }.
+// "param" matches the query-param name signup/all/ reads for that
+// category (general/hire/joinus); a single-category pick instead routes
+// straight to that category's own dedicated page, unchanged.
+const SECTION_PARAM = { 1: 'general', 2: 'hire', 3: 'joinus' };
 
-  let otherText = '';
-  if (String(activeSection) === '3') {
-    otherText = document.getElementById('sec3-other-input').value.trim();
-    vals = vals.filter(v => v !== 'other'); // "other" isn't a real preset role key — sent separately below
+function buildSelections() {
+  const picks = [];
+  Object.keys(SECTION_OPTS).forEach(n => {
+    let vals = Array.from(document.querySelectorAll(`#sec${n}-opts .c-opt.sel`)).map(e => e.dataset.val);
+    let otherText = '';
+    if (String(n) === '3') {
+      otherText = document.getElementById('sec3-other-input').value.trim();
+      vals = vals.filter(v => v !== 'other'); // "other" isn't a real preset role key — sent separately below
+    }
+    if (!vals.length && !otherText) return;
+    picks.push({ n, target: SECTION_OPTS[n].target, param: SECTION_PARAM[n], vals, other: otherText });
+  });
+  return picks;
+}
+
+function goContinue() {
+  const picks = buildSelections();
+  if (!picks.length) return;
+
+  // Exactly one category picked → its own dedicated quiz, exactly as
+  // before (no change to this path, so every existing deep link into
+  // these pages from elsewhere on the site keeps working identically).
+  if (picks.length === 1) {
+    const p = picks[0];
+    let url = p.target + '?sel=' + p.vals.join(',');
+    if (p.other) url += '&other=' + encodeURIComponent(p.other);
+    window.location.href = url;
+    return;
   }
 
-  let url = cfg.target + '?sel=' + vals.join(',');
-  if (otherText) url += '&other=' + encodeURIComponent(otherText);
-  window.location.href = url;
+  // More than one category picked → one combined profile, one quiz: route
+  // to signup/all/ with every category's picks as its own query param, so
+  // it can ask each relevant question exactly once and end in a single
+  // "Sign Up" covering everything selected across all three categories.
+  const params = new URLSearchParams();
+  picks.forEach(p => {
+    params.set(p.param, p.vals.join(','));
+    if (p.other) params.set('other', p.other);
+  });
+  window.location.href = 'all/?' + params.toString();
 }
 
 window.addEventListener('pageshow', (e) => { if (e.persisted) location.reload(); });

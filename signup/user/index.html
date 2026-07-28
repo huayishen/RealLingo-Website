@@ -168,8 +168,14 @@ if (!_hasPreset) {
 const ALL_SECTION_STEPS = {
   general: generalSteps,
 
-  /* ── Learner (2 questions) ── */
+  /* ── Learner (3 questions) ── */
   learner: [
+    {
+      tag:'Learner', q:"I'm learning...", hint:"Select all that apply",
+      html() { return checkboxGroupHtml('learnerLangGrp',[{v:'arabic',t:'Arabic'},{v:'chinese',t:'Chinese'},{v:'korean',t:'Korean'},{v:'spanish',t:'Spanish'},{v:'french',t:'French'}],formData.learnerLanguages||[]); },
+      validate() { return document.querySelectorAll('#learnerLangGrp .c-opt.sel').length>0?null:'Please select at least one language'; },
+      save() { formData.learnerLanguages=Array.from(document.querySelectorAll('#learnerLangGrp .c-opt.sel')).map(e=>e.dataset.val); }
+    },
     {
       tag:'Learner', q:"I'm learning for...", hint:"Select all that apply",
       html() {
@@ -229,13 +235,18 @@ const ALL_SECTION_STEPS = {
             ${currencyHtml('learnerCur',formData.learnerCurrency||'SAR')}
           </div>
           <label class="fl-sm" style="margin-top:1rem;display:block">Budget Range</label>
-          ${sliderHtml('learnerSlider',0,10000,formData.learnerBudMin??0,formData.learnerBudMax??1000)}`;
+          ${sliderHtml('learnerSlider',0,10000,formData.learnerBudMin??0,formData.learnerBudMax??1000)}
+          <div style="margin-top:1.25rem">
+            <label class="fl-sm">Note <span style="text-transform:none;font-weight:400;letter-spacing:0;color:rgba(255,255,255,.25)">(optional)</span></label>
+            <input type="text" class="fi" id="inp-learnerNote" placeholder="Any details you'd like to clarify..." value="${esc(formData.learnerNote||'')}">
+          </div>`;
       },
-      validate() { return null; },
+      validate() { return document.querySelectorAll('#learnerBudgetGrp .c-opt.sel').length>0?null:'Please select at least one charge type'; },
       save() {
         formData.learnerBudgetTypes=Array.from(document.querySelectorAll('#learnerBudgetGrp .c-opt.sel')).map(e=>e.dataset.val);
         formData.learnerPeriodSpec=document.getElementById('inp-learnerPeriod')?.value?.trim()||'';
         formData.learnerCurrency=document.getElementById('learnerCur')?.value||'SAR';
+        formData.learnerNote=document.getElementById('inp-learnerNote')?.value?.trim()||'';
       },
       postRender() { initSlider('learnerSlider',0,10000,100,'learnerBudMin','learnerBudMax','learnerCur'); }
     },
@@ -259,24 +270,37 @@ const ALL_SECTION_STEPS = {
           <div class="fg-2">
             <div>
               <label class="fl-sm">Start date</label>
-              <input type="date" class="fi" id="inp-tripStart" value="${esc(formData.tripStart||'')}">
+              ${calInputHtml('inp-tripStart', formData.tripStart, 'Select start date')}
             </div>
             <div>
               <label class="fl-sm">End date</label>
-              <input type="date" class="fi" id="inp-tripEnd" value="${esc(formData.tripEnd||'')}">
+              ${calInputHtml('inp-tripEnd', formData.tripEnd, 'Select end date')}
             </div>
           </div>`;
       },
       validate() {
-        const s=document.getElementById('inp-tripStart')?.value;
-        const e=document.getElementById('inp-tripEnd')?.value;
+        const s=document.getElementById('inp-tripStart')?.dataset.iso||'';
+        const e=document.getElementById('inp-tripEnd')?.dataset.iso||'';
         if(!s||!e) return 'Please select both a start and end date';
+        if(s<calToday()) return 'Start date must be today or in the future';
         if(e<s) return 'End date must be after the start date';
         return null;
       },
       save() {
-        formData.tripStart=document.getElementById('inp-tripStart')?.value||'';
-        formData.tripEnd=document.getElementById('inp-tripEnd')?.value||'';
+        formData.tripStart=document.getElementById('inp-tripStart')?.dataset.iso||'';
+        formData.tripEnd=document.getElementById('inp-tripEnd')?.dataset.iso||'';
+      },
+      postRender() {
+        // Picking a start date auto-opens the end-date calendar next, so
+        // choosing a range reads as one fluid action rather than two.
+        initCalendarPicker('inp-tripStart', {
+          minDate: calToday,
+          onSelect: () => { document.getElementById('inp-tripEnd')?.click(); }
+        });
+        initCalendarPicker('inp-tripEnd', {
+          minDate: () => document.getElementById('inp-tripStart')?.dataset.iso || calToday(),
+          rangeStart: () => document.getElementById('inp-tripStart')?.dataset.iso || ''
+        });
       }
     },
     {
@@ -297,13 +321,18 @@ const ALL_SECTION_STEPS = {
             ${currencyHtml('travelCur',formData.travelCurrency||'SAR')}
           </div>
           <label class="fl-sm" style="margin-top:1rem;display:block">Budget Range</label>
-          ${sliderHtml('travelSlider',0,10000,formData.travelBudMin??0,formData.travelBudMax??1000)}`;
+          ${sliderHtml('travelSlider',0,10000,formData.travelBudMin??0,formData.travelBudMax??1000)}
+          <div style="margin-top:1.25rem">
+            <label class="fl-sm">Note <span style="text-transform:none;font-weight:400;letter-spacing:0;color:rgba(255,255,255,.25)">(optional)</span></label>
+            <input type="text" class="fi" id="inp-travelNote" placeholder="Any details you'd like to clarify..." value="${esc(formData.travelNote||'')}">
+          </div>`;
       },
-      validate() { return null; },
+      validate() { return document.querySelectorAll('#travelBudgetGrp .c-opt.sel').length>0?null:'Please select at least one charge type'; },
       save() {
         formData.travelBudgetTypes=Array.from(document.querySelectorAll('#travelBudgetGrp .c-opt.sel')).map(e=>e.dataset.val);
         formData.travelPeriodSpec=document.getElementById('inp-travelPeriod')?.value?.trim()||'';
         formData.travelCurrency=document.getElementById('travelCur')?.value||'SAR';
+        formData.travelNote=document.getElementById('inp-travelNote')?.value?.trim()||'';
       },
       postRender() { initSlider('travelSlider',0,10000,100,'travelBudMin','travelBudMax','travelCur'); }
     },
@@ -320,11 +349,22 @@ const ALL_SECTION_STEPS = {
     {
       tag:'Event Member', q:"I'm interested in...", hint:"Select all that apply",
       html() {
-        const opts=[{v:'culture',t:'Culture'},{v:'networking',t:'Networking'},{v:'business',t:'Business'},{v:'entertainment',t:'Entertainment'},{v:'others',t:'Others'}];
-        return checkboxGroupHtml('memberIntGrp',opts,formData.memberInterests||[]);
+        const saved=formData.memberInterests||[];
+        const other=formData.memberInterestsOther||'';
+        return `
+          <div class="chk-grp" id="memberIntGrp">
+            ${[{v:'culture',t:'Culture'},{v:'networking',t:'Networking'},{v:'business',t:'Business'},{v:'entertainment',t:'Entertainment'}].map(o=>`<button type="button" class="c-opt${saved.includes(o.v)?' sel':''}" data-val="${o.v}" onclick="toggleChk(this)">${o.t}</button>`).join('')}
+            <button type="button" class="c-opt${saved.includes('others')?' sel':''}" data-val="others" onclick="toggleChkOther(this,'memberIntOtherRev')">Others</button>
+          </div>
+          <div class="cond${saved.includes('others')?' show':''}" id="memberIntOtherRev">
+            <input type="text" class="fi" id="inp-memberIntOther" placeholder="Please specify..." value="${esc(other)}">
+          </div>`;
       },
       validate() { return document.querySelectorAll('#memberIntGrp .c-opt.sel').length>0?null:'Please select at least one interest'; },
-      save() { formData.memberInterests=Array.from(document.querySelectorAll('#memberIntGrp .c-opt.sel')).map(e=>e.dataset.val); }
+      save() {
+        formData.memberInterests=Array.from(document.querySelectorAll('#memberIntGrp .c-opt.sel')).map(e=>e.dataset.val);
+        formData.memberInterestsOther=document.getElementById('inp-memberIntOther')?.value?.trim()||'';
+      }
     },
     {
       tag:'Event Member', q:"Are you currently a member of our partner communities?",
@@ -391,25 +431,43 @@ const ALL_SECTION_STEPS = {
     {
       tag:'Almost done!', q:"How can we contact you?", hint:"At least one contact method required",
       html() {
+        const savedCountry = formData.phoneCountry || formData.country || '';
+        const code = COUNTRY_DIAL_CODES[savedCountry] || '';
         return `
           <div style="margin-bottom:1rem">
             <label class="fl-sm">Email address</label>
             <input type="email" class="fi" id="inp-email" placeholder="you@example.com" value="${esc(formData.email||'')}" autocomplete="email">
           </div>
-          <div>
-            <label class="fl-sm">Phone number</label>
-            <input type="tel" class="fi" id="inp-phone" placeholder="+1 234 567 8900" value="${esc(formData.phone||'')}" autocomplete="tel">
+          <div class="fg-2">
+            <div>
+              <label class="fl-sm">Country</label>
+              <select class="fs" id="inp-phoneCountry" onchange="updatePhoneCode(this.value)">
+                <option value="">Select country...</option>
+                ${COUNTRIES.map(c=>`<option value="${c}"${savedCountry===c?' selected':''}>${c}</option>`).join('')}
+              </select>
+            </div>
+            <div>
+              <label class="fl-sm">Phone number</label>
+              <div class="phone-input-row">
+                <span class="phone-code-badge" id="phoneCodeBadge">${code||'+—'}</span>
+                <input type="tel" class="fi phone-num-input" id="inp-phone" placeholder="234 567 8900" value="${esc(formData.phone||'')}" autocomplete="tel">
+              </div>
+            </div>
           </div>`;
       },
       validate() {
         const email=document.getElementById('inp-email')?.value?.trim();
         const phone=document.getElementById('inp-phone')?.value?.trim();
+        const phoneCountry=document.getElementById('inp-phoneCountry')?.value;
         if(!email&&!phone) return 'Please provide at least one contact method';
         if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address';
+        if(phone&&!phoneCountry) return 'Please select your phone number\'s country';
         return null;
       },
       save() {
         formData.email=document.getElementById('inp-email')?.value?.trim()||'';
+        formData.phoneCountry=document.getElementById('inp-phoneCountry')?.value||'';
+        formData.phoneCode=COUNTRY_DIAL_CODES[formData.phoneCountry]||'';
         formData.phone=document.getElementById('inp-phone')?.value?.trim()||'';
       }
     },

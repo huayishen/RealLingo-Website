@@ -203,9 +203,18 @@
    FOOTER — master catalog
 ══════════════════════════════════════════════════════════ */
 .site-ftr { background: var(--dark); color: rgba(255,255,255,.85); padding: 4rem 4rem 2.25rem; }
+/* Brand and the nav columns are two separate flex items (not one flat
+   wrapping row) so that when the columns run out of horizontal room and
+   wrap, they wrap within their own box to the right of the brand — never
+   spilling into the empty space directly beneath it. */
 .site-ftr-top { display: flex; flex-wrap: wrap; gap: 2.5rem; padding-bottom: 2.75rem; border-bottom: 1px solid rgba(255,255,255,.09); }
 .site-ftr-brand { flex: 1 1 240px; }
+.site-ftr-cols { display: flex; flex-wrap: wrap; gap: 2.5rem; flex: 3 1 700px; }
 .site-ftr-col { flex: 1 1 140px; }
+/* Last in the row, and the one column expected to grow over time as more
+   partners are added — a wider basis than the others so new entries have
+   room before the list needs to wrap onto extra lines. */
+.site-ftr-col--partners { flex: 1.4 1 200px; }
 .site-ftr-brand .site-logo { color: var(--yellow); font-size: 1.3rem; }
 .site-ftr-tag { margin-top: .85rem; font-size: .82rem; line-height: 1.6; color: rgba(255,255,255,.4); max-width: 26ch; }
 .site-ftr-col h4 { font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 1rem; }
@@ -239,6 +248,7 @@
 @media (max-width: 900px) {
   .site-ftr { padding: 3rem 1.5rem 1.75rem; }
   .site-ftr-brand { flex: 1 1 100%; }
+  .site-ftr-cols { flex: 1 1 100%; }
 }
 
 /* ══════════════════════════════════════════════════════════

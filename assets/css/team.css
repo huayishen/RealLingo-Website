@@ -153,7 +153,11 @@
 }
 .tg-cta-btn:hover { background: #1e2028; transform: translateY(-2px); }
 
-dialog.tja-modal { border: none; border-radius: 20px; padding: 0; width: min(560px, 92vw); box-shadow: 0 30px 70px rgba(17,18,22,.3); }
+/* This page's universal `* { margin: 0 }` reset also zeroes out the
+   browser's own default `margin: auto` centering for a modal <dialog>,
+   so it has to be restored explicitly here or the dialog opens pinned
+   to the top of the viewport instead of centered. */
+dialog.tja-modal { margin: auto; border: none; border-radius: 20px; padding: 0; width: min(560px, 92vw); box-shadow: 0 30px 70px rgba(17,18,22,.3); }
 dialog.tja-modal::backdrop { background: rgba(17,18,22,.5); backdrop-filter: blur(2px); }
 .tja-inner { position: relative; padding: 2.25rem 2.25rem 1.75rem; max-height: 84vh; overflow-y: auto; }
 .tja-close {
