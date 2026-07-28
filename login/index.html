@@ -76,8 +76,13 @@
 
   function showMsg(text, ok) { msg.textContent = text; msg.className = 'lc-msg ' + (ok ? 'ok' : 'err'); }
 
-  // Already signed in? Go straight to the dashboard.
-  RA.getSession().then(s => { if (s) window.location.href = SITE_ROOT + 'dashboard/'; }).catch(()=>{});
+  // Already signed in (and still remembered)? Go straight to the dashboard.
+  // enforceRemember() first clears a non-remembered session on a cold load,
+  // so we don't bounce login → dashboard → login.
+  RA.enforceRemember()
+    .then(() => RA.getSession())
+    .then(s => { if (s) window.location.href = SITE_ROOT + 'dashboard/'; })
+    .catch(() => {});
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();

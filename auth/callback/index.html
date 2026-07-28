@@ -46,6 +46,17 @@
     links.style.display = 'block';
   }
 
+  // No session after the callback usually means the link was opened on a
+  // different device than sign-up (PKCE): the email IS now verified, there's
+  // just no local session here. Guide them to log in rather than alarm them.
+  function needLogin() {
+    spin.style.display = 'none';
+    title.textContent = 'Email verified';
+    sub.textContent = 'Your email is confirmed. Please log in to finish setting up your account.';
+    msg.className = 'lc-msg'; msg.textContent = '';
+    links.style.display = 'block';
+  }
+
   async function waitForSession(sb) {
     let session = (await sb.auth.getSession()).data.session;
     if (session) return session;
@@ -59,7 +70,7 @@
   async function run() {
     const sb = await window.getSupabaseClient();
     const session = await waitForSession(sb);
-    if (!session) { fail('This verification link is invalid or has expired. Please <a href="../../login/">log in</a> or sign up again.'); return; }
+    if (!session) { needLogin(); return; }
 
     // Persist the onboarding profile now that we have an authenticated session.
     try {
