@@ -1214,10 +1214,21 @@ async function submitAccount() {
   } catch(err) {
     console.error('signUp failed', err);
     if(btn){ btn.disabled=false; btn.textContent='Create Account →'; }
-    const already=/registered|already/i.test(err && err.message || '');
-    showErr(already ? 'An account with this email already exists — try logging in instead.'
-                    : (err && err.message) || 'Could not create your account. Please try again.');
+    showErr(friendlyAuthError(err));
   }
+}
+
+/* Turn a raw Supabase/network auth error into a human message (raw errors can
+   be empty objects "{}", "Failed to fetch", or server timeouts). */
+function friendlyAuthError(err) {
+  let m = (err && err.message) || '';
+  if (m === '{}' || m === '[object Object]') m = '';
+  if (/registered|already/i.test(m)) return 'An account with this email already exists — try logging in instead.';
+  if (/rate limit/i.test(m)) return "We've sent a lot of emails recently. Please wait a minute and try again.";
+  if (/failed to fetch|networkerror|load failed|network request failed|deadline|timeout|timed out|504|502|unavailable/i.test(m))
+    return "The sign-up service is busy right now (sending the verification email is slow). Please try again in a moment.";
+  if (/invalid.*email|email.*invalid/i.test(m)) return 'Please enter a valid email address.';
+  return m || "We couldn't create your account just now. Please try again in a moment.";
 }
 
 /* ════════════════════════════════════════════════════════════
