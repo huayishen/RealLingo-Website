@@ -45,14 +45,22 @@
     window.location.href = ROOT;
   }
 
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
   function applyAuthState(target) {
     var actions = target.querySelector('.site-actions');
     if (!actions) return;
     var uname = currentUsername();
     if (uname === null) return; // not logged in — keep Log In / Sign Up
-    // Layout: "Hi, @username"  [Dashboard]  [Log out]
+    // Greet by name (the "how should we call you?" answer), falling back to @username.
+    var name = '';
+    try { name = localStorage.getItem('ra_name') || ''; } catch (e) {}
+    var greet = name || (uname ? '@' + uname : 'there');
+    // Layout: "Hi, <name>"  [Dashboard]  [Log out]
     actions.innerHTML =
-      '<span class="site-hi">Hi, ' + (uname ? '@' + uname : 'there') + '</span>' +
+      '<span class="site-hi">Hi, <b>' + escapeHtml(greet) + '</b></span>' +
       '<a href="' + ROOT + 'dashboard/" class="site-btn-solid">Dashboard</a>' +
       '<a href="#" class="site-btn-ghost" id="siteLogout">Log out</a>';
     var lo = actions.querySelector('#siteLogout');

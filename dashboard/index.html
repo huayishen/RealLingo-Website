@@ -213,7 +213,7 @@
       return;
     }
 
-    document.getElementById('dashHi').innerHTML = 'Hi, <b>' + esc(p.username || 'there') + '</b>';
+    document.getElementById('dashHi').innerHTML = 'Hi, <b>' + esc(p.full_name || p.username || 'there') + '</b>';
     AVATAR_URL = p.avatar_url ? await RA.avatarPublicUrl(p.avatar_url) : (SITE_ROOT + 'assets/img/logo-yellow.png');
     const isDefault = !p.avatar_url;
     const pct = completion(p, data.languages, data.roles);
