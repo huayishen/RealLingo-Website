@@ -129,10 +129,11 @@
       ? '<div class="acct-chips">' + DATA.roles.map(function (rr) { var m = ROLE_META[rr.role_key] || {}; return '<span class="acct-chip">' + (m.icon || '⭐') + ' ' + esc(m.label || rr.role_key) + '</span>'; }).join('') + '</div>'
       : '<div class="acct-empty">No roles yet. <a class="acct-role-cta" href="' + ROOT() + 'signup/' + esc(p.onboarding_flow || 'all') + '/?edit=1">Add roles →</a></div>';
     html += '<h2 class="acct-h2">Languages</h2><div class="acct-card">' + esc(formatLanguages(DATA.languages)) + '</div>';
-    html += '<h2 class="acct-h2">Contact</h2><div class="acct-card">' +
-      '<div class="acct-row"><span class="acct-row-lbl">Email</span><span class="acct-row-val">' + esc(p.email || '—') + '</span></div>' +
-      '<div class="acct-row"><span class="acct-row-lbl">Location</span><span class="acct-row-val">' + esc([p.city, p.country].filter(Boolean).join(', ') || '—') + '</span></div>' +
-      '<div class="acct-row"><span class="acct-row-lbl">Member since</span><span class="acct-row-val">' + memberSince(p.created_at) + '</span></div></div>';
+    function kv(l, v) { return '<div class="acct-kv"><div class="acct-kv-lbl">' + esc(l) + '</div><div class="acct-kv-val">' + esc(v || '—') + '</div></div>'; }
+    html += '<h2 class="acct-h2">Contact</h2><div class="acct-card"><div class="acct-2col">' +
+      kv('Email', p.email) + kv('Member since', memberSince(p.created_at)) +
+      kv('Country', p.country) + kv('City', p.city) +
+      '</div></div>';
     contentEl.innerHTML = html;
   }
 
@@ -404,11 +405,14 @@
       '<input class="acct-input" id="s-username" value="' + esc(p.username || '') + '" maxlength="20" autocomplete="off"><div class="acct-uname-status" id="s-uname-status"></div>' +
       '<button class="acct-btn acct-btn-solid" id="s-uname-save" style="margin-top:.4rem">Save username</button></div>';
     // Personal info
-    html += '<div class="acct-card"><div class="acct-msg" id="s-basics-msg"></div><div class="acct-label">Full name</div><input class="acct-input" id="s-name" value="' + esc(p.full_name || '') + '">' +
-      '<div class="acct-label" style="margin-top:.6rem">Country</div><select class="acct-select" id="s-country">' + countryOptions(p.country || '') + '</select>' +
-      '<div class="acct-label" style="margin-top:.6rem">City</div><input class="acct-input" id="s-city" value="' + esc(p.city || '') + '">' +
-      '<div class="acct-label" style="margin-top:.6rem">Phone</div><input class="acct-input" id="s-phone" value="' + esc(p.phone || '') + '">' +
-      '<button class="acct-btn acct-btn-solid" id="s-basics-save" style="margin-top:.7rem">Save changes</button></div>';
+    html += '<div class="acct-card"><div class="acct-msg" id="s-basics-msg"></div>' +
+      '<div class="acct-field"><div class="acct-label">Full name</div><input class="acct-input" id="s-name" value="' + esc(p.full_name || '') + '"></div>' +
+      '<div class="acct-2col">' +
+        '<div class="acct-field"><div class="acct-label">Country</div><select class="acct-select" id="s-country">' + countryOptions(p.country || '') + '</select></div>' +
+        '<div class="acct-field"><div class="acct-label">City</div><input class="acct-input" id="s-city" value="' + esc(p.city || '') + '"></div>' +
+      '</div>' +
+      '<div class="acct-field"><div class="acct-label">Phone</div><input class="acct-input" id="s-phone" value="' + esc(p.phone || '') + '"></div>' +
+      '<button class="acct-btn acct-btn-solid" id="s-basics-save">Save changes</button></div>';
     // Email
     html += '<div class="acct-card"><div class="acct-msg" id="s-email-msg"></div><div class="acct-label">Email</div><input class="acct-input" id="s-email" type="email" value="' + esc(p.email || '') + '">' +
       '<p style="font-size:.75rem;color:var(--asoft);margin:.45rem 0 .6rem">Changing your email sends a confirmation link to the new address.</p>' +

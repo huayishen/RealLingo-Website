@@ -15,12 +15,12 @@
   --adark:#111216; --amid:#4a4840; --asoft:#8a8878;
   --abg:#f4f4f2; --acard:#ffffff; --aborder:rgba(17,18,22,.09); --adanger:#c0392b;
   position: fixed; top: 0; right: 0; z-index: 9001; height: 100%;
-  width: 38%; max-width: 540px; min-width: 350px;
+  width: 38%; max-width: 560px; min-width: 480px;
   background: var(--abg); color: var(--adark);
   font-family: 'Be Vietnam Pro', system-ui, sans-serif;
-  box-shadow: -26px 0 70px -30px rgba(17,18,22,.4);
+  box-shadow: -30px 0 80px -34px rgba(17,18,22,.42);
   display: flex; flex-direction: column;
-  transform: translateX(104%); transition: transform .34s cubic-bezier(.4,0,.2,1); will-change: transform;
+  transform: translateX(104%); transition: transform .36s cubic-bezier(.4,0,.2,1); will-change: transform;
 }
 .acct-drawer.open { transform: translateX(0); }
 .acct-drawer *, .acct-drawer *::before, .acct-drawer *::after { box-sizing: border-box; }
@@ -39,8 +39,8 @@
 
 /* Body: left nav + content */
 .acct-main { flex: 1; display: flex; min-height: 0; }
-.acct-nav { flex: 0 0 auto; width: 172px; padding: 1rem .7rem; display: flex; flex-direction: column; gap: .2rem; background: var(--acard); border-right: 1px solid var(--aborder); }
-.acct-nav-item { position: relative; display: flex; align-items: center; gap: .6rem; padding: .62rem .8rem; border: none; background: none; border-radius: 11px; color: var(--amid); font-family: inherit; font-size: .87rem; font-weight: 600; cursor: pointer; text-align: left; transition: background .18s ease, color .18s ease, transform .18s ease; }
+.acct-nav { flex: 0 0 auto; width: 196px; padding: 1.2rem .9rem; display: flex; flex-direction: column; gap: .3rem; background: var(--acard); border-right: 1px solid var(--aborder); }
+.acct-nav-item { position: relative; display: flex; align-items: center; gap: .6rem; padding: .74rem 1.05rem; border: none; background: none; border-radius: 11px; color: var(--amid); font-family: inherit; font-size: .9rem; font-weight: 600; cursor: pointer; text-align: left; white-space: nowrap; transition: background .18s ease, color .18s ease, transform .18s ease; }
 .acct-nav-item:hover { background: var(--aysoft); color: var(--adark); }
 .acct-nav-item.active { background: var(--ay); color: var(--adark); font-weight: 700; box-shadow: 0 4px 12px -6px rgba(230,198,74,.9); }
 .acct-nav-item.active::before { content: ""; position: absolute; left: -.7rem; top: 22%; bottom: 22%; width: 3px; border-radius: 3px; background: var(--ayd); animation: acctIndicator .25s ease; }
@@ -49,15 +49,20 @@
 .acct-nav-logout { margin-top: auto; color: var(--adanger); }
 .acct-nav-logout:hover { background: #fdecea; color: var(--adanger); }
 
-.acct-content { flex: 1; overflow-y: auto; padding: 1.5rem 1.5rem 3rem; transition: opacity .18s ease, transform .18s ease; }
+.acct-content { flex: 1; overflow-y: auto; padding: 1.85rem 1.9rem 3.25rem; transition: opacity .18s ease, transform .18s ease; }
 .acct-content.switching { opacity: 0; transform: translateY(6px); }
 
 /* Building blocks */
-.acct-h1 { font-size: 1.35rem; font-weight: 800; letter-spacing: -.01em; margin-bottom: .3rem; }
-.acct-sub { color: var(--asoft); font-size: .85rem; margin-bottom: 1.25rem; }
-.acct-h2 { font-size: 1.05rem; font-weight: 800; margin: 1.5rem 0 .8rem; }
-.acct-card { background: var(--acard); border: 1px solid var(--aborder); border-radius: 16px; padding: 1.2rem 1.35rem; box-shadow: 0 10px 26px -20px rgba(17,18,22,.35); }
-.acct-card + .acct-card { margin-top: 1rem; }
+.acct-h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: -.01em; margin-bottom: .35rem; white-space: nowrap; }
+.acct-sub { color: var(--asoft); font-size: .86rem; line-height: 1.55; margin-bottom: 1.5rem; }
+.acct-h2 { font-size: 1.08rem; font-weight: 800; margin: 1.85rem 0 .9rem; white-space: nowrap; }
+.acct-card { background: var(--acard); border: 1px solid var(--aborder); border-radius: 16px; padding: 1.4rem 1.55rem; box-shadow: 0 10px 26px -20px rgba(17,18,22,.35); }
+.acct-card + .acct-card { margin-top: 1.1rem; }
+/* Two-column layout for paired fields (e.g. Country | City) on the wider panel. */
+.acct-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.6rem; }
+.acct-kv { padding: .7rem 0; border-bottom: 1px solid var(--aborder); }
+.acct-kv-lbl { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--asoft); }
+.acct-kv-val { font-size: .92rem; font-weight: 500; margin-top: .2rem; line-height: 1.4; word-break: break-word; }
 .acct-clickable { cursor: pointer; transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
 .acct-clickable:hover { transform: translateY(-2px); border-color: var(--aym); box-shadow: 0 16px 34px -22px rgba(230,198,74,.9); }
 
@@ -73,7 +78,7 @@
 .acct-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
 .acct-chip { display: inline-flex; align-items: center; gap: .35rem; padding: .4rem .8rem; border-radius: 100px; background: var(--aysoft); border: 1px solid rgba(230,198,74,.4); font-size: .82rem; font-weight: 600; }
 
-.acct-row { display: flex; justify-content: space-between; gap: 1rem; padding: .6rem 0; border-bottom: 1px solid var(--aborder); }
+.acct-row { display: flex; justify-content: space-between; gap: 1rem; padding: .72rem 0; border-bottom: 1px solid var(--aborder); line-height: 1.45; }
 .acct-row:last-child { border-bottom: none; }
 .acct-row-lbl { color: var(--asoft); font-size: .82rem; flex: 0 0 42%; }
 .acct-row-val { font-size: .88rem; text-align: right; font-weight: 500; }
@@ -187,10 +192,11 @@
 .cal-empty-title { font-size: 1.15rem; font-weight: 800; }
 .cal-empty-sub { color: var(--asoft); font-size: .88rem; margin: .4rem 0 1.4rem; }
 
-/* Responsive */
-@media (max-width: 1024px) { .acct-drawer { width: 56%; } }
+/* Responsive width — desktop ≥1440 uses the base rule (38%, 480–560px). */
+@media (max-width: 1439px) { .acct-drawer { width: 44%; min-width: 420px; max-width: 500px; } }
+@media (max-width: 1024px) { .acct-drawer { width: 66%; min-width: 0; max-width: none; } }
 @media (max-width: 680px) {
-  .acct-drawer { width: 100%; max-width: none; min-width: 0; }
-  .acct-nav { width: 148px; padding: 1rem .6rem; }
-  .acct-stats { grid-template-columns: repeat(3, 1fr); }
+  .acct-drawer { width: 100%; }
+  .acct-nav { width: 150px; padding: 1rem .6rem; }
+  .acct-2col { grid-template-columns: 1fr; }
 }
