@@ -29,7 +29,10 @@
   const K_PENDING = 'ra_pending_profile';   // profile stash awaiting a session (email round-trip)
   const K_EMAIL   = 'ra_pending_email';      // email awaiting verification (verify page)
   const K_REMEMBER = 'ra_remember';          // '1' | '0'
+  const K_UNAME   = 'ra_username';            // cached username for the shared nav
   const S_SEEN    = 'ra_session_seen';        // sessionStorage marker for remember-me
+
+  function cacheUsername(u) { try { if (u) localStorage.setItem(K_UNAME, u); } catch (e) {} }
 
   // ── Role → table mapping (hybrid: typed cols + details jsonb) ──
   const ROLE_TABLE = {
@@ -105,12 +108,14 @@
     const sb = await client();
     const { data, error } = await sb.auth.signInWithPassword({ email: email, password: password });
     if (error) throw error;
+    // Cache the username so the shared nav can show it right away.
+    try { const { data: prof } = await sb.from('profiles').select('username').eq('id', data.user.id).maybeSingle(); if (prof) cacheUsername(prof.username); } catch (e) {}
     return data;
   }
   async function signOut() {
     const sb = await client();
     await sb.auth.signOut();
-    try { localStorage.removeItem(K_REMEMBER); localStorage.removeItem(K_PENDING); localStorage.removeItem(K_EMAIL); } catch (e) {}
+    try { localStorage.removeItem(K_REMEMBER); localStorage.removeItem(K_PENDING); localStorage.removeItem(K_EMAIL); localStorage.removeItem(K_UNAME); } catch (e) {}
   }
   async function getUser()    { const sb = await client(); const { data } = await sb.auth.getUser();    return data ? data.user : null; }
   async function getSession() { const sb = await client(); const { data } = await sb.auth.getSession(); return data ? data.session : null; }
@@ -333,6 +338,7 @@
       sb.from('profile_roles').select('*').eq('user_id', uid).order('created_at', { ascending: true }),
       sb.from('applications').select('*').eq('user_id', uid).order('created_at', { ascending: false })
     ]);
+    if (pRes.data) cacheUsername(pRes.data.username);
     const roles = rRes.data || [];
     const roleDetails = {};
     for (const rr of roles) {

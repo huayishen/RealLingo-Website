@@ -151,6 +151,8 @@
 }
 
 .site-actions { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; margin-left: auto; }
+.site-hi { font-size: .82rem; font-weight: 600; color: var(--text-mid); white-space: nowrap; }
+.site-hi b { color: var(--text); }
 .site-btn-ghost {
   font-size: .84rem; font-weight: 600; color: var(--text-mid); text-decoration: none;
   padding: .6rem 1rem; transition: color .2s;
@@ -196,6 +198,7 @@
   .site-nav-item.open .site-dd { pointer-events: auto; max-height: 500px; transform: none; }
   .site-actions { margin-top: 1.5rem; margin-left: 0; flex-direction: column; align-items: stretch; }
   .site-actions .site-btn-solid, .site-actions .site-btn-ghost { text-align: center; }
+  .site-actions .site-hi { text-align: center; }
   .site-burger { display: flex; }
 }
 

@@ -7,6 +7,58 @@
   var SECTION = window.SITE_SECTION || null;
   var PAGE = window.SITE_PAGE || null;
 
+  // Lightweight logged-in check: read the persisted Supabase session straight
+  // from localStorage so marketing pages don't have to load supabase-js.
+  function currentUsername() {
+    var loggedIn = false;
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (!/^sb-.*-auth-token$/.test(k)) continue;
+        var v = JSON.parse(localStorage.getItem(k) || 'null');
+        var sess = v && (v.currentSession || v);
+        if (sess && sess.access_token) {
+          var exp = sess.expires_at || sess.expiresAt;      // unix seconds
+          if (!exp || exp * 1000 >= Date.now()) loggedIn = true;  // present & not clearly expired
+        }
+        break;
+      }
+    } catch (e) { return null; }
+    if (!loggedIn) return null;   // not logged in — keep Log In / Sign Up
+    // logged in — surface the cached username for a friendlier nav (best-effort)
+    var uname = '';
+    try { uname = localStorage.getItem('ra_username') || ''; } catch (e) {}
+    return /^[a-zA-Z0-9_]{1,20}$/.test(uname) ? uname : '';
+  }
+
+  function navLogout() {
+    // No supabase-js on marketing pages, so clear the persisted session
+    // locally and send the user home.
+    try {
+      for (var i = localStorage.length - 1; i >= 0; i--) {
+        var k = localStorage.key(i);
+        if (/^sb-.*-auth-token$/.test(k)) localStorage.removeItem(k);
+      }
+      localStorage.removeItem('ra_username');
+      localStorage.removeItem('ra_remember');
+    } catch (e) {}
+    window.location.href = ROOT;
+  }
+
+  function applyAuthState(target) {
+    var actions = target.querySelector('.site-actions');
+    if (!actions) return;
+    var uname = currentUsername();
+    if (uname === null) return; // not logged in — keep Log In / Sign Up
+    // Layout: "Hi, @username"  [Dashboard]  [Log out]
+    actions.innerHTML =
+      '<span class="site-hi">Hi, ' + (uname ? '@' + uname : 'there') + '</span>' +
+      '<a href="' + ROOT + 'dashboard/" class="site-btn-solid">Dashboard</a>' +
+      '<a href="#" class="site-btn-ghost" id="siteLogout">Log out</a>';
+    var lo = actions.querySelector('#siteLogout');
+    if (lo) lo.addEventListener('click', function (e) { e.preventDefault(); navLogout(); });
+  }
+
   function rewriteLinks(container) {
     container.querySelectorAll('[data-href]').forEach(function (el) {
       var href = el.getAttribute('data-href');
@@ -34,6 +86,7 @@
 
   function initHeader(target) {
     document.body.classList.add('has-site-hdr');
+    applyAuthState(target);   // swap Log In/Sign Up → Dashboard when signed in
     var hdr = target.querySelector('#siteHdr');
     var nav = target.querySelector('#siteNav');
     var burger = target.querySelector('#siteBurger');
