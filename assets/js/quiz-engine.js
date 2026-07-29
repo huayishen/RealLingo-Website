@@ -1201,15 +1201,16 @@ async function submitAccount() {
 
   try {
     RA.stashPending(pending);
-    // Email verification is bypassed for now — Supabase's default SMTP times the
-    // confirmation email out (504) and rolls the whole signup back. signUpDirect
-    // creates the account already-confirmed via the `signup` edge function and
-    // signs in, so we always land here with a live session. Switch back to
-    // RA.signUp + the verify redirect once custom SMTP (Resend) is live.
-    await RA.signUpDirect(email, pass);
+    const res = await RA.signUp(email, pass, accountRedirectUrl());
     clearQuizState();
-    try { await RA.flushPending(); } catch(e){ console.error(e); }
-    window.location.href = SITE_ROOT+'dashboard/';
+    if(res && res.session){
+      // Email confirmation disabled → we already have a session; flush now.
+      try { await RA.flushPending(); } catch(e){ console.error(e); }
+      window.location.href = SITE_ROOT+'dashboard/';
+    } else {
+      // Confirmation required (custom SMTP sends the email) → explain + wait.
+      window.location.href = SITE_ROOT+'signup/verify/';
+    }
   } catch(err) {
     console.error('signUp failed', err);
     if(btn){ btn.disabled=false; btn.textContent='Create Account →'; }
