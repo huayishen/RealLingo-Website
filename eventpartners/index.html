@@ -138,7 +138,16 @@
     display: block; width: 100%; text-align: left; background: none; border: none;
     padding: 1.85rem 1.9rem; cursor: pointer; font: inherit; color: inherit;
   }
-  .ep-card-summary-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .ep-card-summary-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding-right: 2.6rem; }
+
+  /* Save (heart) button — top-right corner of each event card. */
+  .ep-save-btn { position: absolute; top: 1.55rem; right: 1.45rem; z-index: 4; width: 34px; height: 34px; border-radius: 50%;
+    border: 1px solid var(--border); background: #fff; color: var(--text-soft); cursor: pointer; padding: 0;
+    display: flex; align-items: center; justify-content: center; transition: transform .18s ease, border-color .18s ease, color .18s ease, background .18s ease; }
+  .ep-save-btn:hover { transform: scale(1.1); border-color: var(--yellow-mid); color: var(--dark); }
+  .ep-save-btn svg { width: 17px; height: 17px; }
+  .ep-save-btn.saved { background: var(--yellow); border-color: var(--yellow); color: var(--dark); }
+  .ep-save-btn.saved svg { fill: var(--dark); }
   .ep-card-series { font-family: var(--font-serif); font-weight: 400; font-size: 1.22rem; line-height: 1.3; color: var(--dark); }
   .ep-card-community { font-size: .82rem; font-weight: 600; color: var(--text-mid); margin-top: .35rem; }
 
@@ -406,6 +415,8 @@
   window.SITE_SECTION = "explore";
   window.SITE_PAGE = "eventpartners";
 </script>
+<script src="../assets/js/supabase-client.js"></script>
+<script src="../assets/js/auth.js"></script>
 <script>
   /* ════════════════════════════════════════════════════════════
      EVENT DIRECTORY — single data source driving the card list,
@@ -425,6 +436,7 @@
   var PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
   var CAL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
   var CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+  var HEART_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg>';
 
   /* Every event as synced from the Event Directory spreadsheet. Event
      Status is intentionally NOT stored here — computeStatus() derives it
@@ -628,6 +640,7 @@
       : '<span class="ep-val ep-val--muted">None</span>';
     return (
       '<div class="ep-card" data-key="' + ev.key + '">' +
+        '<button type="button" class="ep-save-btn" data-save="' + ev.key + '" aria-label="Save event" aria-pressed="false" title="Save to your dashboard">' + HEART_SVG + '</button>' +
         // ── Collapsed summary: the only content visible until expanded.
         // Program Series leads as the primary identifier; Community is a
         // plain, label-less subtitle right beneath it (secondary emphasis).
@@ -778,6 +791,7 @@
     });
 
     epCards.innerHTML = filtered.map(cardHtml).join('');
+    refreshSaveButtons();
     edfEmpty.hidden = filtered.length > 0;
     edfCount.innerHTML = 'Showing <strong>' + filtered.length + '</strong> of ' + EVENTS.length + ' events';
 
@@ -833,6 +847,59 @@
     summary.setAttribute('aria-expanded', String(expanded));
   });
 
+  // ── Save-to-dashboard (heart) buttons ─────────────────────
+  var SAVED_KEYS = {};
+  var EVENT_BY_KEY = {}; EVENTS.forEach(function (ev) { EVENT_BY_KEY[ev.key] = ev; });
+  function refreshSaveButtons() {
+    document.querySelectorAll('.ep-save-btn').forEach(function (b) {
+      var on = !!(SAVED_KEYS && SAVED_KEYS[b.dataset.save]);
+      b.classList.toggle('saved', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.title = on ? 'Saved — click to remove' : 'Save to your dashboard';
+    });
+  }
+  function eventSnapshot(ev) {
+    return { series: ev.series, title: ev.series, dateLabel: ev.dateLabel, startDate: ev.startDate, endDate: ev.endDate,
+      startTime: ev.startTime, endTime: ev.endTime, cities: ev.cities, country: ev.country, venue: ev.venue,
+      languages: ev.languages, supportingLanguages: ev.supportingLanguages, communities: ev.communities,
+      format: ev.format, type: ev.type, requirement: ev.requirement, moderator: ev.moderator,
+      networking: ev.networking, rsvp: ev.rsvp, entranceFee: ev.entranceFee, overview: ev.overview };
+  }
+  async function onSaveClick(btn) {
+    var key = btn.dataset.save;
+    var root = window.SITE_ROOT || '../';
+    if (typeof RA === 'undefined') { window.location.href = root + 'login/'; return; }
+    var user = null; try { user = await RA.getUser(); } catch (e) {}
+    if (!user) { window.location.href = root + 'login/'; return; }
+    btn.disabled = true;
+    try {
+      if (SAVED_KEYS[key]) { await RA.unsaveItem('event', key); delete SAVED_KEYS[key]; }
+      else {
+        var ev = EVENT_BY_KEY[key];
+        await RA.saveItem({ item_type: 'event', item_ref: key, title: ev ? ev.series : key, url: root + 'eventpartners/', data: ev ? eventSnapshot(ev) : {} });
+        SAVED_KEYS[key] = true;
+      }
+      refreshSaveButtons();
+    } catch (e) { console.error('save failed', e); }
+    btn.disabled = false;
+  }
+  epCards.addEventListener('click', function (e) {
+    var btn = e.target.closest('.ep-save-btn');
+    if (!btn) return;
+    e.stopPropagation();
+    onSaveClick(btn);
+  });
+  async function initSaves() {
+    if (typeof RA === 'undefined') return;
+    var user = null; try { user = await RA.getUser(); } catch (e) {}
+    if (!user) return;
+    try {
+      var rows = await RA.loadSaved();
+      rows.forEach(function (r) { if (r.item_type === 'event') SAVED_KEYS[r.item_ref] = true; });
+      refreshSaveButtons();
+    } catch (e) {}
+  }
+
   // Pre-apply any filters handed off via the URL (e.g. from the "Search
   // Events" form on the Event Near Me page) before the first render.
   (function () {
@@ -863,6 +930,7 @@
   })();
 
   render();
+  initSaves();   // mark already-saved events for a signed-in visitor
 
   // Keep Event Status pills (and Ongoing/Upcoming/Past filtering) correct
   // for anyone who leaves the tab open across an event's start/end time.

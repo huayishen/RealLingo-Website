@@ -147,6 +147,23 @@
     const { data } = await sb.from('saved_items').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
     return data || [];
   }
+  async function saveItem(item) {
+    const sb = await client();
+    const user = await getUser();
+    if (!user) throw new Error('Not authenticated');
+    const { error } = await sb.from('saved_items').upsert({
+      user_id: user.id, item_type: item.item_type, item_ref: item.item_ref,
+      title: item.title || null, url: item.url || null, data: item.data || {}
+    }, { onConflict: 'user_id,item_type,item_ref' });
+    if (error) throw error;
+  }
+  async function unsaveItem(itemType, itemRef) {
+    const sb = await client();
+    const user = await getUser();
+    if (!user) throw new Error('Not authenticated');
+    const { error } = await sb.from('saved_items').delete().eq('user_id', user.id).eq('item_type', itemType).eq('item_ref', itemRef);
+    if (error) throw error;
+  }
   async function getUser()    { const sb = await client(); const { data } = await sb.auth.getUser();    return data ? data.user : null; }
   async function getSession() { const sb = await client(); const { data } = await sb.auth.getSession(); return data ? data.session : null; }
   async function onAuth(cb)   { const sb = await client(); return sb.auth.onAuthStateChange(cb); }
@@ -480,7 +497,7 @@
     stashPending, getPending, clearPending, flushPending,
     saveProfile, loadProfile,
     updateUsername, updateBasics, updateNotificationPrefs, submitApplication, profileToFormData,
-    updateEmail, deleteAccount, loadSaved,
+    updateEmail, deleteAccount, loadSaved, saveItem, unsaveItem,
     enforceRemember
   };
 })();
