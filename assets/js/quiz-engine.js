@@ -47,6 +47,15 @@ function getActiveSections() {
 }
 function invalidateSections() { _cachedSections = null; }
 
+// Display label for a section key. The engine-owned sections ('createAccount',
+// and 'review' as a fallback) aren't in the per-flow SECTION_LABEL map.
+function sectionLabel(key) {
+  if (typeof SECTION_LABEL !== 'undefined' && SECTION_LABEL[key]) return SECTION_LABEL[key];
+  if (key === 'createAccount') return 'Create Account';
+  if (key === 'review') return 'Review';
+  return key;
+}
+
 function getSectionSteps(key) {
   return (ALL_SECTION_STEPS[key] || []).filter(step => !step.skip || !step.skip());
 }
@@ -706,7 +715,7 @@ function renderSidebar() {
     const isCur=i===sectIdx;
     const cls=isDone?'done':isCur?'cur':'pending';
     const dot=isDone?'✓':isCur?'→':'';
-    return `<button type="button" class="sn-item ${cls}" onclick="jumpToSection(${i})"><div class="sn-dot ${cls}">${dot}</div><span class="sn-label">${esc(SECTION_LABEL[key]||key)}</span></button>`;
+    return `<button type="button" class="sn-item ${cls}" onclick="jumpToSection(${i})"><div class="sn-dot ${cls}">${dot}</div><span class="sn-label">${esc(sectionLabel(key))}</span></button>`;
   }).join('');
 }
 
@@ -810,7 +819,7 @@ function defaultAvatarSrc() { return (typeof SITE_ROOT!=='undefined'?SITE_ROOT:'
 
 function buildReviewHtml() {
   const sections = getActiveSections().filter(s => s!=='review');
-  const roleSections = sections.filter(s => s!=='general' && s!=='final');
+  const roleSections = sections.filter(s => s!=='general' && s!=='final' && s!=='createAccount');
 
   let html = `<div class="fstep-tag">Review</div><h2 class="fstep-q" style="margin-bottom:2rem">Review Your Profile</h2>`;
   html += buildGeneralReviewCard(sections);
