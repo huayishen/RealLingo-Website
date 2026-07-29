@@ -114,6 +114,30 @@
     if (error) throw error;
     return data; // data.session is null when email confirmation is required
   }
+  // TEMPORARY email-verification bypass. Supabase's default SMTP times the
+  // /signup request out (10s → 504, account rolled back), so instead of
+  // sb.auth.signUp we create the account already-confirmed via the `signup`
+  // edge function (service-role admin.createUser, email_confirm:true, no email
+  // sent) and then sign in to establish a session. Revert callers to signUp()
+  // once custom SMTP (Resend) is live and re-enable "Confirm email".
+  async function signUpDirect(email, password) {
+    const sb = await client();
+    const { data, error } = await sb.functions.invoke('signup', { body: { email: email, password: password } });
+    // supabase-js surfaces a non-2xx as FunctionsHttpError (body in .context);
+    // some builds instead resolve the parsed body into `data`. Handle both.
+    let code = '';
+    if (error) { try { code = (await error.context.json()).error || ''; } catch (_e) { code = ''; } }
+    else if (data && data.error) { code = data.error; }
+    if (code) {
+      if (code === 'already_registered') { const e = new Error('already registered'); e.code = 'already_registered'; throw e; }
+      if (code === 'invalid_email') throw new Error('Please enter a valid email address');
+      if (code === 'weak_password') throw new Error('Password must be at least 8 characters');
+      throw new Error((error && error.message) || 'Could not create your account');
+    }
+    if (error) throw error;
+    // Account exists and is confirmed — establish a session right away.
+    return await signIn(email, password, true);
+  }
   async function signIn(email, password, remember) {
     try { localStorage.setItem(K_REMEMBER, remember ? '1' : '0'); sessionStorage.setItem(S_SEEN, '1'); } catch (e) {}
     const sb = await client();
@@ -491,7 +515,7 @@
   // ── Public API ───────────────────────────────────────────
   window.RA = {
     ROLE_TABLE, HIRE_TARGET,
-    signUp, signIn, signOut, getUser, getSession, onAuth, resetPassword, updatePassword, requireAuth,
+    signUp, signUpDirect, signIn, signOut, getUser, getSession, onAuth, resetPassword, updatePassword, requireAuth,
     usernameAvailable,
     uploadAvatar, removeAvatar, avatarPublicUrl,
     stashPending, getPending, clearPending, flushPending,
