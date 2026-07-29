@@ -31,22 +31,28 @@
     return /^[a-zA-Z0-9_]{1,20}$/.test(uname) ? uname : '';
   }
 
-  function navLogout() {
-    // No supabase-js on marketing pages, so clear the persisted session
-    // locally and send the user home.
-    try {
-      for (var i = localStorage.length - 1; i >= 0; i--) {
-        var k = localStorage.key(i);
-        if (/^sb-.*-auth-token$/.test(k)) localStorage.removeItem(k);
-      }
-      localStorage.removeItem('ra_username');
-      localStorage.removeItem('ra_remember');
-    } catch (e) {}
-    window.location.href = ROOT;
-  }
-
   function escapeHtml(s) {
     return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // Lazy-load the global account drawer's assets the first time it's opened, so
+  // marketing pages stay light until the user actually clicks their profile.
+  function loadScript(src) { return new Promise(function (res, rej) { var s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
+  function loadCss(href) { if (document.querySelector('link[href="' + href + '"]')) return; var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; document.head.appendChild(l); }
+  var _drawerLoading = null;
+  function ensureDrawer() {
+    if (window.openAccountDrawer) return Promise.resolve();
+    if (_drawerLoading) return _drawerLoading;
+    loadCss(ROOT + 'assets/css/account-drawer.css');
+    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js'); })
+      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js'); });
+    return _drawerLoading;
+  }
+  function openAccountDrawerLazy(e) {
+    if (e) e.preventDefault();
+    ensureDrawer().then(function () { if (window.openAccountDrawer) window.openAccountDrawer(); })
+      .catch(function (err) { console.error('account drawer load failed', err); window.location.href = ROOT + 'dashboard/'; });
   }
 
   function applyAuthState(target) {
@@ -54,17 +60,16 @@
     if (!actions) return;
     var uname = currentUsername();
     if (uname === null) return; // not logged in — keep Log In / Sign Up
-    // Greet by name (the "how should we call you?" answer), falling back to @username.
-    var name = '';
-    try { name = localStorage.getItem('ra_name') || ''; } catch (e) {}
+    // Logged in: a profile button (avatar + "Hi, name") that opens the drawer.
+    var name = '', avatar = '';
+    try { name = localStorage.getItem('ra_name') || ''; avatar = localStorage.getItem('ra_avatar') || ''; } catch (e) {}
     var greet = name || (uname ? '@' + uname : 'there');
-    // Layout: "Hi, <name>"  [Dashboard]  [Log out]
-    actions.innerHTML =
-      '<span class="site-hi">Hi, <b>' + escapeHtml(greet) + '</b></span>' +
-      '<a href="' + ROOT + 'dashboard/" class="site-btn-solid">Dashboard</a>' +
-      '<a href="#" class="site-btn-ghost" id="siteLogout">Log out</a>';
-    var lo = actions.querySelector('#siteLogout');
-    if (lo) lo.addEventListener('click', function (e) { e.preventDefault(); navLogout(); });
+    var ava = avatar
+      ? '<img class="site-profile-ava" src="' + escapeHtml(avatar) + '" alt="">'
+      : '<img class="site-profile-ava" src="' + ROOT + 'assets/img/logo-yellow.png" data-default="1" alt="">';
+    actions.innerHTML = '<button type="button" class="site-profile-btn" id="siteProfileBtn">' + ava + '<span class="site-hi">Hi, <b>' + escapeHtml(greet) + '</b></span></button>';
+    var btn = actions.querySelector('#siteProfileBtn');
+    if (btn) btn.addEventListener('click', openAccountDrawerLazy);
   }
 
   function rewriteLinks(container) {

@@ -31,14 +31,17 @@
   const K_REMEMBER = 'ra_remember';          // '1' | '0'
   const K_UNAME   = 'ra_username';            // cached username for the shared nav
   const K_NAME    = 'ra_name';                // cached display name (full_name) for greetings
+  const K_AVA     = 'ra_avatar';              // cached avatar public URL for the nav button
   const S_SEEN    = 'ra_session_seen';        // sessionStorage marker for remember-me
 
   function cacheIdentity(profile) {
     try {
       if (!profile) return;
       if (profile.username) localStorage.setItem(K_UNAME, profile.username);
-      if (profile.full_name) localStorage.setItem(K_NAME, profile.full_name);
-      else localStorage.removeItem(K_NAME);
+      if (profile.full_name) localStorage.setItem(K_NAME, profile.full_name); else localStorage.removeItem(K_NAME);
+      var cfg = window.SUPABASE_CONFIG;
+      if (profile.avatar_url && cfg) localStorage.setItem(K_AVA, cfg.url + '/storage/v1/object/public/avatars/' + profile.avatar_url);
+      else localStorage.removeItem(K_AVA);
     } catch (e) {}
   }
 
@@ -116,14 +119,33 @@
     const sb = await client();
     const { data, error } = await sb.auth.signInWithPassword({ email: email, password: password });
     if (error) throw error;
-    // Cache name + username so the shared nav can greet the user right away.
-    try { const { data: prof } = await sb.from('profiles').select('username, full_name').eq('id', data.user.id).maybeSingle(); cacheIdentity(prof); } catch (e) {}
+    // Cache name/username/avatar so the shared nav can greet the user right away.
+    try { const { data: prof } = await sb.from('profiles').select('username, full_name, avatar_url').eq('id', data.user.id).maybeSingle(); cacheIdentity(prof); } catch (e) {}
     return data;
   }
   async function signOut() {
     const sb = await client();
     await sb.auth.signOut();
-    try { [K_REMEMBER, K_PENDING, K_EMAIL, K_UNAME, K_NAME].forEach(k => localStorage.removeItem(k)); } catch (e) {}
+    try { [K_REMEMBER, K_PENDING, K_EMAIL, K_UNAME, K_NAME, K_AVA].forEach(k => localStorage.removeItem(k)); } catch (e) {}
+  }
+  async function updateEmail(newEmail) {
+    const sb = await client();
+    const { error } = await sb.auth.updateUser({ email: newEmail });
+    if (error) throw error;   // Supabase emails a confirmation link to the new address
+  }
+  async function deleteAccount() {
+    const sb = await client();
+    const { error } = await sb.rpc('delete_own_account');
+    if (error) throw error;
+    try { await sb.auth.signOut(); } catch (e) {}
+    try { [K_REMEMBER, K_PENDING, K_EMAIL, K_UNAME, K_NAME, K_AVA].forEach(k => localStorage.removeItem(k)); } catch (e) {}
+  }
+  async function loadSaved() {
+    const sb = await client();
+    const user = await getUser();
+    if (!user) return [];
+    const { data } = await sb.from('saved_items').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+    return data || [];
   }
   async function getUser()    { const sb = await client(); const { data } = await sb.auth.getUser();    return data ? data.user : null; }
   async function getSession() { const sb = await client(); const { data } = await sb.auth.getSession(); return data ? data.session : null; }
@@ -458,6 +480,7 @@
     stashPending, getPending, clearPending, flushPending,
     saveProfile, loadProfile,
     updateUsername, updateBasics, updateNotificationPrefs, submitApplication, profileToFormData,
+    updateEmail, deleteAccount, loadSaved,
     enforceRemember
   };
 })();
