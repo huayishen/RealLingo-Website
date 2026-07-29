@@ -43,10 +43,10 @@
   function ensureDrawer() {
     if (window.openAccountDrawer) return Promise.resolve();
     if (_drawerLoading) return _drawerLoading;
-    loadCss(ROOT + 'assets/css/account-drawer.css?v=4');
-    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=4'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=4'); })
-      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=4'); });
+    loadCss(ROOT + 'assets/css/account-drawer.css?v=5');
+    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=5'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=5'); })
+      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=5'); });
     return _drawerLoading;
   }
   function openAccountDrawerLazy(e) {

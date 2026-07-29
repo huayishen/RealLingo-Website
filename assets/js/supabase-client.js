@@ -28,7 +28,10 @@
               persistSession: true,       // keep the user signed in across pages
               autoRefreshToken: true,     // refresh the access token in the background
               detectSessionInUrl: true,   // handle email-verify / recovery links on load
-              flowType: 'pkce'            // recommended, secure email-link flow
+              flowType: 'implicit'        // tokens travel in the link itself, so a
+                                          // verify/reset email works on ANY device or
+                                          // browser (incl. mail-app in-app browsers) —
+                                          // PKCE needs the same browser that started signup
             }
           })
         );
