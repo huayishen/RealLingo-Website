@@ -15,7 +15,7 @@
   --adark:#111216; --amid:#4a4840; --asoft:#8a8878;
   --abg:#f4f4f2; --acard:#ffffff; --aborder:rgba(17,18,22,.09); --adanger:#c0392b;
   position: fixed; top: 0; right: 0; z-index: 9001; height: 100%;
-  width: 38%; max-width: 560px; min-width: 480px;
+  width: 50%; max-width: none; min-width: 540px;   /* half the page so content isn't squeezed */
   background: var(--abg); color: var(--adark);
   font-family: 'Be Vietnam Pro', system-ui, sans-serif;
   box-shadow: -30px 0 80px -34px rgba(17,18,22,.42);
@@ -53,9 +53,9 @@
 .acct-content.switching { opacity: 0; transform: translateY(6px); }
 
 /* Building blocks */
-.acct-h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: -.01em; margin-bottom: .35rem; white-space: nowrap; }
+.acct-h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: -.01em; margin-bottom: .35rem; overflow-wrap: anywhere; }
 .acct-sub { color: var(--asoft); font-size: .86rem; line-height: 1.55; margin-bottom: 1.5rem; }
-.acct-h2 { font-size: 1.08rem; font-weight: 800; margin: 1.85rem 0 .9rem; white-space: nowrap; }
+.acct-h2 { font-size: 1.08rem; font-weight: 800; margin: 1.85rem 0 .9rem; overflow-wrap: anywhere; }
 .acct-card { background: var(--acard); border: 1px solid var(--aborder); border-radius: 16px; padding: 1.4rem 1.55rem; box-shadow: 0 10px 26px -20px rgba(17,18,22,.35); }
 .acct-card + .acct-card { margin-top: 1.1rem; }
 /* Two-column layout for paired fields (e.g. Country | City) on the wider panel. */
@@ -192,9 +192,9 @@
 .cal-empty-title { font-size: 1.15rem; font-weight: 800; }
 .cal-empty-sub { color: var(--asoft); font-size: .88rem; margin: .4rem 0 1.4rem; }
 
-/* Responsive width — desktop ≥1440 uses the base rule (38%, 480–560px). */
-@media (max-width: 1439px) { .acct-drawer { width: 44%; min-width: 420px; max-width: 500px; } }
-@media (max-width: 1024px) { .acct-drawer { width: 66%; min-width: 0; max-width: none; } }
+/* Responsive width — desktop ≥1440 uses the base rule (half page, min 540px). */
+@media (max-width: 1439px) { .acct-drawer { width: 50%; min-width: 460px; max-width: none; } }
+@media (max-width: 1024px) { .acct-drawer { width: 70%; min-width: 0; max-width: none; } }
 @media (max-width: 680px) {
   .acct-drawer { width: 100%; }
   .acct-nav { width: 150px; padding: 1rem .6rem; }

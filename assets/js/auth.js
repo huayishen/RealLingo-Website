@@ -348,6 +348,7 @@
       onboarding_complete: true
     };
     { const { error } = await sb.from('profiles').upsert(profileRow, { onConflict: 'id' }); if (error) throw error; }
+    cacheIdentity(profileRow); // keep the shared-nav greeting ("Hi, <name>") in sync immediately after signup/edit
 
     // 1b. avatar chosen during review (base64 data URL) => upload to Storage
     if (fd.avatarDataUrl && String(fd.avatarDataUrl).startsWith('data:')) {
