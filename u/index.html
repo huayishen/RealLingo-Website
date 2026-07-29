@@ -18,6 +18,12 @@
   .pp-logo .lr { font-family: var(--sr); font-style: italic; }
   .pp-logo .ll { font-family: var(--ss); font-weight: 900; letter-spacing: -.03em; }
   .pp-link { color: var(--y); font-size: .82rem; font-weight: 700; text-decoration: none; }
+  .pp-top-right { display: flex; align-items: center; gap: .6rem; }
+  .pp-btn { display: inline-block; border: 1px solid rgba(255,255,255,.16); background: none; color: rgba(255,255,255,.8);
+            border-radius: 100px; padding: .5rem 1.15rem; font-family: var(--ss); font-size: .8rem; font-weight: 700; text-decoration: none; transition: color .2s, border-color .2s, background .2s; }
+  .pp-btn:hover { color: #fff; border-color: rgba(255,255,255,.4); }
+  .pp-btn-solid { background: var(--y); color: #111216; border-color: var(--y); }
+  .pp-btn-solid:hover { color: #111216; background: #fff; border-color: #fff; }
   .pp-wrap { position: relative; z-index: 10; max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
   .pp-card { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 2.25rem; display: flex; gap: 1.75rem; align-items: center; flex-wrap: wrap; }
   .pp-avatar { width: 108px; height: 108px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,235,153,.35); background: #14151a; }
@@ -39,7 +45,10 @@
 
 <header class="pp-top">
   <a class="pp-logo" href="../"><span class="lr">Real</span><span class="ll">lingo</span></a>
-  <a class="pp-link" href="../login/">Log in</a>
+  <div class="pp-top-right">
+    <a class="pp-btn" href="../explore/event/">Events</a>
+    <a class="pp-btn pp-btn-solid" id="pp-authbtn" href="../login/">Log in</a>
+  </div>
 </header>
 
 <main class="pp-wrap">
@@ -102,6 +111,15 @@
     }
     content.innerHTML = html;
   }
+  // Signed-in visitors get a "Dashboard" button; anonymous visitors keep "Log in".
+  RA.getSession().then(s => {
+    if (s) {
+      const b = document.getElementById('pp-authbtn');
+      b.textContent = 'Dashboard';
+      b.setAttribute('href', SITE_ROOT + 'dashboard/');
+    }
+  }).catch(() => {});
+
   run().catch(err => { console.error(err); content.innerHTML = '<div class="pp-empty">Could not load this profile.</div>'; });
 })();
 </script>
