@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<title>Confirm your RealLingo account</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap');
+  body { margin: 0; padding: 0; width: 100% !important; background-color: #f4f4f2; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+  table { border-collapse: collapse; }
+  img { border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; display: block; }
+  a { text-decoration: none; }
+  .rl-btn:hover { background-color: #f5d96a !important; }
+  @media only screen and (max-width: 620px) {
+    .rl-card { width: 100% !important; border-radius: 0 !important; }
+    .rl-pad { padding-left: 28px !important; padding-right: 28px !important; }
+    .rl-wordmark { font-size: 40px !important; }
+    .rl-h1 { font-size: 26px !important; }
+    .rl-btn { display: block !important; width: 100% !important; box-sizing: border-box; }
+  }
+</style>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f4f2;">
+  <!-- preheader (hidden) -->
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0; font-size:1px; line-height:1px; color:#f4f4f2;">
+    Verify your email to activate your RealLingo account and start exploring authentic language experiences.
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f2;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+
+        <!-- Card -->
+        <table role="presentation" class="rl-card" width="600" cellpadding="0" cellspacing="0" style="width:600px; max-width:600px; background-color:#ffffff; border-radius:20px; overflow:hidden; box-shadow:0 18px 50px -24px rgba(17,18,22,0.22);">
+
+          <!-- Header / wordmark logo (on a cream band so the logo bg blends) -->
+          <tr>
+            <td align="center" bgcolor="#eeede9" style="background-color:#eeede9; padding:46px 48px 40px 48px;">
+              <img src="https://fcvmbygdcynpakmpfams.supabase.co/storage/v1/object/public/email-assets/reallingo-wordmark.png" width="300" alt="RealLingo — Authentic Experiences Since 2026" style="display:block; width:300px; max-width:78%; height:auto; margin:0 auto;">
+              <div style="font-family:'Be Vietnam Pro',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:12px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:#8a8878; margin-top:18px;">
+                Authentic Experiences Since 2026
+              </div>
+            </td>
+          </tr>
+
+          <!-- Hero -->
+          <tr>
+            <td class="rl-pad" align="center" style="padding:36px 56px 0 56px;">
+              <h1 class="rl-h1" style="margin:0 0 16px 0; font-family:'Be Vietnam Pro',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:32px; font-weight:800; line-height:1.2; color:#111216; letter-spacing:-0.02em;">
+                Welcome to RealLingo!
+              </h1>
+              <p style="margin:0; font-family:'Be Vietnam Pro',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:16px; line-height:1.65; color:#4a4840;">
+                Thank you for joining the global language community. Please verify your email address to activate your account and begin exploring authentic language experiences around the world.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Button -->
+          <tr>
+            <td align="center" style="padding:34px 48px 10px 48px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" align="center">
+                <tr>
+                  <td align="center" bgcolor="#ffeb99" style="border-radius:100px;">
+                    <a class="rl-btn" href="{{ .ConfirmationURL }}" target="_blank" style="display:inline-block; padding:17px 46px; font-family:'Be Vietnam Pro',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:16px; font-weight:700; color:#111216; text-decoration:none; border-radius:100px; background-color:#ffeb99;">
+                      Verify My Email
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Fallback link -->
+          <tr>
+            <td class="rl-pad" align="center" style="padding:6px 56px 44px 56px;">
+              <p style="margin:0 0 10px 0; font-family:'Be Vietnam Pro',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:13px; line-height:1.6; color:#8a8878;">
+                If the button doesn't work, you can also copy and paste the verification link into your browser.
+              </p>
+              <p style="margin:0; font-family:'Be Vietnam Pro',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:12px; line-height:1.55; color:#99adff; word-break:break-all;">
+                <a href="{{ .ConfirmationURL }}" target="_blank" style="color:#6b7ce0; text-decoration:underline;">{{ .ConfirmationURL }}</a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer banner -->
+          <tr>
+            <td style="padding:0; font-size:0; line-height:0;">
+              <img src="https://fcvmbygdcynpakmpfams.supabase.co/storage/v1/object/public/email-assets/reallingo-banner.png" width="600" alt="RealLingo — Authentic Language Experience since 2026" style="display:block; width:100%; max-width:600px; height:auto;">
+            </td>
+          </tr>
+
+          <!-- Platform description -->
+          <tr>
+            <td class="rl-pad" align="center" style="padding:30px 56px 8px 56px;">
+              <p style="margin:0; font-family:'Be Vietnam Pro',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:13px; line-height:1.7; color:#8a8878;">
+                RealLingo is a decentralized platform that helps language lovers discover personalized events nearby—from language workshops and community meetups to polyglot roundtables, cultural experiences, policy discussions, and much more.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td class="rl-pad" style="padding:22px 56px 0 56px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid #ececec; font-size:0; line-height:0;">&nbsp;</td></tr></table>
+            </td>
+          </tr>
+
+          <!-- Legal -->
+          <tr>
+            <td class="rl-pad" align="center" style="padding:18px 56px 48px 56px;">
+              <p style="margin:0 0 6px 0; font-family:'Be Vietnam Pro',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:11px; line-height:1.6; color:#b0aea4;">
+                &copy; 2026 RealLingo
+              </p>
+              <p style="margin:0; font-family:'Be Vietnam Pro',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:11px; line-height:1.6; color:#b0aea4;">
+                You're receiving this email because you created a RealLingo account.<br>
+                If you didn't create this account, you can safely ignore this email.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /Card -->
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

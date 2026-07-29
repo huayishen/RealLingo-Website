@@ -88,8 +88,8 @@
 
   function renderNav() {
     navEl.innerHTML = NAV.map(function (it) {
-      return '<button class="acct-nav-item' + (it.key === CURRENT ? ' active' : '') + '" data-nav="' + it.key + '"><span class="acct-nav-ico">' + it.icon + '</span><span class="acct-nav-lbl">' + it.label + '</span></button>';
-    }).join('') + '<button class="acct-nav-item acct-nav-logout" data-nav="__logout"><span class="acct-nav-ico">🚪</span><span class="acct-nav-lbl">Log Out</span></button>';
+      return '<button class="acct-nav-item' + (it.key === CURRENT ? ' active' : '') + '" data-nav="' + it.key + '"><span class="acct-nav-lbl">' + it.label + '</span></button>';
+    }).join('') + '<button class="acct-nav-item acct-nav-logout" data-nav="__logout"><span class="acct-nav-lbl">Log Out</span></button>';
     navEl.querySelectorAll('[data-nav]').forEach(function (b) {
       b.addEventListener('click', function () { b.dataset.nav === '__logout' ? doLogout() : go(b.dataset.nav); });
     });

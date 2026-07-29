@@ -55,21 +55,32 @@
       .catch(function (err) { console.error('account drawer load failed', err); window.location.href = ROOT + 'dashboard/'; });
   }
 
+  function navLogout() {
+    // No supabase-js on marketing pages — clear the persisted session locally.
+    try {
+      for (var i = localStorage.length - 1; i >= 0; i--) { var k = localStorage.key(i); if (/^sb-.*-auth-token$/.test(k)) localStorage.removeItem(k); }
+      ['ra_username', 'ra_name', 'ra_avatar', 'ra_remember'].forEach(function (k) { localStorage.removeItem(k); });
+    } catch (e) {}
+    window.location.href = ROOT;
+  }
+
   function applyAuthState(target) {
     var actions = target.querySelector('.site-actions');
     if (!actions) return;
     var uname = currentUsername();
     if (uname === null) return; // not logged in — keep Log In / Sign Up
-    // Logged in: a profile button (avatar + "Hi, name") that opens the drawer.
-    var name = '', avatar = '';
-    try { name = localStorage.getItem('ra_name') || ''; avatar = localStorage.getItem('ra_avatar') || ''; } catch (e) {}
+    // Logged in: "Hi, name"  [Dashboard → opens drawer]  [Log out]
+    var name = '';
+    try { name = localStorage.getItem('ra_name') || ''; } catch (e) {}
     var greet = name || (uname ? '@' + uname : 'there');
-    var ava = avatar
-      ? '<img class="site-profile-ava" src="' + escapeHtml(avatar) + '" alt="">'
-      : '<img class="site-profile-ava" src="' + ROOT + 'assets/img/logo-yellow.png" data-default="1" alt="">';
-    actions.innerHTML = '<button type="button" class="site-profile-btn" id="siteProfileBtn">' + ava + '<span class="site-hi">Hi, <b>' + escapeHtml(greet) + '</b></span></button>';
-    var btn = actions.querySelector('#siteProfileBtn');
-    if (btn) btn.addEventListener('click', openAccountDrawerLazy);
+    actions.innerHTML =
+      '<span class="site-hi">Hi, <b>' + escapeHtml(greet) + '</b></span>' +
+      '<a href="#" class="site-btn-solid" id="siteDashBtn">Dashboard</a>' +
+      '<a href="#" class="site-btn-ghost" id="siteLogout">Log out</a>';
+    var dash = actions.querySelector('#siteDashBtn');
+    if (dash) dash.addEventListener('click', openAccountDrawerLazy);
+    var lo = actions.querySelector('#siteLogout');
+    if (lo) lo.addEventListener('click', function (e) { e.preventDefault(); navLogout(); });
   }
 
   function rewriteLinks(container) {
