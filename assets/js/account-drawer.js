@@ -439,7 +439,7 @@
       '<button class="acct-btn acct-btn-solid" id="s-uname-save" style="margin-top:.4rem">Save username</button></div>';
     // Personal info
     html += '<div class="acct-card"><div class="acct-msg" id="s-basics-msg"></div>' +
-      '<div class="acct-field"><div class="acct-label">Full name</div><input class="acct-input" id="s-name" value="' + esc(p.full_name || '') + '"></div>' +
+      '<div class="acct-field"><div class="acct-label">Preferred name</div><input class="acct-input" id="s-name" value="' + esc(p.full_name || '') + '"></div>' +
       '<div class="acct-2col">' +
         '<div class="acct-field"><div class="acct-label">Country</div><select class="acct-select" id="s-country">' + countryOptions(p.country || '') + '</select></div>' +
         '<div class="acct-field"><div class="acct-label">City</div><input class="acct-input" id="s-city" value="' + esc(p.city || '') + '"></div>' +
