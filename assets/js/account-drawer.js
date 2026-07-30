@@ -185,7 +185,7 @@
     });
     // Add-a-role affordance — opens the full editor (with the role picker) and
     // preserves the roles they already have.
-    html += '<a href="' + ROOT() + 'signup/all/?edit=1" style="display:block;text-align:center;margin-top:1rem;padding:.85rem;border:1.5px dashed var(--aborder);border-radius:12px;color:var(--adark);font-weight:700;font-size:.9rem;text-decoration:none">+ Add another role</a>';
+    html += '<a href="' + ROOT() + 'signup/all/?edit=1&addrole=1" style="display:block;text-align:center;margin-top:1rem;padding:.85rem;border:1.5px dashed var(--aborder);border-radius:12px;color:var(--adark);font-weight:700;font-size:.9rem;text-decoration:none">+ Add another role</a>';
     contentEl.innerHTML = html;
     contentEl.querySelectorAll('.acct-role-card').forEach(function (card) {
       card.addEventListener('click', function (e) {

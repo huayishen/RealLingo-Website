@@ -44,10 +44,24 @@ let SKIPPED_ONBOARDING = false;
 let COMPLETION_MODE = false;
 function editing() { return EDIT_MODE || COMPLETION_MODE; }
 
+// Add-a-role mode (?addrole=1): a logged-in user adding roles from their
+// dashboard. Skips the General section (name/username/languages/location are
+// already set) — shows just the role picker — and only asks the questions for
+// the NEWLY-selected roles (existing roles are preserved but not re-asked).
+let ADD_ROLE_MODE = false;
+try { ADD_ROLE_MODE = new URLSearchParams(location.search).get('addrole') === '1'; } catch (e) {}
+let _existingRoles = null;   // snapshot of roles the user already had (set in onboardingInit)
+function addRoleActive() { return ADD_ROLE_MODE && _existingRoles !== null; }
+
 function getActiveSections() {
   if (!_cachedSections) {
     _cachedSections = ['general'];
-    ROLE_KEYS.forEach(r => { if (selectedRoles.has(r)) _cachedSections.push(r); });
+    ROLE_KEYS.forEach(r => {
+      if (!selectedRoles.has(r)) return;
+      // In add-role mode only the freshly-picked roles get their own section.
+      if (addRoleActive() && _existingRoles.has(r)) return;
+      _cachedSections.push(r);
+    });
     // Contact (email/phone) is no longer a quiz step — it's folded into the
     // 'createAccount' step after review, so email is asked exactly once.
     // In edit mode the user already has an account, so we stop at review.
@@ -68,6 +82,11 @@ function sectionLabel(key) {
 }
 
 function getSectionSteps(key) {
+  // In add-role mode the General section collapses to just the role picker.
+  if (addRoleActive() && key === 'general') {
+    var pickers = (ALL_SECTION_STEPS.general || []).filter(function (s) { return s.isRolePicker; });
+    if (pickers.length) return pickers;
+  }
   return (ALL_SECTION_STEPS[key] || []).filter(step => !step.skip || !step.skip());
 }
 function currentSectionKey() { return getActiveSections()[sectIdx]; }
@@ -1344,6 +1363,7 @@ async function onboardingInit() {
     }
     // else: no profile row yet — start blank; Finish still upserts onto THIS account.
   } catch (e) { console.error('loadProfile (completion)', e); }
+  if (ADD_ROLE_MODE) _existingRoles = new Set(selectedRoles);   // remember what they already had
   invalidateSections();
   showForm();
 }
