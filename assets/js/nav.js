@@ -43,16 +43,52 @@
   function ensureDrawer() {
     if (window.openAccountDrawer) return Promise.resolve();
     if (_drawerLoading) return _drawerLoading;
-    loadCss(ROOT + 'assets/css/account-drawer.css?v=11');
-    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=11'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=11'); })
-      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=11'); });
+    loadCss(ROOT + 'assets/css/account-drawer.css?v=12');
+    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=12'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=12'); })
+      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=12'); });
     return _drawerLoading;
   }
   function openAccountDrawerLazy(e) {
     if (e) e.preventDefault();
     ensureDrawer().then(function () { if (window.openAccountDrawer) window.openAccountDrawer(); })
       .catch(function (err) { console.error('account drawer load failed', err); window.location.href = ROOT + 'dashboard/'; });
+  }
+
+  // When the user clicks a verify/recovery link in their email, Supabase sends
+  // them back to the site with the session in the URL hash (implicit flow).
+  // Marketing pages don't load supabase-js, so detect that here, establish the
+  // session, then drop them on their dashboard already logged in — no 2nd login.
+  function loadAuthStack() {
+    return (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=12'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=12'); });
+  }
+  function waitForSession(sb) {
+    return sb.auth.getSession().then(function (r) {
+      if (r.data.session) return r.data.session;
+      return new Promise(function (resolve) {
+        var done = false, timer = setTimeout(function () { if (!done) { done = true; resolve(null); } }, 4000);
+        sb.auth.onAuthStateChange(function (_e, s) { if (s && !done) { done = true; clearTimeout(timer); resolve(s); } });
+      });
+    });
+  }
+  function handleAuthReturn() {
+    var hash = location.hash || '';
+    if (!/[#&]access_token=/.test(hash) && !/[#&]type=(signup|magiclink|invite|recovery|email_change)/.test(hash)) return false;
+    if (/\/auth\/callback\//.test(location.pathname) || /\/reset-password\//.test(location.pathname)) return false; // those pages self-handle
+    var m = /[#&]type=([a-z_]+)/.exec(hash), type = m ? m[1] : '';
+    document.documentElement.style.visibility = 'hidden';   // avoid a flash of the marketing page before the redirect
+    loadAuthStack()
+      .then(function () { return window.getSupabaseClient(); })
+      .then(function (sb) { return waitForSession(sb); })
+      .then(function (sess) {
+        if (!sess) { document.documentElement.style.visibility = ''; return; }
+        var dest = (type === 'recovery') ? (ROOT + 'reset-password/') : (ROOT + 'dashboard/');
+        var flush = (type !== 'recovery' && window.RA && RA.flushPending) ? RA.flushPending() : Promise.resolve();
+        return flush.catch(function () {}).then(function () { window.location.replace(dest); });
+      })
+      .catch(function (e) { console.error('auth-return handling failed', e); document.documentElement.style.visibility = ''; });
+    return true;
   }
 
   function navLogout() {
@@ -246,6 +282,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    if (handleAuthReturn()) return;   // just verified via email → establish session + go to dashboard
     loadPartial('nav.html', 'site-header', initHeader);
     loadPartial('footer.html', 'site-footer', initFooter);
   });

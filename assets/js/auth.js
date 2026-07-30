@@ -36,8 +36,11 @@
 
   function cacheIdentity(profile) {
     try {
-      if (!profile) return;
-      if (profile.username) localStorage.setItem(K_UNAME, profile.username);
+      // Always reflect the CURRENT account — clear stale values when the new
+      // account has no profile / no name yet, so we never greet with the
+      // previously-logged-in user's name.
+      if (!profile) { localStorage.removeItem(K_UNAME); localStorage.removeItem(K_NAME); localStorage.removeItem(K_AVA); return; }
+      if (profile.username) localStorage.setItem(K_UNAME, profile.username); else localStorage.removeItem(K_UNAME);
       if (profile.full_name) localStorage.setItem(K_NAME, profile.full_name); else localStorage.removeItem(K_NAME);
       var cfg = window.SUPABASE_CONFIG;
       if (profile.avatar_url && cfg) localStorage.setItem(K_AVA, cfg.url + '/storage/v1/object/public/avatars/' + profile.avatar_url);
