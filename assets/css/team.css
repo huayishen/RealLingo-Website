@@ -79,8 +79,12 @@
     max-height: 0; opacity: 0; overflow: hidden;
     transition: max-height .45s ease, opacity .35s ease, margin-bottom .45s ease;
 }
-.tg-card:hover .tg-bio, .tg-card:focus-within .tg-bio { max-height: 160px; opacity: 1; margin-bottom: .875rem; }
-@media (hover: none) { .tg-bio { max-height: 160px; opacity: 1; margin-bottom: .875rem; } }
+/* Longer bios stay readable: reveal a taller area and let it scroll if needed. */
+.tg-card:hover .tg-bio, .tg-card:focus-within .tg-bio { max-height: 210px; opacity: 1; margin-bottom: .875rem; overflow-y: auto; padding-right: 4px; }
+@media (hover: none) { .tg-bio { max-height: 210px; opacity: 1; margin-bottom: .875rem; overflow-y: auto; } }
+.tg-bio::-webkit-scrollbar { width: 5px; }
+.tg-bio::-webkit-scrollbar-thumb { background: rgba(17,18,22,.18); border-radius: 4px; }
+.tg-bio::-webkit-scrollbar-track { background: transparent; }
 
 .tg-links {
     display: flex; align-items: center; gap: .55rem; margin-top: auto;
