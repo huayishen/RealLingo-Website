@@ -524,7 +524,7 @@
       await ensureData();
       if (!DATA || !DATA.profile) {
         renderHeader(); renderNav();
-        contentEl.innerHTML = '<h1 class="acct-h1">Almost there</h1><div class="acct-empty">Your profile isn\'t set up yet. <a class="acct-role-cta" href="' + ROOT() + 'signup/">Finish onboarding →</a></div>';
+        contentEl.innerHTML = '<h1 class="acct-h1">Almost there</h1><div class="acct-empty">Your profile isn\'t set up yet. <a class="acct-role-cta" href="' + ROOT() + 'signup/all/?edit=1">Finish onboarding →</a></div>';
         return;
       }
       renderHeader(); renderNav(); paint(CURRENT);

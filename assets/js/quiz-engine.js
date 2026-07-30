@@ -36,6 +36,13 @@ try { EDIT_MODE = new URLSearchParams(location.search).get('edit') === '1'; } ca
 // Create Account and the profile is saved as onboarding_complete = false so the
 // dashboard can invite them to finish later.
 let SKIPPED_ONBOARDING = false;
+// Profile Completion Mode: an ALREADY-AUTHENTICATED user is running the quiz to
+// finish/edit their profile. Detected at init from the session (see
+// onboardingInit). Behaves like EDIT_MODE — no Create Account step, no email/
+// password/verify; the answers upsert onto their existing profile. editing()
+// is the single predicate for "this is not a fresh registration".
+let COMPLETION_MODE = false;
+function editing() { return EDIT_MODE || COMPLETION_MODE; }
 
 function getActiveSections() {
   if (!_cachedSections) {
@@ -45,7 +52,7 @@ function getActiveSections() {
     // 'createAccount' step after review, so email is asked exactly once.
     // In edit mode the user already has an account, so we stop at review.
     _cachedSections.push('review');
-    if (!EDIT_MODE) _cachedSections.push('createAccount');
+    if (!editing()) _cachedSections.push('createAccount');
   }
   return _cachedSections;
 }
@@ -716,7 +723,7 @@ function updateSkipLink(isTerminal) {
   const nav = document.querySelector('.form-nav');
   if (!nav) return;
   let row = document.getElementById('fSkipRow');
-  const show = !EDIT_MODE && !isTerminal;
+  const show = !editing() && !isTerminal;   // no "skip" when completing an existing profile
   if (!show) { if (row) row.style.display = 'none'; return; }
   if (!row) {
     row = document.createElement('div');
@@ -771,7 +778,7 @@ function renderSidebar() {
 function nextStep() {
   const sKey=currentSectionKey();
   // Review → save (edit mode) or advance to the Create Account step.
-  if(sKey==='review'){ if(EDIT_MODE){ saveEdits(); return; } sectIdx++; stepIdx=0; renderFormPage('fwd'); return; }
+  if(sKey==='review'){ if(editing()){ saveEdits(); return; } sectIdx++; stepIdx=0; renderFormPage('fwd'); return; }
   // Create Account has its own submit button (submitAccount); Next is hidden.
   if(sKey==='createAccount'){ return; }
   const steps=currentSteps();
@@ -881,8 +888,8 @@ function buildReviewHtml() {
   }
 
   html += `<div class="ferr" id="fErr" style="text-align:center;margin-top:1rem"></div>`;
-  html += EDIT_MODE
-    ? `<button class="review-submit" onclick="saveEdits()">Save changes</button>`
+  html += editing()
+    ? `<button class="review-submit" onclick="saveEdits()">Save my profile →</button>`
     : `<button class="review-submit" onclick="nextStep()">Continue to Create Account →</button>`;
   return html;
 }
@@ -1124,11 +1131,11 @@ function initUsernameCheck() {
 ════════════════════════════════════════════════════════════ */
 function quizStateKey(){ return 'ra_quiz_'+(typeof QUIZ_FLOW!=='undefined'?QUIZ_FLOW:'x'); }
 function persistQuizState(){
-  if (EDIT_MODE) return;   // editing loads from Supabase, not the signup draft
+  if (editing()) return;   // completing/editing loads from Supabase, not the signup draft
   try { localStorage.setItem(quizStateKey(), JSON.stringify({ formData, roles:Array.from(selectedRoles) })); } catch(e){}
 }
 function restoreQuizState(){
-  if (EDIT_MODE) return;
+  if (editing()) return;
   try {
     const raw=localStorage.getItem(quizStateKey()); if(!raw) return;
     const snap=JSON.parse(raw);
@@ -1286,18 +1293,33 @@ function friendlyAuthError(err) {
 ════════════════════════════════════════════════════════════ */
 let _origFlow = null;
 
-async function editBootstrap() {
-  if (!EDIT_MODE) return;
-  if (typeof RA === 'undefined') { console.error('auth.js not loaded — cannot edit'); return; }
-  const user = await RA.getUser();
-  if (!user) { window.location.href = SITE_ROOT + 'login/'; return; }
-  const data = await RA.loadProfile();
-  if (!data || !data.profile) { window.location.href = SITE_ROOT + 'dashboard/'; return; }
-  _origFlow = data.profile.onboarding_flow || null;
-  const mapped = RA.profileToFormData(data);
-  Object.keys(formData).forEach(k => delete formData[k]);
-  Object.assign(formData, mapped.formData);
-  selectedRoles = new Set(mapped.roles);
+// Decide the mode as soon as the page is interactive:
+//  • logged-in visitor           → Profile Completion Mode: prefill existing
+//    data, no Create Account / email / verify; Finish upserts onto their profile.
+//  • ?edit=1 but NOT logged in    → send to login.
+//  • otherwise (anonymous)        → leave the normal registration flow (the page's
+//    own intro / start-quiz) untouched.
+async function onboardingInit() {
+  let user = null;
+  if (typeof RA !== 'undefined') { try { user = await RA.getUser(); } catch (e) {} }
+  if (!user) {
+    if (EDIT_MODE) window.location.href = SITE_ROOT + 'login/';
+    return;   // fresh registration — the page's own intro/showForm handles it
+  }
+  // Authenticated → complete/edit the existing profile (never re-register).
+  COMPLETION_MODE = true;
+  _origFlow = null;
+  try {
+    const data = await RA.loadProfile();
+    if (data && data.profile) {           // prefill everything they've done so far
+      _origFlow = data.profile.onboarding_flow || null;
+      const mapped = RA.profileToFormData(data);
+      Object.keys(formData).forEach(k => delete formData[k]);
+      Object.assign(formData, mapped.formData);
+      selectedRoles = new Set(mapped.roles);
+    }
+    // else: no profile row yet — start blank; Finish still upserts onto THIS account.
+  } catch (e) { console.error('loadProfile (completion)', e); }
   invalidateSections();
   showForm();
 }
@@ -1327,7 +1349,7 @@ async function saveEdits() {
 }
 
 // Runs after the flow page's inline config script (queued via setTimeout 0).
-setTimeout(() => { editBootstrap().catch(e => console.error('editBootstrap', e)); }, 0);
+setTimeout(() => { onboardingInit().catch(e => console.error('onboardingInit', e)); }, 0);
 
 /* ════════════════════════════════════════════════════════════
    SUBMIT (legacy anonymous path — no longer used by signup flows)
