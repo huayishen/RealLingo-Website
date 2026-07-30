@@ -76,6 +76,26 @@
 
   function firstName(p) { return ((p && p.full_name || '').trim().split(/\s+/)[0]) || (p && p.username) || 'there'; }
 
+  // Username may change at most twice per 30 days (name has no limit). Tracked
+  // client-side per user; enforced in the UI before calling updateUsername.
+  var UNAME_LIMIT = 2, UNAME_WINDOW_MS = 30 * 24 * 3600 * 1000;
+  function unameKey(uid) { return 'ra_uname_changes_' + uid; }
+  function recentUnameChanges(uid) {
+    var cutoff = Date.now() - UNAME_WINDOW_MS, arr = [];
+    try { arr = JSON.parse(localStorage.getItem(unameKey(uid)) || '[]'); } catch (e) { arr = []; }
+    return (Array.isArray(arr) ? arr : []).filter(function (t) { return typeof t === 'number' && t >= cutoff; });
+  }
+  function recordUnameChange(uid) {
+    var arr = recentUnameChanges(uid); arr.push(Date.now());
+    try { localStorage.setItem(unameKey(uid), JSON.stringify(arr)); } catch (e) {}
+  }
+  function unameDaysUntilAllowed(uid) {
+    var recent = recentUnameChanges(uid);
+    if (recent.length < UNAME_LIMIT) return 0;
+    var oldest = Math.min.apply(null, recent);
+    return Math.max(1, Math.ceil((oldest + UNAME_WINDOW_MS - Date.now()) / (24 * 3600 * 1000)));
+  }
+
   function renderHeader() {
     var p = DATA.profile || {};
     hdEl.innerHTML =
@@ -412,6 +432,7 @@
     // Username
     html += '<div class="acct-card"><div class="acct-msg" id="s-uname-msg"></div><div class="acct-label">Username</div>' +
       '<input class="acct-input" id="s-username" value="' + esc(p.username || '') + '" maxlength="20" autocomplete="off"><div class="acct-uname-status" id="s-uname-status"></div>' +
+      '<div style="font-size:.72rem;color:var(--asoft);margin-top:.35rem">You can change your username up to twice a month.</div>' +
       '<button class="acct-btn acct-btn-solid" id="s-uname-save" style="margin-top:.4rem">Save username</button></div>';
     // Personal info
     html += '<div class="acct-card"><div class="acct-msg" id="s-basics-msg"></div>' +
@@ -462,7 +483,10 @@
     document.getElementById('s-uname-save').addEventListener('click', async function () {
       var v = unmeIn.value.trim();
       if (!/^[a-zA-Z0-9_]{3,20}$/.test(v)) return setMsg('s-uname-msg', 'Username must be 3–20 letters, numbers, or underscores.');
-      try { await RA.updateUsername(v); setMsg('s-uname-msg', 'Username updated.', true); await refresh('settings'); }
+      if (v.toLowerCase() === (p.username || '').toLowerCase()) return setMsg('s-uname-msg', "That's already your username.");
+      var days = unameDaysUntilAllowed(p.id);
+      if (days > 0) return setMsg('s-uname-msg', 'You can change your username at most twice a month. Please try again in ' + days + ' day' + (days === 1 ? '' : 's') + '.');
+      try { await RA.updateUsername(v); recordUnameChange(p.id); setMsg('s-uname-msg', 'Username updated.', true); await refresh('settings'); }
       catch (e) { setMsg('s-uname-msg', e.code === 'username_taken' ? 'That username is already taken.' : (e.message || 'Could not update.')); }
     });
 

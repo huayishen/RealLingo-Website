@@ -84,6 +84,60 @@ const COUNTRIES = [
   'Vanuatu','Vatican City','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe'
 ];
 
+/* Major cities per country for the "city" autocomplete. Not exhaustive — the
+   field stays free-text, so a datalist just offers the major cities of the
+   selected country as suggestions; anything can still be typed. Countries not
+   listed here simply show no suggestions (plain text entry). */
+const CITIES = {
+  'Mainland China': ['Beijing','Shanghai','Guangzhou','Shenzhen','Chengdu','Chongqing','Tianjin','Wuhan','Xi’an','Hangzhou','Nanjing','Suzhou','Shenyang','Qingdao','Zhengzhou','Changsha','Dalian','Xiamen','Kunming','Jinan','Harbin','Ningbo','Foshan','Dongguan'],
+  'Hong Kong SAR': ['Central','Kowloon','Tsim Sha Tsui','Mong Kok','Sha Tin','Tuen Mun','Causeway Bay','Wan Chai','Kwun Tong','Tai Po'],
+  'Macao SAR': ['Macau Peninsula','Taipa','Cotai','Coloane'],
+  'Taiwan': ['Taipei','New Taipei','Taichung','Kaohsiung','Tainan','Taoyuan','Hsinchu','Keelung','Chiayi','Hualien'],
+  'Saudi Arabia': ['Riyadh','Jeddah','Mecca','Medina','Dammam','Khobar','Dhahran','Taif','Tabuk','Abha','Buraidah','Jubail','Yanbu','Hail','Najran'],
+  'Korea (South)': ['Seoul','Busan','Incheon','Daegu','Daejeon','Gwangju','Suwon','Ulsan','Seongnam','Goyang','Jeonju','Jeju'],
+  'Singapore': ['Singapore'],
+  'Egypt': ['Cairo','Alexandria','Giza','Shubra El-Kheima','Port Said','Suez','Luxor','Aswan','Mansoura','Tanta','Ismailia','Hurghada','Sharm El-Sheikh'],
+  'Japan': ['Tokyo','Yokohama','Osaka','Nagoya','Sapporo','Fukuoka','Kobe','Kyoto','Kawasaki','Hiroshima','Sendai','Saitama','Chiba','Nara'],
+  'Algeria': ['Algiers','Oran','Constantine','Annaba','Blida','Batna','Sétif','Djelfa','Sidi Bel Abbès','Tlemcen'],
+  'Morocco': ['Casablanca','Rabat','Fez','Marrakesh','Tangier','Agadir','Meknès','Oujda','Kenitra','Tetouan'],
+  'Tunisia': ['Tunis','Sfax','Sousse','Kairouan','Bizerte','Gabès','Ariana','Gafsa','Monastir','Nabeul'],
+  'Jordan': ['Amman','Zarqa','Irbid','Aqaba','Russeifa','Madaba','Salt','Mafraq','Jerash'],
+  'Lebanon': ['Beirut','Tripoli','Sidon','Tyre','Byblos','Jounieh','Zahlé','Baalbek'],
+  'Syria': ['Damascus','Aleppo','Homs','Latakia','Hama','Tartus','Deir ez-Zor','Raqqa'],
+  'Iraq': ['Baghdad','Basra','Mosul','Erbil','Najaf','Karbala','Kirkuk','Sulaymaniyah','Fallujah'],
+  'United Arab Emirates': ['Dubai','Abu Dhabi','Sharjah','Al Ain','Ajman','Ras Al Khaimah','Fujairah','Umm Al Quwain'],
+  'Qatar': ['Doha','Al Rayyan','Al Wakrah','Al Khor','Lusail','Umm Salal'],
+  'Kuwait': ['Kuwait City','Hawalli','Salmiya','Al Ahmadi','Jahra','Farwaniya'],
+  'Bahrain': ['Manama','Riffa','Muharraq','Hamad Town','A’ali','Isa Town','Sitra'],
+  'Oman': ['Muscat','Seeb','Salalah','Sohar','Nizwa','Sur','Ibri'],
+  'Yemen': ['Sana’a','Aden','Taiz','Hodeidah','Mukalla','Ibb'],
+  'United States': ['New York','Los Angeles','Chicago','Houston','Phoenix','Philadelphia','San Antonio','San Diego','Dallas','San Jose','Austin','San Francisco','Seattle','Boston','Washington','Miami','Atlanta','Denver','Detroit'],
+  'United Kingdom': ['London','Birmingham','Manchester','Glasgow','Liverpool','Leeds','Edinburgh','Bristol','Sheffield','Cardiff','Belfast','Nottingham','Newcastle','Oxford','Cambridge'],
+  'Canada': ['Toronto','Montreal','Vancouver','Calgary','Edmonton','Ottawa','Winnipeg','Quebec City','Hamilton','Halifax'],
+  'Australia': ['Sydney','Melbourne','Brisbane','Perth','Adelaide','Gold Coast','Canberra','Newcastle','Hobart','Darwin'],
+  'India': ['Mumbai','Delhi','Bengaluru','Hyderabad','Chennai','Kolkata','Pune','Ahmedabad','Jaipur','Surat','Lucknow','Kochi','Chandigarh'],
+  'Pakistan': ['Karachi','Lahore','Faisalabad','Rawalpindi','Islamabad','Multan','Peshawar','Quetta','Sialkot'],
+  'Bangladesh': ['Dhaka','Chittagong','Khulna','Rajshahi','Sylhet','Barisal','Rangpur','Comilla'],
+  'Indonesia': ['Jakarta','Surabaya','Bandung','Medan','Semarang','Makassar','Palembang','Denpasar','Yogyakarta'],
+  'Malaysia': ['Kuala Lumpur','George Town','Ipoh','Johor Bahru','Malacca','Kota Kinabalu','Kuching','Shah Alam'],
+  'Thailand': ['Bangkok','Chiang Mai','Pattaya','Phuket','Nonthaburi','Hat Yai','Khon Kaen','Nakhon Ratchasima'],
+  'Vietnam': ['Ho Chi Minh City','Hanoi','Da Nang','Hai Phong','Can Tho','Bien Hoa','Nha Trang','Hue'],
+  'Philippines': ['Manila','Quezon City','Cebu','Davao','Makati','Taguig','Pasig','Baguio','Iloilo'],
+  'France': ['Paris','Marseille','Lyon','Toulouse','Nice','Nantes','Strasbourg','Montpellier','Bordeaux','Lille'],
+  'Germany': ['Berlin','Hamburg','Munich','Cologne','Frankfurt','Stuttgart','Düsseldorf','Leipzig','Dortmund','Dresden'],
+  'Spain': ['Madrid','Barcelona','Valencia','Seville','Zaragoza','Málaga','Bilbao','Granada','Alicante'],
+  'Italy': ['Rome','Milan','Naples','Turin','Palermo','Genoa','Bologna','Florence','Venice','Verona'],
+  'Netherlands': ['Amsterdam','Rotterdam','The Hague','Utrecht','Eindhoven','Groningen','Tilburg','Delft'],
+  'Russia': ['Moscow','Saint Petersburg','Novosibirsk','Yekaterinburg','Kazan','Nizhny Novgorod','Sochi','Vladivostok'],
+  'Turkey': ['Istanbul','Ankara','Izmir','Bursa','Antalya','Adana','Gaziantep','Konya','Trabzon'],
+  'Brazil': ['São Paulo','Rio de Janeiro','Brasília','Salvador','Fortaleza','Belo Horizonte','Manaus','Curitiba','Recife','Porto Alegre'],
+  'Mexico': ['Mexico City','Guadalajara','Monterrey','Puebla','Tijuana','León','Cancún','Querétaro','Mérida'],
+  'Nigeria': ['Lagos','Abuja','Kano','Ibadan','Port Harcourt','Benin City','Kaduna','Enugu'],
+  'South Africa': ['Johannesburg','Cape Town','Durban','Pretoria','Port Elizabeth','Bloemfontein','East London'],
+  'Kenya': ['Nairobi','Mombasa','Kisumu','Nakuru','Eldoret','Thika'],
+  'Nicaragua': ['Managua','León','Masaya','Chinandega','Granada','Estelí'],
+};
+
 /* Country → international dial code, used by the sign-up quiz's phone
    number field: picking a country auto-fills the matching code. */
 const COUNTRY_DIAL_CODES = {

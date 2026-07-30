@@ -81,12 +81,19 @@
   function categoryOf(r) { return HIRE_TARGET[r] ? HIRE_CAT : (ROLE_TABLE[r] ? ROLE_TABLE[r].cat : null); }
   function pick(obj, keys) { const o = {}; keys.forEach(k => { o[k] = obj[k]; }); return o; }
 
-  function flattenLanguages(uid, langs) {
+  function flattenLanguages(uid, langs, other) {
     const rows = [];
     if (!langs) return rows;
+    other = other || {};
     for (const [lang, val] of Object.entries(langs)) {
       if (val && typeof val === 'object') {
-        for (const [variant, level] of Object.entries(val)) { if (level) rows.push({ user_id: uid, language: lang, variant: variant, level: level }); }
+        for (const [variant, level] of Object.entries(val)) {
+          if (!level) continue;
+          // For an "Other variant(s)" option, store the user's typed variety name
+          // in the variant column (falls back to a generic label if left blank).
+          const variantName = /^other_/.test(variant) ? ((other[lang] && String(other[lang]).trim()) || 'Other') : variant;
+          rows.push({ user_id: uid, language: lang, variant: variantName, level: level });
+        }
       } else if (val) {
         rows.push({ user_id: uid, language: lang, variant: null, level: val });
       }
@@ -359,7 +366,7 @@
 
     // 2. languages (replace)
     await sb.from('profile_languages').delete().eq('user_id', uid);
-    const langRows = flattenLanguages(uid, fd.languages);
+    const langRows = flattenLanguages(uid, fd.languages, fd.langOther);
     if (langRows.length) { const { error } = await sb.from('profile_languages').insert(langRows); if (error) throw error; }
 
     // 3. roles (replace)
@@ -473,12 +480,24 @@
 
   // ── Reverse mapper: normalized tables => formData (edit mode) ──
   function rebuildLanguages(rows) {
-    const langs = {};
+    const langs = {}, other = {};
+    const langDef = (lang) => { try { return (typeof LANGUAGES !== 'undefined') && LANGUAGES.find(l => l.key === lang); } catch (e) { return null; } };
     (rows || []).forEach(r => {
-      if (r.variant) { if (typeof langs[r.language] !== 'object' || langs[r.language] === null) langs[r.language] = {}; langs[r.language][r.variant] = r.level; }
-      else { langs[r.language] = r.level; }
+      if (r.variant) {
+        if (typeof langs[r.language] !== 'object' || langs[r.language] === null) langs[r.language] = {};
+        const def = langDef(r.language);
+        const known = def ? def.variants.map(v => v.key) : null;
+        if (known && known.indexOf(r.variant) === -1) {
+          // a typed "Other variant" name → restore the other_* key + the text
+          const ov = def.variants.find(v => /^other_/.test(v.key));
+          if (ov) { langs[r.language][ov.key] = r.level; other[r.language] = r.variant; }
+          else { langs[r.language][r.variant] = r.level; }
+        } else {
+          langs[r.language][r.variant] = r.level;
+        }
+      } else { langs[r.language] = r.level; }
     });
-    return langs;
+    return { langs, other };
   }
   function profileToFormData(data) {
     const fd = {};
@@ -496,7 +515,7 @@
     fd.companyIndustry = p.company_industry || '';
     if (p.qualifications) fd.qualifications = p.qualifications;
     fd.otherRole = p.other_role || '';
-    fd.languages = rebuildLanguages(data && data.languages);
+    { const rl = rebuildLanguages(data && data.languages); fd.languages = rl.langs; fd.langOther = rl.other; }
     const roles = ((data && data.roles) || []).map(r => r.role_key);
     roles.forEach(r => {
       const detail = data.roleDetails[r];

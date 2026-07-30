@@ -216,10 +216,28 @@ function checkboxGroupHtml(id, opts, saved, cls) {
 }
 
 function countrySelectHtml(id, saved) {
-  return `<select class="fs" id="${id}">
+  return `<select class="fs" id="${id}" onchange="if(typeof onCountryChange==='function')onCountryChange(this.value)">
     <option value="">Select country...</option>
     ${COUNTRIES.map(c=>`<option value="${c}"${saved===c?' selected':''}>${c}</option>`).join('')}
   </select>`;
+}
+
+// City field: free-text input backed by a <datalist> of the country's major
+// cities (suggestions only — any city can still be typed).
+function cityOptions(country) {
+  const list = (typeof CITIES !== 'undefined' && CITIES[country]) ? CITIES[country] : [];
+  return list.map(c=>`<option value="${esc(c)}"></option>`).join('');
+}
+function cityFieldHtml(id, country, saved) {
+  return `<input type="text" class="fi" id="${id}" list="${id}-list" placeholder="Start typing your city…" value="${esc(saved||'')}" autocomplete="off">
+    <datalist id="${id}-list">${cityOptions(country)}</datalist>`;
+}
+// When the country changes, refresh the city suggestions to match.
+function onCountryChange(country) {
+  const dl = document.getElementById('inp-city-list');
+  if (dl) dl.innerHTML = cityOptions(country);
+  const badge = document.getElementById('phoneCodeBadge');   // keep existing phone-code sync working
+  if (badge && typeof COUNTRY_DIAL_CODES!=='undefined') badge.textContent = COUNTRY_DIAL_CODES[country] || '+—';
 }
 
 function multiCountryHtml(id, saved) {
@@ -429,16 +447,25 @@ function renderLangSection(langDef) {
       ${langDef.variants.map(v=>`<button type="button" class="c-opt${v.key in selVars?' sel':''}" data-variant="${v.key}" onclick="toggleVariant('${lk}','${v.key}')">${v.label}</button>`).join('')}
     </div>
     <div id="varLevels-${lk}">
-      ${langDef.variants.filter(v=>v.key in selVars).map(v=>`
-        <div class="lang-level-row" id="vrow-${lk}-${v.key}">
-          <span class="lang-level-label">${v.label}</span>
-          <div class="lang-level-opts">
-            ${LANG_LEVELS.map(lv=>`<button type="button" class="lvl-btn${selVars[v.key]===lv.k?' sel':''}" onclick="setLangLevel('${lk}','${v.key}','${lv.k}')">${lv.l}</button>`).join('')}
-          </div>
-        </div>`).join('')}
+      ${langDef.variants.filter(v=>v.key in selVars).map(v=>langVarRow(lk,v,selVars)).join('')}
     </div>
   </div>`;
 }
+
+// A variant's level row. For an "Other variant(s)" option (key starts "other_")
+// we also render a fill-in-the-blank so the user can name the specific variety.
+function isOtherVariant(vk){ return /^other_/.test(vk); }
+function langVarRow(lk, v, selVars){
+  const otherVal = (formData.langOther && formData.langOther[lk]) || '';
+  return `<div class="lang-level-row" id="vrow-${lk}-${v.key}">
+    <span class="lang-level-label">${v.label}</span>
+    <div class="lang-level-opts">
+      ${LANG_LEVELS.map(lv=>`<button type="button" class="lvl-btn${selVars[v.key]===lv.k?' sel':''}" onclick="setLangLevel('${lk}','${v.key}','${lv.k}')">${lv.l}</button>`).join('')}
+    </div>
+    ${isOtherVariant(v.key) ? `<input type="text" class="fi lang-other-input" style="margin-top:.55rem" placeholder="Which variant? e.g. Sudanese Arabic, Shanghainese…" value="${esc(otherVal)}" oninput="setLangOther('${lk}', this.value)">` : ''}
+  </div>`;
+}
+function setLangOther(lk, val){ if(!formData.langOther) formData.langOther = {}; formData.langOther[lk] = val; }
 
 function toggleLang(lk) {
   if (!formData.languages) formData.languages = {};
@@ -461,13 +488,7 @@ function toggleVariant(lk, vk) {
   document.querySelector(`#varGrp-${lk} [data-variant="${vk}"]`)?.classList.toggle('sel', vk in ld);
   const langDef = LANGUAGES.find(l=>l.key===lk);
   document.getElementById(`varLevels-${lk}`).innerHTML =
-    langDef.variants.filter(v=>v.key in ld).map(v=>`
-      <div class="lang-level-row" id="vrow-${lk}-${v.key}">
-        <span class="lang-level-label">${v.label}</span>
-        <div class="lang-level-opts">
-          ${LANG_LEVELS.map(lv=>`<button type="button" class="lvl-btn${ld[v.key]===lv.k?' sel':''}" onclick="setLangLevel('${lk}','${v.key}','${lv.k}')">${lv.l}</button>`).join('')}
-        </div>
-      </div>`).join('');
+    langDef.variants.filter(v=>v.key in ld).map(v=>langVarRow(lk,v,ld)).join('');
 }
 
 function setLangLevel(lk, vk, level) {
@@ -1063,7 +1084,10 @@ function formatLangsReview(langs) {
     const parts=Object.entries(lv).map(([vk,vl])=>{
       const vd=def.variants.find(v=>v.key===vk);
       const ll=LANG_LEVELS.find(l=>l.k===vl);
-      return `${vd?.label||vk}${ll?': '+ll.l:''}`;
+      // show the typed name for an "Other variant" (e.g. "Sudanese Arabic") instead of the generic label
+      const otherTxt = isOtherVariant(vk) && formData.langOther && formData.langOther[lk] ? String(formData.langOther[lk]).trim() : '';
+      const label = otherTxt || vd?.label || vk;
+      return `${label}${ll?': '+ll.l:''}`;
     });
     return `${def.label} — ${parts.join(', ')}`;
   }).filter(Boolean).join('; ');

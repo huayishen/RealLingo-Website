@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/site.css?v=10">
+<link rel="stylesheet" href="../../assets/css/site.css?v=11">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font-sans); }
@@ -24,6 +24,7 @@
     <div class="auth-icon">📬</div>
     <h1>Check your email</h1>
     <p class="lc-sub">We've sent a verification link to<br><span class="auth-email" id="vf-email">your email</span>.<br>Please verify your email before continuing.</p>
+    <p style="margin:.85rem auto 0;max-width:24rem;padding:.7rem .9rem;background:#fff7d6;border:1px solid #f0dd8f;border-radius:10px;font-size:.86rem;line-height:1.5;color:#6b5f2a;">📁 Can't find it? Please <strong>check your spam or junk folder</strong> — and mark it “Not spam” so future emails reach your inbox.</p>
 
     <div class="lc-msg" id="vf-msg"></div>
 
@@ -61,9 +62,9 @@
   window.SITE_SECTION = null;
   window.SITE_PAGE = "verify";
 </script>
-<script src="../../assets/js/nav.js?v=10" defer></script>
-<script src="../../assets/js/supabase-client.js?v=10"></script>
-<script src="../../assets/js/auth.js?v=10"></script>
+<script src="../../assets/js/nav.js?v=11" defer></script>
+<script src="../../assets/js/supabase-client.js?v=11"></script>
+<script src="../../assets/js/auth.js?v=11"></script>
 <script>
 (function () {
   const emailChip = document.getElementById('vf-email');
