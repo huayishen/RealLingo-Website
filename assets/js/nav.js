@@ -43,10 +43,10 @@
   function ensureDrawer() {
     if (window.openAccountDrawer) return Promise.resolve();
     if (_drawerLoading) return _drawerLoading;
-    loadCss(ROOT + 'assets/css/account-drawer.css?v=12');
-    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=12'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=12'); })
-      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=12'); });
+    loadCss(ROOT + 'assets/css/account-drawer.css?v=13');
+    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=13'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=13'); })
+      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=13'); });
     return _drawerLoading;
   }
   function openAccountDrawerLazy(e) {
@@ -60,8 +60,8 @@
   // Marketing pages don't load supabase-js, so detect that here, establish the
   // session, then drop them on their dashboard already logged in — no 2nd login.
   function loadAuthStack() {
-    return (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=12'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=12'); });
+    return (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=13'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=13'); });
   }
   function waitForSession(sb) {
     return sb.auth.getSession().then(function (r) {
