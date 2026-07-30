@@ -47,6 +47,7 @@
 
   var built = false, DATA = null, SAVED = [], AVATAR = null, CURRENT = 'dashboard';
   var overlay, drawer, hdEl, navEl, contentEl, fileInput;
+  var calTarget = null;   // where the calendar renders — the drawer's content, or the global slide-down panel
 
   function build() {
     if (built) return; built = true;
@@ -130,7 +131,7 @@
     if (section === 'roles') return renderRoles();
     if (section === 'applications') return renderApplications();
     if (section === 'saved') return renderSaved();
-    if (section === 'calendar') return renderCalendar();
+    if (section === 'calendar') return renderCalendar(contentEl);
     if (section === 'settings') return renderSettings();
   }
 
@@ -256,12 +257,14 @@
     return 'saved';
   }
 
-  function renderCalendar() {
+  function renderCalendar(target) {
+    if (target) calTarget = target;
+    if (!calTarget) calTarget = contentEl;
     if (!CAL.ref) CAL.ref = new Date();
     if (CAL.detail) return renderEventDetail(CAL.detail);
     var events = calEvents();
     if (!events.length) {
-      contentEl.innerHTML =
+      calTarget.innerHTML =
         '<h1 class="acct-h1">Calendar</h1>' +
         '<div class="cal-empty"><div class="cal-empty-ill">📅</div><div class="cal-empty-title">Your calendar is empty</div>' +
         '<p class="cal-empty-sub">Save or register for events to see them here.</p>' +
@@ -287,7 +290,7 @@
       '</div>' +
       '<div class="cal-body">' + calBody(events) + '</div>' +
     '</div>';
-    contentEl.innerHTML = html;
+    calTarget.innerHTML = html;
     wireCalendar();
   }
   function weekLabel(ref){ var s=startOfWeek(ref); var e=new Date(s); e.setDate(e.getDate()+6); return MO[s.getMonth()].slice(0,3)+' '+s.getDate()+' – '+MO[e.getMonth()].slice(0,3)+' '+e.getDate()+', '+e.getFullYear(); }
@@ -387,9 +390,9 @@
         '<button class="acct-btn acct-btn-danger" data-cal="remove" data-ref="'+esc(ev.ref)+'">Remove from Saved</button>'+
       '</div>'+
       '<div class="cal-detail-actions"><button class="acct-btn" disabled>Add reminder (soon)</button><button class="acct-btn" disabled>Share (soon)</button></div>';
-    contentEl.innerHTML = html;
-    contentEl.querySelector('[data-cal="back"]').addEventListener('click', function(){ CAL.detail=null; renderCalendar(); });
-    var rm=contentEl.querySelector('[data-cal="remove"]');
+    calTarget.innerHTML = html;
+    calTarget.querySelector('[data-cal="back"]').addEventListener('click', function(){ CAL.detail=null; renderCalendar(); });
+    var rm=calTarget.querySelector('[data-cal="remove"]');
     if(rm) rm.addEventListener('click', async function(){
       rm.disabled=true;
       try { await RA.unsaveItem('event', ev.ref); SAVED = SAVED.filter(function(s){return !(s.item_type==='event'&&s.item_ref===ev.ref);}); CAL.detail=null; renderCalendar(); }
@@ -398,7 +401,7 @@
   }
 
   function wireCalendar(){
-    contentEl.querySelectorAll('[data-cal]').forEach(function(b){
+    calTarget.querySelectorAll('[data-cal]').forEach(function(b){
       b.addEventListener('click', function(){
         var a=b.dataset.cal;
         if(a==='today'){ CAL.ref=new Date(); }
@@ -412,14 +415,14 @@
         renderCalendar();
       });
     });
-    contentEl.querySelectorAll('.cal-view-btn').forEach(function(b){
+    calTarget.querySelectorAll('.cal-view-btn').forEach(function(b){
       b.addEventListener('click', function(){ CAL.view=b.dataset.view; renderCalendar(); });
     });
-    contentEl.querySelectorAll('[data-ev]').forEach(function(b){
+    calTarget.querySelectorAll('[data-ev]').forEach(function(b){
       b.addEventListener('click', function(e){ e.stopPropagation(); CAL.detail=b.dataset.ev; renderEventDetail(b.dataset.ev); });
     });
     // clicking a month day cell (not on an event) → jump to that day
-    contentEl.querySelectorAll('.cal-cell[data-day]').forEach(function(c){
+    calTarget.querySelectorAll('.cal-cell[data-day]').forEach(function(c){
       c.addEventListener('click', function(){ var p=c.dataset.day.split('-'); CAL.ref=new Date(+p[0],+p[1]-1,+p[2]); CAL.view='day'; renderCalendar(); });
     });
   }
@@ -559,4 +562,57 @@
   }
 
   window.openAccountDrawer = open;
+
+  /* ── Global Event Calendar: a slide-down panel that reuses the SAME calendar
+     rendered in the drawer (renderCalendar targets calPanelBody instead of the
+     drawer content). Opened from the header icon via window.openEventCalendar(). */
+  var calPanel, calPanelBody, calPanelOverlay, _calPanelPrevFocus;
+  function buildCalPanel() {
+    if (calPanel) return;
+    calPanelOverlay = document.createElement('div'); calPanelOverlay.className = 'calpanel-overlay';
+    calPanel = document.createElement('section'); calPanel.className = 'calpanel';
+    calPanel.setAttribute('role', 'dialog'); calPanel.setAttribute('aria-modal', 'true'); calPanel.setAttribute('aria-label', 'Event Calendar');
+    calPanel.innerHTML =
+      '<div class="calpanel-hd"><h2 class="calpanel-title">Event Calendar</h2>' +
+      '<button class="calpanel-close" aria-label="Close calendar">&times;</button></div>' +
+      '<div class="calpanel-body" id="calPanelBody"></div>';
+    document.body.appendChild(calPanelOverlay); document.body.appendChild(calPanel);
+    calPanelBody = calPanel.querySelector('#calPanelBody');
+    calPanelOverlay.addEventListener('click', closeCalPanel);
+    calPanel.querySelector('.calpanel-close').addEventListener('click', closeCalPanel);
+  }
+  function calPanelKeydown(e) {
+    if (e.key === 'Escape') { closeCalPanel(); return; }
+    if (e.key === 'Tab' && calPanel) {   // simple focus trap
+      var f = calPanel.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])');
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  }
+  function closeCalPanel() {
+    if (!calPanel) return;
+    calPanelOverlay.classList.remove('open'); calPanel.classList.remove('open');
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', calPanelKeydown);
+    if (_calPanelPrevFocus && _calPanelPrevFocus.focus) { try { _calPanelPrevFocus.focus(); } catch (e) {} }
+  }
+  window.closeEventCalendar = closeCalPanel;
+  window.openEventCalendar = async function () {
+    if (typeof RA === 'undefined') { window.location.href = ROOT() + 'dashboard/'; return; }
+    buildCalPanel();
+    calPanelBody.innerHTML = '<div class="acct-loading">Loading your calendar…</div>';
+    _calPanelPrevFocus = document.activeElement;
+    calPanelOverlay.classList.add('open'); calPanel.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', calPanelKeydown);
+    try {
+      if (!DATA) { await ensureData(); }                 // first open → load profile + saved
+      else { try { SAVED = await RA.loadSaved(); } catch (e) {} }   // keep in sync with the drawer
+    } catch (e) { console.error('calendar data load failed', e); }
+    CAL.detail = null;
+    renderCalendar(calPanelBody);                         // SAME calendar, targeting the panel
+    var closeBtn = calPanel.querySelector('.calpanel-close'); if (closeBtn) closeBtn.focus();
+  };
 })();

@@ -208,3 +208,32 @@
   .acct-nav { width: 150px; padding: 1rem .6rem; }
   .acct-2col { grid-template-columns: 1fr; }
 }
+
+/* ── Global Event Calendar slide-down panel ─────────────────────────────
+   Reuses the .cal-* calendar styles; redefines the drawer palette so those
+   variable-based rules resolve the same colors outside .acct-drawer. */
+.calpanel-overlay { position: fixed; inset: 0; background: rgba(17,18,22,.45); opacity: 0; pointer-events: none; transition: opacity .32s ease; z-index: 9100; }
+.calpanel-overlay.open { opacity: 1; pointer-events: auto; }
+.calpanel {
+  --ay:#ffeb99; --aym:#f5d96a; --ayd:#e6c64a; --aysoft:#fff7d6;
+  --adark:#111216; --amid:#4a4840; --asoft:#8a8878;
+  --abg:#f4f4f2; --acard:#ffffff; --aborder:rgba(17,18,22,.09); --adanger:#c0392b;
+  position: fixed; top: 0; left: 50%; z-index: 9101;
+  width: 92%; max-width: 1120px; height: 82vh; max-height: 920px;
+  background: var(--abg); color: var(--adark);
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+  border-radius: 0 0 26px 26px; overflow: hidden;
+  box-shadow: 0 44px 100px -34px rgba(17,18,22,.55);
+  display: flex; flex-direction: column;
+  transform: translateX(-50%) translateY(-105%);
+  transition: transform .44s cubic-bezier(.4,0,.2,1); will-change: transform;
+}
+.calpanel.open { transform: translateX(-50%) translateY(0); }
+.calpanel *, .calpanel *::before, .calpanel *::after { box-sizing: border-box; }
+.calpanel-hd { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 1.7rem; background: var(--acard); border-bottom: 1px solid var(--aborder); }
+.calpanel-title { font-size: 1.32rem; font-weight: 800; letter-spacing: -.01em; margin: 0; }
+.calpanel-close { flex: 0 0 auto; width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--abg); color: var(--amid); font-size: 1.35rem; line-height: 1; cursor: pointer; transition: background .2s, color .2s; }
+.calpanel-close:hover { background: #ececea; color: var(--adark); }
+.calpanel-body { flex: 1; overflow-y: auto; padding: 1.6rem 1.7rem 2.6rem; }
+@media (max-width: 768px) { .calpanel { width: 100%; height: 92vh; border-radius: 0 0 18px 18px; } .calpanel-body { padding: 1.2rem 1.1rem 2rem; } }
+@media (max-width: 480px) { .calpanel { height: 100vh; border-radius: 0; } }

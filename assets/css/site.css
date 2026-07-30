@@ -324,3 +324,13 @@
 .auth-icon { font-size: 2.6rem; text-align: center; margin-bottom: .75rem; }
 .auth-email { font-weight: 700; color: var(--text); word-break: break-all; }
 .lc-center { text-align: center; }
+
+/* ── Header "Event Calendar" icon button (logged-in) ─────────────────── */
+.site-cal-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border: none; border-radius: 12px; background: transparent; cursor: pointer; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; }
+.site-cal-btn:hover, .site-cal-btn:focus-visible { transform: translateY(-2px) scale(1.05); background: rgba(255,235,153,.2); box-shadow: 0 8px 20px -8px rgba(245,217,106,.85); outline: none; }
+.site-cal-btn:active { transform: translateY(0) scale(1); }
+.site-cal-btn svg { display: block; transition: transform .28s cubic-bezier(.34,1.56,.64,1); }
+.site-cal-btn:hover svg, .site-cal-btn:focus-visible svg { transform: rotate(-5deg); }
+.site-cal-tip { position: absolute; top: calc(100% + 9px); left: 50%; transform: translateX(-50%) translateY(-4px); background: #111216; color: #fff; font-size: .74rem; font-weight: 600; padding: .4rem .62rem; border-radius: 8px; white-space: nowrap; opacity: 0; pointer-events: none; box-shadow: 0 10px 24px -10px rgba(17,18,22,.55); transition: opacity .18s ease, transform .18s ease; z-index: 10001; }
+.site-cal-tip::before { content: ""; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-bottom-color: #111216; }
+.site-cal-btn:hover .site-cal-tip, .site-cal-btn:focus-visible .site-cal-tip { opacity: 1; transform: translateX(-50%) translateY(0); }
