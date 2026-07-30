@@ -345,7 +345,9 @@
       qualifications: fd.qualifications || null,
       other_role: fd.otherRole || null,
       onboarding_flow: pending.flow || null,
-      onboarding_complete: true
+      // false only when the user tapped "Skip for now"; any full run (incl. the
+      // later "complete your profile" edit) leaves it true.
+      onboarding_complete: pending.onboardingComplete === false ? false : true
     };
     { const { error } = await sb.from('profiles').upsert(profileRow, { onConflict: 'id' }); if (error) throw error; }
     cacheIdentity(profileRow); // keep the shared-nav greeting ("Hi, <name>") in sync immediately after signup/edit

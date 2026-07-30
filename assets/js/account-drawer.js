@@ -71,7 +71,7 @@
     DATA = await RA.loadProfile();
     try { SAVED = await RA.loadSaved(); } catch (e) { SAVED = []; }
     var p = DATA && DATA.profile;
-    AVATAR = (p && p.avatar_url) ? await RA.avatarPublicUrl(p.avatar_url) : (ROOT() + 'assets/img/logo-yellow.png');
+    AVATAR = (p && p.avatar_url) ? await RA.avatarPublicUrl(p.avatar_url) : (ROOT() + 'assets/img/default-avatar.png');
   }
 
   function firstName(p) { return ((p && p.full_name || '').trim().split(/\s+/)[0]) || (p && p.username) || 'there'; }
@@ -117,6 +117,15 @@
   function renderDashboard() {
     var p = DATA.profile, pct = completion(p, DATA.languages, DATA.roles);
     var html = '<h1 class="acct-h1">Welcome back, ' + esc(firstName(p)) + '!</h1><p class="acct-sub">Your RealLingo control center.</p>';
+    // Profile started but not finished (they tapped "Skip for now" at signup) —
+    // invite them to complete it. Goes to the quiz in edit mode, which loads
+    // their account and skips the email/password/verify step entirely.
+    if (p.onboarding_complete === false) {
+      html += '<a class="acct-complete-cta" href="' + ROOT() + 'signup/' + esc(p.onboarding_flow || 'all') + '/?edit=1">' +
+        '<div class="acct-complete-txt"><strong>Complete your profile</strong>' +
+        '<span>Answer a few quick questions so we can match you with the right people and opportunities.</span></div>' +
+        '<span class="acct-complete-arrow">→</span></a>';
+    }
     html += '<div class="acct-card"><div class="acct-progress-top"><span>Profile completion</span><span>' + pct + '%</span></div>' +
       '<div class="acct-progress-track"><div class="acct-progress-fill" style="width:' + pct + '%"></div></div>' +
       '<div class="acct-stats">' +

@@ -56,6 +56,14 @@
 .acct-h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: -.01em; margin-bottom: .35rem; overflow-wrap: anywhere; }
 .acct-sub { color: var(--asoft); font-size: .86rem; line-height: 1.55; margin-bottom: 1.5rem; }
 .acct-h2 { font-size: 1.08rem; font-weight: 800; margin: 1.85rem 0 .9rem; overflow-wrap: anywhere; }
+
+/* "Complete your profile" banner — shown when onboarding was skipped. */
+.acct-complete-cta { display: flex; align-items: center; gap: .9rem; background: linear-gradient(135deg, var(--aysoft), var(--ay)); border: 1px solid var(--aym); border-radius: 14px; padding: 1rem 1.15rem; margin: .4rem 0 1.4rem; text-decoration: none; color: var(--adark); transition: transform .15s ease, box-shadow .15s ease; }
+.acct-complete-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -14px rgba(17,18,22,.45); }
+.acct-complete-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .18rem; }
+.acct-complete-txt strong { font-size: .98rem; font-weight: 800; }
+.acct-complete-txt span { font-size: .8rem; color: var(--amid); line-height: 1.35; }
+.acct-complete-arrow { flex: 0 0 auto; font-size: 1.3rem; font-weight: 800; }
 .acct-card { background: var(--acard); border: 1px solid var(--aborder); border-radius: 16px; padding: 1.4rem 1.55rem; box-shadow: 0 10px 26px -20px rgba(17,18,22,.35); }
 .acct-card + .acct-card { margin-top: 1.1rem; }
 /* Two-column layout for paired fields (e.g. Country | City) on the wider panel. */

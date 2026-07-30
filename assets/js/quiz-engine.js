@@ -32,6 +32,10 @@ let stepIdx = 0;
 // from Supabase instead of starting fresh, and skips the Create Account step.
 let EDIT_MODE = false;
 try { EDIT_MODE = new URLSearchParams(location.search).get('edit') === '1'; } catch (e) {}
+// Set when the user taps "Skip for now" during signup — they jump straight to
+// Create Account and the profile is saved as onboarding_complete = false so the
+// dashboard can invite them to finish later.
+let SKIPPED_ONBOARDING = false;
 
 function getActiveSections() {
   if (!_cachedSections) {
@@ -701,6 +705,51 @@ function updateNavButtons() {
   back.disabled=isFirst;
   next.textContent='Next →';
   next.style.display=isTerminal?'none':'';
+  updateSkipLink(isTerminal);
+}
+
+// "Skip for now" — a subtle link under the nav during signup (not edit mode).
+// Lets a visitor jump straight to Create Account after their name, filling out
+// the rest of their profile later from the dashboard. Injected once, then just
+// shown/hidden, so it works across all four flow pages without editing each.
+function updateSkipLink(isTerminal) {
+  const nav = document.querySelector('.form-nav');
+  if (!nav) return;
+  let row = document.getElementById('fSkipRow');
+  const show = !EDIT_MODE && !isTerminal;
+  if (!show) { if (row) row.style.display = 'none'; return; }
+  if (!row) {
+    row = document.createElement('div');
+    row.id = 'fSkipRow';
+    row.style.cssText = 'text-align:center;margin-top:.85rem;';
+    const b = document.createElement('button');
+    b.type = 'button'; b.id = 'fBtnSkip';
+    b.textContent = "I'll finish my profile later — skip for now →";
+    b.style.cssText = 'background:none;border:none;color:#8a8878;font-family:inherit;font-size:.85rem;text-decoration:underline;cursor:pointer;padding:.3rem .5rem;';
+    b.addEventListener('click', skipToAccount);
+    row.appendChild(b);
+    nav.insertAdjacentElement('afterend', row);
+  }
+  row.style.display = '';
+}
+
+function suggestUsername(name) {
+  const base = String(name || 'user').toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 12) || 'user';
+  return base + Math.floor(1000 + Math.random() * 9000);   // e.g. sarah4821 — changeable later in Settings
+}
+
+// Skip the remaining profile questions and go straight to Create Account.
+function skipToAccount() {
+  currentSteps()[stepIdx]?.save?.();          // keep whatever's on the current step
+  if (!formData.name || !formData.name.trim()) { showErr('Please enter your name first'); return; }
+  if (!formData.username) formData.username = suggestUsername(formData.name);   // auto-pick if not chosen yet
+  const sections = getActiveSections();
+  const ai = sections.indexOf('createAccount');
+  if (ai < 0) return;                          // no createAccount in edit mode
+  SKIPPED_ONBOARDING = true;
+  clearErr();
+  sectIdx = ai; stepIdx = 0;
+  renderFormPage('fwd');
 }
 
 function renderSidebar() {
@@ -815,7 +864,7 @@ const ROLE_CARD_ICON = {
   tutor: '📚', translator: '💬', influencer: '📣', tourGuide: '🧭', languageEvent: '🌐', languageTalent: '🌟',
 };
 
-function defaultAvatarSrc() { return (typeof SITE_ROOT!=='undefined'?SITE_ROOT:'') + 'assets/img/logo-yellow.png'; }
+function defaultAvatarSrc() { return (typeof SITE_ROOT!=='undefined'?SITE_ROOT:'') + 'assets/img/default-avatar.png'; }
 
 function buildReviewHtml() {
   const sections = getActiveSections().filter(s => s!=='review');
@@ -1196,6 +1245,7 @@ async function submitAccount() {
     email,
     roles,
     roleRows,
+    onboardingComplete: !SKIPPED_ONBOARDING,   // false when they tapped "Skip for now"
     formData: JSON.parse(JSON.stringify(formData))
   };
 
