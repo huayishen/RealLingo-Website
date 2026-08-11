@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+<link rel="apple-touch-icon" href="../../assets/img/favicon.png">
+<title>Marketplace — Real lingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css?v=18">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --mp-dark:#111216; --mp-mid:#4a4840; --mp-soft:#8a8878; --mp-y:#ffeb99; --mp-ym:#f5d96a; --mp-yp:#fff7d6; --mp-bg:#f4f4f2; --mp-card:#fff; --mp-border:rgba(17,18,22,.1); }
+  body { font-family: var(--font-sans); background: var(--mp-bg); color: var(--mp-dark); }
+
+  .mp-wrap { max-width: 1180px; margin: 0 auto; padding: 2.6rem 1.25rem 4.5rem; }
+  .mp-crumb { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--mp-soft); margin-bottom: .9rem; }
+  .mp-top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem; }
+  .mp-h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -.02em; }
+  .mp-sub { color: var(--mp-mid); margin-top: .35rem; font-size: 1rem; max-width: 520px; line-height: 1.55; }
+  .mp-sell-btn { flex: 0 0 auto; display: inline-flex; align-items: center; gap: .5rem; padding: .85rem 1.6rem; border-radius: 100px; border: none; background: var(--mp-dark); color: #fff; font-family: inherit; font-weight: 700; font-size: .95rem; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease; }
+  .mp-sell-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -14px rgba(17,18,22,.55); }
+
+  .mp-filters { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.8rem; }
+  .mp-search { flex: 1 1 240px; min-width: 180px; padding: .7rem 1rem; border: 1px solid var(--mp-border); border-radius: 12px; font-family: inherit; font-size: .9rem; background: #fff; }
+  .mp-cat { padding: .7rem 1rem; border: 1px solid var(--mp-border); border-radius: 12px; font-family: inherit; font-size: .9rem; background: #fff; cursor: pointer; }
+
+  .mp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.1rem; }
+  .mp-card { background: var(--mp-card); border: 1px solid var(--mp-border); border-radius: 16px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+  .mp-card:hover { transform: translateY(-4px); border-color: var(--mp-ym); box-shadow: 0 20px 40px -22px rgba(17,18,22,.35); }
+  .mp-card-img { aspect-ratio: 4/3; background: var(--mp-yp) center/cover no-repeat; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--mp-ym); }
+  .mp-card-body { padding: .9rem 1rem 1.1rem; display: flex; flex-direction: column; gap: .3rem; flex: 1; }
+  .mp-card-title { font-weight: 700; font-size: .98rem; line-height: 1.3; }
+  .mp-card-price { font-weight: 800; font-size: 1.05rem; }
+  .mp-card-meta { font-size: .76rem; color: var(--mp-soft); margin-top: auto; display: flex; flex-wrap: wrap; gap: .3rem .6rem; }
+  .mp-tag { display: inline-block; padding: .18rem .5rem; border-radius: 100px; background: var(--mp-yp); border: 1px solid rgba(230,198,74,.4); font-size: .68rem; font-weight: 700; color: #6a5800; }
+
+  .mp-empty { text-align: center; padding: 4rem 1rem; color: var(--mp-soft); }
+  .mp-empty-ill { font-size: 2.6rem; margin-bottom: .6rem; }
+  .mp-loading { text-align: center; padding: 4rem 1rem; color: var(--mp-soft); }
+
+  /* Modal (sell form + detail) */
+  .mp-modal-ov { position: fixed; inset: 0; background: rgba(17,18,22,.5); opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 9200; display: flex; align-items: flex-start; justify-content: center; padding: 3rem 1rem; overflow-y: auto; }
+  .mp-modal-ov.open { opacity: 1; pointer-events: auto; }
+  .mp-modal { background: #fff; width: 100%; max-width: 560px; border-radius: 20px; box-shadow: 0 40px 90px -30px rgba(17,18,22,.5); transform: translateY(14px); transition: transform .28s; }
+  .mp-modal-ov.open .mp-modal { transform: translateY(0); }
+  .mp-modal-hd { display: flex; align-items: center; justify-content: space-between; padding: 1.3rem 1.5rem; border-bottom: 1px solid var(--mp-border); }
+  .mp-modal-hd h2 { font-size: 1.25rem; font-weight: 800; }
+  .mp-modal-close { width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--mp-bg); color: var(--mp-mid); font-size: 1.3rem; cursor: pointer; }
+  .mp-modal-body { padding: 1.5rem; }
+  .mp-field { margin-bottom: 1rem; }
+  .mp-field label { display: block; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--mp-soft); margin-bottom: .35rem; }
+  .mp-field input, .mp-field textarea, .mp-field select { width: 100%; padding: .7rem .85rem; border: 1px solid var(--mp-border); border-radius: 10px; font-family: inherit; font-size: .92rem; background: #fff; }
+  .mp-field textarea { min-height: 90px; resize: vertical; }
+  .mp-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+  .mp-submit { width: 100%; padding: .95rem; border: none; border-radius: 100px; background: var(--mp-y); color: var(--mp-dark); font-family: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; transition: background .18s; }
+  .mp-submit:hover { background: var(--mp-ym); }
+  .mp-submit:disabled { opacity: .6; cursor: not-allowed; }
+  .mp-msg { padding: .7rem .9rem; border-radius: 10px; font-size: .86rem; margin-bottom: 1rem; }
+  .mp-msg.err { background: #fdecea; color: #c0392b; }
+  .mp-msg.ok { background: #eafaf1; color: #1e824c; }
+  .mp-note { font-size: .78rem; color: var(--mp-soft); text-align: center; margin-top: .8rem; }
+
+  /* Detail modal */
+  .mp-detail-img { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 14px; background: var(--mp-yp); margin-bottom: 1rem; }
+  .mp-detail-price { font-size: 1.5rem; font-weight: 800; }
+  .mp-detail-desc { color: var(--mp-mid); line-height: 1.6; margin: .8rem 0; white-space: pre-wrap; }
+  .mp-detail-rows { margin: 1rem 0; }
+  .mp-drow { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem 0; border-bottom: 1px solid var(--mp-border); font-size: .9rem; }
+  .mp-drow span:first-child { color: var(--mp-soft); }
+  .mp-contact-btn { width: 100%; padding: .9rem; border: none; border-radius: 100px; background: var(--mp-dark); color: #fff; font-family: inherit; font-weight: 700; font-size: .95rem; cursor: pointer; }
+  .mp-contact-reveal { margin-top: .9rem; padding: 1rem; border-radius: 12px; background: var(--mp-yp); border: 1px solid rgba(230,198,74,.4); text-align: center; font-weight: 700; word-break: break-word; }
+  .mp-back { display: inline-block; margin-top: 2.5rem; font-weight: 700; color: var(--mp-dark); text-decoration: none; }
+  @media (max-width: 520px){ .mp-row2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main class="mp-wrap">
+  <div class="mp-crumb">Open Sources / Learners Hub / Marketplace</div>
+  <div class="mp-top">
+    <div>
+      <h1 class="mp-h1">Marketplace</h1>
+      <p class="mp-sub">Buy and sell within the RealLingo community — books, gear, services, and more. List an item and reach language learners worldwide.</p>
+    </div>
+    <button class="mp-sell-btn" id="mpSellBtn">＋ Sell an item</button>
+  </div>
+
+  <div class="mp-filters">
+    <input type="search" class="mp-search" id="mpSearch" placeholder="Search products…">
+    <select class="mp-cat" id="mpCat">
+      <option value="">All categories</option>
+      <option>Books &amp; Study</option>
+      <option>Electronics</option>
+      <option>Language Services</option>
+      <option>Fashion</option>
+      <option>Home &amp; Living</option>
+      <option>Tickets &amp; Events</option>
+      <option>Other</option>
+    </select>
+  </div>
+
+  <div id="mpGrid" class="mp-grid"></div>
+  <div id="mpState" class="mp-loading">Loading products…</div>
+
+  <a href="../" class="mp-back">← Back to Learners Hub</a>
+</main>
+
+<!-- Sell modal -->
+<div class="mp-modal-ov" id="mpSellModal">
+  <div class="mp-modal" role="dialog" aria-modal="true" aria-label="List a product">
+    <div class="mp-modal-hd"><h2>List a product</h2><button class="mp-modal-close" data-close>&times;</button></div>
+    <div class="mp-modal-body">
+      <div id="mpSellMsg"></div>
+      <form id="mpSellForm" novalidate>
+        <div class="mp-field"><label>Product name *</label><input type="text" id="pName" maxlength="120" required></div>
+        <div class="mp-field"><label>Description</label><textarea id="pDesc" maxlength="2000" placeholder="Condition details, what's included, why you're selling…"></textarea></div>
+        <div class="mp-row2">
+          <div class="mp-field"><label>Price</label><input type="number" id="pPrice" min="0" step="0.01" placeholder="0.00"></div>
+          <div class="mp-field"><label>Currency</label><select id="pCurrency"><option>USD</option><option>SAR</option><option>CNY</option><option>AED</option><option>EUR</option><option>GBP</option><option>SGD</option><option>KRW</option></select></div>
+        </div>
+        <div class="mp-row2">
+          <div class="mp-field"><label>Category</label><select id="pCat"><option value="">Select…</option><option>Books &amp; Study</option><option>Electronics</option><option>Language Services</option><option>Fashion</option><option>Home &amp; Living</option><option>Tickets &amp; Events</option><option>Other</option></select></div>
+          <div class="mp-field"><label>Condition</label><select id="pCond"><option value="">Select…</option><option>New</option><option>Like new</option><option>Good</option><option>Fair</option><option>Used</option></select></div>
+        </div>
+        <div class="mp-field"><label>Location</label><input type="text" id="pLoc" maxlength="120" placeholder="City, Country"></div>
+        <div class="mp-field"><label>Your contact * <span style="text-transform:none;font-weight:500;color:var(--mp-soft)">(buyers reveal this to reach you)</span></label><input type="text" id="pContact" maxlength="200" placeholder="Email, WhatsApp, WeChat, or a link" required></div>
+        <div class="mp-field"><label>Photo</label><input type="file" id="pImg" accept="image/png,image/jpeg,image/webp,image/gif"></div>
+        <button type="submit" class="mp-submit" id="mpSubmit">Submit for review</button>
+        <p class="mp-note">🛡️ New listings are reviewed by our team before appearing publicly.</p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Detail modal -->
+<div class="mp-modal-ov" id="mpDetailModal">
+  <div class="mp-modal" role="dialog" aria-modal="true" aria-label="Product details">
+    <div class="mp-modal-hd"><h2 id="mpDetailTitle">Product</h2><button class="mp-modal-close" data-close>&times;</button></div>
+    <div class="mp-modal-body" id="mpDetailBody"></div>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script>
+  window.SITE_ROOT = "../../";
+  window.SITE_SECTION = "opensource";
+  window.SITE_PAGE = "resources/marketplace";
+</script>
+<script src="../../assets/js/nav.js?v=18" defer></script>
+<script src="../../assets/js/supabase-client.js?v=18"></script>
+<script src="../../assets/js/auth.js?v=18"></script>
+<script>
+(function () {
+  var grid = document.getElementById('mpGrid'), stateEl = document.getElementById('mpState');
+  var searchEl = document.getElementById('mpSearch'), catEl = document.getElementById('mpCat');
+  var ALL = [];
+
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function money(p, c){ if(p==null||p==='') return 'Contact for price'; return (c||'USD') + ' ' + Number(p).toLocaleString(undefined,{minimumFractionDigits: Number(p)%1?2:0}); }
+  function imgUrl(row){ try { return row.image_url ? RA.productImageUrl(row.image_url) : null; } catch(e){ return null; } }
+
+  function render(list){
+    if (!list.length){ grid.innerHTML=''; stateEl.className='mp-empty'; stateEl.innerHTML='<div class="mp-empty-ill">🛍️</div>No products yet. Be the first to list one!'; return; }
+    stateEl.textContent=''; stateEl.className='';
+    grid.innerHTML = list.map(function(r){
+      var u = imgUrl(r);
+      return '<div class="mp-card" data-id="'+r.id+'">' +
+        '<div class="mp-card-img"'+(u?' style="background-image:url(\''+esc(u)+'\')"':'')+'>'+(u?'':'🛍️')+'</div>' +
+        '<div class="mp-card-body">' +
+          '<div class="mp-card-title">'+esc(r.title)+'</div>' +
+          '<div class="mp-card-price">'+esc(money(r.price, r.currency))+'</div>' +
+          '<div class="mp-card-meta">' + (r.condition?'<span class="mp-tag">'+esc(r.condition)+'</span>':'') +
+            (r.category?'<span>'+esc(r.category)+'</span>':'') + (r.location?'<span>· '+esc(r.location)+'</span>':'') + '</div>' +
+        '</div></div>';
+    }).join('');
+    grid.querySelectorAll('.mp-card').forEach(function(c){ c.addEventListener('click', function(){ openDetail(c.dataset.id); }); });
+  }
+
+  function applyFilters(){
+    var s = (searchEl.value||'').toLowerCase(), cat = catEl.value;
+    render(ALL.filter(function(r){
+      if (cat && r.category !== cat) return false;
+      if (s && !((r.title||'').toLowerCase().indexOf(s)>=0 || (r.description||'').toLowerCase().indexOf(s)>=0)) return false;
+      return true;
+    }));
+  }
+  searchEl.addEventListener('input', applyFilters);
+  catEl.addEventListener('change', applyFilters);
+
+  function load(){
+    if (typeof RA === 'undefined'){ stateEl.textContent = 'Marketplace is unavailable right now.'; return; }
+    RA.listMarketplace().then(function(rows){ ALL = rows; applyFilters(); })
+      .catch(function(e){ console.error(e); stateEl.textContent = 'Could not load products.'; });
+  }
+
+  /* ── Detail modal + reveal contact ── */
+  var detailModal = document.getElementById('mpDetailModal');
+  function openDetail(id){
+    var r = ALL.filter(function(x){return x.id===id;})[0]; if(!r) return;
+    document.getElementById('mpDetailTitle').textContent = r.title;
+    var u = imgUrl(r);
+    function row(l,v){ return v ? '<div class="mp-drow"><span>'+esc(l)+'</span><span>'+esc(v)+'</span></div>' : ''; }
+    document.getElementById('mpDetailBody').innerHTML =
+      (u?'<img class="mp-detail-img" src="'+esc(u)+'" alt="'+esc(r.title)+'">':'') +
+      '<div class="mp-detail-price">'+esc(money(r.price,r.currency))+'</div>' +
+      (r.description?'<div class="mp-detail-desc">'+esc(r.description)+'</div>':'') +
+      '<div class="mp-detail-rows">'+ row('Condition', r.condition)+row('Category', r.category)+row('Location', r.location)+'</div>' +
+      '<button class="mp-contact-btn" id="mpReveal">Show seller contact</button>' +
+      '<div id="mpRevealBox"></div>';
+    document.getElementById('mpReveal').addEventListener('click', function(){
+      this.style.display='none';
+      document.getElementById('mpRevealBox').innerHTML = '<div class="mp-contact-reveal">'+esc(r.contact||'No contact provided')+'</div>';
+    });
+    openModal(detailModal);
+  }
+
+  /* ── Modals ── */
+  function openModal(m){ m.classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeModal(m){ m.classList.remove('open'); document.body.style.overflow=''; }
+  document.querySelectorAll('.mp-modal-ov').forEach(function(ov){
+    ov.addEventListener('click', function(e){ if(e.target===ov) closeModal(ov); });
+    ov.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', function(){ closeModal(ov); }); });
+  });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ document.querySelectorAll('.mp-modal-ov.open').forEach(closeModal); } });
+
+  /* ── Sell flow (auth-gated) ── */
+  var sellModal = document.getElementById('mpSellModal');
+  document.getElementById('mpSellBtn').addEventListener('click', async function(){
+    if (typeof RA === 'undefined') return;
+    var user = null; try { user = await RA.getUser(); } catch(e){}
+    if (!user){ window.location.href = SITE_ROOT + 'login/'; return; }
+    openModal(sellModal);
+  });
+  function setMsg(t, ok){ document.getElementById('mpSellMsg').innerHTML = t ? '<div class="mp-msg '+(ok?'ok':'err')+'">'+esc(t)+'</div>' : ''; }
+  document.getElementById('mpSellForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+    var title = document.getElementById('pName').value.trim();
+    var contact = document.getElementById('pContact').value.trim();
+    if (!title) return setMsg('Please enter a product name.');
+    if (!contact) return setMsg('Please add a contact so buyers can reach you.');
+    var btn = document.getElementById('mpSubmit'); btn.disabled=true; var o=btn.textContent; btn.textContent='Submitting…';
+    try {
+      var image_url = null;
+      var f = document.getElementById('pImg').files[0];
+      if (f) { try { image_url = await RA.uploadProductImage(f); } catch(err){ console.error('img', err); } }
+      await RA.createProduct({
+        title: title, description: document.getElementById('pDesc').value.trim(),
+        price: document.getElementById('pPrice').value, currency: document.getElementById('pCurrency').value,
+        category: document.getElementById('pCat').value, condition: document.getElementById('pCond').value,
+        location: document.getElementById('pLoc').value.trim(), contact: contact, image_url: image_url
+      });
+      setMsg('✓ Submitted! Your listing is pending review and will appear once approved. Track it in your dashboard → Marketplace.', true);
+      this.reset();
+      setTimeout(function(){ closeModal(sellModal); setMsg(''); }, 3200);
+    } catch(err){ console.error(err); setMsg((err&&err.message)||'Could not submit your listing.'); }
+    finally { btn.disabled=false; btn.textContent=o; }
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>

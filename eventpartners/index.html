@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/site.css?v=17">
-<link rel="stylesheet" href="../assets/css/event-network.css?v=17">
+<link rel="stylesheet" href="../assets/css/site.css?v=18">
+<link rel="stylesheet" href="../assets/css/event-network.css?v=18">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font-sans); }
@@ -415,8 +415,8 @@
   window.SITE_SECTION = "explore";
   window.SITE_PAGE = "eventpartners";
 </script>
-<script src="../assets/js/supabase-client.js?v=17"></script>
-<script src="../assets/js/auth.js?v=17"></script>
+<script src="../assets/js/supabase-client.js?v=18"></script>
+<script src="../assets/js/auth.js?v=18"></script>
 <script>
   /* ════════════════════════════════════════════════════════════
      EVENT DIRECTORY — single data source driving the card list,
@@ -931,6 +931,31 @@
 
   render();
   initSaves();   // mark already-saved events for a signed-in visitor
+  wirePartnerCta();
+
+  // "Apply to Be an Event Partner": a logged-in user just gains the Event
+  // Organizer role (added to their dashboard); a visitor is sent to sign up
+  // with that role pre-selected — either way they end up an event organizer.
+  function wirePartnerCta() {
+    var cta = document.querySelector('.ep-apply-cta');
+    if (!cta) return;
+    var signupHref = cta.getAttribute('href');   // ../signup/join-us/?sel=languageEvent
+    cta.addEventListener('click', async function (e) {
+      if (typeof RA === 'undefined') return;      // no JS auth → let the link go to signup
+      var user = null; try { user = await RA.getUser(); } catch (_) {}
+      if (!user) return;                          // not logged in → follow href (sign up)
+      e.preventDefault();
+      var orig = cta.textContent; cta.style.pointerEvents = 'none'; cta.textContent = 'Adding…';
+      try {
+        await RA.addRole('languageEvent');
+        cta.textContent = '✓ You’re an Event Organizer';
+        setTimeout(function () { window.location.href = '../dashboard/'; }, 900);   // show it in their panel
+      } catch (err) {
+        console.error('addRole failed', err);
+        window.location.href = signupHref;        // e.g. no profile yet → finish via signup
+      }
+    });
+  }
 
   // Keep Event Status pills (and Ongoing/Upcoming/Past filtering) correct
   // for anyone who leaves the tab open across an event's start/end time.
@@ -1007,6 +1032,6 @@
     }, 2000);
   })();
 </script>
-<script src="../assets/js/nav.js?v=17" defer></script>
+<script src="../assets/js/nav.js?v=18" defer></script>
 </body>
 </html>

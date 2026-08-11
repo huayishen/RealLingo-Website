@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/site.css?v=17">
-<link rel="stylesheet" href="../../assets/css/explore-hero.css?v=17">
+<link rel="stylesheet" href="../../assets/css/site.css?v=18">
+<link rel="stylesheet" href="../../assets/css/explore-hero.css?v=18">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font-sans); }
@@ -176,9 +176,24 @@
   .ex-edit-tagline.right { text-align: right; margin-left: auto; }
 
   @media (max-width: 760px) {
-    .ex-edit-content { padding: 3.5rem 1.5rem 2.5rem; }
+    .ex-edit-content { padding: 3.25rem 1.4rem 2.5rem; }
     .ex-edit-bottom { flex-direction: column; align-items: center; gap: 1.5rem; text-align: center; }
     .ex-edit-tagline.left, .ex-edit-tagline.right { text-align: center; max-width: 100%; margin-left: 0; }
+    /* The landscape hero video crops hard on a tall phone, over-emphasising
+       compression. Soften it into a premium frosted backdrop (gentle blur +
+       toned-down saturation/brightness; scaled up so the blur has no edge gap)
+       and lay a stronger top/bottom gradient scrim for text legibility. */
+    .ex-hero-bg-video { filter: saturate(.8) brightness(.86) blur(3px); transform: scale(1.09); }
+    .ex-hero-editorial .ex-hero-bg-overlay {
+      background: linear-gradient(180deg, rgba(17,18,22,.56) 0%, rgba(17,18,22,.4) 42%, rgba(17,18,22,.68) 100%);
+    }
+    /* Full-width stacked CTAs read cleaner than centered pills at phone width. */
+    .ex-edit-ctas { flex-direction: column; align-items: stretch; gap: .75rem; }
+    .ex-edit-ctas .ex-cta, .ex-edit-ctas .ex-cta-outline, .ex-edit-ctas .ex-cta-flyout-wrap { width: 100%; }
+    .ex-edit-ctas .ex-cta-outline { padding: .95rem 1.5rem; text-align: center; }
+  }
+  @media (max-width: 480px) {
+    .ex-hero-bg-video { filter: saturate(.78) brightness(.84) blur(4px); transform: scale(1.12); }
   }
 </style>
 </head>
@@ -399,6 +414,6 @@
     });
   })();
 </script>
-<script src="../../assets/js/nav.js?v=17" defer></script>
+<script src="../../assets/js/nav.js?v=18" defer></script>
 </body>
 </html>

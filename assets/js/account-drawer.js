@@ -39,10 +39,12 @@
     { key: 'dashboard', label: 'Dashboard', icon: '👤' },
     { key: 'roles', label: 'My Roles', icon: '⭐' },
     { key: 'applications', label: 'Applications', icon: '📄' },
+    { key: 'marketplace', label: 'Marketplace', icon: '🛍️' },
     { key: 'saved', label: 'Saved', icon: '❤️' },
     { key: 'calendar', label: 'Calendar', icon: '📅' },
     { key: 'settings', label: 'Settings', icon: '⚙️' }
   ];
+  var MYPRODUCTS = [], PENDING = [], IS_ADMIN = false;
   var CAL = { view: 'month', ref: null, detail: null };  // calendar state
 
   var built = false, DATA = null, SAVED = [], AVATAR = null, CURRENT = 'dashboard';
@@ -71,6 +73,9 @@
   async function ensureData() {
     DATA = await RA.loadProfile();
     try { SAVED = await RA.loadSaved(); } catch (e) { SAVED = []; }
+    try { MYPRODUCTS = await RA.myProducts(); } catch (e) { MYPRODUCTS = []; }
+    try { IS_ADMIN = await RA.isAdmin(); } catch (e) { IS_ADMIN = false; }
+    if (IS_ADMIN) { try { PENDING = await RA.pendingProducts(); } catch (e) { PENDING = []; } }
     var p = DATA && DATA.profile;
     AVATAR = (p && p.avatar_url) ? await RA.avatarPublicUrl(p.avatar_url) : (ROOT() + 'assets/img/default-avatar.png');
   }
@@ -110,8 +115,15 @@
   }
 
   function renderNav() {
-    navEl.innerHTML = NAV.map(function (it) {
-      return '<button class="acct-nav-item' + (it.key === CURRENT ? ' active' : '') + '" data-nav="' + it.key + '"><span class="acct-nav-lbl">' + it.label + '</span></button>';
+    var items = NAV.slice();
+    if (IS_ADMIN) {   // marketplace admin (pr@thereallingo.com) gets a review panel
+      var idx = -1; for (var j = 0; j < items.length; j++) { if (items[j].key === 'marketplace') { idx = j; break; } }
+      var adminItem = { key: 'adminreview', label: 'Admin Review', icon: '🛡️' };
+      if (idx >= 0) items.splice(idx + 1, 0, adminItem); else items.push(adminItem);
+    }
+    navEl.innerHTML = items.map(function (it) {
+      var badge = (it.key === 'adminreview' && PENDING.length) ? ' <span class="acct-nav-badge">' + PENDING.length + '</span>' : '';
+      return '<button class="acct-nav-item' + (it.key === CURRENT ? ' active' : '') + '" data-nav="' + it.key + '"><span class="acct-nav-lbl">' + it.label + badge + '</span></button>';
     }).join('') + '<button class="acct-nav-item acct-nav-logout" data-nav="__logout"><span class="acct-nav-lbl">Log Out</span></button>';
     navEl.querySelectorAll('[data-nav]').forEach(function (b) {
       b.addEventListener('click', function () { b.dataset.nav === '__logout' ? doLogout() : go(b.dataset.nav); });
@@ -132,6 +144,8 @@
     if (section === 'applications') return renderApplications();
     if (section === 'saved') return renderSaved();
     if (section === 'calendar') return renderCalendar(contentEl);
+    if (section === 'marketplace') return renderMarketplace();
+    if (section === 'adminreview') return renderAdminReview();
     if (section === 'settings') return renderSettings();
   }
 
@@ -424,6 +438,87 @@
     // clicking a month day cell (not on an event) → jump to that day
     calTarget.querySelectorAll('.cal-cell[data-day]').forEach(function(c){
       c.addEventListener('click', function(){ var p=c.dataset.day.split('-'); CAL.ref=new Date(+p[0],+p[1]-1,+p[2]); CAL.view='day'; renderCalendar(); });
+    });
+  }
+
+  function mpMoney(p, c) { return (p == null || p === '') ? '—' : (c || 'USD') + ' ' + Number(p).toLocaleString(); }
+  function mpStatusBadge(s) {
+    var map = { pending: ['Pending review', 'pend'], approved: ['Live', 'ok'], rejected: ['Rejected', 'rej'], sold: ['Sold', 'sold'] };
+    var m = map[s] || [s, '']; return '<span class="mp-badge mp-badge-' + m[1] + '">' + m[0] + '</span>';
+  }
+  function mpListingCard(p, actionsHtml) {
+    var img = p.image_url ? RA.productImageUrl(p.image_url) : null;
+    return '<div class="acct-card mp-listing">' +
+      '<div class="mp-listing-row">' +
+        '<div class="mp-listing-thumb"' + (img ? ' style="background-image:url(\'' + esc(img) + '\')"' : '') + '>' + (img ? '' : '🛍️') + '</div>' +
+        '<div class="mp-listing-main"><div class="mp-listing-title">' + esc(p.title) + '</div>' +
+          '<div class="mp-listing-price">' + esc(mpMoney(p.price, p.currency)) + '</div>' + mpStatusBadge(p.status) +
+        '</div></div>' + (actionsHtml || '') + '</div>';
+  }
+  function renderMarketplace() {
+    var items = MYPRODUCTS || [];
+    var active = items.filter(function (p) { return p.status === 'approved'; }).length;
+    var pend = items.filter(function (p) { return p.status === 'pending'; }).length;
+    var sold = items.filter(function (p) { return p.status === 'sold'; }).length;
+    var html = '<h1 class="acct-h1">Marketplace</h1><p class="acct-sub">Your listings and sales.</p>';
+    html += '<div class="acct-card"><div class="acct-stats">' +
+      '<div class="acct-stat"><div class="acct-stat-num">' + active + '</div><div class="acct-stat-lbl">Live</div></div>' +
+      '<div class="acct-stat"><div class="acct-stat-num">' + pend + '</div><div class="acct-stat-lbl">Pending</div></div>' +
+      '<div class="acct-stat"><div class="acct-stat-num">' + sold + '</div><div class="acct-stat-lbl">Sold</div></div>' +
+      '</div></div>';
+    html += '<a class="acct-btn acct-btn-solid" style="margin:1rem 0;display:inline-block" href="' + ROOT() + 'resources/marketplace/">＋ List a new item</a>';
+    if (!items.length) { html += '<div class="acct-empty">No listings yet. List something on the Marketplace and it will show here.</div>'; contentEl.innerHTML = html; return; }
+    html += '<h2 class="acct-h2">Your listings</h2>';
+    items.forEach(function (p) {
+      var acts = '<div class="mp-listing-actions">' +
+        (p.status === 'rejected' && p.reject_reason ? '<div class="mp-listing-reason">Rejected: ' + esc(p.reject_reason) + '</div>' : '') +
+        (p.status === 'approved' ? '<button class="acct-btn mp-act" data-act="sold" data-pid="' + p.id + '">Mark sold</button>' : '') +
+        '<button class="acct-btn acct-btn-danger mp-act" data-act="delete" data-pid="' + p.id + '">Delete</button>' + '</div>';
+      html += mpListingCard(p, acts);
+    });
+    contentEl.innerHTML = html;
+    contentEl.querySelectorAll('.mp-act').forEach(function (b) {
+      b.addEventListener('click', async function () {
+        var id = b.dataset.pid, act = b.dataset.act;
+        if (act === 'delete' && !confirm('Delete this listing?')) return;
+        b.disabled = true;
+        try {
+          if (act === 'sold') await RA.markProductSold(id); else if (act === 'delete') await RA.deleteProduct(id);
+          MYPRODUCTS = await RA.myProducts(); renderMarketplace();
+        } catch (e) { b.disabled = false; alert('Could not update: ' + (e.message || e)); }
+      });
+    });
+  }
+  function renderAdminReview() {
+    var html = '<h1 class="acct-h1">Admin Review 🛡️</h1><p class="acct-sub">Approve or reject marketplace listings before they go public.</p>';
+    if (!PENDING.length) { html += '<div class="acct-empty">🎉 Nothing pending review right now.</div>'; contentEl.innerHTML = html; return; }
+    html += '<h2 class="acct-h2">Pending (' + PENDING.length + ')</h2>';
+    PENDING.forEach(function (p) {
+      var img = p.image_url ? RA.productImageUrl(p.image_url) : null;
+      html += '<div class="acct-card mp-listing">' +
+        '<div class="mp-listing-row">' +
+          '<div class="mp-listing-thumb"' + (img ? ' style="background-image:url(\'' + esc(img) + '\')"' : '') + '>' + (img ? '' : '🛍️') + '</div>' +
+          '<div class="mp-listing-main"><div class="mp-listing-title">' + esc(p.title) + '</div>' +
+            '<div class="mp-listing-price">' + esc(mpMoney(p.price, p.currency)) + '</div>' +
+            (p.description ? '<div class="mp-listing-reason">' + esc(p.description) + '</div>' : '') +
+            '<div class="mp-listing-reason">📇 ' + esc(p.contact || '—') + ' · ' + esc(p.category || '—') + ' · ' + esc(p.location || '—') + '</div>' +
+          '</div></div>' +
+        '<div class="mp-listing-actions">' +
+          '<button class="acct-btn acct-btn-solid mp-adm" data-act="approve" data-pid="' + p.id + '">Approve</button>' +
+          '<button class="acct-btn acct-btn-danger mp-adm" data-act="reject" data-pid="' + p.id + '">Reject</button>' +
+        '</div></div>';
+    });
+    contentEl.innerHTML = html;
+    contentEl.querySelectorAll('.mp-adm').forEach(function (b) {
+      b.addEventListener('click', async function () {
+        var id = b.dataset.pid, act = b.dataset.act, reason = '';
+        if (act === 'reject') { reason = prompt('Reason for rejection (optional, shown to the seller):') || ''; }
+        b.disabled = true;
+        try {
+          if (act === 'approve') await RA.approveProduct(id); else await RA.rejectProduct(id, reason);
+          PENDING = await RA.pendingProducts(); renderNav(); renderAdminReview();
+        } catch (e) { b.disabled = false; alert('Action failed: ' + (e.message || e)); }
+      });
     });
   }
 

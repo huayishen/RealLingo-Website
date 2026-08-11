@@ -537,6 +537,89 @@
     return { formData: fd, roles: roles };
   }
 
+  // Add a single role to the current user's profile (idempotent). Used by the
+  // "become an event organizer" CTA for already-logged-in users.
+  async function addRole(roleKey) {
+    const { sb, session } = await sessionOrThrow();
+    const { error } = await sb.from('profile_roles').upsert(
+      { user_id: session.user.id, role_key: roleKey, category: categoryOf(roleKey) },
+      { onConflict: 'user_id,role_key' }
+    );
+    if (error) throw error;
+  }
+
+  // ── Marketplace ──────────────────────────────────────────
+  const ADMIN_EMAIL = 'pr@thereallingo.com';
+  async function isAdmin() {
+    try { const u = await getUser(); return !!(u && String(u.email || '').toLowerCase() === ADMIN_EMAIL); } catch (e) { return false; }
+  }
+  function productImageUrl(path) {
+    if (!path) return null;
+    const cfg = window.SUPABASE_CONFIG;
+    return cfg ? (cfg.url + '/storage/v1/object/public/product-images/' + path) : null;
+  }
+  async function uploadProductImage(file) {
+    const { session } = await sessionOrThrow();
+    const sb = await client();
+    const cfg = window.SUPABASE_CONFIG;
+    const uid = session.user.id;
+    const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+    const path = uid + '/' + randId() + '.' + ext;
+    const send = (tok) => fetch(cfg.url + '/storage/v1/object/product-images/' + path, {
+      method: 'POST',
+      headers: { apikey: cfg.key, Authorization: 'Bearer ' + tok, 'Content-Type': file.type || 'application/octet-stream' },
+      body: file
+    });
+    let token = session.access_token;
+    let resp = await send(token);
+    for (let a = 0; a < 3 && !resp.ok; a++) {
+      try { const r = await sb.auth.refreshSession(); if (r && r.data && r.data.session) token = r.data.session.access_token; } catch (e) {}
+      await new Promise(res => setTimeout(res, 500 + a * 500));
+      resp = await send(token);
+    }
+    if (!resp.ok) throw new Error('Image upload failed (' + resp.status + ')');
+    return path;
+  }
+  async function createProduct(p) {
+    const { sb, session } = await sessionOrThrow();
+    const row = {
+      seller_id: session.user.id,
+      title: p.title, description: p.description || null,
+      price: (p.price === '' || p.price == null) ? null : Number(p.price),
+      currency: p.currency || 'USD', category: p.category || null, condition: p.condition || null,
+      image_url: p.image_url || null, contact: p.contact || null, location: p.location || null,
+      quantity: p.quantity ? Number(p.quantity) : 1
+    };
+    const { data, error } = await sb.from('marketplace_products').insert(row).select().single();
+    if (error) throw error;
+    return data; // status is forced to 'pending' by the DB trigger
+  }
+  async function listMarketplace(opts) {
+    opts = opts || {};
+    const sb = await client();
+    let q = sb.from('marketplace_products').select('*').eq('status', 'approved').order('created_at', { ascending: false });
+    if (opts.category) q = q.eq('category', opts.category);
+    const { data, error } = await q;
+    if (error) throw error;
+    let rows = data || [];
+    if (opts.search) { const s = opts.search.toLowerCase(); rows = rows.filter(r => (r.title || '').toLowerCase().includes(s) || (r.description || '').toLowerCase().includes(s) || (r.category || '').toLowerCase().includes(s)); }
+    return rows;
+  }
+  async function myProducts() {
+    const { sb, session } = await sessionOrThrow();
+    const { data, error } = await sb.from('marketplace_products').select('*').eq('seller_id', session.user.id).order('created_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  }
+  async function updateProduct(id, patch) { const sb = await client(); const { error } = await sb.from('marketplace_products').update(patch).eq('id', id); if (error) throw error; }
+  async function markProductSold(id) { return updateProduct(id, { status: 'sold' }); }
+  async function deleteProduct(id) { const sb = await client(); const { error } = await sb.from('marketplace_products').delete().eq('id', id); if (error) throw error; }
+  // Admin (RLS enforces that only pr@thereallingo.com can actually change status)
+  async function pendingProducts() { const sb = await client(); const { data, error } = await sb.from('marketplace_products').select('*').eq('status', 'pending').order('created_at', { ascending: true }); if (error) throw error; return data || []; }
+  async function allProductsAdmin() { const sb = await client(); const { data, error } = await sb.from('marketplace_products').select('*').order('created_at', { ascending: false }); if (error) throw error; return data || []; }
+  async function approveProduct(id) { return updateProduct(id, { status: 'approved', reject_reason: null }); }
+  async function rejectProduct(id, reason) { return updateProduct(id, { status: 'rejected', reject_reason: reason || null }); }
+
   // ── Public API ───────────────────────────────────────────
   window.RA = {
     ROLE_TABLE, HIRE_TARGET,
@@ -546,7 +629,9 @@
     stashPending, getPending, clearPending, flushPending,
     saveProfile, loadProfile,
     updateUsername, updateBasics, updateNotificationPrefs, submitApplication, profileToFormData,
-    updateEmail, deleteAccount, loadSaved, saveItem, unsaveItem,
+    updateEmail, deleteAccount, loadSaved, saveItem, unsaveItem, addRole,
+    isAdmin, productImageUrl, uploadProductImage, createProduct, listMarketplace, myProducts,
+    updateProduct, markProductSold, deleteProduct, pendingProducts, allProductsAdmin, approveProduct, rejectProduct,
     enforceRemember
   };
 })();

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+<link rel="apple-touch-icon" href="../../assets/img/favicon.png">
+<title>Scholarships — Real lingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css?v=18">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); background: var(--yellow-pale, #fff7d6); }
+
+  .sch-wrap { max-width: 780px; margin: 0 auto; padding: 3.4rem 1.25rem 4.5rem; }
+  .sch-crumb { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-mid, #6a6a6a); text-align: center; margin-bottom: 1rem; }
+  .sch-head { text-align: center; margin-bottom: 2rem; }
+  .sch-h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -.02em; color: var(--dark, #111216); margin-bottom: .6rem; }
+  .sch-sub { color: var(--text-mid, #4a4840); font-size: 1.05rem; line-height: 1.65; max-width: 620px; margin: 0 auto; }
+
+  /* Featured external resource card */
+  .sch-card { background: #fff; border: 1px solid rgba(17,18,22,.09); border-radius: 24px; padding: 2.4rem 2.2rem; box-shadow: 0 30px 70px -36px rgba(17,18,22,.34); text-align: center; position: relative; overflow: hidden; }
+  .sch-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, var(--yellow, #ffeb99), var(--yellow-mid, #f5d96a)); }
+  .sch-badge { display: inline-block; padding: .35rem .85rem; border-radius: 100px; background: var(--yellow-pale, #fff7d6); border: 1px solid rgba(230,198,74,.5); color: #6a5800; font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 1.15rem; }
+  .sch-brand { font-size: 1.7rem; font-weight: 800; color: var(--dark, #111216); margin-bottom: .5rem; }
+  .sch-brand span { color: #2e7d32; }
+  .sch-desc { color: var(--text-mid, #4a4840); font-size: .98rem; line-height: 1.65; max-width: 520px; margin: 0 auto 1.5rem; }
+  .sch-feats { display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem; margin-bottom: 1.8rem; }
+  .sch-feat { display: inline-flex; align-items: center; gap: .4rem; padding: .45rem .9rem; border-radius: 100px; background: #f4f4f2; font-size: .82rem; font-weight: 600; color: var(--dark, #111216); }
+  .sch-cta { display: inline-flex; align-items: center; gap: .5rem; padding: .95rem 2rem; border-radius: 100px; background: var(--dark, #111216); color: #fff; font-weight: 700; font-size: 1rem; text-decoration: none; transition: transform .18s ease, box-shadow .18s ease; }
+  .sch-cta:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -14px rgba(17,18,22,.55); }
+  .sch-cta .arw { transition: transform .18s ease; }
+  .sch-cta:hover .arw { transform: translate(2px,-2px); }
+  .sch-host { margin-top: 1rem; font-size: .78rem; color: var(--text-mid, #8a8878); }
+
+  .sch-back { display: block; text-align: center; margin-top: 2rem; font-weight: 700; color: var(--dark, #111216); text-decoration: none; }
+  .sch-back:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main class="sch-wrap">
+  <div class="sch-crumb">Open Sources / Learners Hub / Scholarship</div>
+  <div class="sch-head">
+    <h1 class="sch-h1">Scholarships</h1>
+    <p class="sch-sub">Hunting for scholarships, fellowships, or funding across the Arab world and the wider MENA region? We've partnered you with a dedicated directory that keeps track of them all.</p>
+  </div>
+
+  <div class="sch-card">
+    <span class="sch-badge">Arabic &amp; MENA Scholarships</span>
+    <div class="sch-brand">MENA <span>Scholar</span></div>
+    <p class="sch-desc">A comprehensive, searchable directory of scholarships, fellowships, exchange programs, and funding opportunities across the Middle East and North Africa — updated regularly and free to browse.</p>
+    <div class="sch-feats">
+      <span class="sch-feat">🔍 Search</span>
+      <span class="sch-feat">📖 Directory</span>
+      <span class="sch-feat">🗺️ Map</span>
+    </div>
+    <a class="sch-cta" href="https://menascholar.com/#directory" target="_blank" rel="noopener">
+      Explore Arabic Scholarships <span class="arw" aria-hidden="true">↗</span>
+    </a>
+    <div class="sch-host">Opens menascholar.com in a new tab</div>
+  </div>
+
+  <a href="../" class="sch-back">← Back to Learners Hub</a>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+  window.SITE_ROOT = "../../";
+  window.SITE_SECTION = "opensource";
+  window.SITE_PAGE = "resources/scholarship";
+</script>
+<script src="../../assets/js/nav.js?v=18" defer></script>
+</body>
+</html>

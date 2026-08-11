@@ -43,10 +43,10 @@
   function ensureDrawer() {
     if (window.openAccountDrawer) return Promise.resolve();
     if (_drawerLoading) return _drawerLoading;
-    loadCss(ROOT + 'assets/css/account-drawer.css?v=17');
-    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=17'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=17'); })
-      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=17'); });
+    loadCss(ROOT + 'assets/css/account-drawer.css?v=18');
+    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=18'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=18'); })
+      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=18'); });
     return _drawerLoading;
   }
   function openAccountDrawerLazy(e) {
@@ -80,8 +80,8 @@
   // Marketing pages don't load supabase-js, so detect that here, establish the
   // session, then drop them on their dashboard already logged in — no 2nd login.
   function loadAuthStack() {
-    return (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=17'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=17'); });
+    return (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=18'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=18'); });
   }
   function waitForSession(sb) {
     return sb.auth.getSession().then(function (r) {
@@ -94,18 +94,29 @@
   }
   function handleAuthReturn() {
     var hash = location.hash || '';
-    if (!/[#&]access_token=/.test(hash) && !/[#&]type=(signup|magiclink|invite|recovery|email_change)/.test(hash)) return false;
+    var hasAuth = /[#&](access_token|error|error_description)=/.test(hash) || /[#&]type=(signup|magiclink|invite|recovery|email_change)/.test(hash);
+    if (!hasAuth) return false;
     if (/\/auth\/callback\//.test(location.pathname) || /\/reset-password\//.test(location.pathname)) return false; // those pages self-handle
     var m = /[#&]type=([a-z_]+)/.exec(hash), type = m ? m[1] : '';
+    var isError = /[#&](error|error_description)=/.test(hash);
+    // Password-recovery links — and any expired/invalid auth link (which carries an
+    // error and no usable session) — belong on the reset page: it shows the
+    // new-password form for a valid recovery session, or a clear "this link is
+    // invalid or has expired, request a new one" message otherwise. Forward the
+    // whole hash so that page can read the session/error itself.
+    if (type === 'recovery' || isError) {
+      window.location.replace(ROOT + 'reset-password/' + hash);
+      return true;
+    }
+    // Otherwise it's a successful verify/magic-link → establish the session + dashboard.
     document.documentElement.style.visibility = 'hidden';   // avoid a flash of the marketing page before the redirect
     loadAuthStack()
       .then(function () { return window.getSupabaseClient(); })
       .then(function (sb) { return waitForSession(sb); })
       .then(function (sess) {
-        if (!sess) { document.documentElement.style.visibility = ''; return; }
-        var dest = (type === 'recovery') ? (ROOT + 'reset-password/') : (ROOT + 'dashboard/');
-        var flush = (type !== 'recovery' && window.RA && RA.flushPending) ? RA.flushPending() : Promise.resolve();
-        return flush.catch(function () {}).then(function () { window.location.replace(dest); });
+        if (!sess) { window.location.replace(ROOT + 'reset-password/' + hash); return; } // no session → let reset page explain
+        var flush = (window.RA && RA.flushPending) ? RA.flushPending() : Promise.resolve();
+        return flush.catch(function () {}).then(function () { window.location.replace(ROOT + 'dashboard/'); });
       })
       .catch(function (e) { console.error('auth-return handling failed', e); document.documentElement.style.visibility = ''; });
     return true;
