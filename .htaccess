@@ -1,0 +1,31 @@
+# RealLingo cache policy
+# HTML is the entry point and references version-stamped assets (?v=N), so it
+# must always be re-checked — otherwise returning visitors keep running stale
+# markup that points at old asset versions. Static assets are cache-busted via
+# their ?v= query string, so they can be cached hard.
+
+<IfModule mod_headers.c>
+  # Always revalidate HTML (cheap 304s when unchanged).
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  # Long-cache fingerprinted/static assets.
+  <FilesMatch "\.(js|css|png|jpe?g|gif|svg|webp|ico|woff2?|ttf|otf|eot|mp4|webm)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>
+
+# Also drive the browser cache lifetimes via mod_expires where available.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 week"
+  ExpiresByType application/javascript "access plus 1 week"
+  ExpiresByType image/png "access plus 1 week"
+  ExpiresByType image/jpeg "access plus 1 week"
+  ExpiresByType image/svg+xml "access plus 1 week"
+  ExpiresByType image/webp "access plus 1 week"
+  ExpiresByType font/woff2 "access plus 1 week"
+  ExpiresByType video/mp4 "access plus 1 week"
+</IfModule>
