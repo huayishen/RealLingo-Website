@@ -6,9 +6,30 @@
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
 <link rel="apple-touch-icon" href="assets/img/favicon.png">
 <title>Real lingo — 5+ Languages, Since 2026</title>
-<meta http-equiv="refresh" content="0; url=explore/event/">
+<script>
+  // Auth-aware landing router. Supabase sends verify/recovery links back to the
+  // site's root (the "Site URL") with the session in the URL hash, e.g.
+  //   /#access_token=…&type=recovery   or   /#error=…&error_description=…
+  // A plain <meta refresh> would drop that hash, losing the reset token — so we
+  // route it ourselves BEFORE any redirect:
+  //   • password recovery (or an expired/invalid link) → /reset-password/
+  //   • any other verify/magic-link session            → /explore/event/ (nav.js
+  //     establishes the session there and forwards to the dashboard)
+  //   • no auth hash                                    → the normal landing page
+  (function () {
+    var hash = location.hash || '';
+    var isRecovery = /[#&]type=recovery/.test(hash);
+    var isError    = /[#&](error|error_description)=/.test(hash);
+    var isAuth     = /[#&](access_token|refresh_token)=/.test(hash) ||
+                     /[#&]type=(signup|magiclink|invite|recovery|email_change)/.test(hash);
+    if (isRecovery || isError) { location.replace('reset-password/' + hash); }
+    else if (isAuth)          { location.replace('explore/event/' + hash); }
+    else                       { location.replace('explore/event/'); }
+  })();
+</script>
+<noscript><meta http-equiv="refresh" content="0; url=explore/event/"></noscript>
 <link rel="canonical" href="explore/event/">
-<link rel="stylesheet" href="assets/css/site.css?v=18">
+<link rel="stylesheet" href="assets/css/site.css?v=19">
 </head>
 <body>
 <div class="redirect-note">

@@ -620,6 +620,42 @@
   async function approveProduct(id) { return updateProduct(id, { status: 'approved', reject_reason: null }); }
   async function rejectProduct(id, reason) { return updateProduct(id, { status: 'rejected', reject_reason: reason || null }); }
 
+  // ── Events (directory + organizer submissions, my@ admin) ─
+  const EVENT_ADMIN_EMAIL = 'my@thereallingo.com';
+  async function isEventAdmin() {
+    try { const u = await getUser(); return !!(u && String(u.email || '').toLowerCase() === EVENT_ADMIN_EMAIL); } catch (e) { return false; }
+  }
+  // Public: approved events, returned as the original event objects (id merged in).
+  async function listEvents() {
+    const sb = await client();
+    const { data, error } = await sb.from('events').select('*').eq('status', 'approved').order('start_date', { ascending: true });
+    if (error) throw error;
+    return (data || []).map(function (r) { return Object.assign({}, r.data, { id: r.id, key: r.key || r.id }); });
+  }
+  async function submitEvent(ev) {
+    const { sb, session } = await sessionOrThrow();
+    const slug = String(ev.series || ev.title || 'event').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const key = slug + '-' + (ev.startDate || '') + '-' + randId();
+    const row = {
+      organizer_id: session.user.id, key: key, title: ev.series || ev.title || 'Event',
+      start_date: ev.startDate || null, end_date: ev.endDate || ev.startDate || null,
+      country: ev.country || null, data: ev
+    };
+    const { data, error } = await sb.from('events').insert(row).select().single();
+    if (error) throw error;
+    return data; // trigger forces status 'pending'
+  }
+  async function myEvents() {
+    const { sb, session } = await sessionOrThrow();
+    const { data, error } = await sb.from('events').select('*').eq('organizer_id', session.user.id).order('created_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  }
+  async function deleteEvent(id) { const sb = await client(); const { error } = await sb.from('events').delete().eq('id', id); if (error) throw error; }
+  async function pendingEvents() { const sb = await client(); const { data, error } = await sb.from('events').select('*').eq('status', 'pending').order('created_at', { ascending: true }); if (error) throw error; return data || []; }
+  async function approveEvent(id) { const sb = await client(); const { error } = await sb.from('events').update({ status: 'approved', reject_reason: null }).eq('id', id); if (error) throw error; }
+  async function rejectEvent(id, reason) { const sb = await client(); const { error } = await sb.from('events').update({ status: 'rejected', reject_reason: reason || null }).eq('id', id); if (error) throw error; }
+
   // ── Public API ───────────────────────────────────────────
   window.RA = {
     ROLE_TABLE, HIRE_TARGET,
@@ -632,6 +668,7 @@
     updateEmail, deleteAccount, loadSaved, saveItem, unsaveItem, addRole,
     isAdmin, productImageUrl, uploadProductImage, createProduct, listMarketplace, myProducts,
     updateProduct, markProductSold, deleteProduct, pendingProducts, allProductsAdmin, approveProduct, rejectProduct,
+    isEventAdmin, listEvents, submitEvent, myEvents, deleteEvent, pendingEvents, approveEvent, rejectEvent,
     enforceRemember
   };
 })();

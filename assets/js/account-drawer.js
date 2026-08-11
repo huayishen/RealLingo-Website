@@ -45,6 +45,7 @@
     { key: 'settings', label: 'Settings', icon: '⚙️' }
   ];
   var MYPRODUCTS = [], PENDING = [], IS_ADMIN = false;
+  var MYEVENTS = [], PENDING_EVENTS = [], IS_EVENT_ADMIN = false, IS_ORGANIZER = false;
   var CAL = { view: 'month', ref: null, detail: null };  // calendar state
 
   var built = false, DATA = null, SAVED = [], AVATAR = null, CURRENT = 'dashboard';
@@ -76,6 +77,11 @@
     try { MYPRODUCTS = await RA.myProducts(); } catch (e) { MYPRODUCTS = []; }
     try { IS_ADMIN = await RA.isAdmin(); } catch (e) { IS_ADMIN = false; }
     if (IS_ADMIN) { try { PENDING = await RA.pendingProducts(); } catch (e) { PENDING = []; } }
+    IS_ORGANIZER = ((DATA && DATA.roles) || []).some(function (r) { return r.role_key === 'languageEvent'; });
+    try { MYEVENTS = await RA.myEvents(); } catch (e) { MYEVENTS = []; }
+    if (MYEVENTS.length) IS_ORGANIZER = true;   // anyone who has submitted an event also sees the panel
+    try { IS_EVENT_ADMIN = await RA.isEventAdmin(); } catch (e) { IS_EVENT_ADMIN = false; }
+    if (IS_EVENT_ADMIN) { try { PENDING_EVENTS = await RA.pendingEvents(); } catch (e) { PENDING_EVENTS = []; } }
     var p = DATA && DATA.profile;
     AVATAR = (p && p.avatar_url) ? await RA.avatarPublicUrl(p.avatar_url) : (ROOT() + 'assets/img/default-avatar.png');
   }
@@ -116,13 +122,13 @@
 
   function renderNav() {
     var items = NAV.slice();
-    if (IS_ADMIN) {   // marketplace admin (pr@thereallingo.com) gets a review panel
-      var idx = -1; for (var j = 0; j < items.length; j++) { if (items[j].key === 'marketplace') { idx = j; break; } }
-      var adminItem = { key: 'adminreview', label: 'Admin Review', icon: '🛡️' };
-      if (idx >= 0) items.splice(idx + 1, 0, adminItem); else items.push(adminItem);
-    }
+    function insertAfter(key, item) { var i = -1; for (var j = 0; j < items.length; j++) { if (items[j].key === key) { i = j; break; } } items.splice(i >= 0 ? i + 1 : items.length, 0, item); }
+    if (IS_ORGANIZER) insertAfter('applications', { key: 'myevents', label: 'My Events', icon: '📅' });
+    if (IS_ADMIN) insertAfter('marketplace', { key: 'adminreview', label: 'Admin Review', icon: '🛡️' });          // pr@ (marketplace)
+    if (IS_EVENT_ADMIN) insertAfter('adminreview', { key: 'eventreview', label: 'Event Review', icon: '🗓️' });    // my@ (events)
     navEl.innerHTML = items.map(function (it) {
-      var badge = (it.key === 'adminreview' && PENDING.length) ? ' <span class="acct-nav-badge">' + PENDING.length + '</span>' : '';
+      var count = it.key === 'adminreview' ? PENDING.length : (it.key === 'eventreview' ? PENDING_EVENTS.length : 0);
+      var badge = count ? ' <span class="acct-nav-badge">' + count + '</span>' : '';
       return '<button class="acct-nav-item' + (it.key === CURRENT ? ' active' : '') + '" data-nav="' + it.key + '"><span class="acct-nav-lbl">' + it.label + badge + '</span></button>';
     }).join('') + '<button class="acct-nav-item acct-nav-logout" data-nav="__logout"><span class="acct-nav-lbl">Log Out</span></button>';
     navEl.querySelectorAll('[data-nav]').forEach(function (b) {
@@ -146,6 +152,8 @@
     if (section === 'calendar') return renderCalendar(contentEl);
     if (section === 'marketplace') return renderMarketplace();
     if (section === 'adminreview') return renderAdminReview();
+    if (section === 'myevents') return renderMyEvents();
+    if (section === 'eventreview') return renderEventReview();
     if (section === 'settings') return renderSettings();
   }
 
@@ -518,6 +526,109 @@
           if (act === 'approve') await RA.approveProduct(id); else await RA.rejectProduct(id, reason);
           PENDING = await RA.pendingProducts(); renderNav(); renderAdminReview();
         } catch (e) { b.disabled = false; alert('Action failed: ' + (e.message || e)); }
+      });
+    });
+  }
+
+  function evMonth(s) { if (!s) return ''; try { return ['January','February','March','April','May','June','July','August','September','October','November','December'][new Date(s + 'T00:00:00').getMonth()]; } catch (e) { return ''; } }
+  function evDateLabel(start, st, et) { try { var d = new Date(start + 'T00:00:00'); var mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]; var l = mo + ' ' + d.getDate() + ', ' + d.getFullYear(); if (st) l += ' · ' + st + (et ? '–' + et : ''); return l; } catch (e) { return start; } }
+  function setEvMsg(t, ok) { var m = document.getElementById('evMsg'); if (m) m.innerHTML = t ? '<div style="padding:.6rem .85rem;border-radius:9px;margin:.6rem 0;font-size:.86rem;background:' + (ok ? '#eafaf1;color:#1e824c' : '#fdecea;color:#c0392b') + '">' + esc(t) + '</div>' : ''; }
+  function eventFormHtml() {
+    function f(id, label, type, ph) { return '<div class="acct-field"><div class="acct-label">' + label + '</div><input class="acct-input" id="' + id + '"' + (type ? ' type="' + type + '"' : '') + ' placeholder="' + (ph || '') + '"></div>'; }
+    return '<div class="acct-card">' +
+      f('ev-series', 'Event name / series', 'text', 'e.g. Language Across Borders') +
+      '<div class="acct-2col">' + f('ev-start', 'Start date', 'date', '') + f('ev-end', 'End date (optional)', 'date', '') + '</div>' +
+      '<div class="acct-2col">' + f('ev-stime', 'Start time', 'time', '') + f('ev-etime', 'End time', 'time', '') + '</div>' +
+      '<div class="acct-2col">' + f('ev-city', 'City', 'text', 'e.g. Beijing') + f('ev-country', 'Country', 'text', 'e.g. China') + '</div>' +
+      '<div class="acct-field"><div class="acct-label">Type</div><select class="acct-input" id="ev-type"><option>in-person</option><option>hybrid</option><option>online</option></select></div>' +
+      f('ev-format', 'Format', 'text', 'e.g. Language Exchange, Workshop') +
+      f('ev-langs', 'Languages (comma-separated)', 'text', 'e.g. Chinese, Arabic') +
+      f('ev-fee', 'Entrance fee', 'text', 'e.g. Free, 50 SAR') +
+      f('ev-venue', 'Venue', 'text', '') +
+      '<div class="acct-field"><div class="acct-label">Overview</div><textarea class="acct-input" id="ev-overview" rows="3" placeholder="What is the event about?"></textarea></div>' +
+      '<button class="acct-btn acct-btn-solid" id="evSubmit" style="width:100%">Submit for review</button>' +
+      '<div style="font-size:.72rem;color:var(--asoft);text-align:center;margin-top:.5rem">🛡️ Reviewed by our team before it appears in the directory.</div></div>';
+  }
+  function wireEventForm() {
+    document.getElementById('evSubmit').addEventListener('click', async function () {
+      var series = document.getElementById('ev-series').value.trim();
+      var start = document.getElementById('ev-start').value;
+      if (!series) return setEvMsg('Please enter an event name.');
+      if (!start) return setEvMsg('Please choose a start date.');
+      var city = document.getElementById('ev-city').value.trim();
+      var st = document.getElementById('ev-stime').value || null, et = document.getElementById('ev-etime').value || null;
+      var data = {
+        series: series, communities: [], type: document.getElementById('ev-type').value,
+        format: document.getElementById('ev-format').value.trim() || 'Community Meetup',
+        cities: city ? [city] : [], country: document.getElementById('ev-country').value.trim(),
+        startDate: start, endDate: document.getElementById('ev-end').value || start, startTime: st, endTime: et,
+        dateLabel: evDateLabel(start, st, et), month: evMonth(start),
+        languages: document.getElementById('ev-langs').value.split(',').map(function (s) { return s.trim(); }).filter(Boolean),
+        supportingLanguages: ['English'], requirement: 'No Requirement', moderator: 'Optional', networking: 'Optional', rsvp: 'No',
+        entranceFee: document.getElementById('ev-fee').value.trim() || 'Free', venue: document.getElementById('ev-venue').value.trim(),
+        overview: document.getElementById('ev-overview').value.trim(), icon: 'network'
+      };
+      var btn = document.getElementById('evSubmit'); btn.disabled = true; var o = btn.textContent; btn.textContent = 'Submitting…';
+      try { await RA.submitEvent(data); MYEVENTS = await RA.myEvents(); setEvMsg('✓ Submitted! It’s pending review and will appear in the directory once approved.', true); setTimeout(renderMyEvents, 1600); }
+      catch (e) { btn.disabled = false; btn.textContent = o; setEvMsg(e.message || 'Could not submit the event.'); }
+    });
+  }
+  function renderMyEvents() {
+    var items = MYEVENTS || [];
+    var live = items.filter(function (e) { return e.status === 'approved'; }).length;
+    var pend = items.filter(function (e) { return e.status === 'pending'; }).length;
+    var html = '<h1 class="acct-h1">My Events</h1><p class="acct-sub">Submit events to the RealLingo directory — each is reviewed before going public.</p>';
+    html += '<div class="acct-card"><div class="acct-stats">' +
+      '<div class="acct-stat"><div class="acct-stat-num">' + live + '</div><div class="acct-stat-lbl">Live</div></div>' +
+      '<div class="acct-stat"><div class="acct-stat-num">' + pend + '</div><div class="acct-stat-lbl">Pending</div></div>' +
+      '<div class="acct-stat"><div class="acct-stat-num">' + items.length + '</div><div class="acct-stat-lbl">Total</div></div></div></div>';
+    html += '<button class="acct-btn acct-btn-solid" id="evNewBtn" style="margin:1rem 0;display:inline-block">＋ Submit an event</button>';
+    html += '<div id="evFormWrap" style="display:none"></div><div id="evMsg"></div>';
+    if (items.length) {
+      html += '<h2 class="acct-h2">Your submissions</h2>';
+      items.forEach(function (e) {
+        var d = e.data || {};
+        html += '<div class="acct-card mp-listing"><div class="mp-listing-row"><div class="mp-listing-thumb">📅</div>' +
+          '<div class="mp-listing-main"><div class="mp-listing-title">' + esc(e.title || d.series || 'Event') + '</div>' +
+          '<div class="mp-listing-reason">' + esc(d.dateLabel || e.start_date || '') + ' · ' + esc((d.cities || []).join(', ')) + ' ' + esc(d.country || '') + '</div>' +
+          mpStatusBadge(e.status) + (e.status === 'rejected' && e.reject_reason ? '<div class="mp-listing-reason">Rejected: ' + esc(e.reject_reason) + '</div>' : '') +
+          '</div></div><div class="mp-listing-actions"><button class="acct-btn acct-btn-danger ev-del" data-id="' + e.id + '">Delete</button></div></div>';
+      });
+    }
+    contentEl.innerHTML = html;
+    document.getElementById('evNewBtn').addEventListener('click', function () {
+      var w = document.getElementById('evFormWrap');
+      if (w.style.display === 'none') { w.innerHTML = eventFormHtml(); w.style.display = 'block'; wireEventForm(); this.style.display = 'none'; }
+    });
+    contentEl.querySelectorAll('.ev-del').forEach(function (b) {
+      b.addEventListener('click', async function () {
+        if (!confirm('Delete this event submission?')) return; b.disabled = true;
+        try { await RA.deleteEvent(b.dataset.id); MYEVENTS = await RA.myEvents(); renderMyEvents(); } catch (e) { b.disabled = false; alert('Could not delete: ' + (e.message || e)); }
+      });
+    });
+  }
+  function renderEventReview() {
+    var html = '<h1 class="acct-h1">Event Review 🗓️</h1><p class="acct-sub">Approve or reject event submissions before they appear in the public directory.</p>';
+    if (!PENDING_EVENTS.length) { html += '<div class="acct-empty">🎉 No events pending review right now.</div>'; contentEl.innerHTML = html; return; }
+    html += '<h2 class="acct-h2">Pending (' + PENDING_EVENTS.length + ')</h2>';
+    PENDING_EVENTS.forEach(function (e) {
+      var d = e.data || {};
+      html += '<div class="acct-card mp-listing"><div class="mp-listing-row"><div class="mp-listing-thumb">📅</div>' +
+        '<div class="mp-listing-main"><div class="mp-listing-title">' + esc(e.title || d.series) + '</div>' +
+        '<div class="mp-listing-reason">' + esc(d.dateLabel || e.start_date || '') + ' · ' + esc((d.cities || []).join(', ')) + ' ' + esc(d.country || '') + '</div>' +
+        (d.overview ? '<div class="mp-listing-reason">' + esc(d.overview) + '</div>' : '') +
+        '<div class="mp-listing-reason">' + esc((d.languages || []).join(', ')) + ' · ' + esc(d.format || '') + ' · ' + esc(d.entranceFee || '') + ' · ' + esc(d.venue || '') + '</div>' +
+        '</div></div><div class="mp-listing-actions"><button class="acct-btn acct-btn-solid ev-adm" data-act="approve" data-id="' + e.id + '">Approve</button>' +
+        '<button class="acct-btn acct-btn-danger ev-adm" data-act="reject" data-id="' + e.id + '">Reject</button></div></div>';
+    });
+    contentEl.innerHTML = html;
+    contentEl.querySelectorAll('.ev-adm').forEach(function (b) {
+      b.addEventListener('click', async function () {
+        var id = b.dataset.id, act = b.dataset.act, reason = '';
+        if (act === 'reject') reason = prompt('Reason for rejection (optional, shown to the organizer):') || '';
+        b.disabled = true;
+        try { if (act === 'approve') await RA.approveEvent(id); else await RA.rejectEvent(id, reason); PENDING_EVENTS = await RA.pendingEvents(); renderNav(); renderEventReview(); }
+        catch (e) { b.disabled = false; alert('Action failed: ' + (e.message || e)); }
       });
     });
   }

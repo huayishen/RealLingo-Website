@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/site.css?v=18">
-<link rel="stylesheet" href="../assets/css/event-network.css?v=18">
+<link rel="stylesheet" href="../assets/css/site.css?v=19">
+<link rel="stylesheet" href="../assets/css/event-network.css?v=19">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font-sans); }
@@ -415,8 +415,8 @@
   window.SITE_SECTION = "explore";
   window.SITE_PAGE = "eventpartners";
 </script>
-<script src="../assets/js/supabase-client.js?v=18"></script>
-<script src="../assets/js/auth.js?v=18"></script>
+<script src="../assets/js/supabase-client.js?v=19"></script>
+<script src="../assets/js/auth.js?v=19"></script>
 <script>
   /* ════════════════════════════════════════════════════════════
      EVENT DIRECTORY — single data source driving the card list,
@@ -588,6 +588,7 @@
   }
 
   function populateSelect(select, values) {
+    while (select.options.length > 1) select.remove(1);   // keep the leading "All …" option, refresh the rest
     values.forEach(function (v) {
       var opt = document.createElement('option');
       opt.value = v;
@@ -622,15 +623,19 @@
 
   var MONTH_ORDER = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-  populateSelect(seriesSelect, uniqueSorted(EVENTS.map(function (e) { return e.series; })));
-  populateSelect(communitySelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(e.communities); }, [])));
-  populateSelect(formatSelect, uniqueSorted(EVENTS.map(function (e) { return e.format; })));
-  populateSelect(citySelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(e.cities); }, [])));
-  populateSelect(countrySelect, uniqueSorted(EVENTS.map(function (e) { return e.country; })));
-  populateSelect(monthSelect, uniqueSorted(EVENTS.map(function (e) { return e.month; })).sort(function (a, b) { return MONTH_ORDER.indexOf(a) - MONTH_ORDER.indexOf(b); }));
-  populateSelect(languageSelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(e.languages); }, [])));
-  populateSelect(supportingSelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(e.supportingLanguages); }, [])));
-  populateSelect(requirementSelect, uniqueSorted(EVENTS.map(function (e) { return e.requirement; })));
+  function arr(v) { return Array.isArray(v) ? v : (v == null ? [] : [v]); }
+  function populateFilters() {
+    populateSelect(seriesSelect, uniqueSorted(EVENTS.map(function (e) { return e.series; })));
+    populateSelect(communitySelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(arr(e.communities)); }, [])));
+    populateSelect(formatSelect, uniqueSorted(EVENTS.map(function (e) { return e.format; })));
+    populateSelect(citySelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(arr(e.cities)); }, [])));
+    populateSelect(countrySelect, uniqueSorted(EVENTS.map(function (e) { return e.country; })));
+    populateSelect(monthSelect, uniqueSorted(EVENTS.map(function (e) { return e.month; })).sort(function (a, b) { return MONTH_ORDER.indexOf(a) - MONTH_ORDER.indexOf(b); }));
+    populateSelect(languageSelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(arr(e.languages)); }, [])));
+    populateSelect(supportingSelect, uniqueSorted(EVENTS.reduce(function (a, e) { return a.concat(arr(e.supportingLanguages)); }, [])));
+    populateSelect(requirementSelect, uniqueSorted(EVENTS.map(function (e) { return e.requirement; })));
+  }
+  populateFilters();
 
   function cardHtml(ev) {
     var status = computeStatus(ev);
@@ -849,7 +854,9 @@
 
   // ── Save-to-dashboard (heart) buttons ─────────────────────
   var SAVED_KEYS = {};
-  var EVENT_BY_KEY = {}; EVENTS.forEach(function (ev) { EVENT_BY_KEY[ev.key] = ev; });
+  var EVENT_BY_KEY = {};
+  function rebuildEventIndex() { EVENT_BY_KEY = {}; EVENTS.forEach(function (ev) { EVENT_BY_KEY[ev.key] = ev; }); }
+  rebuildEventIndex();
   function refreshSaveButtons() {
     document.querySelectorAll('.ep-save-btn').forEach(function (b) {
       var on = !!(SAVED_KEYS && SAVED_KEYS[b.dataset.save]);
@@ -932,6 +939,17 @@
   render();
   initSaves();   // mark already-saved events for a signed-in visitor
   wirePartnerCta();
+  loadEventsFromDb();
+
+  // The directory is now DB-backed: swap the built-in list for the live set of
+  // approved events (official + organizer-submitted). The built-in array stays
+  // as an instant first paint / offline fallback if the DB is unreachable.
+  function loadEventsFromDb() {
+    if (typeof RA === 'undefined' || !RA.listEvents) return;
+    RA.listEvents().then(function (rows) {
+      if (rows && rows.length) { EVENTS = rows; populateFilters(); rebuildEventIndex(); render(); initSaves(); }
+    }).catch(function (e) { console.error('events DB load failed', e); });
+  }
 
   // "Apply to Be an Event Partner": a logged-in user just gains the Event
   // Organizer role (added to their dashboard); a visitor is sent to sign up
@@ -1032,6 +1050,6 @@
     }, 2000);
   })();
 </script>
-<script src="../assets/js/nav.js?v=18" defer></script>
+<script src="../assets/js/nav.js?v=19" defer></script>
 </body>
 </html>
