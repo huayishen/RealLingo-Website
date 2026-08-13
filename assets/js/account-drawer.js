@@ -38,10 +38,10 @@
   var NAV = [
     { key: 'dashboard', label: 'Dashboard', icon: '👤' },
     { key: 'roles', label: 'My Roles', icon: '⭐' },
-    { key: 'applications', label: 'Applications', icon: '📄' },
-    { key: 'marketplace', label: 'Marketplace', icon: '🛍️' },
     { key: 'saved', label: 'Saved', icon: '❤️' },
     { key: 'calendar', label: 'Calendar', icon: '📅' },
+    { key: 'marketplace', label: 'My Listings', icon: '🛍️' },   // seller's own product listings
+    { key: 'applications', label: 'My Apps', icon: '📄' },        // scholarship / partner / event applications
     { key: 'settings', label: 'Settings', icon: '⚙️' }
   ];
   var MYPRODUCTS = [], PENDING = [], IS_ADMIN = false;
@@ -227,7 +227,7 @@
   }
 
   function renderApplications() {
-    var html = '<h1 class="acct-h1">Applications</h1>';
+    var html = '<h1 class="acct-h1">My Apps</h1><p class="acct-sub">Your scholarship, partner, and event applications.</p>';
     if (!DATA.applications.length) { html += '<div class="acct-empty">No applications yet. Scholarship, partner, and event applications will appear here.</div>'; }
     else html += DATA.applications.map(function (a) {
       return '<div class="acct-card"><div style="font-weight:700;text-transform:capitalize">' + esc(a.type) + ' application</div>' +
@@ -486,7 +486,7 @@
     var active = items.filter(function (p) { return p.status === 'approved'; }).length;
     var pend = items.filter(function (p) { return p.status === 'pending'; }).length;
     var sold = items.filter(function (p) { return p.status === 'sold'; }).length;
-    var html = '<h1 class="acct-h1">Marketplace</h1><p class="acct-sub">Your listings and sales.</p>';
+    var html = '<h1 class="acct-h1">My Listings</h1><p class="acct-sub">The products you\'ve listed on the Marketplace.</p>';
     html += '<div class="acct-card"><div class="acct-stats">' +
       '<div class="acct-stat"><div class="acct-stat-num">' + active + '</div><div class="acct-stat-lbl">Live</div></div>' +
       '<div class="acct-stat"><div class="acct-stat-num">' + pend + '</div><div class="acct-stat-lbl">Pending</div></div>' +

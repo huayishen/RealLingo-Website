@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/site.css?v=24">
-<link rel="stylesheet" href="../assets/css/event-network.css?v=24">
+<link rel="stylesheet" href="../assets/css/site.css?v=25">
+<link rel="stylesheet" href="../assets/css/event-network.css?v=25">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font-sans); }
@@ -60,6 +60,30 @@
     height: fit-content;
   }
   .edf-clear:hover { background: var(--border-sub); color: var(--dark); }
+
+  /* ── Slide-out "Search & Filters" panel ── */
+  .edf-bar { max-width: 980px; margin: 0 auto 1.4rem; }
+  .edf-open-btn { display: inline-flex; align-items: center; gap: .55rem; padding: .75rem 1.35rem; border: 1px solid var(--border); border-radius: 100px; background: #fff; font-family: var(--font-sans); font-weight: 700; font-size: .9rem; color: var(--dark); cursor: pointer; transition: background .18s ease, border-color .18s ease, box-shadow .18s ease; }
+  .edf-open-btn:hover { border-color: var(--yellow-mid); box-shadow: 0 6px 18px -10px rgba(17,18,22,.35); }
+  .edf-open-count { background: var(--yellow); color: var(--dark); font-size: .7rem; font-weight: 800; border-radius: 100px; padding: .08rem .5rem; }
+  .edf-panel-ov { position: fixed; inset: 0; z-index: 9100; background: rgba(17,18,22,.42); backdrop-filter: blur(2px); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+  .edf-panel-ov.open { opacity: 1; pointer-events: auto; }
+  .edf-panel { position: fixed; top: 0; right: 0; height: 100%; width: min(460px, 92vw); z-index: 9101; background: #fff; display: flex; flex-direction: column; box-shadow: -30px 0 70px -34px rgba(17,18,22,.45); transform: translateX(105%); transition: transform .34s cubic-bezier(.4,0,.2,1); will-change: transform; }
+  .edf-panel.open { transform: translateX(0); }
+  .edf-panel-head { display: flex; align-items: center; justify-content: space-between; padding: 1.3rem 1.4rem; border-bottom: 1px solid var(--border); }
+  .edf-panel-head h2 { font-size: 1.1rem; font-weight: 800; color: var(--dark); }
+  .edf-panel-close { width: 34px; height: 34px; border: none; border-radius: 50%; background: var(--cream); color: var(--text-mid); font-size: 1.4rem; line-height: 1; cursor: pointer; }
+  .edf-panel-close:hover { background: var(--border-sub); color: var(--dark); }
+  .edf-panel-body { flex: 1; overflow-y: auto; padding: 1.4rem; }
+  .edf-panel-foot { display: flex; gap: .7rem; padding: 1rem 1.4rem; border-top: 1px solid var(--border); }
+  .edf-panel-foot .edf-clear { height: auto; padding: .85rem 1.25rem; }
+  .edf-done { flex: 1; border: none; border-radius: 100px; background: var(--dark); color: var(--yellow); font-family: var(--font-sans); font-weight: 700; font-size: .92rem; padding: .85rem; cursor: pointer; transition: background .18s; }
+  .edf-done:hover { background: #000; }
+  /* inside the panel the filters stack vertically */
+  .edf-panel .edf-filters { display: flex; flex-direction: column; gap: 1.05rem; background: transparent; border: none; border-radius: 0; padding: 0; margin: 0; }
+  .edf-panel .edf-field { min-width: 0; flex: none; width: 100%; }
+  .edf-panel .edf-field--search { order: 0; }
+  .epn-wrap { margin-top: 3.5rem; }
 
   /* ── Search: full-width and visually larger than the other filters —
      it's the primary entry point for event discovery, not just one
@@ -255,24 +279,19 @@
   </section>
 
   <section class="ep-list">
-    <!-- Global Event Network: an abstract, animated map of connected hubs
-         rather than a static pin repeated per city. Hover/focus a node to
-         see its event details and highlight its matching card below. Nodes
-         dim when their event is filtered out of the directory below. -->
-    <div class="epn-wrap" aria-label="RealLingo global event network">
-      <svg class="epn-lines" viewBox="0 0 1000 210" preserveAspectRatio="none" aria-hidden="true">
-        <path class="epn-path" data-idx="0" d="M 90 150 C 190 60, 260 40, 360 60"/>
-        <path class="epn-path" data-idx="1" d="M 360 60 C 460 80, 550 170, 650 140"/>
-        <path class="epn-path" data-idx="2" d="M 650 140 C 750 110, 820 40, 910 55"/>
-        <circle class="epn-dot" r="3.2"><animateMotion dur="7s" repeatCount="indefinite" path="M 90 150 C 190 60, 260 40, 360 60"/></circle>
-        <circle class="epn-dot" r="3.2"><animateMotion dur="8s" begin="1.2s" repeatCount="indefinite" path="M 360 60 C 460 80, 550 170, 650 140"/></circle>
-        <circle class="epn-dot" r="3.2"><animateMotion dur="6.4s" begin=".6s" repeatCount="indefinite" path="M 650 140 C 750 110, 820 40, 910 55"/></circle>
-      </svg>
-      <div class="epn-nodes" id="epnNodes"></div>
-      <div class="epn-tooltip" id="epnTooltip" role="tooltip"></div>
+    <div class="edf-bar">
+      <button type="button" class="edf-open-btn" id="edfOpen" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v5l-4 2v-7L3 5Z"/></svg>
+        Search &amp; Filters
+        <span class="edf-open-count" id="edfActiveCount" hidden></span>
+      </button>
     </div>
 
-    <form class="edf-filters" id="edfFilters">
+    <div class="edf-panel-ov" id="edfPanelOv"></div>
+    <aside class="edf-panel" id="edfPanel" role="dialog" aria-modal="true" aria-label="Search and filters">
+      <div class="edf-panel-head"><h2>Search &amp; Filters</h2><button type="button" class="edf-panel-close" id="edfPanelClose" aria-label="Close">&times;</button></div>
+      <div class="edf-panel-body">
+      <form class="edf-filters" id="edfFilters">
       <div class="edf-field edf-field--search">
         <label for="edf-search">Search</label>
         <div class="edf-search-wrap">
@@ -360,8 +379,13 @@
           <option value="No">No</option>
         </select>
       </div>
-      <button type="button" class="edf-clear" id="edfClear">Clear Filters</button>
-    </form>
+      </form>
+      </div>
+      <div class="edf-panel-foot">
+        <button type="button" class="edf-clear" id="edfClear">Clear Filters</button>
+        <button type="button" class="edf-done" id="edfPanelDone">Show results</button>
+      </div>
+    </aside>
 
     <!-- Time-based sorting is kept visually separate from the general
          filter form above: it's a compact toolbar, not another field in
@@ -391,6 +415,20 @@
       No events match your filters.
       <br><button type="button" id="edfEmptyClear">Clear filters</button>
     </div>
+
+    <!-- Global Event Network (moved to the bottom of the directory) -->
+    <div class="epn-wrap" aria-label="RealLingo global event network">
+      <svg class="epn-lines" viewBox="0 0 1000 210" preserveAspectRatio="none" aria-hidden="true">
+        <path class="epn-path" data-idx="0" d="M 90 150 C 190 60, 260 40, 360 60"/>
+        <path class="epn-path" data-idx="1" d="M 360 60 C 460 80, 550 170, 650 140"/>
+        <path class="epn-path" data-idx="2" d="M 650 140 C 750 110, 820 40, 910 55"/>
+        <circle class="epn-dot" r="3.2"><animateMotion dur="7s" repeatCount="indefinite" path="M 90 150 C 190 60, 260 40, 360 60"/></circle>
+        <circle class="epn-dot" r="3.2"><animateMotion dur="8s" begin="1.2s" repeatCount="indefinite" path="M 360 60 C 460 80, 550 170, 650 140"/></circle>
+        <circle class="epn-dot" r="3.2"><animateMotion dur="6.4s" begin=".6s" repeatCount="indefinite" path="M 650 140 C 750 110, 820 40, 910 55"/></circle>
+      </svg>
+      <div class="epn-nodes" id="epnNodes"></div>
+      <div class="epn-tooltip" id="epnTooltip" role="tooltip"></div>
+    </div>
   </section>
 
   <section class="ep-apply">
@@ -410,8 +448,8 @@
   window.SITE_SECTION = "explore";
   window.SITE_PAGE = "eventpartners";
 </script>
-<script src="../assets/js/supabase-client.js?v=24"></script>
-<script src="../assets/js/auth.js?v=24"></script>
+<script src="../assets/js/supabase-client.js?v=25"></script>
+<script src="../assets/js/auth.js?v=25"></script>
 <script>
   /* ════════════════════════════════════════════════════════════
      EVENT DIRECTORY — single data source driving the card list,
@@ -799,6 +837,10 @@
     refreshSaveButtons();
     edfEmpty.hidden = filtered.length > 0;
     edfCount.innerHTML = 'Showing <strong>' + filtered.length + '</strong> of ' + EVENTS.length + ' events';
+    // reflect how many filters are active on the "Search & Filters" button
+    var activeCount = ALL_SELECTS.filter(function (s) { return s.value; }).length + (searchInput.value.trim() ? 1 : 0);
+    var badge = document.getElementById('edfActiveCount');
+    if (badge) { badge.textContent = activeCount; badge.hidden = !activeCount; }
 
     var filteredCommunities = {};
     filtered.forEach(function (ev) { ev.communities.forEach(function (c) { filteredCommunities[c] = true; }); });
@@ -840,6 +882,21 @@
     render();
   });
   sortSelect.addEventListener('change', render);
+
+  // Slide-out "Search & Filters" panel
+  (function () {
+    var openBtn = document.getElementById('edfOpen');
+    var panel = document.getElementById('edfPanel');
+    var ov = document.getElementById('edfPanelOv');
+    if (!openBtn || !panel || !ov) return;
+    function openP() { panel.classList.add('open'); ov.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeP() { panel.classList.remove('open'); ov.classList.remove('open'); document.body.style.overflow = ''; }
+    openBtn.addEventListener('click', openP);
+    ov.addEventListener('click', closeP);
+    var cl = document.getElementById('edfPanelClose'); if (cl) cl.addEventListener('click', closeP);
+    var dn = document.getElementById('edfPanelDone'); if (dn) dn.addEventListener('click', closeP);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && panel.classList.contains('open')) closeP(); });
+  })();
 
   // Accordion expand/collapse. Delegated on the container (rather than
   // bound per-card) since render() replaces every card's markup whenever
@@ -1050,6 +1107,6 @@
     }, 2000);
   })();
 </script>
-<script src="../assets/js/nav.js?v=24" defer></script>
+<script src="../assets/js/nav.js?v=25" defer></script>
 </body>
 </html>
