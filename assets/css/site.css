@@ -162,8 +162,10 @@
 }
 
 .site-actions { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; margin-left: auto; }
-.site-hi { font-size: .82rem; font-weight: 600; color: var(--text-mid); white-space: nowrap; }
-.site-hi b { color: var(--text); }
+.site-hi { font-size: .82rem; font-weight: 600; color: var(--text-mid); white-space: nowrap; text-decoration: none; cursor: pointer; transition: opacity .15s ease; }
+.site-hi:hover { opacity: .7; }
+.site-hi b { color: var(--text); text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px; transition: text-decoration-color .15s ease; }
+.site-hi:hover b { text-decoration-color: currentColor; }
 .site-profile-btn { display: flex; align-items: center; gap: .5rem; background: none; border: 1px solid var(--border); border-radius: 100px; padding: .28rem .85rem .28rem .3rem; cursor: pointer; font-family: var(--font-sans); transition: border-color .2s, background .2s, transform .15s; }
 .site-profile-btn:hover { border-color: var(--yellow-mid); background: var(--yellow-pale); transform: translateY(-1px); }
 .site-profile-ava { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); background: var(--cream); flex: 0 0 auto; }
