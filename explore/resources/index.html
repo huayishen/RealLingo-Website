@@ -4,95 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="../../assets/img/favicon.png">
-<link rel="apple-touch-icon" href="../../assets/img/favicon.png">
-<title>Open Source — Real lingo</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/site.css?v=19">
-<link rel="stylesheet" href="../../assets/css/os-gateway.css?v=19">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--font-sans); }
-</style>
+<title>RealLingo Open Sources</title>
+<!-- Canonical Open Sources lives at /resources/. This older path just forwards
+     there so there's no stale duplicate to fall out of sync. -->
+<link rel="canonical" href="../../resources/">
+<script>location.replace('../../resources/' + (location.hash || ''));</script>
+<noscript><meta http-equiv="refresh" content="0; url=../../resources/"></noscript>
 </head>
 <body>
-
-<div id="site-header"></div>
-
-<!-- ═══ RealLingo Open Source Hub — landing page ═════════════ -->
-<main class="os-lock">
-    <div class="os-aurora a1" aria-hidden="true"></div>
-    <div class="os-aurora a2" aria-hidden="true"></div>
-    <div class="os-aurora a3" aria-hidden="true"></div>
-    <svg class="os-constellation" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <line x1="60" y1="90" x2="180" y2="150"/>
-        <line x1="180" y1="150" x2="120" y2="260"/>
-        <line x1="180" y1="150" x2="300" y2="120"/>
-        <line x1="300" y1="120" x2="340" y2="240"/>
-        <line x1="120" y1="260" x2="260" y2="310"/>
-        <line x1="260" y1="310" x2="340" y2="240"/>
-        <circle cx="60" cy="90" r="3"/>
-        <circle cx="180" cy="150" r="3.5" style="animation-delay:.4s"/>
-        <circle cx="120" cy="260" r="3" style="animation-delay:.9s"/>
-        <circle cx="300" cy="120" r="3" style="animation-delay:1.3s"/>
-        <circle cx="340" cy="240" r="3.5" style="animation-delay:1.8s"/>
-        <circle cx="260" cy="310" r="3" style="animation-delay:2.2s"/>
-    </svg>
-
-    <!-- Ambient background symbols: knowledge/collaboration motifs, kept
-         low-opacity so they read as texture rather than content. -->
-    <div class="os-bg-symbol" style="left:5%; top:8%; animation-delay:.2s">📚</div>
-    <div class="os-bg-symbol" style="right:6%; top:6%; animation-delay:1.4s">💡</div>
-    <div class="os-bg-symbol" style="left:4%; bottom:10%; animation-delay:2.3s">🤝</div>
-    <div class="os-bg-symbol" style="right:5%; bottom:8%; animation-delay:.8s">🚀</div>
-    <div class="os-bg-symbol" style="left:50%; top:4%; animation-delay:1.9s">🌍</div>
-
-    <!-- Floating multilingual "Open Source" — the platform's global,
-         multilingual nature, drifting gently around the hero. -->
-    <div class="os-lang-float" style="left:9%; top:20%; animation-delay:0s">🇬🇧 Open Source</div>
-    <div class="os-lang-float" style="right:8%; top:24%; animation-delay:.7s">🇨🇳 开源</div>
-    <div class="os-lang-float" style="left:6%; top:62%; animation-delay:1.4s" dir="rtl">🇸🇦 المصدر المفتوح</div>
-    <div class="os-lang-float" style="right:6%; top:60%; animation-delay:2.1s">🇰🇷 오픈소스</div>
-    <div class="os-lang-float" style="left:18%; bottom:10%; animation-delay:2.8s">🇫🇷 Open Source</div>
-    <div class="os-lang-float" style="right:16%; bottom:9%; animation-delay:3.5s">🇪🇸 Código Abierto</div>
-
-    <div class="os-lock-content">
-        <div class="os-hero-eyebrow">RealLingo Open Source</div>
-        <h1 class="os-hero-title">Welcome to the<br><span class="rl-mark os-hero-brand"><span class="r">Real</span><span class="l">lingo</span></span><br><em>Learner Hub</em></h1>
-        <p class="os-hero-sub">A global, multilingual space for learning, building, and discovering opportunity together.</p>
-
-        <div class="os-preview-row">
-            <svg class="os-preview-lines" viewBox="0 0 600 40" preserveAspectRatio="none" aria-hidden="true">
-                <line class="os-connect-line" x1="100" y1="20" x2="300" y2="20"/>
-                <line class="os-connect-line" x1="300" y1="20" x2="500" y2="20"/>
-            </svg>
-            <a href="scholarship/" class="os-preview-card">
-                <div class="os-preview-icon">🎓</div>
-                <div class="os-preview-label">Scholarship</div>
-                <p class="os-preview-desc">Discover scholarships, fellowships, competitions, exchange programs, and funding opportunities worldwide.</p>
-            </a>
-            <a href="prompt/" class="os-preview-card">
-                <div class="os-preview-icon">📚</div>
-                <div class="os-preview-label">Online Resources</div>
-                <p class="os-preview-desc">Curated language-learning materials, guides, templates, and open educational resources.</p>
-            </a>
-            <a href="application-hub/" class="os-preview-card">
-                <div class="os-preview-icon">🚀</div>
-                <div class="os-preview-label">Application Hub</div>
-                <p class="os-preview-desc">Explore community-built tools, productivity apps, AI utilities, and open-source projects.</p>
-            </a>
-        </div>
-    </div>
-</main>
-
-<div id="site-footer"></div>
-
-<script>
-  window.SITE_ROOT = "../../";
-  window.SITE_SECTION = "explore";
-  window.SITE_PAGE = "explore/resources";
-</script>
-<script src="../../assets/js/nav.js?v=19" defer></script>
+<p>Redirecting to the <a href="../../resources/">RealLingo Open Sources</a>…</p>
 </body>
 </html>

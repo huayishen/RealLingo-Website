@@ -450,6 +450,19 @@
   }
 
   function mpMoney(p, c) { return (p == null || p === '') ? '—' : (c || 'USD') + ' ' + Number(p).toLocaleString(); }
+  // Sale-price markup, consistent with the marketplace page: struck-through
+  // reference price + auto-computed "% OFF" pill when there's a genuine
+  // original price; plain price otherwise.
+  function mpPriceHtml(p) {
+    var cur = p.currency || 'USD', now = p.price, orig = p.original_price;
+    if (now == null || now === '') return '<span class="mp-lp-now">—</span>';
+    var hasDisc = orig != null && orig !== '' && Number(orig) > Number(now);
+    var pct = hasDisc ? Math.round((Number(orig) - Number(now)) / Number(orig) * 100) : 0;
+    return '<span class="mp-lp">' +
+      (hasDisc ? '<span class="mp-lp-orig">' + esc(mpMoney(orig, cur)) + '</span>' : '') +
+      '<span class="mp-lp-now">' + esc(mpMoney(now, cur)) + '</span>' +
+      (hasDisc ? '<span class="mp-lp-badge">' + pct + '% OFF</span>' : '') + '</span>';
+  }
   function mpStatusBadge(s) {
     var map = { pending: ['Pending review', 'pend'], approved: ['Live', 'ok'], rejected: ['Rejected', 'rej'], sold: ['Sold', 'sold'] };
     var m = map[s] || [s, '']; return '<span class="mp-badge mp-badge-' + m[1] + '">' + m[0] + '</span>';
@@ -460,7 +473,7 @@
       '<div class="mp-listing-row">' +
         '<div class="mp-listing-thumb"' + (img ? ' style="background-image:url(\'' + esc(img) + '\')"' : '') + '>' + (img ? '' : '🛍️') + '</div>' +
         '<div class="mp-listing-main"><div class="mp-listing-title">' + esc(p.title) + '</div>' +
-          '<div class="mp-listing-price">' + esc(mpMoney(p.price, p.currency)) + '</div>' + mpStatusBadge(p.status) +
+          '<div class="mp-listing-price">' + mpPriceHtml(p) + '</div>' + mpStatusBadge(p.status) +
         '</div></div>' + (actionsHtml || '') + '</div>';
   }
   function renderMarketplace() {
@@ -507,7 +520,7 @@
         '<div class="mp-listing-row">' +
           '<div class="mp-listing-thumb"' + (img ? ' style="background-image:url(\'' + esc(img) + '\')"' : '') + '>' + (img ? '' : '🛍️') + '</div>' +
           '<div class="mp-listing-main"><div class="mp-listing-title">' + esc(p.title) + '</div>' +
-            '<div class="mp-listing-price">' + esc(mpMoney(p.price, p.currency)) + '</div>' +
+            '<div class="mp-listing-price">' + mpPriceHtml(p) + '</div>' +
             (p.description ? '<div class="mp-listing-reason">' + esc(p.description) + '</div>' : '') +
             '<div class="mp-listing-reason">📇 ' + esc(p.contact || '—') + ' · ' + esc(p.category || '—') + ' · ' + esc(p.location || '—') + '</div>' +
           '</div></div>' +

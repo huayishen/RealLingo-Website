@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/site.css?v=19">
+<link rel="stylesheet" href="../../assets/css/site.css?v=23">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root { --mp-dark:#111216; --mp-mid:#4a4840; --mp-soft:#8a8878; --mp-y:#ffeb99; --mp-ym:#f5d96a; --mp-yp:#fff7d6; --mp-bg:#f4f4f2; --mp-card:#fff; --mp-border:rgba(17,18,22,.1); }
@@ -34,6 +34,20 @@
   .mp-card-body { padding: .9rem 1rem 1.1rem; display: flex; flex-direction: column; gap: .3rem; flex: 1; }
   .mp-card-title { font-weight: 700; font-size: .98rem; line-height: 1.3; }
   .mp-card-price { font-weight: 800; font-size: 1.05rem; }
+
+  /* ── Reusable sale-price component (card + detail) ──
+     Reference price struck through in grey; sale price prominent in
+     black; auto-computed discount in a soft yellow pill. Only the
+     sale price shows when there's no genuine reference price. */
+  .mp-price { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: .3rem .55rem; }
+  .mp-price-orig { font-size: .82rem; color: var(--mp-soft); text-decoration: line-through; text-decoration-thickness: 1px; white-space: nowrap; }
+  .mp-price-now { font-weight: 800; font-size: 1.08rem; color: var(--mp-dark); letter-spacing: -.01em; white-space: nowrap; }
+  .mp-price-badge { align-self: center; font-size: .62rem; font-weight: 800; letter-spacing: .04em; color: var(--mp-dark); background: var(--mp-y); border-radius: 100px; padding: .16rem .5rem; white-space: nowrap; }
+  .mp-price-tba { font-weight: 700; font-size: .95rem; color: var(--mp-dark); }
+  .mp-price--lg { gap: .45rem .7rem; }
+  .mp-price--lg .mp-price-orig { font-size: 1.05rem; }
+  .mp-price--lg .mp-price-now { font-size: 1.7rem; }
+  .mp-price--lg .mp-price-badge { font-size: .72rem; padding: .24rem .62rem; }
   .mp-card-meta { font-size: .76rem; color: var(--mp-soft); margin-top: auto; display: flex; flex-wrap: wrap; gap: .3rem .6rem; }
   .mp-tag { display: inline-block; padding: .18rem .5rem; border-radius: 100px; background: var(--mp-yp); border: 1px solid rgba(230,198,74,.4); font-size: .68rem; font-weight: 700; color: #6a5800; }
 
@@ -64,9 +78,25 @@
   .mp-note { font-size: .78rem; color: var(--mp-soft); text-align: center; margin-top: .8rem; }
 
   /* Detail modal */
-  .mp-detail-img { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 14px; background: var(--mp-yp); margin-bottom: 1rem; }
+  .mp-detail-img { width: 100%; max-height: 440px; object-fit: contain; border-radius: 14px; background: var(--mp-yp); margin-bottom: .7rem; }
+  /* Crossfading gallery: two stacked layers fade between images for a
+     polished, e-commerce feel. Auto-advances; pauses on hover (desktop). */
+  .mp-gallery-main { position: relative; width: 100%; height: clamp(280px, 56vw, 440px); background: var(--mp-yp); border-radius: 14px; overflow: hidden; margin-bottom: .7rem; }
+  .mp-gal-layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity .8s ease-in-out; }
+  .mp-gal-layer.active { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .mp-gal-layer { transition: opacity .2s ease; } }
+  .mp-gallery-thumbs { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .mp-thumb { width: 62px; height: 62px; border-radius: 10px; object-fit: cover; cursor: pointer; border: 2px solid transparent; background: var(--mp-yp); transition: border-color .15s ease; }
+  .mp-thumb:hover { border-color: var(--mp-border); }
+  .mp-thumb.active { border-color: var(--mp-ym); }
+  .mp-detail-video { width: 100%; max-height: 460px; border-radius: 14px; margin-bottom: 1rem; background: #000; display: block; }
   .mp-detail-price { font-size: 1.5rem; font-weight: 800; }
   .mp-detail-desc { color: var(--mp-mid); line-height: 1.6; margin: .8rem 0; white-space: pre-wrap; }
+  .mp-detail-desc[dir="rtl"] { text-align: right; }
+  .mp-lang-toggle { display: inline-flex; gap: 2px; background: var(--mp-bg); border: 1px solid var(--mp-border); border-radius: 100px; padding: 3px; margin: 1rem 0 .1rem; }
+  .mp-lang-toggle button { border: none; background: transparent; font-family: inherit; font-size: .78rem; font-weight: 700; color: var(--mp-soft); padding: .3rem .85rem; border-radius: 100px; cursor: pointer; transition: background .15s ease, color .15s ease; }
+  .mp-lang-toggle button:hover { color: var(--mp-dark); }
+  .mp-lang-toggle button.active { background: var(--mp-y); color: var(--mp-dark); }
   .mp-detail-rows { margin: 1rem 0; }
   .mp-drow { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem 0; border-bottom: 1px solid var(--mp-border); font-size: .9rem; }
   .mp-drow span:first-child { color: var(--mp-soft); }
@@ -81,7 +111,7 @@
 <div id="site-header"></div>
 
 <main class="mp-wrap">
-  <div class="mp-crumb">Open Sources / Learners Hub / Marketplace</div>
+  <div class="mp-crumb">Marketplace</div>
   <div class="mp-top">
     <div>
       <h1 class="mp-h1">Marketplace</h1>
@@ -107,7 +137,7 @@
   <div id="mpGrid" class="mp-grid"></div>
   <div id="mpState" class="mp-loading">Loading products…</div>
 
-  <a href="../" class="mp-back">← Back to Learners Hub</a>
+  <a href="../../" class="mp-back">← Back to home</a>
 </main>
 
 <!-- Sell modal -->
@@ -149,20 +179,37 @@
 
 <script>
   window.SITE_ROOT = "../../";
-  window.SITE_SECTION = "opensource";
+  window.SITE_SECTION = "marketplace";
   window.SITE_PAGE = "resources/marketplace";
 </script>
-<script src="../../assets/js/nav.js?v=19" defer></script>
-<script src="../../assets/js/supabase-client.js?v=19"></script>
-<script src="../../assets/js/auth.js?v=19"></script>
+<script src="../../assets/js/nav.js?v=23" defer></script>
+<script src="../../assets/js/supabase-client.js?v=23"></script>
+<script src="../../assets/js/auth.js?v=23"></script>
 <script>
 (function () {
   var grid = document.getElementById('mpGrid'), stateEl = document.getElementById('mpState');
   var searchEl = document.getElementById('mpSearch'), catEl = document.getElementById('mpCat');
   var ALL = [];
+  var galTimer = null;
+  function stopGal(){ if (galTimer){ clearInterval(galTimer); galTimer = null; } }
 
   function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function money(p, c){ if(p==null||p==='') return 'Contact for price'; return (c||'USD') + ' ' + Number(p).toLocaleString(undefined,{minimumFractionDigits: Number(p)%1?2:0}); }
+  // Reusable sale-price renderer. Shows a struck-through reference price and an
+  // auto-computed "% OFF" badge ONLY when there's a genuine original price
+  // above the current one; otherwise just the plain price.
+  function priceHtml(r, lg){
+    var cur = r.currency || 'USD', now = r.price, orig = r.original_price;
+    var cls = 'mp-price' + (lg ? ' mp-price--lg' : '');
+    if (now == null || now === '') return '<div class="'+cls+'"><span class="mp-price-tba">Contact for price</span></div>';
+    var hasDisc = orig != null && orig !== '' && Number(orig) > Number(now);
+    var pct = hasDisc ? Math.round((Number(orig) - Number(now)) / Number(orig) * 100) : 0;
+    return '<div class="'+cls+'">' +
+      (hasDisc ? '<span class="mp-price-orig">'+esc(money(orig, cur))+'</span>' : '') +
+      '<span class="mp-price-now">'+esc(money(now, cur))+'</span>' +
+      (hasDisc ? '<span class="mp-price-badge">'+pct+'% OFF</span>' : '') +
+      '</div>';
+  }
   function imgUrl(row){ try { return row.image_url ? RA.productImageUrl(row.image_url) : null; } catch(e){ return null; } }
 
   function render(list){
@@ -174,7 +221,7 @@
         '<div class="mp-card-img"'+(u?' style="background-image:url(\''+esc(u)+'\')"':'')+'>'+(u?'':'🛍️')+'</div>' +
         '<div class="mp-card-body">' +
           '<div class="mp-card-title">'+esc(r.title)+'</div>' +
-          '<div class="mp-card-price">'+esc(money(r.price, r.currency))+'</div>' +
+          '<div class="mp-card-price">'+priceHtml(r)+'</div>' +
           '<div class="mp-card-meta">' + (r.condition?'<span class="mp-tag">'+esc(r.condition)+'</span>':'') +
             (r.category?'<span>'+esc(r.category)+'</span>':'') + (r.location?'<span>· '+esc(r.location)+'</span>':'') + '</div>' +
         '</div></div>';
@@ -204,15 +251,84 @@
   function openDetail(id){
     var r = ALL.filter(function(x){return x.id===id;})[0]; if(!r) return;
     document.getElementById('mpDetailTitle').textContent = r.title;
-    var u = imgUrl(r);
+    // Gallery: use r.gallery when present, else fall back to the single image.
+    var gal = (Array.isArray(r.gallery) && r.gallery.length ? r.gallery : (r.image_url ? [r.image_url] : []))
+      .map(function(p){ try { return RA.productImageUrl(p); } catch(e){ return null; } }).filter(Boolean);
+    var main = gal[0] || null;
+    var vid = null; try { vid = r.video_url ? RA.productImageUrl(r.video_url) : null; } catch(e){}
+    var thumbs = gal.length > 1 ? '<div class="mp-gallery-thumbs">' + gal.map(function(g,i){
+        return '<img class="mp-thumb'+(i===0?' active':'')+'" data-i="'+i+'" src="'+esc(g)+'" alt="">'; }).join('') + '</div>' : '';
+    var galMain = main
+      ? '<div class="mp-gallery-main" id="mpGalMain">' +
+          '<img class="mp-gal-layer active" id="mpGalA" src="'+esc(main)+'" alt="'+esc(r.title)+'">' +
+          '<img class="mp-gal-layer" id="mpGalB" alt="">' +
+        '</div>' : '';
     function row(l,v){ return v ? '<div class="mp-drow"><span>'+esc(l)+'</span><span>'+esc(v)+'</span></div>' : ''; }
+
+    /* ── Description with optional language toggle ── */
+    var LNAME = { en: 'English', ar: 'العربية', zh: '中文', ko: '한국어', fr: 'Français', es: 'Español' };
+    var LORDER = ['en', 'ar', 'zh', 'ko', 'fr', 'es'];
+    var i18n = (r.description_i18n && typeof r.description_i18n === 'object') ? r.description_i18n : null;
+    var langs = i18n ? Object.keys(i18n).filter(function(k){ return i18n[k] && String(i18n[k]).trim(); })
+                            .sort(function(a,b){ return (LORDER.indexOf(a)+1||99) - (LORDER.indexOf(b)+1||99); }) : [];
+    var descBlock = '';
+    if (langs.length > 1) {
+      descBlock = '<div class="mp-lang-toggle" id="mpLangTg">' + langs.map(function(l,i){
+          return '<button type="button" data-lang="'+esc(l)+'"'+(i===0?' class="active"':'')+'>'+esc(LNAME[l]||l.toUpperCase())+'</button>'; }).join('') + '</div>' +
+        '<div class="mp-detail-desc" id="mpDesc"'+(langs[0]==='ar'?' dir="rtl"':'')+'>'+esc(i18n[langs[0]])+'</div>';
+    } else if (langs.length === 1) {
+      descBlock = '<div class="mp-detail-desc"'+(langs[0]==='ar'?' dir="rtl"':'')+'>'+esc(i18n[langs[0]])+'</div>';
+    } else if (r.description) {
+      descBlock = '<div class="mp-detail-desc">'+esc(r.description)+'</div>';
+    }
+
     document.getElementById('mpDetailBody').innerHTML =
-      (u?'<img class="mp-detail-img" src="'+esc(u)+'" alt="'+esc(r.title)+'">':'') +
-      '<div class="mp-detail-price">'+esc(money(r.price,r.currency))+'</div>' +
-      (r.description?'<div class="mp-detail-desc">'+esc(r.description)+'</div>':'') +
+      galMain +
+      thumbs +
+      (vid?'<video class="mp-detail-video" controls preload="metadata" playsinline src="'+esc(vid)+'"></video>':'') +
+      '<div class="mp-detail-price">'+priceHtml(r, true)+'</div>' +
+      descBlock +
       '<div class="mp-detail-rows">'+ row('Condition', r.condition)+row('Category', r.category)+row('Location', r.location)+'</div>' +
       '<button class="mp-contact-btn" id="mpReveal">Show seller contact</button>' +
       '<div id="mpRevealBox"></div>';
+
+    /* ── Auto-rotating crossfade gallery ── */
+    stopGal();
+    var layers = [document.getElementById('mpGalA'), document.getElementById('mpGalB')];
+    var thumbEls = Array.prototype.slice.call(document.querySelectorAll('#mpDetailBody .mp-thumb'));
+    var curL = 0, curIdx = 0;
+    function paintThumbs(){ thumbEls.forEach(function(t,i){ t.classList.toggle('active', i===curIdx); }); }
+    function showIdx(n){
+      n = ((n % gal.length) + gal.length) % gal.length;
+      if (n === curIdx || !layers[0]) return;
+      var nl = 1 - curL;
+      layers[nl].src = gal[n];
+      layers[nl].classList.add('active');
+      layers[curL].classList.remove('active');
+      curL = nl; curIdx = n; paintThumbs();
+    }
+    function startGal(){ stopGal(); if (gal.length > 1) galTimer = setInterval(function(){ showIdx(curIdx + 1); }, 4200); }
+    if (gal.length > 1) {
+      startGal();
+      var gm = document.getElementById('mpGalMain');
+      if (gm && window.matchMedia && window.matchMedia('(hover: hover)').matches) {
+        gm.addEventListener('mouseenter', stopGal);           // pause on desktop hover
+        gm.addEventListener('mouseleave', startGal);          // resume on leave
+      }
+    }
+    thumbEls.forEach(function(t){ t.addEventListener('click', function(){ showIdx(+t.dataset.i); startGal(); }); });
+
+    /* ── Description language switch ── */
+    if (langs.length > 1) {
+      var descEl = document.getElementById('mpDesc');
+      document.querySelectorAll('#mpLangTg button').forEach(function(b){ b.addEventListener('click', function(){
+        var l = b.dataset.lang;
+        if (descEl){ descEl.textContent = i18n[l]; descEl.setAttribute('dir', l==='ar'?'rtl':'ltr'); }
+        document.querySelectorAll('#mpLangTg button').forEach(function(x){ x.classList.remove('active'); });
+        b.classList.add('active');
+      }); });
+    }
+
     document.getElementById('mpReveal').addEventListener('click', function(){
       this.style.display='none';
       document.getElementById('mpRevealBox').innerHTML = '<div class="mp-contact-reveal">'+esc(r.contact||'No contact provided')+'</div>';
@@ -222,7 +338,7 @@
 
   /* ── Modals ── */
   function openModal(m){ m.classList.add('open'); document.body.style.overflow='hidden'; }
-  function closeModal(m){ m.classList.remove('open'); document.body.style.overflow=''; }
+  function closeModal(m){ m.classList.remove('open'); document.body.style.overflow=''; stopGal(); }
   document.querySelectorAll('.mp-modal-ov').forEach(function(ov){
     ov.addEventListener('click', function(e){ if(e.target===ov) closeModal(ov); });
     ov.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', function(){ closeModal(ov); }); });

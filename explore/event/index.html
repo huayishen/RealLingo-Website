@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/site.css?v=19">
-<link rel="stylesheet" href="../../assets/css/explore-hero.css?v=19">
+<link rel="stylesheet" href="../../assets/css/site.css?v=23">
+<link rel="stylesheet" href="../../assets/css/explore-hero.css?v=23">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font-sans); }
@@ -20,6 +20,14 @@
      vertical rule, echoing an editorial hospitality-brand hero. */
   .ex-hero-editorial.ex-hero-centered { display: block; padding: 0; }
   .ex-hero-editorial .ex-hero-bg-overlay { background: rgba(17, 18, 22, .32); }
+
+  /* Static photo-collage wallpaper — desktop keeps the video; small screens use
+     this instead (background-image is set only in the ≤760px query so desktop
+     never downloads it). */
+  .ex-hero-wallpaper {
+    display: none; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background: #1a160c center top / cover no-repeat;
+  }
 
   .ex-edit-content {
     position: relative; z-index: 3; min-height: calc(100vh - 82px);
@@ -179,13 +187,16 @@
     .ex-edit-content { padding: 3.25rem 1.4rem 2.5rem; }
     .ex-edit-bottom { flex-direction: column; align-items: center; gap: 1.5rem; text-align: center; }
     .ex-edit-tagline.left, .ex-edit-tagline.right { text-align: center; max-width: 100%; margin-left: 0; }
-    /* The landscape hero video crops hard on a tall phone, over-emphasising
-       compression. Soften it into a premium frosted backdrop (gentle blur +
-       toned-down saturation/brightness; scaled up so the blur has no edge gap)
-       and lay a stronger top/bottom gradient scrim for text legibility. */
-    .ex-hero-bg-video { filter: saturate(.8) brightness(.86) blur(3px); transform: scale(1.09); }
+    /* The landscape hero video crops hard on a tall phone. Replace it entirely
+       with the static editorial photo collage, and lay a stronger top/bottom
+       gradient scrim (with a faint yellow brand wash) for text legibility while
+       keeping the photos recognisable. */
+    .ex-hero-bg-video { display: none !important; }
+    .ex-hero-wallpaper { display: block; background-image: url("../../assets/img/event-wallpaper.jpg"); }
     .ex-hero-editorial .ex-hero-bg-overlay {
-      background: linear-gradient(180deg, rgba(17,18,22,.56) 0%, rgba(17,18,22,.4) 42%, rgba(17,18,22,.68) 100%);
+      background:
+        linear-gradient(180deg, rgba(17,18,22,.62) 0%, rgba(17,18,22,.34) 40%, rgba(17,18,22,.72) 100%),
+        rgba(255,235,153,.06);
     }
     /* Full-width stacked CTAs read cleaner than centered pills at phone width. */
     .ex-edit-ctas { flex-direction: column; align-items: stretch; gap: .75rem; }
@@ -202,11 +213,15 @@
 <div id="site-header"></div>
 
 <main class="ex-hero has-bg-video ex-hero-centered ex-hero-editorial">
-    <video class="ex-hero-bg-video" autoplay muted loop playsinline preload="auto" disablepictureinpicture
+    <video class="ex-hero-bg-video" autoplay muted loop playsinline preload="none" disablepictureinpicture
         poster="../../assets/video/explore-event-bg-poster.jpg">
-        <source src="../../assets/video/explore-event-bg.mp4" type="video/mp4">
-        <img src="../../assets/video/explore-event-bg-poster.jpg" class="ex-hero-bg-video" alt="">
+        <!-- src is set by JS only on wider screens, so phones/tablets never download the video -->
+        <source data-src="../../assets/video/explore-event-bg.mp4" type="video/mp4">
     </video>
+    <!-- Small screens swap the hard-cropped video for a static editorial photo
+         collage (see the ≤760px media query). The background-image is declared
+         only there, so desktop never fetches it. -->
+    <div class="ex-hero-wallpaper" aria-hidden="true"></div>
     <div class="ex-hero-bg-overlay"></div>
 
     <div class="ex-edit-content">
@@ -235,10 +250,10 @@
                 <a href="../../signup/user/?sel=eventMember" class="ex-cta">Sign Up Now</a>
                 <a href="../../eventpartners/" class="ex-cta-outline">All Events</a>
                 <div class="ex-cta-flyout-wrap">
-                    <a href="../resources/" class="ex-cta-outline">Learner Hub</a>
+                    <a href="../resources/" class="ex-cta-outline">Open Sources</a>
                     <div class="ex-cta-flyout">
                         <a href="../resources/scholarship/">Scholarship</a>
-                        <a href="../resources/prompt/">Online Resources</a>
+                        <a href="../resources/online-resources/">Online Resources</a>
                         <a href="../resources/application-hub/">Application Hub</a>
                     </div>
                 </div>
@@ -350,18 +365,33 @@
   window.SITE_SECTION = "explore";
   window.SITE_PAGE = "explore/event";
 
-  // Graceful fallback: if the background video can't load or autoplay gets
-  // blocked, drop it and let the poster-image background (set via CSS) show instead.
+  // Load the hero video ONLY on wider screens. Small screens (≤760px) show the
+  // static photo collage instead, and must never download the video — so the
+  // <source> carries data-src and we only promote it to src above the breakpoint.
   (function () {
     var v = document.querySelector('.ex-hero-bg-video');
     if (!v) return;
+    var src = v.querySelector('source[data-src]');
+    var mq = window.matchMedia('(min-width: 761px)');
     function fallbackToImage() {
       v.style.display = 'none';
       v.parentElement.style.setProperty('background-image', 'url("../../assets/video/explore-event-bg-poster.jpg")');
     }
+    function loadVideo() {
+      if (!src || src.src) return;               // already loaded
+      src.src = src.getAttribute('data-src');
+      v.load();
+      // autoplay attribute drives playback; also nudge play() once the video is
+      // ready (a too-early play() can reject). If autoplay is blocked the poster
+      // stays visible, so a rejection is a harmless no-op (don't hide it).
+      var tryPlay = function () { var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+      tryPlay();
+      v.addEventListener('canplay', tryPlay, { once: true });
+    }
     v.addEventListener('error', fallbackToImage);
-    var playPromise = v.play();
-    if (playPromise && playPromise.catch) playPromise.catch(fallbackToImage);
+    if (mq.matches) loadVideo();                 // desktop: load + autoplay now
+    var onChange = function (e) { if (e.matches) loadVideo(); };  // grew past breakpoint → load then
+    if (mq.addEventListener) mq.addEventListener('change', onChange); else mq.addListener(onChange);
   })();
 
   // Cycle the hero's animated language word and its synchronized subtitle
@@ -414,6 +444,6 @@
     });
   })();
 </script>
-<script src="../../assets/js/nav.js?v=19" defer></script>
+<script src="../../assets/js/nav.js?v=23" defer></script>
 </body>
 </html>

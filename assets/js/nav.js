@@ -43,10 +43,10 @@
   function ensureDrawer() {
     if (window.openAccountDrawer) return Promise.resolve();
     if (_drawerLoading) return _drawerLoading;
-    loadCss(ROOT + 'assets/css/account-drawer.css?v=19');
-    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=19'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=19'); })
-      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=19'); });
+    loadCss(ROOT + 'assets/css/account-drawer.css?v=23');
+    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=23'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=23'); })
+      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=23'); });
     return _drawerLoading;
   }
   function openAccountDrawerLazy(e) {
@@ -80,8 +80,8 @@
   // Marketing pages don't load supabase-js, so detect that here, establish the
   // session, then drop them on their dashboard already logged in — no 2nd login.
   function loadAuthStack() {
-    return (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=19'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=19'); });
+    return (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=23'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=23'); });
   }
   function waitForSession(sb) {
     return sb.auth.getSession().then(function (r) {
@@ -168,7 +168,7 @@
   }
 
   function loadPartial(name, targetId, after) {
-    fetch(ROOT + 'partials/' + name)
+    fetch(ROOT + 'partials/' + name + '?v=23')   // versioned so header/footer partials refresh with each release
       .then(function (r) { return r.text(); })
       .then(function (html) {
         var target = document.getElementById(targetId);

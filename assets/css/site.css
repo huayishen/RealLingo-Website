@@ -114,6 +114,17 @@
 .site-dd a:hover { background: var(--cream); color: var(--dark); }
 .site-dd a.current { color: var(--dark); background: var(--yellow); }
 
+/* Pre-filtered "Event Near Me" entries: icon · label · hover arrow, with a
+   subtle yellow hover so they read as quick jumps into the Event Directory. */
+.site-dd a.site-dd-flt { display: flex; align-items: center; gap: .6rem; }
+.site-dd a.site-dd-flt .dd-ic { display: inline-flex; flex: 0 0 auto; color: var(--text-soft); transition: color .15s; }
+.site-dd a.site-dd-flt .dd-ic svg { width: 16px; height: 16px; display: block; }
+.site-dd a.site-dd-flt .dd-lbl { flex: 1 1 auto; white-space: nowrap; }
+.site-dd a.site-dd-flt .dd-arw { flex: 0 0 auto; font-weight: 800; color: var(--dark); opacity: 0; transform: translateX(-4px); transition: opacity .15s ease, transform .15s ease; }
+.site-dd a.site-dd-flt:hover { background: var(--yellow-pale); color: var(--dark); }
+.site-dd a.site-dd-flt:hover .dd-ic { color: var(--dark); }
+.site-dd a.site-dd-flt:hover .dd-arw { opacity: 1; transform: translateX(0); }
+
 /* Nested flyout: a dropdown row (e.g. "Open Source") that reveals its own
    sub-routes to the side on hover/focus, closing on a short delay so the
    cursor can travel from the row into the flyout panel. */

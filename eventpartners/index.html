@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/site.css?v=19">
-<link rel="stylesheet" href="../assets/css/event-network.css?v=19">
+<link rel="stylesheet" href="../assets/css/site.css?v=23">
+<link rel="stylesheet" href="../assets/css/event-network.css?v=23">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font-sans); }
@@ -415,8 +415,8 @@
   window.SITE_SECTION = "explore";
   window.SITE_PAGE = "eventpartners";
 </script>
-<script src="../assets/js/supabase-client.js?v=19"></script>
-<script src="../assets/js/auth.js?v=19"></script>
+<script src="../assets/js/supabase-client.js?v=23"></script>
+<script src="../assets/js/auth.js?v=23"></script>
 <script>
   /* ════════════════════════════════════════════════════════════
      EVENT DIRECTORY — single data source driving the card list,
@@ -588,6 +588,7 @@
   }
 
   function populateSelect(select, values) {
+    var prev = select.value;                               // preserve any active choice (URL- or user-applied)
     while (select.options.length > 1) select.remove(1);   // keep the leading "All …" option, refresh the rest
     values.forEach(function (v) {
       var opt = document.createElement('option');
@@ -595,6 +596,10 @@
       opt.textContent = v;
       select.appendChild(opt);
     });
+    // restore the previous selection if it still exists after the refresh, so a
+    // pre-applied filter (e.g. ?country=China) isn't wiped when the DB reload
+    // repopulates the options.
+    if (prev && Array.prototype.some.call(select.options, function (o) { return o.value === prev; })) select.value = prev;
   }
 
   var seriesSelect = document.getElementById('edf-series');
@@ -1050,6 +1055,6 @@
     }, 2000);
   })();
 </script>
-<script src="../assets/js/nav.js?v=19" defer></script>
+<script src="../assets/js/nav.js?v=23" defer></script>
 </body>
 </html>

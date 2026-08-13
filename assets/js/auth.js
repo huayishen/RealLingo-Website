@@ -555,6 +555,10 @@
   }
   function productImageUrl(path) {
     if (!path) return null;
+    // Curated listings may store an absolute or site-root-relative URL
+    // (e.g. /assets/img/…); pass those straight through. User uploads store a
+    // bare storage path resolved against the product-images bucket.
+    if (/^(https?:)?\/\//.test(path) || path.charAt(0) === '/') return path;
     const cfg = window.SUPABASE_CONFIG;
     return cfg ? (cfg.url + '/storage/v1/object/public/product-images/' + path) : null;
   }

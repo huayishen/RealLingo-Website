@@ -5,85 +5,155 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="../assets/img/favicon.png">
 <link rel="apple-touch-icon" href="../assets/img/favicon.png">
-<title>Learners Hub — Real lingo</title>
+<title>Open Sources — Real lingo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/site.css?v=19">
-<link rel="stylesheet" href="../assets/css/os-gateway.css?v=19">
+<link rel="stylesheet" href="../assets/css/site.css?v=23">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font-sans); }
+
+  /* ══════════════════════════════════════════════════════════════
+     RealLingo Learner Hub — minimalist functionalist gateway.
+     Three equal, equally-weighted destinations shown as parallel
+     columns split by hairline dividers. Visual interest comes from
+     layout, type, spacing and one restrained yellow accent — not
+     decoration. Each column is a real link; works without JS. ── */
+  .lh {
+    min-height: calc(100vh - 62px);
+    background: var(--cream-white);
+    padding: clamp(3rem, 7vw, 5.5rem) 1.5rem clamp(3rem, 6vw, 5rem);
+    display: flex; flex-direction: column;
+  }
+
+  /* ── Slim header ── */
+  .lh-head { text-align: center; max-width: 640px; margin: 0 auto clamp(2.5rem, 5vw, 4rem); }
+  .lh-eyebrow {
+    font-size: .7rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--text-soft); margin-bottom: 1rem;
+  }
+  .lh-title { font-size: clamp(2rem, 4.6vw, 3rem); font-weight: 800; letter-spacing: -.025em; color: var(--dark); line-height: 1.05; }
+  .lh-sub { margin-top: .85rem; color: var(--text-mid); font-size: 1rem; line-height: 1.6; }
+
+  /* ── Three-column navigation surface ── */
+  .lh-cols {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    width: 100%; max-width: 1140px; margin: 0 auto;
+    background: #fff; border: 1px solid var(--border);
+  }
+  .lh-col {
+    position: relative; display: flex; text-decoration: none; color: inherit;
+    border-left: 1px solid var(--border);
+    transition: background .18s ease;
+  }
+  .lh-col:first-child { border-left: none; }
+  /* activation accent — a yellow bar that wipes in along the top */
+  .lh-col::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--yellow); transform: scaleX(0); transform-origin: left;
+    transition: transform .2s ease;
+  }
+  .lh-col:hover, .lh-col:focus-visible { background: rgba(255, 235, 153, .1); outline: none; }
+  .lh-col:hover::before, .lh-col:focus-visible::before { transform: scaleX(1); }
+
+  .lh-col-inner {
+    flex: 1; display: flex; flex-direction: column; align-items: flex-start;
+    padding: clamp(2rem, 3vw, 3rem) clamp(1.5rem, 2.4vw, 2.5rem);
+  }
+  .lh-num { font-size: .72rem; font-weight: 700; letter-spacing: .14em; color: var(--text-soft); }
+  .lh-icon { margin: 1.5rem 0 1.25rem; color: var(--dark); }
+  .lh-icon svg { display: block; width: 30px; height: 30px; }
+  .lh-col-title { font-size: 1.4rem; font-weight: 800; letter-spacing: -.015em; color: var(--dark); }
+  .lh-col-title .u { border-bottom: 2px solid transparent; padding-bottom: 2px; transition: border-color .18s ease; }
+  .lh-col:hover .lh-col-title .u, .lh-col:focus-visible .lh-col-title .u { border-color: var(--yellow-mid); }
+  .lh-col-desc { margin-top: .7rem; font-size: .92rem; line-height: 1.6; color: var(--text-mid); max-width: 30ch; }
+  .lh-cta {
+    margin-top: auto; padding-top: 1.75rem;
+    font-size: .85rem; font-weight: 800; color: var(--dark);
+    display: inline-flex; align-items: center; gap: .45rem;
+  }
+  .lh-cta .arw { transition: transform .2s ease; }
+  .lh-col:hover .lh-cta .arw, .lh-col:focus-visible .lh-cta .arw { transform: translateX(4px); }
+
+  /* ── Tablet: keep three columns while they stay readable ── */
+  @media (max-width: 860px) {
+    .lh-col-inner { padding: 2rem 1.35rem; }
+    .lh-col-title { font-size: 1.2rem; }
+    .lh-col-desc { font-size: .86rem; }
+  }
+
+  /* ── Mobile: stack, dividers become horizontal, accent moves to the side ── */
+  @media (max-width: 620px) {
+    .lh-cols { grid-template-columns: 1fr; }
+    .lh-col { border-left: none; border-top: 1px solid var(--border); }
+    .lh-col:first-child { border-top: none; }
+    .lh-col::before { height: auto; width: 3px; top: 0; bottom: 0; right: auto;
+      transform: scaleY(0); transform-origin: top; transition: transform .2s ease; }
+    .lh-col:hover::before, .lh-col:focus-visible::before { transform: scaleY(1); }
+    .lh-icon { margin: 1rem 0 .9rem; }
+    .lh-cta { padding-top: 1.25rem; }
+  }
 </style>
 </head>
 <body>
 
 <div id="site-header"></div>
 
-<!-- ═══ RealLingo Open Source Hub — landing page ═════════════ -->
-<main class="os-lock">
-    <div class="os-aurora a1" aria-hidden="true"></div>
-    <div class="os-aurora a2" aria-hidden="true"></div>
-    <div class="os-aurora a3" aria-hidden="true"></div>
-    <svg class="os-constellation" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <line x1="60" y1="90" x2="180" y2="150"/>
-        <line x1="180" y1="150" x2="120" y2="260"/>
-        <line x1="180" y1="150" x2="300" y2="120"/>
-        <line x1="300" y1="120" x2="340" y2="240"/>
-        <line x1="120" y1="260" x2="260" y2="310"/>
-        <line x1="260" y1="310" x2="340" y2="240"/>
-        <circle cx="60" cy="90" r="3"/>
-        <circle cx="180" cy="150" r="3.5" style="animation-delay:.4s"/>
-        <circle cx="120" cy="260" r="3" style="animation-delay:.9s"/>
-        <circle cx="300" cy="120" r="3" style="animation-delay:1.3s"/>
-        <circle cx="340" cy="240" r="3.5" style="animation-delay:1.8s"/>
-        <circle cx="260" cy="310" r="3" style="animation-delay:2.2s"/>
-    </svg>
+<!-- ═══ RealLingo Learner Hub — three parallel destinations ═══════ -->
+<main class="lh">
+  <header class="lh-head">
+    <div class="lh-eyebrow">RealLingo</div>
+    <h1 class="lh-title">Open Sources</h1>
+    <p class="lh-sub">Three ways to learn, build, and find opportunity — choose a path.</p>
+  </header>
 
-    <!-- Ambient background symbols: knowledge/collaboration motifs, kept
-         low-opacity so they read as texture rather than content. -->
-    <div class="os-bg-symbol" style="left:5%; top:8%; animation-delay:.2s">📚</div>
-    <div class="os-bg-symbol" style="right:6%; top:6%; animation-delay:1.4s">💡</div>
-    <div class="os-bg-symbol" style="left:4%; bottom:10%; animation-delay:2.3s">🤝</div>
-    <div class="os-bg-symbol" style="right:5%; bottom:8%; animation-delay:.8s">🚀</div>
-    <div class="os-bg-symbol" style="left:50%; top:4%; animation-delay:1.9s">🌍</div>
+  <div class="lh-cols">
+    <!-- 01 Scholarship -->
+    <a class="lh-col" href="scholarship/" aria-label="Scholarship — explore">
+      <div class="lh-col-inner">
+        <span class="lh-num">01</span>
+        <span class="lh-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4 2 9l10 5 10-5-10-5Z"/><path d="M6 11.2V16c0 1.2 2.7 2.6 6 2.6s6-1.4 6-2.6v-4.8"/><path d="M22 9v4.5"/>
+          </svg>
+        </span>
+        <h2 class="lh-col-title"><span class="u">Scholarship</span></h2>
+        <p class="lh-col-desc">Discover scholarships, educational opportunities, and international learning opportunities.</p>
+        <span class="lh-cta">Explore <span class="arw">→</span></span>
+      </div>
+    </a>
 
-    <!-- Floating multilingual "Open Source" — the platform's global,
-         multilingual nature, drifting gently around the hero. -->
-    <div class="os-lang-float" style="left:9%; top:20%; animation-delay:0s">🇬🇧 Open Source</div>
-    <div class="os-lang-float" style="right:8%; top:24%; animation-delay:.7s">🇨🇳 开源</div>
-    <div class="os-lang-float" style="left:6%; top:62%; animation-delay:1.4s" dir="rtl">🇸🇦 المصدر المفتوح</div>
-    <div class="os-lang-float" style="right:6%; top:60%; animation-delay:2.1s">🇰🇷 오픈소스</div>
-    <div class="os-lang-float" style="left:18%; bottom:10%; animation-delay:2.8s">🇫🇷 Open Source</div>
-    <div class="os-lang-float" style="right:16%; bottom:9%; animation-delay:3.5s">🇪🇸 Código Abierto</div>
+    <!-- 02 Online Resources -->
+    <a class="lh-col" href="online-resources/" aria-label="Online Resources — explore">
+      <div class="lh-col-inner">
+        <span class="lh-num">02</span>
+        <span class="lh-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 6.6C10.4 5.3 8.2 4.9 6 5.3 5 5.5 4 6.3 4 7.5v9.7c0 .8.8 1.4 1.6 1.2 2-.4 4-.1 5.4 1 .6.5 1.4.5 2 0 1.4-1.1 3.4-1.4 5.4-1 .8.2 1.6-.4 1.6-1.2V7.5c0-1.2-1-2-2-2.2-2.2-.4-4.4 0-6 1.3Z"/><path d="M12 6.6V19"/>
+          </svg>
+        </span>
+        <h2 class="lh-col-title"><span class="u">Online Resources</span></h2>
+        <p class="lh-col-desc">Curated digital resources for language learning, teaching, culture, and professional development.</p>
+        <span class="lh-cta">Explore <span class="arw">→</span></span>
+      </div>
+    </a>
 
-    <div class="os-lock-content">
-        <div class="os-hero-eyebrow">RealLingo Open Sources</div>
-        <h1 class="os-hero-title">Welcome to the<br><span class="rl-mark os-hero-brand"><span class="r">Real</span><span class="l">lingo</span></span><br><em>Learners Hub</em></h1>
-        <p class="os-hero-sub">A global, multilingual space for learning, building, and discovering opportunity together.</p>
-
-        <div class="os-preview-row">
-            <svg class="os-preview-lines" viewBox="0 0 600 40" preserveAspectRatio="none" aria-hidden="true">
-                <line class="os-connect-line" x1="100" y1="20" x2="300" y2="20"/>
-                <line class="os-connect-line" x1="300" y1="20" x2="500" y2="20"/>
-            </svg>
-            <a href="scholarship/" class="os-preview-card">
-                <div class="os-preview-icon">🎓</div>
-                <div class="os-preview-label">Scholarship</div>
-                <p class="os-preview-desc">Discover scholarships, fellowships, competitions, exchange programs, and funding opportunities worldwide.</p>
-            </a>
-            <a href="prompt/" class="os-preview-card">
-                <div class="os-preview-icon">📚</div>
-                <div class="os-preview-label">Online Resources</div>
-                <p class="os-preview-desc">Curated language-learning materials, guides, templates, and open educational resources.</p>
-            </a>
-            <a href="application-hub/" class="os-preview-card">
-                <div class="os-preview-icon">🚀</div>
-                <div class="os-preview-label">Application Hub</div>
-                <p class="os-preview-desc">Explore community-built tools, productivity apps, AI utilities, and open-source projects.</p>
-            </a>
-        </div>
-    </div>
+    <!-- 03 Application Hub -->
+    <a class="lh-col" href="application-hub/" aria-label="Application Hub — explore">
+      <div class="lh-col-inner">
+        <span class="lh-num">03</span>
+        <span class="lh-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="5" width="14" height="16" rx="1.5"/><path d="M9 5V4.4A1.4 1.4 0 0 1 10.4 3h3.2A1.4 1.4 0 0 1 15 4.4V5"/><path d="m8.6 13.2 2 2 4.2-4.2"/>
+          </svg>
+        </span>
+        <h2 class="lh-col-title"><span class="u">Application Hub</span></h2>
+        <p class="lh-col-desc">Discover and manage applications for RealLingo opportunities and programs.</p>
+        <span class="lh-cta">Explore <span class="arw">→</span></span>
+      </div>
+    </a>
+  </div>
 </main>
 
 <div id="site-footer"></div>
@@ -93,6 +163,6 @@
   window.SITE_SECTION = "opensource";
   window.SITE_PAGE = "resources";
 </script>
-<script src="../assets/js/nav.js?v=19" defer></script>
+<script src="../assets/js/nav.js?v=23" defer></script>
 </body>
 </html>
