@@ -48,6 +48,9 @@
   .mp-price--lg .mp-price-orig { font-size: 1.05rem; }
   .mp-price--lg .mp-price-now { font-size: 1.7rem; }
   .mp-price--lg .mp-price-badge { font-size: .72rem; padding: .24rem .62rem; }
+  .mp-cur-toggle { display: inline-block; margin-top: .5rem; padding: 0; background: none; border: none; font-family: inherit; font-size: .78rem; color: var(--mp-soft); cursor: pointer; text-align: left; }
+  .mp-cur-toggle .u { color: #9a7d00; text-decoration: underline; font-weight: 700; }
+  .mp-cur-toggle:hover .u { color: var(--mp-dark); }
   .mp-card-meta { font-size: .76rem; color: var(--mp-soft); margin-top: auto; display: flex; flex-wrap: wrap; gap: .3rem .6rem; }
   .mp-tag { display: inline-block; padding: .18rem .5rem; border-radius: 100px; background: var(--mp-yp); border: 1px solid rgba(230,198,74,.4); font-size: .68rem; font-weight: 700; color: #6a5800; }
 
@@ -195,20 +198,63 @@
 
   function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function money(p, c){ if(p==null||p==='') return 'Contact for price'; return (c||'USD') + ' ' + Number(p).toLocaleString(undefined,{minimumFractionDigits: Number(p)%1?2:0}); }
+
+  /* ── Currency localization ──────────────────────────────────────
+     Listings store a base currency (e.g. SAR). By default we show an
+     APPROXIMATE converted price in the visitor's local currency (guessed
+     from their timezone/locale), with a one-click toggle back to the
+     original. Rates are static/indicative — listings are contact-to-buy,
+     so no real transaction depends on them. */
+  var USD_PER = { USD:1, SAR:0.2666, AED:0.2723, QAR:0.2747, CNY:0.1389, SGD:0.741, KRW:0.000726, JPY:0.0064, HKD:0.128, MYR:0.212, INR:0.0116, EUR:1.08, GBP:1.27 };
+  var TZ_CUR = { 'Asia/Shanghai':'CNY','Asia/Urumqi':'CNY','Asia/Chongqing':'CNY','Asia/Harbin':'CNY','Asia/Riyadh':'SAR','Asia/Singapore':'SGD','Asia/Seoul':'KRW','Asia/Pyongyang':'KRW','Asia/Dubai':'AED','Asia/Qatar':'QAR','Asia/Tokyo':'JPY','Asia/Hong_Kong':'HKD','Asia/Kuala_Lumpur':'MYR','Asia/Kolkata':'INR','Europe/London':'GBP','America/New_York':'USD','America/Los_Angeles':'USD','America/Chicago':'USD','America/Toronto':'USD' };
+  var REG_CUR = { CN:'CNY', SA:'SAR', SG:'SGD', KR:'KRW', AE:'AED', QA:'QAR', JP:'JPY', HK:'HKD', MY:'MYR', IN:'INR', GB:'GBP', US:'USD', FR:'EUR', ES:'EUR', DE:'EUR', IT:'EUR' };
+  function detectCurrency(){
+    try {
+      var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone) || '';
+      if (TZ_CUR[tz]) return TZ_CUR[tz];
+      if (/^Europe\//.test(tz)) return 'EUR';
+      var reg = ((navigator.language || navigator.userLanguage || '').split('-')[1] || '').toUpperCase();
+      if (REG_CUR[reg]) return REG_CUR[reg];
+    } catch (e) {}
+    return null;
+  }
+  var LOCAL_CUR = detectCurrency();
+  var showLocal = true;                 // default: display in the visitor's local currency
+  function convert(amt, from, to){ return (USD_PER[from] && USD_PER[to]) ? amt * USD_PER[from] / USD_PER[to] : null; }
+  function fmtCur(amount, code){ return code + ' ' + Number(amount).toLocaleString(undefined, { maximumFractionDigits: (amount % 1 ? 2 : 0) }); }
+  function localizable(base){ return !!(LOCAL_CUR && LOCAL_CUR !== base && USD_PER[LOCAL_CUR] && USD_PER[base]); }
+  function dispCur(base){ return (showLocal && localizable(base)) ? LOCAL_CUR : base; }
+
   // Reusable sale-price renderer. Shows a struck-through reference price and an
   // auto-computed "% OFF" badge ONLY when there's a genuine original price
-  // above the current one; otherwise just the plain price.
+  // above the current one; renders in the active display currency.
   function priceHtml(r, lg){
-    var cur = r.currency || 'USD', now = r.price, orig = r.original_price;
+    var base = r.currency || 'USD', now = r.price, orig = r.original_price;
     var cls = 'mp-price' + (lg ? ' mp-price--lg' : '');
     if (now == null || now === '') return '<div class="'+cls+'"><span class="mp-price-tba">Contact for price</span></div>';
     var hasDisc = orig != null && orig !== '' && Number(orig) > Number(now);
     var pct = hasDisc ? Math.round((Number(orig) - Number(now)) / Number(orig) * 100) : 0;
+    var dc = dispCur(base), local = dc !== base;
+    function show(v){ var a = local ? Math.round(convert(Number(v), base, dc)) : Number(v); return (local ? '≈ ' : '') + fmtCur(a, dc); }
     return '<div class="'+cls+'">' +
-      (hasDisc ? '<span class="mp-price-orig">'+esc(money(orig, cur))+'</span>' : '') +
-      '<span class="mp-price-now">'+esc(money(now, cur))+'</span>' +
+      (hasDisc ? '<span class="mp-price-orig">'+esc(show(orig))+'</span>' : '') +
+      '<span class="mp-price-now">'+esc(show(now))+'</span>' +
       (hasDisc ? '<span class="mp-price-badge">'+pct+'% OFF</span>' : '') +
       '</div>';
+  }
+  // Currency toggle (detail view): switch between local and original currency.
+  function curToggleHtml(base){
+    if (!localizable(base)) return '';
+    return '<button type="button" class="mp-cur-toggle" id="mpCurToggle">' +
+      (showLocal ? 'Approx. in ' + LOCAL_CUR + ' · <span class="u">view original (' + base + ')</span>'
+                 : 'Original price in ' + base + ' · <span class="u">view in ' + LOCAL_CUR + '</span>') +
+      '</button>';
+  }
+  function renderPriceBlock(r){
+    var el = document.getElementById('mpPriceBlock'); if (!el) return;
+    el.innerHTML = priceHtml(r, true) + curToggleHtml(r.currency || 'USD');
+    var t = document.getElementById('mpCurToggle');
+    if (t) t.addEventListener('click', function(){ showLocal = !showLocal; renderPriceBlock(r); applyFilters(); });
   }
   function imgUrl(row){ try { return row.image_url ? RA.productImageUrl(row.image_url) : null; } catch(e){ return null; } }
 
@@ -286,11 +332,13 @@
       galMain +
       thumbs +
       (vid?'<video class="mp-detail-video" controls preload="metadata" playsinline src="'+esc(vid)+'"></video>':'') +
-      '<div class="mp-detail-price">'+priceHtml(r, true)+'</div>' +
+      '<div class="mp-detail-price" id="mpPriceBlock"></div>' +
       descBlock +
       '<div class="mp-detail-rows">'+ row('Condition', r.condition)+row('Category', r.category)+row('Location', r.location)+'</div>' +
       '<button class="mp-contact-btn" id="mpReveal">Show seller contact</button>' +
       '<div id="mpRevealBox"></div>';
+
+    renderPriceBlock(r);   // price + local-currency toggle
 
     /* ── Auto-rotating crossfade gallery ── */
     stopGal();

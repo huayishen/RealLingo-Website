@@ -64,7 +64,8 @@
   .rs-empty-ic { font-size: 2.4rem; margin-bottom: .5rem; }
   .rs-empty button { margin-top: 1rem; font-family: inherit; font-size: .82rem; font-weight: 700; color: var(--rs-dark); background: var(--rs-y); border: none; border-radius: 100px; padding: .55rem 1.3rem; cursor: pointer; }
 
-  .rs-back { display: inline-block; margin-top: 2.5rem; font-weight: 700; color: var(--rs-dark); text-decoration: none; }
+  .rs-disclaimer { margin-top: 2.4rem; padding-top: 1.4rem; border-top: 1px solid var(--rs-border); font-size: .76rem; line-height: 1.5; color: var(--rs-soft); max-width: 720px; }
+  .rs-back { display: inline-block; margin-top: 1.6rem; font-weight: 700; color: var(--rs-dark); text-decoration: none; }
 </style>
 </head>
 <body>
@@ -112,6 +113,8 @@
   <div class="rs-count" id="rsCount"></div>
   <div class="rs-grid" id="rsGrid"></div>
 
+  <p class="rs-disclaimer">Links open independent third-party websites, shared here as helpful references. RealLingo is not affiliated with, does not endorse, and is not responsible for the content of these external resources; all names and trademarks belong to their respective owners.</p>
+
   <a href="../" class="rs-back">← Back to Open Sources</a>
 </main>
 
@@ -128,18 +131,13 @@
   // Curated resource library. Static (no DB) — a knowledge index, not a store.
   var TYPE_ICON = { Website:'🌐', Article:'📄', Video:'▶️', Course:'🎓', Tool:'🛠️', Book:'📖', Guide:'🧭', Download:'⬇️', Community:'👥' };
   var RESOURCES = [
-    { title:'HelloChinese', desc:'Gamified app for Mandarin beginners — pronunciation, characters and grammar.', lang:'Chinese', cat:'Learning', type:'Tool', url:'https://www.hellochinese.cc/' },
-    { title:'Pleco Dictionary', desc:'The essential Chinese–English dictionary, with OCR and flashcards.', lang:'Chinese', cat:'Learning', type:'Tool', url:'https://www.pleco.com/' },
-    { title:'Du Chinese', desc:'Graded Mandarin reading with audio, from beginner to advanced.', lang:'Chinese', cat:'Learning', type:'Website', url:'https://www.duchinese.net/' },
     { title:'Madinah Arabic', desc:'Free structured course in Modern Standard Arabic with reading practice.', lang:'Arabic', cat:'Learning', type:'Course', url:'https://www.madinaharabic.com/' },
     { title:'Talk To Me In Korean', desc:'Popular lessons, workbooks and audio for learning Korean at every level.', lang:'Korean', cat:'Learning', type:'Course', url:'https://talktomeinkorean.com/' },
     { title:'Coffee Break Languages', desc:'Bite-sized audio lessons for French, Spanish and more — learn on the go.', lang:'Multiple', cat:'Learning', type:'Course', url:'https://coffeebreaklanguages.com/' },
     { title:'SpanishDict', desc:'Spanish dictionary, conjugation tables and grammar lessons.', lang:'Spanish', cat:'Learning', type:'Tool', url:'https://www.spanishdict.com/' },
-    { title:'Anki', desc:'Powerful spaced-repetition flashcards for memorising vocabulary in any language.', lang:'Multiple', cat:'Learning', type:'Tool', url:'https://apps.ankiweb.net/' },
     { title:'Tatoeba', desc:'A vast, community-built collection of example sentences and translations.', lang:'Multiple', cat:'Learning', type:'Website', url:'https://tatoeba.org/' },
     { title:'Forvo', desc:'Hear real native speakers pronounce words in dozens of languages.', lang:'Multiple', cat:'Learning', type:'Tool', url:'https://forvo.com/' },
     { title:'ISL Collective', desc:'Thousands of free printable worksheets and video lessons for teachers.', lang:'Multiple', cat:'Teaching', type:'Download', url:'https://en.islcollective.com/' },
-    { title:'Quizlet', desc:'Create and share study sets, flashcards and classroom games.', lang:'Multiple', cat:'Teaching', type:'Tool', url:'https://quizlet.com/' },
     { title:'TV5MONDE Apprendre', desc:'Free French exercises built around authentic video clips, by level.', lang:'French', cat:'Teaching', type:'Video', url:'https://apprendre.tv5monde.com/' },
     { title:'BBC Languages Archive', desc:'Classic introductory guides and phrasebooks across many languages.', lang:'Multiple', cat:'Teaching', type:'Guide', url:'https://www.bbc.co.uk/languages/' },
     { title:'China Highlights', desc:'Travel, festivals and cultural guides for exploring China.', lang:'Chinese', cat:'Culture', type:'Guide', url:'https://www.chinahighlights.com/' },

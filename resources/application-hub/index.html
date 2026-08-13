@@ -22,7 +22,7 @@
 
 <main>
     <section class="apphub-hero">
-        <div class="apphub-crumb">Explore / Resources / Application Hub</div>
+        <div class="apphub-crumb">Open Sources / Application Hub</div>
         <h1 class="apphub-h1">Apps built <em>with</em> the community</h1>
         <p class="apphub-sub">The Application Hub is where developers, educators, and language lovers showcase the tools they've built for the RealLingo ecosystem — from study aids to translation helpers.</p>
         <button type="button" class="apphub-hero-cta" data-open-modal>Share Your Application</button>
@@ -33,9 +33,9 @@
 
     <section class="apphub-gallery">
         <div class="apphub-gallery-head">
-            <div class="apphub-kicker">Community Apps</div>
-            <h2 class="apphub-h2">Nothing published <em>yet</em></h2>
-            <p class="apphub-gallery-sub">No applications have been shared here yet — be one of the first. Every tile below is an open spot waiting for your project.</p>
+            <div class="apphub-kicker">Language-Learning Apps</div>
+            <h2 class="apphub-h2">Apps to <em>get you started</em></h2>
+            <p class="apphub-gallery-sub">A handpicked shortlist of language-learning apps — and an open spot for the community to add their own.</p>
         </div>
 
         <!-- Empty-state gallery: each .apphub-card is an open, clickable "slot."
@@ -43,50 +43,46 @@
              ".apphub-card.filled" shape documented in apphub.css — icon,
              name, description, language chips, link, optional featured badge. -->
         <div class="apphub-grid" id="apphubGrid">
+            
+            <a class="apphub-card filled" href="https://www.hellochinese.cc/" target="_blank" rel="noopener noreferrer" style="cursor:pointer">
+                <span class="apphub-card-app-icon" style="display:flex;align-items:center;justify-content:center;background:var(--yellow-pale);font-size:1.5rem">📱</span>
+                <span class="apphub-card-app-name">HelloChinese</span>
+                <span class="apphub-card-app-desc">Gamified app for Mandarin beginners — pronunciation, characters and grammar.</span>
+                <span class="apphub-card-app-langs"><span class="apphub-card-app-lang">Chinese</span></span>
+                <span class="apphub-card-app-link">Open app →</span>
+            </a>
+            <a class="apphub-card filled" href="https://www.pleco.com/" target="_blank" rel="noopener noreferrer" style="cursor:pointer">
+                <span class="apphub-card-app-icon" style="display:flex;align-items:center;justify-content:center;background:var(--yellow-pale);font-size:1.5rem">📖</span>
+                <span class="apphub-card-app-name">Pleco</span>
+                <span class="apphub-card-app-desc">The essential Chinese–English dictionary app, with OCR and flashcards.</span>
+                <span class="apphub-card-app-langs"><span class="apphub-card-app-lang">Chinese</span></span>
+                <span class="apphub-card-app-link">Open app →</span>
+            </a>
+            <a class="apphub-card filled" href="https://www.duchinese.net/" target="_blank" rel="noopener noreferrer" style="cursor:pointer">
+                <span class="apphub-card-app-icon" style="display:flex;align-items:center;justify-content:center;background:var(--yellow-pale);font-size:1.5rem">📚</span>
+                <span class="apphub-card-app-name">Du Chinese</span>
+                <span class="apphub-card-app-desc">Graded Mandarin reading with native audio, from beginner to advanced.</span>
+                <span class="apphub-card-app-langs"><span class="apphub-card-app-lang">Chinese</span></span>
+                <span class="apphub-card-app-link">Open app →</span>
+            </a>
+            <a class="apphub-card filled" href="https://apps.ankiweb.net/" target="_blank" rel="noopener noreferrer" style="cursor:pointer">
+                <span class="apphub-card-app-icon" style="display:flex;align-items:center;justify-content:center;background:var(--yellow-pale);font-size:1.5rem">🗂️</span>
+                <span class="apphub-card-app-name">Anki</span>
+                <span class="apphub-card-app-desc">Spaced-repetition flashcards for memorising vocabulary in any language.</span>
+                <span class="apphub-card-app-langs"><span class="apphub-card-app-lang">Multiple</span></span>
+                <span class="apphub-card-app-link">Open app →</span>
+            </a>
+            <a class="apphub-card filled" href="https://quizlet.com/" target="_blank" rel="noopener noreferrer" style="cursor:pointer">
+                <span class="apphub-card-app-icon" style="display:flex;align-items:center;justify-content:center;background:var(--yellow-pale);font-size:1.5rem">🧠</span>
+                <span class="apphub-card-app-name">Quizlet</span>
+                <span class="apphub-card-app-desc">Study flashcards and play learning games on any device.</span>
+                <span class="apphub-card-app-langs"><span class="apphub-card-app-lang">Multiple</span></span>
+                <span class="apphub-card-app-link">Open app →</span>
+            </a>
             <button type="button" class="apphub-card" data-open-modal>
                 <span class="apphub-card-icon">+</span>
                 <span class="apphub-card-msg" data-msg></span>
-                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
-            </button>
-            <button type="button" class="apphub-card" data-open-modal>
-                <span class="apphub-card-icon">+</span>
-                <span class="apphub-card-msg" data-msg></span>
-                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
-            </button>
-            <button type="button" class="apphub-card" data-open-modal>
-                <span class="apphub-card-icon">+</span>
-                <span class="apphub-card-msg" data-msg></span>
-                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
-            </button>
-            <button type="button" class="apphub-card" data-open-modal>
-                <span class="apphub-card-icon">+</span>
-                <span class="apphub-card-msg" data-msg></span>
-                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
-            </button>
-            <button type="button" class="apphub-card" data-open-modal>
-                <span class="apphub-card-icon">+</span>
-                <span class="apphub-card-msg" data-msg></span>
-                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
-            </button>
-            <button type="button" class="apphub-card" data-open-modal>
-                <span class="apphub-card-icon">+</span>
-                <span class="apphub-card-msg" data-msg></span>
-                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
-            </button>
-            <button type="button" class="apphub-card" data-open-modal>
-                <span class="apphub-card-icon">+</span>
-                <span class="apphub-card-msg" data-msg></span>
-                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
-            </button>
-            <button type="button" class="apphub-card" data-open-modal>
-                <span class="apphub-card-icon">+</span>
-                <span class="apphub-card-msg" data-msg></span>
-                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
-            </button>
-            <button type="button" class="apphub-card" data-open-modal>
-                <span class="apphub-card-icon">+</span>
-                <span class="apphub-card-msg" data-msg></span>
-                <span class="apphub-card-desc">Help grow the RealLingo ecosystem by contributing your language-learning application.</span>
+                <span class="apphub-card-desc">Built a language app? Share it with the RealLingo community.</span>
             </button>
         </div>
     </section>

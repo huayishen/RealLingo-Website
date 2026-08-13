@@ -26,7 +26,8 @@
      never downloads it). */
   .ex-hero-wallpaper {
     display: none; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    background: #1a160c center top / cover no-repeat;
+    /* full-width photo stack, aspect preserved (no crop), anchored to the top */
+    background: #1a160c top center / 100% auto no-repeat;
   }
 
   .ex-edit-content {
@@ -192,7 +193,7 @@
        gradient scrim (with a faint yellow brand wash) for text legibility while
        keeping the photos recognisable. */
     .ex-hero-bg-video { display: none !important; }
-    .ex-hero-wallpaper { display: block; background-image: url("../../assets/img/event-wallpaper.jpg"); }
+    .ex-hero-wallpaper { display: block; background-image: url("../../assets/img/event-wallpaper.jpg?v=3"); }
     .ex-hero-editorial .ex-hero-bg-overlay {
       background:
         linear-gradient(180deg, rgba(17,18,22,.62) 0%, rgba(17,18,22,.34) 40%, rgba(17,18,22,.72) 100%),
