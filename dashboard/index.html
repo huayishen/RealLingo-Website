@@ -9,30 +9,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/site.css?v=23">
-<link rel="stylesheet" href="../assets/css/account-drawer.css?v=23">
+<link rel="stylesheet" href="../assets/css/site.css?v=24">
+<link rel="stylesheet" href="../assets/css/account-drawer.css?v=24">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--font-sans); background: var(--cream); }
-  .dash-landing { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 8rem 1.5rem 4rem; }
-  .dash-landing-card { text-align: center; max-width: 420px; }
-  .dash-landing-card h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -.02em; margin-bottom: .5rem; }
-  .dash-landing-card p { color: var(--text-soft); font-size: .9rem; margin-bottom: 1.5rem; }
-  .dash-open-btn { border: none; border-radius: 100px; background: var(--dark); color: var(--yellow); font-family: var(--font-sans); font-weight: 700; font-size: .9rem; padding: .85rem 1.75rem; cursor: pointer; transition: transform .15s; }
-  .dash-open-btn:hover { transform: translateY(-1px); }
+  body { font-family: var(--font-sans); background: #f4f4f2; }
+  .acct-loading { padding: 4rem 1rem; text-align: center; color: #8a8878; }
 </style>
 </head>
 <body>
 
 <div id="site-header"></div>
 
-<main class="dash-landing">
-  <div class="dash-landing-card">
-    <h1>Your account</h1>
-    <p>Manage your profile, roles, applications, and settings from the panel.</p>
-    <button class="dash-open-btn" id="openPanelBtn">Open account panel</button>
-  </div>
-</main>
+<!-- The account panel renders inline here (docked "page" mode), not as a popup. -->
+<main class="acct-page" id="acctPageMount"></main>
 
 <div id="site-footer"></div>
 
@@ -41,16 +31,18 @@
   window.SITE_SECTION = null;
   window.SITE_PAGE = "dashboard";
 </script>
-<script src="../assets/js/nav.js?v=23" defer></script>
-<script src="../assets/js/supabase-client.js?v=23"></script>
-<script src="../assets/js/auth.js?v=23"></script>
-<script src="../assets/js/account-drawer.js?v=23"></script>
+<script src="../assets/js/nav.js?v=24" defer></script>
+<script src="../assets/js/supabase-client.js?v=24"></script>
+<script src="../assets/js/auth.js?v=24"></script>
+<script src="../assets/js/quiz-data.js?v=24"></script>
+<script src="../assets/js/account-drawer.js?v=24"></script>
 <script>
   (function () {
-    function openIt() { if (window.openAccountDrawer) window.openAccountDrawer(); }
-    document.getElementById('openPanelBtn').addEventListener('click', openIt);
-    // Auto-open on arrival (post-login / callback land here); open() gates auth.
-    window.addEventListener('load', function () { setTimeout(openIt, 200); });
+    function mount() {
+      if (window.openAccountPage) window.openAccountPage(document.getElementById('acctPageMount'));
+    }
+    if (document.readyState === 'complete' || document.readyState === 'interactive') setTimeout(mount, 60);
+    else window.addEventListener('DOMContentLoaded', mount);
   })();
 </script>
 </body>

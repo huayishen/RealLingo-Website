@@ -43,10 +43,10 @@
   function ensureDrawer() {
     if (window.openAccountDrawer) return Promise.resolve();
     if (_drawerLoading) return _drawerLoading;
-    loadCss(ROOT + 'assets/css/account-drawer.css?v=23');
-    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=23'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=23'); })
-      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=23'); });
+    loadCss(ROOT + 'assets/css/account-drawer.css?v=24');
+    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=24'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=24'); })
+      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=24'); });
     return _drawerLoading;
   }
   function openAccountDrawerLazy(e) {
@@ -80,8 +80,8 @@
   // Marketing pages don't load supabase-js, so detect that here, establish the
   // session, then drop them on their dashboard already logged in — no 2nd login.
   function loadAuthStack() {
-    return (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=23'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=23'); });
+    return (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=24'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=24'); });
   }
   function waitForSession(sb) {
     return sb.auth.getSession().then(function (r) {
@@ -144,12 +144,11 @@
       '<span class="site-hi">Hi, <b>' + escapeHtml(greet) + '</b></span>' +
       '<button type="button" class="site-cal-btn" id="siteCalBtn" aria-label="Event Calendar">' + CAL_ICON_SVG +
         '<span class="site-cal-tip" role="tooltip">Event Calendar</span></button>' +
-      '<a href="#" class="site-btn-solid" id="siteDashBtn">Dashboard</a>' +
+      '<a href="' + ROOT + 'dashboard/" class="site-btn-solid" id="siteDashBtn">Dashboard</a>' +
       '<a href="#" class="site-btn-ghost" id="siteLogout">Log out</a>';
     var cal = actions.querySelector('#siteCalBtn');
     if (cal) cal.addEventListener('click', openEventCalendarLazy);
-    var dash = actions.querySelector('#siteDashBtn');
-    if (dash) dash.addEventListener('click', openAccountDrawerLazy);
+    // Dashboard now lives on its own page (docked account panel), so just navigate there.
     var lo = actions.querySelector('#siteLogout');
     if (lo) lo.addEventListener('click', function (e) { e.preventDefault(); navLogout(); });
   }
@@ -168,7 +167,7 @@
   }
 
   function loadPartial(name, targetId, after) {
-    fetch(ROOT + 'partials/' + name + '?v=23')   // versioned so header/footer partials refresh with each release
+    fetch(ROOT + 'partials/' + name + '?v=24')   // versioned so header/footer partials refresh with each release
       .then(function (r) { return r.text(); })
       .then(function (html) {
         var target = document.getElementById(targetId);

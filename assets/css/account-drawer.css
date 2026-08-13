@@ -257,3 +257,25 @@
 .mp-badge-pend { background: var(--aysoft); color: #6a5800; }
 .mp-badge-rej { background: #fdecea; color: var(--adanger); }
 .mp-badge-sold { background: #eef0f2; color: var(--amid); }
+
+/* ══ Docked "page" mode ═══════════════════════════════════════════
+   The same panel rendered inline on the dashboard page instead of as
+   a fixed slide-over. Keeps the sidebar + content layout; the page
+   scrolls and the sidebar sticks. ── */
+.acct-page { background: #f4f4f2; min-height: calc(100vh - 60px); }
+.acct-drawer--page {
+  position: static; transform: none !important; height: auto; min-width: 0;
+  width: 100%; max-width: 1160px; margin: 0 auto; padding: 1.4rem 1.25rem 4rem;
+  background: transparent; box-shadow: none; z-index: auto;
+}
+.acct-drawer--page .acct-close { display: none; }
+.acct-drawer--page .acct-hd { border: 1px solid var(--aborder); border-radius: 16px; }
+.acct-drawer--page .acct-main { margin-top: 1.2rem; gap: 1.2rem; align-items: flex-start; }
+.acct-drawer--page .acct-nav { border: 1px solid var(--aborder); border-radius: 16px; position: sticky; top: 78px; }
+.acct-drawer--page .acct-content { overflow: visible; background: transparent; padding: .25rem 0 0; }
+@media (max-width: 760px) {
+  .acct-drawer--page { padding: 1rem .85rem 3rem; }
+  .acct-drawer--page .acct-main { flex-direction: column; }
+  .acct-drawer--page .acct-nav { position: static; width: 100%; flex-direction: row; flex-wrap: wrap; gap: .35rem; }
+  .acct-drawer--page .acct-nav-logout { margin-top: 0; margin-left: auto; }
+}

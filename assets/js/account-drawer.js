@@ -52,24 +52,29 @@
   var overlay, drawer, hdEl, navEl, contentEl, fileInput;
   var calTarget = null;   // where the calendar renders — the drawer's content, or the global slide-down panel
 
-  function build() {
+  var pageMode = false;
+  function build(mountEl) {
     if (built) return; built = true;
-    overlay = document.createElement('div'); overlay.className = 'acct-overlay';
-    drawer = document.createElement('aside'); drawer.className = 'acct-drawer'; drawer.setAttribute('role', 'dialog'); drawer.setAttribute('aria-modal', 'true');
+    pageMode = !!mountEl;
+    if (!pageMode) { overlay = document.createElement('div'); overlay.className = 'acct-overlay'; }
+    drawer = document.createElement('aside'); drawer.className = 'acct-drawer' + (pageMode ? ' acct-drawer--page' : '');
+    drawer.setAttribute('role', pageMode ? 'region' : 'dialog'); if (!pageMode) drawer.setAttribute('aria-modal', 'true');
     drawer.innerHTML =
       '<div class="acct-hd" id="acctHd"></div>' +
       '<div class="acct-main"><nav class="acct-nav" id="acctNav"></nav><div class="acct-content" id="acctContent"></div></div>';
     fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.accept = 'image/png,image/jpeg,image/webp,image/gif'; fileInput.style.display = 'none';
-    document.body.appendChild(overlay); document.body.appendChild(drawer); document.body.appendChild(fileInput);
+    var host = mountEl || document.body;
+    if (overlay) document.body.appendChild(overlay);
+    host.appendChild(drawer); host.appendChild(fileInput);
     hdEl = drawer.querySelector('#acctHd'); navEl = drawer.querySelector('#acctNav'); contentEl = drawer.querySelector('#acctContent');
 
-    overlay.addEventListener('click', close);
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && drawer.classList.contains('open')) close(); });
+    if (overlay) overlay.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) { if (overlay && e.key === 'Escape' && drawer.classList.contains('open')) close(); });
     fileInput.addEventListener('change', onAvatarFile);
   }
 
-  function show() { overlay.classList.add('open'); drawer.classList.add('open'); document.body.style.overflow = 'hidden'; }
-  function close() { overlay.classList.remove('open'); drawer.classList.remove('open'); document.body.style.overflow = ''; }
+  function show() { if (overlay) { overlay.classList.add('open'); document.body.style.overflow = 'hidden'; } drawer.classList.add('open'); }
+  function close() { if (overlay) { overlay.classList.remove('open'); document.body.style.overflow = ''; } drawer.classList.remove('open'); }
 
   async function ensureData() {
     DATA = await RA.loadProfile();
@@ -762,8 +767,8 @@
 
   function doLogout() { RA.signOut().catch(function () {}).then(function () { window.location.href = ROOT(); }); }
 
-  async function open() {
-    build(); show();
+  async function open(mountEl) {
+    build(mountEl); show();
     contentEl.innerHTML = '<div class="acct-loading">Loading your account…</div>';
     if (typeof RA === 'undefined') { contentEl.innerHTML = '<div class="acct-loading">Account tools failed to load. Please reload.</div>'; return; }
     try {
@@ -781,6 +786,9 @@
   }
 
   window.openAccountDrawer = open;
+  // Render the account panel inline on a page (docked mode) instead of as a
+  // slide-over overlay. Pass the container element to mount into.
+  window.openAccountPage = function (mountEl) { return open(mountEl); };
 
   /* ── Global Event Calendar: a slide-down panel that reuses the SAME calendar
      rendered in the drawer (renderCalendar targets calPanelBody instead of the
