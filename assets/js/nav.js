@@ -43,10 +43,10 @@
   function ensureDrawer() {
     if (window.openAccountDrawer) return Promise.resolve();
     if (_drawerLoading) return _drawerLoading;
-    loadCss(ROOT + 'assets/css/account-drawer.css?v=26');
-    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=26'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=26'); })
-      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=26'); });
+    loadCss(ROOT + 'assets/css/account-drawer.css?v=27');
+    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=27'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=27'); })
+      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=27'); });
     return _drawerLoading;
   }
   function openAccountDrawerLazy(e) {
@@ -75,13 +75,20 @@
       '<circle cx="12" cy="17.6" r="1.35" fill="#ffeb99"/>' +
     '</svg>';
 
+  // Shopping-cart mark for the saved-products cart.
+  var CART_ICON_SVG =
+    '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="#111216" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+      '<circle cx="9" cy="20" r="1.4"/><circle cx="17.5" cy="20" r="1.4"/>' +
+      '<path d="M2.5 3.5H5l2.1 11a1.6 1.6 0 0 0 1.6 1.3h8.2a1.6 1.6 0 0 0 1.6-1.2L21.5 8H6"/>' +
+    '</svg>';
+
   // When the user clicks a verify/recovery link in their email, Supabase sends
   // them back to the site with the session in the URL hash (implicit flow).
   // Marketing pages don't load supabase-js, so detect that here, establish the
   // session, then drop them on their dashboard already logged in — no 2nd login.
   function loadAuthStack() {
-    return (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=26'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=26'); });
+    return (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=27'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=27'); });
   }
   function waitForSession(sb) {
     return sb.auth.getSession().then(function (r) {
@@ -144,6 +151,8 @@
       '<span class="site-hi">Hi, <b>' + escapeHtml(greet) + '</b></span>' +
       '<button type="button" class="site-cal-btn" id="siteCalBtn" aria-label="Event Calendar">' + CAL_ICON_SVG +
         '<span class="site-cal-tip" role="tooltip">Event Calendar</span></button>' +
+      '<a href="' + ROOT + 'dashboard/?s=cart" class="site-cal-btn" id="siteCartBtn" aria-label="Shopping Cart">' + CART_ICON_SVG +
+        '<span class="site-cal-tip" role="tooltip">Shopping Cart</span></a>' +
       '<a href="' + ROOT + 'dashboard/" class="site-btn-solid" id="siteDashBtn">Dashboard</a>' +
       '<a href="#" class="site-btn-ghost" id="siteLogout">Log out</a>';
     var cal = actions.querySelector('#siteCalBtn');
@@ -160,11 +169,17 @@
     if (hdr && burger && !hdr.querySelector('.site-cal-mobile')) {
       var mcal = document.createElement('button');
       mcal.type = 'button';
-      mcal.className = 'site-cal-mobile';
+      mcal.className = 'site-hdr-ic site-cal-mobile';
       mcal.setAttribute('aria-label', 'Event Calendar');
       mcal.innerHTML = CAL_ICON_SVG;
       mcal.addEventListener('click', openEventCalendarLazy);
       hdr.insertBefore(mcal, burger);
+      var mcart = document.createElement('a');
+      mcart.className = 'site-hdr-ic site-cart-mobile';
+      mcart.href = ROOT + 'dashboard/?s=cart';
+      mcart.setAttribute('aria-label', 'Shopping Cart');
+      mcart.innerHTML = CART_ICON_SVG;
+      hdr.insertBefore(mcart, burger);   // sits right after the calendar icon
     }
   }
 
@@ -182,7 +197,7 @@
   }
 
   function loadPartial(name, targetId, after) {
-    fetch(ROOT + 'partials/' + name + '?v=26')   // versioned so header/footer partials refresh with each release
+    fetch(ROOT + 'partials/' + name + '?v=27')   // versioned so header/footer partials refresh with each release
       .then(function (r) { return r.text(); })
       .then(function (html) {
         var target = document.getElementById(targetId);

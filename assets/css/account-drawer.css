@@ -120,6 +120,7 @@
 .acct-btn-solid:hover:not(:disabled) { background: var(--aym); border-color: var(--aym); }
 .acct-btn-danger { color: var(--adanger); border-color: rgba(192,57,43,.4); }
 .acct-btn-danger:hover:not(:disabled) { background: #fdecea; border-color: var(--adanger); }
+.acct-btn-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
 .acct-ava-actions { display: flex; gap: .5rem; margin-top: .6rem; }
 
 .acct-danger-zone { border: 1px solid rgba(192,57,43,.3); background: #fef6f5; border-radius: 14px; padding: 1.1rem 1.25rem; margin-top: 1.5rem; }
@@ -279,3 +280,13 @@
   .acct-drawer--page .acct-nav { position: static; width: 100%; flex-direction: row; flex-wrap: wrap; gap: .35rem; }
   .acct-drawer--page .acct-nav-logout { margin-top: 0; margin-left: auto; }
 }
+
+/* Saved-event ("My Events") detail cards — a compact echo of the directory card */
+.acct-ev-card { padding: 1.1rem 1.2rem; }
+.acct-ev-link { display: block; text-decoration: none; color: inherit; }
+.acct-ev-title { font-weight: 800; font-size: 1.02rem; line-height: 1.25; color: var(--adark); }
+.acct-ev-comm { font-size: .84rem; color: var(--amid); margin-top: .2rem; }
+.acct-ev-meta { display: flex; flex-wrap: wrap; gap: .3rem 1rem; margin-top: .55rem; font-size: .82rem; color: var(--amid); }
+.acct-ev-tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .7rem; }
+.acct-ev-tag { font-size: .68rem; font-weight: 700; background: var(--abg); color: var(--amid); padding: .22rem .6rem; border-radius: 100px; }
+.acct-ev-tag--lang { background: var(--aysoft); color: #6a5800; }

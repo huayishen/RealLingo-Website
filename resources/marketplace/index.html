@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/site.css?v=26">
+<link rel="stylesheet" href="../../assets/css/site.css?v=27">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root { --mp-dark:#111216; --mp-mid:#4a4840; --mp-soft:#8a8878; --mp-y:#ffeb99; --mp-ym:#f5d96a; --mp-yp:#fff7d6; --mp-bg:#f4f4f2; --mp-card:#fff; --mp-border:rgba(17,18,22,.1); }
@@ -103,6 +103,10 @@
   .mp-detail-rows { margin: 1rem 0; }
   .mp-drow { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem 0; border-bottom: 1px solid var(--mp-border); font-size: .9rem; }
   .mp-drow span:first-child { color: var(--mp-soft); }
+  .mp-cart-btn { width: 100%; padding: .85rem; margin-bottom: .6rem; border: 1.5px solid var(--mp-dark); border-radius: 100px; background: #fff; color: var(--mp-dark); font-family: inherit; font-weight: 700; font-size: .95rem; cursor: pointer; transition: background .18s, color .18s, border-color .18s; }
+  .mp-cart-btn:hover:not(:disabled) { background: var(--mp-yp); }
+  .mp-cart-btn.in-cart { background: var(--mp-y); border-color: var(--mp-y); }
+  .mp-cart-btn:disabled { opacity: .6; cursor: not-allowed; }
   .mp-contact-btn { width: 100%; padding: .9rem; border: none; border-radius: 100px; background: var(--mp-dark); color: #fff; font-family: inherit; font-weight: 700; font-size: .95rem; cursor: pointer; }
   .mp-contact-reveal { margin-top: .9rem; padding: 1rem; border-radius: 12px; background: var(--mp-yp); border: 1px solid rgba(230,198,74,.4); text-align: center; font-weight: 700; word-break: break-word; }
   .mp-back { display: inline-block; margin-top: 2.5rem; font-weight: 700; color: var(--mp-dark); text-decoration: none; }
@@ -185,14 +189,15 @@
   window.SITE_SECTION = "marketplace";
   window.SITE_PAGE = "resources/marketplace";
 </script>
-<script src="../../assets/js/nav.js?v=26" defer></script>
-<script src="../../assets/js/supabase-client.js?v=26"></script>
-<script src="../../assets/js/auth.js?v=26"></script>
+<script src="../../assets/js/nav.js?v=27" defer></script>
+<script src="../../assets/js/supabase-client.js?v=27"></script>
+<script src="../../assets/js/auth.js?v=27"></script>
 <script>
 (function () {
   var grid = document.getElementById('mpGrid'), stateEl = document.getElementById('mpState');
   var searchEl = document.getElementById('mpSearch'), catEl = document.getElementById('mpCat');
   var ALL = [];
+  var CART = {};   // product id -> true, for the signed-in user's saved products
   var galTimer = null;
   function stopGal(){ if (galTimer){ clearInterval(galTimer); galTimer = null; } }
 
@@ -290,6 +295,8 @@
     if (typeof RA === 'undefined'){ stateEl.textContent = 'Marketplace is unavailable right now.'; return; }
     RA.listMarketplace().then(function(rows){ ALL = rows; applyFilters(); })
       .catch(function(e){ console.error(e); stateEl.textContent = 'Could not load products.'; });
+    // load which products are already in the signed-in user's cart
+    try { RA.getUser().then(function(u){ if (u) RA.loadSaved().then(function(rows){ (rows||[]).forEach(function(x){ if (x.item_type === 'product') CART[x.item_ref] = true; }); }).catch(function(){}); }).catch(function(){}); } catch(e){}
   }
 
   /* ── Detail modal + reveal contact ── */
@@ -335,6 +342,7 @@
       '<div class="mp-detail-price" id="mpPriceBlock"></div>' +
       descBlock +
       '<div class="mp-detail-rows">'+ row('Condition', r.condition)+row('Category', r.category)+row('Location', r.location)+'</div>' +
+      '<button class="mp-cart-btn'+(CART[r.id]?' in-cart':'')+'" id="mpCartBtn">'+(CART[r.id]?'✓ In your cart':'🛒 Add to cart')+'</button>' +
       '<button class="mp-contact-btn" id="mpReveal">Show seller contact</button>' +
       '<div id="mpRevealBox"></div>';
 
@@ -380,6 +388,24 @@
     document.getElementById('mpReveal').addEventListener('click', function(){
       this.style.display='none';
       document.getElementById('mpRevealBox').innerHTML = '<div class="mp-contact-reveal">'+esc(r.contact||'No contact provided')+'</div>';
+    });
+
+    // Add to / remove from the shopping cart (saved products)
+    document.getElementById('mpCartBtn').addEventListener('click', async function(){
+      var user = null; try { user = await RA.getUser(); } catch(e){}
+      if (!user){ window.location.href = SITE_ROOT + 'login/'; return; }
+      var btn = this; btn.disabled = true;
+      try {
+        if (CART[r.id]) {
+          await RA.unsaveItem('product', r.id); delete CART[r.id];
+          btn.textContent = '🛒 Add to cart'; btn.classList.remove('in-cart');
+        } else {
+          await RA.saveItem({ item_type:'product', item_ref:r.id, title:r.title, url: SITE_ROOT + 'resources/marketplace/',
+            data:{ price:r.price, original_price:r.original_price, currency:r.currency, image_url:r.image_url } });
+          CART[r.id] = true; btn.textContent = '✓ In your cart'; btn.classList.add('in-cart');
+        }
+      } catch(e){ alert('Could not update cart: ' + (e.message||e)); }
+      finally { btn.disabled = false; }
     });
     openModal(detailModal);
   }

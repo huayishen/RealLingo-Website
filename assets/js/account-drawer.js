@@ -38,8 +38,9 @@
   var NAV = [
     { key: 'dashboard', label: 'Dashboard', icon: '👤' },
     { key: 'roles', label: 'My Roles', icon: '⭐' },
-    { key: 'saved', label: 'Saved', icon: '❤️' },
+    { key: 'saved', label: 'My Events', icon: '❤️' },           // saved events from the directory
     { key: 'calendar', label: 'Calendar', icon: '📅' },
+    { key: 'cart', label: 'My Shopping Cart', icon: '🛒' },      // saved marketplace products
     { key: 'marketplace', label: 'My Listings', icon: '🛍️' },   // seller's own product listings
     { key: 'applications', label: 'My Apps', icon: '📄' },        // scholarship / partner / event applications
     { key: 'settings', label: 'Settings', icon: '⚙️' }
@@ -128,7 +129,7 @@
   function renderNav() {
     var items = NAV.slice();
     function insertAfter(key, item) { var i = -1; for (var j = 0; j < items.length; j++) { if (items[j].key === key) { i = j; break; } } items.splice(i >= 0 ? i + 1 : items.length, 0, item); }
-    if (IS_ORGANIZER) insertAfter('applications', { key: 'myevents', label: 'My Events', icon: '📅' });
+    if (IS_ORGANIZER) insertAfter('applications', { key: 'myevents', label: 'Hosted Events', icon: '📅' });
     if (IS_ADMIN) insertAfter('marketplace', { key: 'adminreview', label: 'Admin Review', icon: '🛡️' });          // pr@ (marketplace)
     if (IS_EVENT_ADMIN) insertAfter('adminreview', { key: 'eventreview', label: 'Event Review', icon: '🗓️' });    // my@ (events)
     navEl.innerHTML = items.map(function (it) {
@@ -154,6 +155,7 @@
     if (section === 'roles') return renderRoles();
     if (section === 'applications') return renderApplications();
     if (section === 'saved') return renderSaved();
+    if (section === 'cart') return renderCart();
     if (section === 'calendar') return renderCalendar(contentEl);
     if (section === 'marketplace') return renderMarketplace();
     if (section === 'adminreview') return renderAdminReview();
@@ -238,14 +240,79 @@
   }
 
   function renderSaved() {
-    var html = '<h1 class="acct-h1">Saved</h1>';
-    if (!SAVED.length) { html += '<div class="acct-empty">Nothing saved yet. Save events and resources to find them here.</div>'; }
-    else html += SAVED.map(function (s) {
-      return '<div class="acct-card acct-clickable">' + (s.url ? '<a href="' + esc(s.url) + '" style="text-decoration:none;color:inherit">' : '') +
-        '<div style="font-weight:700">' + esc(s.title || s.item_ref) + '</div><div style="color:var(--asoft);font-size:.8rem;margin-top:.2rem;text-transform:capitalize">' + esc(s.item_type) + '</div>' +
-        (s.url ? '</a>' : '') + '</div>';
+    var items = SAVED.filter(function (s) { return s.item_type === 'event'; });
+    var html = '<h1 class="acct-h1">My Events</h1><p class="acct-sub">Events you\'ve saved from the directory.</p>';
+    if (!items.length) { html += '<div class="acct-empty">No saved events yet. Tap the ♥ on an event in the <a class="acct-role-cta" href="' + ROOT() + 'eventpartners/">Event Directory</a> to save it here.</div>'; contentEl.innerHTML = html; return; }
+    html += items.map(function (s) {
+      var d = s.data || {};
+      var loc = [(d.cities || []).filter(Boolean).join(', '), d.country].filter(Boolean).join(', ');
+      var when = d.dateLabel || d.startDate || '';
+      if (d.startTime) when += (when ? ' · ' : '') + fmtTime(d.startTime) + (d.endTime ? '–' + fmtTime(d.endTime) : '');
+      var comm = (d.communities || []).filter(Boolean).join(' + ');
+      var tags = '';
+      if (d.format) tags += '<span class="acct-ev-tag">' + esc(d.format) + '</span>';
+      if (d.entranceFee) tags += '<span class="acct-ev-tag">' + esc(d.entranceFee) + '</span>';
+      tags += (d.languages || []).map(function (l) { return '<span class="acct-ev-tag acct-ev-tag--lang">' + esc(l) + '</span>'; }).join('');
+      return '<div class="acct-card acct-ev-card">' +
+        (s.url ? '<a href="' + esc(s.url) + '" class="acct-ev-link">' : '<div>') +
+          '<div class="acct-ev-title">' + esc(s.title || d.series || s.item_ref) + '</div>' +
+          (comm ? '<div class="acct-ev-comm">' + esc(comm) + '</div>' : '') +
+          '<div class="acct-ev-meta">' +
+            (loc ? '<span>📍 ' + esc(loc) + '</span>' : '') +
+            (when ? '<span>🗓 ' + esc(when) + '</span>' : '') +
+          '</div>' +
+          (tags ? '<div class="acct-ev-tags">' + tags + '</div>' : '') +
+        (s.url ? '</a>' : '</div>') +
+        '<div class="acct-btn-row"><button class="acct-btn acct-btn-danger" data-ev-remove="' + esc(s.item_ref) + '">Remove</button></div>' +
+      '</div>';
     }).join('');
     contentEl.innerHTML = html;
+    contentEl.querySelectorAll('[data-ev-remove]').forEach(function (b) {
+      b.addEventListener('click', async function () {
+        b.disabled = true;
+        try {
+          await RA.unsaveItem('event', b.dataset.evRemove);
+          SAVED = SAVED.filter(function (s) { return !(s.item_type === 'event' && s.item_ref === b.dataset.evRemove); });
+          renderSaved();
+        } catch (e) { b.disabled = false; alert('Could not remove: ' + (e.message || e)); }
+      });
+    });
+  }
+
+  // ─────────── My Shopping Cart (saved marketplace products) ───────────
+  function renderCart() {
+    var items = SAVED.filter(function (s) { return s.item_type === 'product'; });
+    var html = '<h1 class="acct-h1">My Shopping Cart</h1><p class="acct-sub">Products you\'ve saved from the Marketplace. Contact the seller to buy.</p>';
+    if (!items.length) {
+      html += '<div class="acct-empty">Your cart is empty. Browse the <a class="acct-role-cta" href="' + ROOT() + 'resources/marketplace/">Marketplace</a> and add products here.</div>';
+      contentEl.innerHTML = html; return;
+    }
+    html += items.map(function (s) {
+      var d = s.data || {};
+      var img = null; try { img = d.image_url ? RA.productImageUrl(d.image_url) : null; } catch (e) {}
+      var priceHtml = (d.price == null || d.price === '') ? '<span class="mp-lp-now">—</span>' : mpPriceHtml({ price: d.price, original_price: d.original_price, currency: d.currency });
+      return '<div class="acct-card mp-listing">' +
+        '<div class="mp-listing-row">' +
+          '<div class="mp-listing-thumb"' + (img ? ' style="background-image:url(\'' + esc(img) + '\')"' : '') + '>' + (img ? '' : '🛍️') + '</div>' +
+          '<div class="mp-listing-main"><div class="mp-listing-title">' + esc(s.title || 'Product') + '</div>' +
+            '<div class="mp-listing-price">' + priceHtml + '</div></div>' +
+        '</div>' +
+        '<div class="acct-btn-row">' +
+          '<a class="acct-btn" href="' + esc(s.url || (ROOT() + 'resources/marketplace/')) + '">View in Marketplace</a>' +
+          '<button class="acct-btn acct-btn-danger" data-cart-remove="' + esc(s.item_ref) + '">Remove</button>' +
+        '</div></div>';
+    }).join('');
+    contentEl.innerHTML = html;
+    contentEl.querySelectorAll('[data-cart-remove]').forEach(function (b) {
+      b.addEventListener('click', async function () {
+        b.disabled = true;
+        try {
+          await RA.unsaveItem('product', b.dataset.cartRemove);
+          SAVED = SAVED.filter(function (s) { return !(s.item_type === 'product' && s.item_ref === b.dataset.cartRemove); });
+          renderCart(); renderNav();
+        } catch (e) { b.disabled = false; alert('Could not remove: ' + (e.message || e)); }
+      });
+    });
   }
 
   // ─────────── Calendar ───────────
@@ -595,7 +662,7 @@
     var items = MYEVENTS || [];
     var live = items.filter(function (e) { return e.status === 'approved'; }).length;
     var pend = items.filter(function (e) { return e.status === 'pending'; }).length;
-    var html = '<h1 class="acct-h1">My Events</h1><p class="acct-sub">Submit events to the RealLingo directory — each is reviewed before going public.</p>';
+    var html = '<h1 class="acct-h1">Hosted Events</h1><p class="acct-sub">Submit events to the RealLingo directory — each is reviewed before going public.</p>';
     html += '<div class="acct-card"><div class="acct-stats">' +
       '<div class="acct-stat"><div class="acct-stat-num">' + live + '</div><div class="acct-stat-lbl">Live</div></div>' +
       '<div class="acct-stat"><div class="acct-stat-num">' + pend + '</div><div class="acct-stat-lbl">Pending</div></div>' +
@@ -769,6 +836,12 @@
 
   async function open(mountEl) {
     build(mountEl); show();
+    // deep-link: /dashboard/?s=cart opens that section directly
+    try {
+      var _s = new URLSearchParams(location.search).get('s');
+      var _valid = ['dashboard','roles','saved','calendar','cart','marketplace','applications','settings','myevents','adminreview','eventreview'];
+      if (_s && _valid.indexOf(_s) >= 0) CURRENT = _s;
+    } catch (e) {}
     contentEl.innerHTML = '<div class="acct-loading">Loading your account…</div>';
     if (typeof RA === 'undefined') { contentEl.innerHTML = '<div class="acct-loading">Account tools failed to load. Please reload.</div>'; return; }
     try {

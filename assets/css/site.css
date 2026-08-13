@@ -181,10 +181,10 @@
 }
 .site-btn-solid:hover { background: var(--dark-mid); transform: translateY(-1px); }
 
-/* Calendar icon shown in the header bar on mobile (next to the logo). Hidden on
-   desktop, where .site-actions carries the calendar button instead. */
-.site-cal-mobile { display: none; width: 40px; height: 40px; padding: 0; border: none; background: none; cursor: pointer; color: var(--dark); align-items: center; justify-content: center; }
-.site-cal-mobile svg { width: 23px; height: 23px; }
+/* Calendar + cart icons shown in the header bar on mobile (next to the logo).
+   Hidden on desktop, where .site-actions carries these buttons instead. */
+.site-hdr-ic { display: none; width: 40px; height: 40px; padding: 0; border: none; background: none; cursor: pointer; color: var(--dark); align-items: center; justify-content: center; text-decoration: none; }
+.site-hdr-ic svg { width: 23px; height: 23px; }
 
 .site-burger {
   display: none; width: 40px; height: 40px; border: none; background: none; cursor: pointer;
@@ -220,9 +220,11 @@
   .site-actions .site-btn-solid, .site-actions .site-btn-ghost { text-align: center; }
   .site-actions .site-hi { text-align: center; }
   .site-burger { display: flex; }
-  /* show the header calendar icon next to the logo; push the burger to the far
-     right; and drop the now-duplicate calendar button from inside the menu. */
-  .site-cal-mobile { display: inline-flex; margin-right: auto; margin-left: .35rem; }
+  /* show the header calendar + cart icons next to the logo; push the burger to
+     the far right; and drop the now-duplicate buttons from inside the menu. */
+  .site-hdr-ic { display: inline-flex; }
+  .site-cal-mobile { margin-left: .35rem; }
+  .site-cart-mobile { margin-right: auto; }
   .site-actions .site-cal-btn { display: none; }
 }
 
