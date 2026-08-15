@@ -22,6 +22,25 @@ const LANGUAGES = [
   {key:'spanish', label:'Spanish', variants:[]},
 ];
 
+// Other world languages (everything apart from the five above). Chosen from a
+// dropdown under the "Other language" option, each with its own proficiency.
+const WORLD_LANGUAGES = [
+  'English','Japanese','German','Portuguese','Italian','Russian','Hindi','Urdu',
+  'Bengali','Punjabi','Tamil','Telugu','Marathi','Gujarati','Turkish','Persian / Farsi',
+  'Hebrew','Vietnamese','Thai','Indonesian','Malay','Tagalog / Filipino','Burmese',
+  'Khmer','Lao','Nepali','Sinhala','Mongolian','Dutch','Polish','Ukrainian','Czech',
+  'Slovak','Romanian','Hungarian','Greek','Swedish','Norwegian','Danish','Finnish',
+  'Icelandic','Bulgarian','Serbian','Croatian','Bosnian','Albanian','Georgian',
+  'Armenian','Azerbaijani','Kazakh','Uzbek','Pashto','Swahili','Amharic','Hausa',
+  'Yoruba','Igbo','Zulu','Afrikaans','Somali','Sign Language',
+].map(name => ({ key: name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, ''), label: name }));
+
+// Expose "Other language" as a sixth pickable language whose "variants" are the
+// world languages above, so the existing variant + level machinery (render,
+// validate, save/load to profile_languages) handles it with no special casing
+// in the data layer.
+LANGUAGES.push({ key: 'other', label: 'Other language', variants: WORLD_LANGUAGES });
+
 const LANG_LEVELS = [
   {k:'beginner',     l:'Beginner'},
   {k:'intermediate', l:'Intermediate'},

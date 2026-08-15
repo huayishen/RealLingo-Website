@@ -171,7 +171,7 @@
     // invite them to complete it. Goes to the quiz in edit mode, which loads
     // their account and skips the email/password/verify step entirely.
     if (p.onboarding_complete === false) {
-      html += '<a class="acct-complete-cta" href="' + ROOT() + 'signup/' + esc(p.onboarding_flow || 'all') + '/?edit=1">' +
+      html += '<a class="acct-complete-cta" href="' + ROOT() + 'signup/user/">' +
         '<div class="acct-complete-txt"><strong>Complete your profile</strong>' +
         '<span>Answer a few quick questions so we can match you with the right people and opportunities.</span></div>' +
         '<span class="acct-complete-arrow">→</span></a>';
@@ -186,7 +186,7 @@
     html += '<h2 class="acct-h2">Roles</h2>';
     html += DATA.roles.length
       ? '<div class="acct-chips">' + DATA.roles.map(function (rr) { var m = ROLE_META[rr.role_key] || {}; return '<span class="acct-chip">' + (m.icon || '⭐') + ' ' + esc(m.label || rr.role_key) + '</span>'; }).join('') + '</div>'
-      : '<div class="acct-empty">No roles yet. <a class="acct-role-cta" href="' + ROOT() + 'signup/' + esc(p.onboarding_flow || 'all') + '/?edit=1">Add roles →</a></div>';
+      : '<div class="acct-empty">No roles yet. <a class="acct-role-cta" href="' + ROOT() + 'signup/user/?edit=1">Add roles →</a></div>';
     html += '<h2 class="acct-h2">Languages</h2><div class="acct-card">' + esc(formatLanguages(DATA.languages)) + '</div>';
     function kv(l, v) { return '<div class="acct-kv"><div class="acct-kv-lbl">' + esc(l) + '</div><div class="acct-kv-val">' + esc(v || '—') + '</div></div>'; }
     html += '<h2 class="acct-h2">Contact</h2><div class="acct-card"><div class="acct-2col">' +
@@ -198,7 +198,7 @@
 
   function renderRoles() {
     var p = DATA.profile;
-    if (!DATA.roles.length) { contentEl.innerHTML = '<h1 class="acct-h1">My Roles</h1><div class="acct-empty">No roles selected yet. <a class="acct-role-cta" href="' + ROOT() + 'signup/' + esc(p.onboarding_flow || 'all') + '/?edit=1">Add roles →</a></div>'; return; }
+    if (!DATA.roles.length) { contentEl.innerHTML = '<h1 class="acct-h1">My Roles</h1><div class="acct-empty">No roles selected yet. <a class="acct-role-cta" href="' + ROOT() + 'signup/user/?edit=1">Add roles →</a></div>'; return; }
     var html = '<h1 class="acct-h1">My Roles</h1><p class="acct-sub">Tap a role to see its details.</p>';
     DATA.roles.forEach(function (rr) {
       var r = rr.role_key, m = ROLE_META[r] || {}, detail = DATA.roleDetails[r], rows = (detail && detail.details && detail.details.display_rows) || [];
@@ -208,14 +208,14 @@
         '<div class="acct-role-preview">' + esc(preview) + '</div>' +
         '<div class="acct-role-detail" style="display:none">' +
           rows.map(function (x) { return '<div class="acct-row"><span class="acct-row-lbl">' + esc(x.l) + '</span><span class="acct-row-val">' + esc(x.v) + '</span></div>'; }).join('') +
-          '<div style="margin-top:.8rem"><a class="acct-btn acct-btn-solid" href="' + ROOT() + 'signup/' + esc(p.onboarding_flow || 'all') + '/?edit=1">Edit in full editor →</a></div>' +
+          '<div style="margin-top:.8rem"><a class="acct-btn acct-btn-solid" href="' + ROOT() + 'signup/user/?edit=1">Edit in full editor →</a></div>' +
         '</div>' +
         '<div class="acct-role-cta acct-role-toggle">View details →</div>' +
       '</div>';
     });
     // Add-a-role affordance — opens the full editor (with the role picker) and
     // preserves the roles they already have.
-    html += '<a href="' + ROOT() + 'signup/all/?edit=1&addrole=1" style="display:block;text-align:center;margin-top:1rem;padding:.85rem;border:1.5px dashed var(--aborder);border-radius:12px;color:var(--adark);font-weight:700;font-size:.9rem;text-decoration:none">+ Add another role</a>';
+    html += '<a href="' + ROOT() + 'signup/user/?edit=1" style="display:block;text-align:center;margin-top:1rem;padding:.85rem;border:1.5px dashed var(--aborder);border-radius:12px;color:var(--adark);font-weight:700;font-size:.9rem;text-decoration:none">Edit my profile</a>';
     contentEl.innerHTML = html;
     contentEl.querySelectorAll('.acct-role-card').forEach(function (card) {
       card.addEventListener('click', function (e) {
@@ -851,7 +851,7 @@
       await ensureData();
       if (!DATA || !DATA.profile) {
         renderHeader(); renderNav();
-        contentEl.innerHTML = '<h1 class="acct-h1">Almost there</h1><div class="acct-empty">Your profile isn\'t set up yet. <a class="acct-role-cta" href="' + ROOT() + 'signup/all/?edit=1">Finish onboarding →</a></div>';
+        contentEl.innerHTML = '<h1 class="acct-h1">Almost there</h1><div class="acct-empty">Your profile isn\'t set up yet. <a class="acct-role-cta" href="' + ROOT() + 'signup/user/">Finish onboarding →</a></div>';
         return;
       }
       renderHeader(); renderNav(); paint(CURRENT);

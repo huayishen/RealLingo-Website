@@ -448,6 +448,8 @@ function buildLangLevelHtml() {
 
 function renderLangSection(langDef) {
   const lk = langDef.key;
+  // "Other language" gets a dropdown-add UI instead of a wall of buttons.
+  if (lk === 'other') return renderOtherLangSection(langDef);
   const ld = formData.languages?.[lk] ?? (langDef.variants.length===0 ? '' : {});
   if (langDef.variants.length===0) {
     const level = typeof ld==='string' ? ld : '';
@@ -485,6 +487,54 @@ function langVarRow(lk, v, selVars){
   </div>`;
 }
 function setLangOther(lk, val){ if(!formData.langOther) formData.langOther = {}; formData.langOther[lk] = val; }
+
+/* ── "Other language" — pick any world language (apart from the five above)
+   from a dropdown, each with its own proficiency. Data lives in
+   formData.languages.other = { japanese:'fluent', … } so it saves/loads
+   through the same profile_languages machinery as every other language. ── */
+function renderOtherLangSection(langDef){
+  const ld = formData.languages && formData.languages.other;
+  const selVars = (ld && typeof ld==='object') ? ld : {};
+  const chosen = Object.keys(selVars);
+  const avail = langDef.variants.filter(v => !(v.key in selVars));
+  return `<div class="lang-section" id="langSect-other">
+    <div class="lang-section-hd">${esc(langDef.label)}</div>
+    <div id="otherLangRows">
+      ${chosen.map(vk => { const v = langDef.variants.find(x=>x.key===vk) || {key:vk,label:vk}; return langOtherRow(v, selVars); }).join('')}
+    </div>
+    <select class="fs" id="otherLangAdd" onchange="addOtherLang(this.value)" style="margin-top:.65rem">
+      <option value="">+ Add a language…</option>
+      ${avail.map(v=>`<option value="${v.key}">${esc(v.label)}</option>`).join('')}
+    </select>
+  </div>`;
+}
+function langOtherRow(v, selVars){
+  return `<div class="lang-level-row" id="orow-${v.key}">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem">
+      <span class="lang-level-label">${esc(v.label)}</span>
+      <button type="button" class="lvl-btn" style="padding:.3rem .6rem;opacity:.75" onclick="removeOtherLang('${v.key}')">Remove</button>
+    </div>
+    <div class="lang-level-opts">
+      ${LANG_LEVELS.map(lv=>`<button type="button" class="lvl-btn${selVars[v.key]===lv.k?' sel':''}" onclick="setLangLevel('other','${v.key}','${lv.k}')">${lv.l}</button>`).join('')}
+    </div>
+  </div>`;
+}
+function addOtherLang(vk){
+  if(!vk) return;
+  if(!formData.languages) formData.languages={};
+  if(!formData.languages.other || typeof formData.languages.other!=='object') formData.languages.other={};
+  formData.languages.other[vk]='';
+  rerenderOtherSection();
+}
+function removeOtherLang(vk){
+  if(formData.languages && formData.languages.other) delete formData.languages.other[vk];
+  rerenderOtherSection();
+}
+function rerenderOtherSection(){
+  const def = LANGUAGES.find(l=>l.key==='other');
+  const sect = document.getElementById('langSect-other');
+  if(sect && def){ const tmp=document.createElement('div'); tmp.innerHTML=renderLangSection(def); sect.replaceWith(tmp.firstElementChild); }
+}
 
 function toggleLang(lk) {
   if (!formData.languages) formData.languages = {};
@@ -1014,6 +1064,9 @@ function getReviewRows(sKey) {
       add('Role(s)', Array.from(selectedRoles).map(r=>ROLE_DISPLAY[r]).filter(Boolean).join(', '));
       add('Language(s)', formatLangsReview(formData.languages));
       add('Location', [formData.city,formData.country].filter(Boolean).join(', '));
+      add('Learning', lbls(formData.learnerLanguages));
+      add('Learning for', [...(formData.learnerPurpose||[]).map(lbl),formData.learnerPurposeOther].filter(Boolean).join(', '));
+      add('Looking for', [...(formData.learnerLooking||[]).map(lbl),formData.learnerLookingOther].filter(Boolean).join(', '));
       add('Qualifications', formatQualReview(formData.qualifications));
       add('Hiring as', formData.hiringAs==='company'?`Company — ${formData.companyName||''}${formData.companyIndustry?' ('+formData.companyIndustry+')':''}`:lbl(formData.hiringAs));
       add('Other role', formData.otherRole);
@@ -1129,6 +1182,9 @@ function injectUsernameStep() {
   if (!g || g.__unameInjected) return;
   const step = {
     tag:'General', q:'Choose a username', hint:"How you'll appear on RealLingo — you can change it later",
+    // When finishing a profile later (completion mode, not an explicit edit),
+    // don't re-ask a username that's already set.
+    skip() { return COMPLETION_MODE && !EDIT_MODE && !!formData.username; },
     html() {
       return `<input type="text" class="fi" id="inp-username" placeholder="e.g. yasmin_92" value="${esc(formData.username||'')}" autocomplete="off" spellcheck="false" maxlength="20">
         <div class="uname-status" id="unameStatus"></div>`;
@@ -1370,8 +1426,7 @@ async function onboardingInit() {
 
 async function saveEdits() {
   if (typeof RA === 'undefined') return showErr('Editing is unavailable right now. Please reload.');
-  const roles = Array.from(selectedRoles);
-  if (!roles.length) return showErr('Please keep at least one role selected.');
+  const roles = Array.from(selectedRoles);   // single event-user flow has none — that's fine
   const roleRows = {};
   roles.forEach(r => { try { roleRows[r] = getReviewRows(r); } catch(e){ roleRows[r] = []; } });
   const pending = {
