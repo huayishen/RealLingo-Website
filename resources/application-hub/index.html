@@ -22,10 +22,105 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/css/site.css?v=32">
-<link rel="stylesheet" href="../../assets/css/apphub.css?v=32">
 <style>
+  /* ═══════════════════════════════════════════════════════════════
+     Application Hub — shares the "Open Sources" design system with the
+     Scholarship & Online Resources pages: pale-yellow ground, centered
+     header, white rounded cards with a yellow gradient top accent + soft
+     shadow + hover lift, yellow-pale chips, dark pill CTAs. Same system,
+     different content. (Self-contained — no external apphub.css.)
+  ═══════════════════════════════════════════════════════════════ */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--font-sans); }
+  :root { --ah-dark:#111216; --ah-mid:#4a4840; --ah-soft:#8a8878; --ah-y:#ffeb99; --ah-ym:#f5d96a; --ah-yp:#fff7d6; --ah-border:rgba(17,18,22,.09); }
+  body { font-family: var(--font-sans); background: var(--cream-white, #fffff2); color: var(--ah-dark); }
+
+  /* ── Hero (centered header, matches Scholarship) ── */
+  .apphub-hero { max-width: 780px; margin: 0 auto; padding: 3.4rem 1.25rem 1rem; text-align: center; }
+  /* Relocated to the foot of the page: a closing "contribute" call-to-action. */
+  .apphub-hero--end { padding: 1rem 1.25rem 4.5rem; border-top: 1px solid var(--ah-border); margin-top: 1.5rem; padding-top: 3rem; }
+  .apphub-crumb { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ah-mid); margin-bottom: 1rem; }
+  .apphub-h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -.02em; color: var(--ah-dark); line-height: 1.1; margin-bottom: .7rem; }
+  .apphub-h1 em { font-style: italic; background: linear-gradient(180deg, transparent 62%, var(--ah-y) 62%); padding: 0 .08em; }
+  .apphub-sub { color: var(--ah-mid); font-size: 1.05rem; line-height: 1.65; max-width: 620px; margin: 0 auto 1.6rem; }
+  .apphub-hero-cta { display: inline-flex; align-items: center; gap: .5rem; padding: .95rem 2rem; border-radius: 100px; background: var(--ah-dark); color: #fff; font-family: inherit; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; text-decoration: none; transition: transform .18s ease, box-shadow .18s ease; }
+  .apphub-hero-cta:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -14px rgba(17,18,22,.55); }
+  .apphub-back { margin-top: 1.6rem; }
+  .apphub-back a { font-weight: 700; color: var(--ah-dark); text-decoration: none; }
+  .apphub-back a:hover { text-decoration: underline; }
+
+  /* ── Gallery ── */
+  .apphub-gallery { max-width: 1080px; margin: 0 auto; padding: 2.4rem 1.25rem 4.5rem; }
+  .apphub-gallery-head { text-align: center; margin-bottom: 2rem; }
+  .apphub-kicker { font-size: .72rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ah-soft); margin-bottom: .7rem; }
+  .apphub-h2 { font-size: clamp(1.6rem, 4vw, 2.3rem); font-weight: 800; letter-spacing: -.02em; color: var(--ah-dark); margin-bottom: .5rem; }
+  .apphub-h2 em { font-style: italic; background: linear-gradient(180deg, transparent 62%, var(--ah-y) 62%); padding: 0 .08em; }
+  .apphub-gallery-sub { color: var(--ah-mid); font-size: 1rem; line-height: 1.6; max-width: 560px; margin: 0 auto; }
+
+  .apphub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+  @media (max-width: 900px) { .apphub-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .apphub-grid { grid-template-columns: 1fr; } }
+
+  /* ── Card shell (shared) ── */
+  .apphub-card {
+    position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: flex-start;
+    background: #fff; border: 1px solid var(--ah-border); border-radius: 20px;
+    padding: 1.5rem 1.35rem 1.3rem; text-decoration: none; color: inherit;
+    box-shadow: 0 18px 44px -30px rgba(17,18,22,.4);
+    transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  }
+  .apphub-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--ah-y), var(--ah-ym)); opacity: 0; transition: opacity .22s ease; }
+  .apphub-card.filled:hover { transform: translateY(-4px); border-color: var(--ah-ym); box-shadow: 0 26px 60px -30px rgba(17,18,22,.45); }
+  .apphub-card.filled:hover::before { opacity: 1; }
+
+  /* Filled app card */
+  .apphub-card-app-icon { width: 48px; height: 48px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: .85rem; }
+  .apphub-card-app-name { font-size: 1.05rem; font-weight: 800; letter-spacing: -.01em; }
+  .apphub-card-app-desc { font-size: .86rem; line-height: 1.55; color: var(--ah-mid); margin-top: .4rem; }
+  .apphub-card-app-langs { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .85rem; }
+  .apphub-card-app-lang { font-size: .66rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #6a5800; background: var(--ah-yp); border: 1px solid rgba(230,198,74,.5); border-radius: 100px; padding: .25rem .6rem; }
+  .apphub-card-app-link { margin-top: 1rem; padding-top: .9rem; border-top: 1px solid var(--ah-border); width: 100%; font-size: .82rem; font-weight: 800; color: var(--ah-dark); transition: color .2s ease; }
+  .apphub-card.filled:hover .apphub-card-app-link { color: #9a7d00; }
+
+  /* "+" invite slot */
+  .apphub-card:not(.filled) { align-items: center; justify-content: center; text-align: center; gap: .5rem; min-height: 210px; cursor: pointer; background: rgba(255,247,214,.55); border: 1.5px dashed rgba(230,198,74,.75); font-family: inherit; transition: transform .22s ease, box-shadow .22s ease, background .22s ease; }
+  .apphub-card:not(.filled)::before { display: none; }
+  .apphub-card:not(.filled):hover { transform: translateY(-4px); background: rgba(255,240,178,.7); box-shadow: 0 26px 60px -30px rgba(17,18,22,.4); }
+  .apphub-card-icon { width: 54px; height: 54px; border-radius: 50%; border: 1.5px dashed var(--ah-ym); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: var(--ah-dark); }
+  .apphub-card-msg { font-size: 1.02rem; font-weight: 800; color: var(--ah-dark); }
+  .apphub-card-desc { font-size: .84rem; line-height: 1.5; color: var(--ah-mid); max-width: 220px; }
+
+  /* ── Modal ── */
+  .apphub-modal { border: none; padding: 0; border-radius: 24px; max-width: 560px; width: 92vw; background: #fff; box-shadow: 0 40px 90px -30px rgba(17,18,22,.55); color: var(--ah-dark); }
+  .apphub-modal::backdrop { background: rgba(17,18,22,.5); backdrop-filter: blur(2px); }
+  .apphub-modal-inner { padding: 2rem 2rem 2.2rem; max-height: 88vh; overflow-y: auto; }
+  .apphub-modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.3rem; }
+  .apphub-modal-title { font-size: 1.35rem; font-weight: 800; letter-spacing: -.01em; }
+  .apphub-modal-close { background: #f4f4f2; border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 1rem; cursor: pointer; color: var(--ah-mid); transition: background .18s ease; }
+  .apphub-modal-close:hover { background: #e9e9e5; }
+
+  .apphub-field { margin-bottom: 1.05rem; }
+  .apphub-field label { display: block; font-size: .82rem; font-weight: 700; color: var(--ah-dark); margin-bottom: .4rem; }
+  .apphub-field .opt { font-weight: 400; color: var(--ah-soft); }
+  .apphub-field input, .apphub-field textarea, .apphub-field select {
+    width: 100%; font-family: inherit; font-size: .92rem; color: var(--ah-dark);
+    background: #fff; border: 1px solid var(--ah-border); border-radius: 12px; padding: .7rem .9rem;
+  }
+  .apphub-field textarea { min-height: 88px; resize: vertical; }
+  .apphub-field input:focus, .apphub-field textarea:focus, .apphub-field select:focus { outline: 2px solid var(--ah-ym); outline-offset: 1px; border-color: var(--ah-ym); }
+
+  .apphub-chip-group { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .apphub-chip { cursor: pointer; }
+  .apphub-chip input { display: none; }
+  .apphub-chip span { display: inline-block; font-size: .8rem; font-weight: 700; color: var(--ah-mid); background: #fff; border: 1px solid var(--ah-border); border-radius: 100px; padding: .4rem .95rem; transition: background .18s ease, color .18s ease, border-color .18s ease; }
+  .apphub-chip input:checked + span { background: var(--ah-y); border-color: var(--ah-y); color: var(--ah-dark); }
+
+  .apphub-submit { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; width: 100%; margin-top: .6rem; padding: .95rem 2rem; border-radius: 100px; background: var(--ah-dark); color: #fff; font-family: inherit; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease; }
+  .apphub-submit:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -14px rgba(17,18,22,.55); }
+
+  .apphub-success { text-align: center; padding: 1rem 0; }
+  .apphub-success-icon { font-size: 2.6rem; margin-bottom: .5rem; }
+  .apphub-success h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: .5rem; }
+  .apphub-success p { color: var(--ah-mid); font-size: .92rem; line-height: 1.6; max-width: 400px; margin: 0 auto 1.3rem; }
 </style>
 </head>
 <body>
@@ -33,16 +128,6 @@
 <div id="site-header"></div>
 
 <main>
-    <section class="apphub-hero">
-        <div class="apphub-crumb">Open Sources / Application Hub</div>
-        <h1 class="apphub-h1">Apps built <em>with</em> the community</h1>
-        <p class="apphub-sub">The Application Hub is where developers, educators, and language lovers showcase the tools they've built for the RealLingo ecosystem — from study aids to translation helpers.</p>
-        <button type="button" class="apphub-hero-cta" data-open-modal>Share Your Application</button>
-        <div class="apphub-back">
-            <a href="../">← Back to Open Sources</a>
-        </div>
-    </section>
-
     <section class="apphub-gallery">
         <div class="apphub-gallery-head">
             <div class="apphub-kicker">Language-Learning Apps</div>
@@ -52,40 +137,40 @@
 
         <!-- Empty-state gallery: each .apphub-card is an open, clickable "slot."
              Once real apps exist, swap a card's inner markup for the
-             ".apphub-card.filled" shape documented in apphub.css — icon,
-             name, description, language chips, link, optional featured badge. -->
+             ".apphub-card.filled" shape — icon, name, description, language
+             chips, link, optional featured badge. -->
         <div class="apphub-grid" id="apphubGrid">
-            
+
             <a class="apphub-card filled" href="https://www.hellochinese.cc/" target="_blank" rel="noopener noreferrer" style="cursor:pointer">
-                <span class="apphub-card-app-icon" style="display:flex;align-items:center;justify-content:center;background:var(--yellow-pale);font-size:1.5rem">📱</span>
+                <span class="apphub-card-app-icon" style="background:var(--yellow-pale)">📱</span>
                 <span class="apphub-card-app-name">HelloChinese</span>
                 <span class="apphub-card-app-desc">Gamified app for Mandarin beginners — pronunciation, characters and grammar.</span>
                 <span class="apphub-card-app-langs"><span class="apphub-card-app-lang">Chinese</span></span>
                 <span class="apphub-card-app-link">Open app →</span>
             </a>
             <a class="apphub-card filled" href="https://www.pleco.com/" target="_blank" rel="noopener noreferrer" style="cursor:pointer">
-                <span class="apphub-card-app-icon" style="display:flex;align-items:center;justify-content:center;background:var(--yellow-pale);font-size:1.5rem">📖</span>
+                <span class="apphub-card-app-icon" style="background:var(--yellow-pale)">📖</span>
                 <span class="apphub-card-app-name">Pleco</span>
                 <span class="apphub-card-app-desc">The essential Chinese–English dictionary app, with OCR and flashcards.</span>
                 <span class="apphub-card-app-langs"><span class="apphub-card-app-lang">Chinese</span></span>
                 <span class="apphub-card-app-link">Open app →</span>
             </a>
             <a class="apphub-card filled" href="https://www.duchinese.net/" target="_blank" rel="noopener noreferrer" style="cursor:pointer">
-                <span class="apphub-card-app-icon" style="display:flex;align-items:center;justify-content:center;background:var(--yellow-pale);font-size:1.5rem">📚</span>
+                <span class="apphub-card-app-icon" style="background:var(--yellow-pale)">📚</span>
                 <span class="apphub-card-app-name">Du Chinese</span>
                 <span class="apphub-card-app-desc">Graded Mandarin reading with native audio, from beginner to advanced.</span>
                 <span class="apphub-card-app-langs"><span class="apphub-card-app-lang">Chinese</span></span>
                 <span class="apphub-card-app-link">Open app →</span>
             </a>
             <a class="apphub-card filled" href="https://apps.ankiweb.net/" target="_blank" rel="noopener noreferrer" style="cursor:pointer">
-                <span class="apphub-card-app-icon" style="display:flex;align-items:center;justify-content:center;background:var(--yellow-pale);font-size:1.5rem">🗂️</span>
+                <span class="apphub-card-app-icon" style="background:var(--yellow-pale)">🗂️</span>
                 <span class="apphub-card-app-name">Anki</span>
                 <span class="apphub-card-app-desc">Spaced-repetition flashcards for memorising vocabulary in any language.</span>
                 <span class="apphub-card-app-langs"><span class="apphub-card-app-lang">Multiple</span></span>
                 <span class="apphub-card-app-link">Open app →</span>
             </a>
             <a class="apphub-card filled" href="https://quizlet.com/" target="_blank" rel="noopener noreferrer" style="cursor:pointer">
-                <span class="apphub-card-app-icon" style="display:flex;align-items:center;justify-content:center;background:var(--yellow-pale);font-size:1.5rem">🧠</span>
+                <span class="apphub-card-app-icon" style="background:var(--yellow-pale)">🧠</span>
                 <span class="apphub-card-app-name">Quizlet</span>
                 <span class="apphub-card-app-desc">Study flashcards and play learning games on any device.</span>
                 <span class="apphub-card-app-langs"><span class="apphub-card-app-lang">Multiple</span></span>
@@ -96,6 +181,16 @@
                 <span class="apphub-card-msg" data-msg></span>
                 <span class="apphub-card-desc">Built a language app? Share it with the RealLingo community.</span>
             </button>
+        </div>
+    </section>
+
+    <section class="apphub-hero apphub-hero--end">
+        <div class="apphub-crumb">Open Sources / Application Hub</div>
+        <h1 class="apphub-h1">Apps built <em>with</em> the community</h1>
+        <p class="apphub-sub">The Application Hub is where developers, educators, and language lovers showcase the tools they've built for the RealLingo ecosystem — from study aids to translation helpers.</p>
+        <button type="button" class="apphub-hero-cta" data-open-modal>Share Your Application</button>
+        <div class="apphub-back">
+            <a href="../">← Back to Open Sources</a>
         </div>
     </section>
 </main>

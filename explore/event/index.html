@@ -260,7 +260,7 @@
                 </span> <img src="../../assets/img/logo-yellow.png" alt="Real lingo" class="rl-mark-img">
             </p>
             <div class="ex-edit-ctas">
-                <a href="../../signup/user/?sel=eventMember" class="ex-cta">Sign Up Now</a>
+                <a href="../../signup/user/" class="ex-cta" id="exSignupCta">Sign Up Now</a>
                 <a href="../../eventpartners/" class="ex-cta-outline">All Events</a>
                 <div class="ex-cta-flyout-wrap">
                     <a href="../resources/" class="ex-cta-outline">Open Sources</a>
@@ -377,6 +377,32 @@
   window.SITE_ROOT = "../../";
   window.SITE_SECTION = "explore";
   window.SITE_PAGE = "explore/event";
+
+  // Hero CTA: logged-out visitors get "Sign Up Now" → the signup flow; a
+  // logged-in visitor instead gets "My Events" → their saved events in the
+  // dashboard. Uses the same lightweight localStorage session check nav.js does,
+  // so no extra scripts are loaded.
+  (function () {
+    var btn = document.getElementById('exSignupCta');
+    if (!btn) return;
+    function loggedIn() {
+      try {
+        for (var i = 0; i < localStorage.length; i++) {
+          var k = localStorage.key(i);
+          if (!/^sb-.*-auth-token$/.test(k)) continue;
+          var v = JSON.parse(localStorage.getItem(k) || 'null');
+          var s = v && (v.currentSession || v);
+          if (s && s.access_token) {
+            var e = s.expires_at || s.expiresAt;
+            if (!e || e * 1000 >= Date.now()) return true;
+          }
+          break;
+        }
+      } catch (e) {}
+      return false;
+    }
+    if (loggedIn()) { btn.textContent = 'My Events'; btn.setAttribute('href', '../../dashboard/?s=saved'); }
+  })();
 
   // Load the hero video ONLY on wider screens. Small screens (≤760px) show the
   // static photo collage instead, and must never download the video — so the

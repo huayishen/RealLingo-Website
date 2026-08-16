@@ -27,7 +27,9 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { font-family: var(--font-sans); }
+  /* Match the Join-Us hero (.jn-hero) so the "Our Team" section and the
+     "How can you join" section share one seamless cream-white ground. */
+  body { font-family: var(--font-sans); background: var(--cream-white); }
   .team-section { padding: 6rem 4rem; max-width: 1280px; margin: 0 auto; scroll-margin-top: 90px; }
   .team-kicker { font-size: .7rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: var(--text-soft); margin-bottom: .875rem; }
   .team-h2 { font-family: var(--font-serif); font-size: clamp(2rem, 3.5vw, 3.2rem); font-weight: 400; line-height: 1.1; }
@@ -123,7 +125,7 @@
                     <div class="tg-cta-icon" aria-hidden="true">+</div>
                     <div class="tg-name">Join Our Team</div>
                     <p class="tg-cta-text">Love languages and connecting cultures? We're always looking for people who do too.</p>
-                    <button type="button" class="tg-cta-btn" id="tgApplyBtn">Apply Now</button>
+                    <a href="https://forms.gle/uXdj4TMQJWpFUHPL7" target="_blank" rel="noopener" class="tg-cta-btn" id="tgApplyBtn">Apply Now</a>
                 </div>
 
             </div>
@@ -585,7 +587,8 @@
     }
     function closeModal() { dialog.close(); }
 
-    applyBtn.addEventListener('click', openModal);
+    // "Apply Now" now links straight to the Google application form (see the
+    // anchor #tgApplyBtn above), so the in-page modal is no longer opened.
     closeBtn.addEventListener('click', closeModal);
     cancelBtn.addEventListener('click', closeModal);
     dialog.addEventListener('click', function (e) { if (e.target === dialog) closeModal(); });
