@@ -119,8 +119,12 @@
   .mp-cart-btn:hover:not(:disabled) { background: var(--mp-yp); }
   .mp-cart-btn.in-cart { background: var(--mp-y); border-color: var(--mp-y); }
   .mp-cart-btn:disabled { opacity: .6; cursor: not-allowed; }
-  .mp-contact-btn { width: 100%; padding: .9rem; border: none; border-radius: 100px; background: var(--mp-dark); color: #fff; font-family: inherit; font-weight: 700; font-size: .95rem; cursor: pointer; }
+  .mp-contact-btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; width: 100%; padding: .9rem; border: none; border-radius: 100px; background: var(--mp-dark); color: #fff; font-family: inherit; font-weight: 700; font-size: .95rem; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; }
+  .mp-contact-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -12px rgba(17,18,22,.55); }
+  .mp-contact-btn svg { flex: 0 0 auto; }
   .mp-contact-reveal { margin-top: .9rem; padding: 1rem; border-radius: 12px; background: var(--mp-yp); border: 1px solid rgba(230,198,74,.4); text-align: center; font-weight: 700; word-break: break-word; }
+  .mp-contact-reveal a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+  .mp-contact-reveal a:hover { color: #1a8a4a; }
   .mp-back { display: inline-block; margin-top: 2.5rem; font-weight: 700; color: var(--mp-dark); text-decoration: none; }
   @media (max-width: 520px){ .mp-row2 { grid-template-columns: 1fr; } }
 </style>
@@ -355,7 +359,7 @@
       descBlock +
       '<div class="mp-detail-rows">'+ row('Condition', r.condition)+row('Category', r.category)+row('Location', r.location)+'</div>' +
       '<button class="mp-cart-btn'+(CART[r.id]?' in-cart':'')+'" id="mpCartBtn">'+(CART[r.id]?'✓ In your cart':'🛒 Add to cart')+'</button>' +
-      '<button class="mp-contact-btn" id="mpReveal">Show seller contact</button>' +
+      '<button class="mp-contact-btn" id="mpReveal"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17.5 14.38c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.07-.3-.15-1.27-.47-2.42-1.49-.9-.8-1.5-1.79-1.67-2.09-.17-.3-.02-.46.13-.61.14-.14.3-.35.44-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.79.37s-1.04 1.02-1.04 2.48c0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.7h-.01a9.6 9.6 0 0 1-4.88-1.34l-.35-.2-3.63.95.97-3.54-.23-.36a9.56 9.56 0 0 1-1.47-5.1c0-5.29 4.32-9.6 9.63-9.6a9.56 9.56 0 0 1 9.6 9.61c0 5.29-4.32 9.6-9.6 9.6zM17.5 5.98A8.14 8.14 0 0 0 12.05 3.7c-4.5 0-8.16 3.66-8.16 8.16 0 1.54.43 3.04 1.25 4.34l-.83 3.03 3.1-.81c1.25.68 2.66 1.04 4.09 1.04h.01c4.5 0 8.16-3.66 8.16-8.16a8.11 8.11 0 0 0-2.38-5.76z"/></svg>Contact the Seller</button>' +
       '<div id="mpRevealBox"></div>';
 
     renderPriceBlock(r);   // price + local-currency toggle
@@ -397,9 +401,21 @@
       }); });
     }
 
+    // Render the seller contact as a clickable link where possible: a phone /
+    // WhatsApp number opens a WhatsApp chat, an email opens the mail client,
+    // and a URL opens in a new tab. Anything else stays as plain text.
+    function mpContactLink(v){
+      v = (v==null?'':String(v)).trim();
+      if(!v) return 'No contact provided';
+      if(/^https?:\/\//i.test(v)) return '<a href="'+esc(v)+'" target="_blank" rel="noopener">'+esc(v)+'</a>';
+      if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return '<a href="mailto:'+esc(v)+'">'+esc(v)+'</a>';
+      var digits = v.replace(/[^\d]/g,'');
+      if(/^\+?[\d\s\-().]{6,}$/.test(v) && digits.length>=7) return '<a href="https://wa.me/'+digits+'" target="_blank" rel="noopener">💬 '+esc(v)+'</a>';
+      return esc(v);
+    }
     document.getElementById('mpReveal').addEventListener('click', function(){
       this.style.display='none';
-      document.getElementById('mpRevealBox').innerHTML = '<div class="mp-contact-reveal">'+esc(r.contact||'No contact provided')+'</div>';
+      document.getElementById('mpRevealBox').innerHTML = '<div class="mp-contact-reveal">'+mpContactLink(r.contact)+'</div>';
     });
 
     // Add to / remove from the shopping cart (saved products)
