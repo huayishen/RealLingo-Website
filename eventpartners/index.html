@@ -21,8 +21,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/site.css?v=33">
-<link rel="stylesheet" href="../assets/css/event-network.css?v=33">
+<link rel="stylesheet" href="../assets/css/site.css?v=34">
+<link rel="stylesheet" href="../assets/css/event-network.css?v=34">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font-sans); }
@@ -279,6 +279,7 @@
     transition: background .2s, transform .2s, box-shadow .2s;
   }
   .ep-apply-cta:hover { background: var(--yellow-mid); transform: translateY(-2px); box-shadow: 0 12px 26px rgba(0,0,0,.3); }
+  .ep-apply-note { margin-top: 1rem; font-size: .78rem; color: rgba(255,255,255,.4); letter-spacing: .01em; }
 
   @media (max-width: 760px) {
     .ep-card-summary { padding: 1.5rem 1.6rem; }
@@ -455,10 +456,11 @@
 
   <section class="ep-apply">
     <div class="ep-apply-inner">
-      <div class="ep-apply-kicker">Become a Partner</div>
-      <h2 class="ep-apply-h2">Host the next <em>language community</em> event</h2>
-      <p class="ep-apply-sub">Have a venue, a following, or an idea for a language event? Apply as an Event Partner and we'll take it from there.</p>
-      <a href="../signup/join-us/?sel=languageEvent" class="ep-apply-cta">Apply to Be an Event Partner →</a>
+      <div class="ep-apply-kicker">Submit an Event</div>
+      <h2 class="ep-apply-h2">Have a language event? <em>Put it on the map.</em></h2>
+      <p class="ep-apply-sub">Language exchange, workshop, cultural meetup or webinar — anyone can list an upcoming event on RealLingo and put it in front of language learners across the region. Just fill out a short form; our team reviews every submission to keep the directory high-quality, and once approved it goes live — usually within 1–3 working days.</p>
+      <a href="https://forms.gle/BfTjLFdWPkq6sbAk6" target="_blank" rel="noopener" class="ep-apply-cta">Submit an Upcoming Event →</a>
+      <div class="ep-apply-note">Free to submit · Reviewed within 1–3 working days</div>
     </div>
   </section>
 </main>
@@ -470,8 +472,8 @@
   window.SITE_SECTION = "explore";
   window.SITE_PAGE = "eventpartners";
 </script>
-<script src="../assets/js/supabase-client.js?v=33"></script>
-<script src="../assets/js/auth.js?v=33"></script>
+<script src="../assets/js/supabase-client.js?v=34"></script>
+<script src="../assets/js/auth.js?v=34"></script>
 <script>
   /* ════════════════════════════════════════════════════════════
      EVENT DIRECTORY — single data source driving the card list,
@@ -1035,7 +1037,7 @@
 
   render();
   initSaves();   // mark already-saved events for a signed-in visitor
-  wirePartnerCta();
+  // Event submission is now a direct link to the Google Form — no CTA wiring.
   loadEventsFromDb();
 
   // The directory is now DB-backed: swap the built-in list for the live set of
@@ -1147,6 +1149,6 @@
     }, 2000);
   })();
 </script>
-<script src="../assets/js/nav.js?v=33" defer></script>
+<script src="../assets/js/nav.js?v=34" defer></script>
 </body>
 </html>

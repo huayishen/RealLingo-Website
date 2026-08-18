@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/site.css?v=33">
+<link rel="stylesheet" href="../../assets/css/site.css?v=34">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root { --mp-dark:#111216; --mp-mid:#4a4840; --mp-soft:#8a8878; --mp-y:#ffeb99; --mp-ym:#f5d96a; --mp-yp:#fff7d6; --mp-bg:#f4f4f2; --mp-card:#fff; --mp-border:rgba(17,18,22,.1); }
@@ -125,6 +125,21 @@
   .mp-contact-reveal { margin-top: .9rem; padding: 1rem; border-radius: 12px; background: var(--mp-yp); border: 1px solid rgba(230,198,74,.4); text-align: center; font-weight: 700; word-break: break-word; }
   .mp-contact-reveal a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
   .mp-contact-reveal a:hover { color: #1a8a4a; }
+
+  /* ── Share this product (WhatsApp / WeChat QR / Copy link) ── */
+  .mp-share { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--mp-border); }
+  .mp-share-label { display: block; font-size: .72rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--mp-soft); margin-bottom: .55rem; }
+  .mp-share-btns { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .mp-share-btn { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1rem; border-radius: 100px; border: 1px solid var(--mp-border); background: #fff; color: var(--mp-dark); font-family: inherit; font-weight: 700; font-size: .85rem; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease, border-color .15s ease; }
+  .mp-share-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 18px -10px rgba(17,18,22,.4); }
+  .mp-share-wa:hover { background: #25D366; border-color: #25D366; color: #fff; }
+  .mp-share-wc:hover { background: #07C160; border-color: #07C160; color: #fff; }
+  .mp-share-qr { margin-top: .9rem; }
+  .mp-share-qr-inner { display: inline-flex; flex-direction: column; align-items: center; gap: .5rem; padding: 1rem; background: #fff; border: 1px solid var(--mp-border); border-radius: 14px; }
+  .mp-share-qr-inner img { display: block; border-radius: 6px; }
+  .mp-share-qr-cap { font-size: .75rem; color: var(--mp-mid); text-align: center; line-height: 1.5; }
+  .mp-toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%,12px); background: var(--mp-dark); color: #fff; padding: .7rem 1.2rem; border-radius: 100px; font-size: .85rem; font-weight: 700; box-shadow: 0 12px 30px -10px rgba(17,18,22,.6); opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease; z-index: 9500; }
+  .mp-toast.show { opacity: 1; transform: translate(-50%,0); }
   .mp-back { display: inline-block; margin-top: 2.5rem; font-weight: 700; color: var(--mp-dark); text-decoration: none; }
   @media (max-width: 520px){ .mp-row2 { grid-template-columns: 1fr; } }
 </style>
@@ -205,9 +220,9 @@
   window.SITE_SECTION = "marketplace";
   window.SITE_PAGE = "resources/marketplace";
 </script>
-<script src="../../assets/js/nav.js?v=33" defer></script>
-<script src="../../assets/js/supabase-client.js?v=33"></script>
-<script src="../../assets/js/auth.js?v=33"></script>
+<script src="../../assets/js/nav.js?v=34" defer></script>
+<script src="../../assets/js/supabase-client.js?v=34"></script>
+<script src="../../assets/js/auth.js?v=34"></script>
 <script>
 (function () {
   var grid = document.getElementById('mpGrid'), stateEl = document.getElementById('mpState');
@@ -309,7 +324,7 @@
 
   function load(){
     if (typeof RA === 'undefined'){ stateEl.textContent = 'Marketplace is unavailable right now.'; return; }
-    RA.listMarketplace().then(function(rows){ ALL = rows; applyFilters(); })
+    RA.listMarketplace().then(function(rows){ ALL = rows; applyFilters(); mpOpenFromParam(); })
       .catch(function(e){ console.error(e); stateEl.textContent = 'Could not load products.'; });
     // load which products are already in the signed-in user's cart
     try { RA.getUser().then(function(u){ if (u) RA.loadSaved().then(function(rows){ (rows||[]).forEach(function(x){ if (x.item_type === 'product') CART[x.item_ref] = true; }); }).catch(function(){}); }).catch(function(){}); } catch(e){}
@@ -360,7 +375,12 @@
       '<div class="mp-detail-rows">'+ row('Condition', r.condition)+row('Category', r.category)+row('Location', r.location)+'</div>' +
       '<button class="mp-cart-btn'+(CART[r.id]?' in-cart':'')+'" id="mpCartBtn">'+(CART[r.id]?'✓ In your cart':'🛒 Add to cart')+'</button>' +
       '<button class="mp-contact-btn" id="mpReveal"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17.5 14.38c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.07-.3-.15-1.27-.47-2.42-1.49-.9-.8-1.5-1.79-1.67-2.09-.17-.3-.02-.46.13-.61.14-.14.3-.35.44-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.79.37s-1.04 1.02-1.04 2.48c0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.7h-.01a9.6 9.6 0 0 1-4.88-1.34l-.35-.2-3.63.95.97-3.54-.23-.36a9.56 9.56 0 0 1-1.47-5.1c0-5.29 4.32-9.6 9.63-9.6a9.56 9.56 0 0 1 9.6 9.61c0 5.29-4.32 9.6-9.6 9.6zM17.5 5.98A8.14 8.14 0 0 0 12.05 3.7c-4.5 0-8.16 3.66-8.16 8.16 0 1.54.43 3.04 1.25 4.34l-.83 3.03 3.1-.81c1.25.68 2.66 1.04 4.09 1.04h.01c4.5 0 8.16-3.66 8.16-8.16a8.11 8.11 0 0 0-2.38-5.76z"/></svg>Contact the Seller</button>' +
-      '<div id="mpRevealBox"></div>';
+      '<div id="mpRevealBox"></div>' +
+      '<div class="mp-share"><span class="mp-share-label">Share this product</span><div class="mp-share-btns">' +
+        '<button type="button" class="mp-share-btn mp-share-wa" id="mpShareWa"><svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M17.5 14.38c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.07-.3-.15-1.27-.47-2.42-1.49-.9-.8-1.5-1.79-1.67-2.09-.17-.3-.02-.46.13-.61.14-.14.3-.35.44-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.79.37s-1.04 1.02-1.04 2.48c0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.7h-.01a9.6 9.6 0 0 1-4.88-1.34l-.35-.2-3.63.95.97-3.54-.23-.36a9.56 9.56 0 0 1-1.47-5.1c0-5.29 4.32-9.6 9.63-9.6a9.56 9.56 0 0 1 9.6 9.61c0 5.29-4.32 9.6-9.6 9.6z"/></svg>WhatsApp</button>' +
+        '<button type="button" class="mp-share-btn mp-share-wc" id="mpShareWc"><svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M8.69 4C4.6 4 1.5 6.74 1.5 10.2c0 1.9.98 3.6 2.6 4.78L3.4 17.2l2.6-1.35c.5.14 1.02.24 1.55.28-.1-.42-.15-.85-.15-1.28 0-3.02 2.86-5.4 6.3-5.4.2 0 .4.01.6.03C13.9 6.3 11.6 4 8.69 4Zm-2.4 3.02a.86.86 0 1 1 0 1.72.86.86 0 0 1 0-1.72Zm4.9 0a.86.86 0 1 1 0 1.72.86.86 0 0 1 0-1.72Zm3.62 3.06c-2.9 0-5.26 1.98-5.26 4.44 0 2.46 2.36 4.44 5.26 4.44.6 0 1.18-.09 1.72-.25L18.7 20l-.5-1.52c1.36-.98 2.22-2.42 2.22-4.02 0-2.46-2.36-4.42-5.62-4.42Zm-1.77 2.3a.7.7 0 1 1 0 1.4.7.7 0 0 1 0-1.4Zm3.54 0a.7.7 0 1 1 0 1.4.7.7 0 0 1 0-1.4Z"/></svg>WeChat</button>' +
+        '<button type="button" class="mp-share-btn" id="mpShareCp"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>Copy link</button>' +
+      '</div><div class="mp-share-qr" id="mpShareQr" hidden></div></div>';
 
     renderPriceBlock(r);   // price + local-currency toggle
 
@@ -435,12 +455,57 @@
       } catch(e){ alert('Could not update cart: ' + (e.message||e)); }
       finally { btn.disabled = false; }
     });
+
+    // Share this product: WhatsApp, WeChat (QR), or copy the deep link.
+    var _shareUrl = mpShareUrl(r.id);
+    var _swa = document.getElementById('mpShareWa'); if (_swa) _swa.addEventListener('click', function(){ window.open('https://wa.me/?text=' + encodeURIComponent(r.title + ' — ' + _shareUrl), '_blank', 'noopener'); });
+    var _swc = document.getElementById('mpShareWc'); if (_swc) _swc.addEventListener('click', function(){ mpWeChat(_shareUrl); });
+    var _scp = document.getElementById('mpShareCp'); if (_scp) _scp.addEventListener('click', function(){ mpCopy(_shareUrl); });
+
+    try { history.replaceState(null, '', location.pathname + '?p=' + encodeURIComponent(r.id)); } catch(e){}
     openModal(detailModal);
+  }
+
+  /* ── Share helpers ── */
+  function mpShareUrl(id){ return location.origin + location.pathname + '?p=' + encodeURIComponent(id); }
+  function mpToast(msg){
+    var t = document.getElementById('mpToast');
+    if (!t){ t = document.createElement('div'); t.id = 'mpToast'; t.className = 'mp-toast'; document.body.appendChild(t); }
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+  }
+  function mpCopyFallback(url){
+    try { var i = document.createElement('input'); i.value = url; document.body.appendChild(i); i.select(); document.execCommand('copy'); document.body.removeChild(i); mpToast('Link copied to clipboard'); }
+    catch(e){ prompt('Copy this link:', url); }
+  }
+  function mpCopy(url){
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(function(){ mpToast('Link copied to clipboard'); }).catch(function(){ mpCopyFallback(url); });
+    else mpCopyFallback(url);
+  }
+  var _qrLoading = null;
+  function mpLoadQr(){
+    if (window.qrcode) return Promise.resolve();
+    if (_qrLoading) return _qrLoading;
+    _qrLoading = new Promise(function(res, rej){ var s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+    return _qrLoading;
+  }
+  function mpWeChat(url){
+    var box = document.getElementById('mpShareQr'); if (!box) return;
+    if (box.getAttribute('data-open') === '1'){ box.hidden = true; box.removeAttribute('data-open'); box.innerHTML = ''; return; }
+    box.hidden = false; box.setAttribute('data-open', '1'); box.innerHTML = '<div class="mp-share-qr-cap">Loading QR…</div>';
+    mpLoadQr().then(function(){
+      try { var q = window.qrcode(0, 'M'); q.addData(url); q.make();
+        box.innerHTML = '<div class="mp-share-qr-inner"><img alt="WeChat QR" width="176" height="176" src="' + q.createDataURL(6, 2) + '"><div class="mp-share-qr-cap">用微信「扫一扫」打开并分享<br>Scan with WeChat to open &amp; share</div></div>';
+      } catch(e){ box.hidden = true; box.removeAttribute('data-open'); mpCopy(url); mpToast('Link copied — paste it in WeChat'); }
+    }).catch(function(){ box.hidden = true; box.removeAttribute('data-open'); mpCopy(url); mpToast('Link copied — paste it in WeChat'); });
+  }
+  function mpOpenFromParam(){
+    try { var pid = new URLSearchParams(location.search).get('p'); if (pid && ALL.some(function(x){ return x.id === pid; })) openDetail(pid); } catch(e){}
   }
 
   /* ── Modals ── */
   function openModal(m){ m.classList.add('open'); document.body.style.overflow='hidden'; }
-  function closeModal(m){ m.classList.remove('open'); document.body.style.overflow=''; stopGal(); }
+  function closeModal(m){ m.classList.remove('open'); document.body.style.overflow=''; stopGal(); if(m===detailModal){ try{ history.replaceState(null,'',location.pathname); }catch(e){} } }
   document.querySelectorAll('.mp-modal-ov').forEach(function(ov){
     ov.addEventListener('click', function(e){ if(e.target===ov) closeModal(ov); });
     ov.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', function(){ closeModal(ov); }); });

@@ -680,8 +680,7 @@
       '<div class="acct-stat"><div class="acct-stat-num">' + live + '</div><div class="acct-stat-lbl">Live</div></div>' +
       '<div class="acct-stat"><div class="acct-stat-num">' + pend + '</div><div class="acct-stat-lbl">Pending</div></div>' +
       '<div class="acct-stat"><div class="acct-stat-num">' + items.length + '</div><div class="acct-stat-lbl">Total</div></div></div></div>';
-    html += '<button class="acct-btn acct-btn-solid" id="evNewBtn" style="margin:1rem 0;display:inline-block">＋ Submit an event</button>';
-    html += '<div id="evFormWrap" style="display:none"></div><div id="evMsg"></div>';
+    html += '<a class="acct-btn acct-btn-solid" href="https://forms.gle/BfTjLFdWPkq6sbAk6" target="_blank" rel="noopener" style="margin:1rem 0;display:inline-block">＋ Submit an Event</a>';
     if (items.length) {
       html += '<h2 class="acct-h2">Your submissions</h2>';
       items.forEach(function (e) {
@@ -694,10 +693,8 @@
       });
     }
     contentEl.innerHTML = html;
-    document.getElementById('evNewBtn').addEventListener('click', function () {
-      var w = document.getElementById('evFormWrap');
-      if (w.style.display === 'none') { w.innerHTML = eventFormHtml(); w.style.display = 'block'; wireEventForm(); this.style.display = 'none'; }
-    });
+    // "Submit an Event" now links out to the public submission form (reviewed
+    // before publishing) — the old in-app form is retired.
     contentEl.querySelectorAll('.ev-del').forEach(function (b) {
       b.addEventListener('click', async function () {
         if (!confirm('Delete this event submission?')) return; b.disabled = true;
