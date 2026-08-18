@@ -263,7 +263,7 @@
           '</div>' +
           (tags ? '<div class="acct-ev-tags">' + tags + '</div>' : '') +
         (s.url ? '</a>' : '</div>') +
-        '<div class="acct-btn-row"><button class="acct-btn acct-btn-danger" data-ev-remove="' + esc(s.item_ref) + '">Remove</button></div>' +
+        '<div class="acct-btn-row">' + evActionBtns(d) + '<button class="acct-btn acct-btn-danger" data-ev-remove="' + esc(s.item_ref) + '">Remove</button></div>' +
       '</div>';
     }).join('');
     contentEl.innerHTML = html;
@@ -325,6 +325,18 @@
   function startOfWeek(d){ var x=startOfDay(d); x.setDate(x.getDate()-x.getDay()); return x; }
   function fmtTime(t){ if(!t) return ''; var p=t.split(':'); var h=parseInt(p[0],10); var ap=h<12?'AM':'PM'; var hh=h%12; if(hh===0)hh=12; return hh+(p[1]&&p[1]!=='00'?':'+p[1]:'')+' '+ap; }
   function evTimeLabel(ev){ if(!ev.startTime) return 'Time TBD'; return fmtTime(ev.startTime)+(ev.endTime?' – '+fmtTime(ev.endTime):''); }
+  // Event action buttons (Sign Up / More Info / Directions) — shown only when the
+  // saved event snapshot carries the link. Guards against non-http hrefs.
+  function acctSafeUrl(u){ return (typeof u==='string' && /^https?:\/\//i.test(u.trim())) ? u.trim() : ''; }
+  function evActionBtns(d){
+    d = d || {};
+    var reg=acctSafeUrl(d.registerLink), ext=acctSafeUrl(d.externalLink), addr=acctSafeUrl(d.addressLink);
+    var b='';
+    if(reg)  b+='<a class="acct-btn acct-btn-solid" href="'+esc(reg)+'" target="_blank" rel="noopener">Sign Up ↗</a>';
+    if(ext)  b+='<a class="acct-btn" href="'+esc(ext)+'" target="_blank" rel="noopener">More Info ↗</a>';
+    if(addr) b+='<a class="acct-btn" href="'+esc(addr)+'" target="_blank" rel="noopener">📍 Directions</a>';
+    return b;
+  }
 
   function calEvents() {
     var out = [];
@@ -466,7 +478,7 @@
       '<div class="acct-card" style="margin-top:.5rem">'+
         row('Date', fmtLong(ev.date)+', '+ev.date.getFullYear())+
         row('Time', evTimeLabel(ev))+
-        row('Venue', d.venue)+
+        (d.venue ? '<div class="acct-row"><span class="acct-row-lbl">Venue</span><span class="acct-row-val">'+(acctSafeUrl(d.addressLink)?'<a href="'+esc(acctSafeUrl(d.addressLink))+'" target="_blank" rel="noopener" class="acct-ev-addr">'+esc(d.venue)+' ↗</a>':esc(d.venue))+'</span></div>' : '')+
         row('City', (d.cities||[]).join(' / '))+
         row('Country', d.country)+
         row('Primary language', (d.languages||[]).join(', '))+
@@ -479,6 +491,7 @@
         row('Networking', d.networking)+
         row('Entrance fee', d.entranceFee)+
       '</div>'+
+      (evActionBtns(d) ? '<div class="cal-detail-actions">'+evActionBtns(d)+'</div>' : '')+
       '<div class="cal-detail-actions">'+
         '<a class="acct-btn acct-btn-solid" href="'+esc((ev.saved && ev.saved.url) || (ROOT()+'eventpartners/'))+'">View Event</a>'+
         '<button class="acct-btn acct-btn-danger" data-cal="remove" data-ref="'+esc(ev.ref)+'">Remove from Saved</button>'+

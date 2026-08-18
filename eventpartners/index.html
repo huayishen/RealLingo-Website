@@ -21,8 +21,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/site.css?v=32">
-<link rel="stylesheet" href="../assets/css/event-network.css?v=32">
+<link rel="stylesheet" href="../assets/css/site.css?v=33">
+<link rel="stylesheet" href="../assets/css/event-network.css?v=33">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font-sans); }
@@ -213,6 +213,15 @@
   .ep-card-details-wrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s cubic-bezier(.4,0,.2,1); }
   .ep-card.expanded .ep-card-details-wrap { grid-template-rows: 1fr; }
   .ep-card-details-inner { overflow: hidden; min-height: 0; }
+
+  /* Clickable venue address + event action buttons (Sign Up / More Info / Directions) */
+  .ep-venue-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; font-weight: 600; }
+  .ep-venue-link:hover { color: #9a7d00; }
+  .ep-actions { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1.35rem; }
+  .ep-action-btn { display: inline-flex; align-items: center; gap: .4rem; padding: .62rem 1.15rem; border-radius: 100px; font-size: .85rem; font-weight: 700; text-decoration: none; border: 1px solid var(--border, rgba(17,18,22,.14)); color: var(--dark, #111216); background: #fff; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
+  .ep-action-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px -12px rgba(17,18,22,.45); }
+  .ep-action-btn--primary { background: var(--dark, #111216); color: #fff; border-color: var(--dark, #111216); }
+  .ep-action-btn svg { width: 15px; height: 15px; flex: 0 0 auto; }
   .ep-card-details-content {
     padding: 1.4rem 1.9rem 1.9rem; border-top: 1px solid var(--border-sub);
     opacity: 0; transform: translateY(-6px);
@@ -461,8 +470,8 @@
   window.SITE_SECTION = "explore";
   window.SITE_PAGE = "eventpartners";
 </script>
-<script src="../assets/js/supabase-client.js?v=32"></script>
-<script src="../assets/js/auth.js?v=32"></script>
+<script src="../assets/js/supabase-client.js?v=33"></script>
+<script src="../assets/js/auth.js?v=33"></script>
 <script>
   /* ════════════════════════════════════════════════════════════
      EVENT DIRECTORY — single data source driving the card list,
@@ -688,6 +697,20 @@
   }
   populateFilters();
 
+  // Only allow real http(s) links (community events are auto-approved, so guard
+  // against javascript:/data: hrefs from user-submitted rows).
+  function evSafeUrl(u) { return (typeof u === 'string' && /^https?:\/\//i.test(u.trim())) ? u.trim() : ''; }
+  function evEsc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  // Action buttons shown only when the event actually carries the link.
+  function eventActionsHtml(ev) {
+    var reg = evSafeUrl(ev.registerLink), ext = evSafeUrl(ev.externalLink), addr = evSafeUrl(ev.addressLink);
+    var b = '';
+    if (reg)  b += '<a class="ep-action-btn ep-action-btn--primary" href="' + evEsc(reg) + '" target="_blank" rel="noopener">Sign Up for Event <span aria-hidden="true">→</span></a>';
+    if (ext)  b += '<a class="ep-action-btn" href="' + evEsc(ext) + '" target="_blank" rel="noopener">More Info <span aria-hidden="true">↗</span></a>';
+    if (addr) b += '<a class="ep-action-btn" href="' + evEsc(addr) + '" target="_blank" rel="noopener">' + PIN_SVG + 'Directions</a>';
+    return b ? '<div class="ep-actions">' + b + '</div>' : '';
+  }
+
   function cardHtml(ev) {
     var status = computeStatus(ev);
     var primaryLangTags = ev.languages.map(function (l) { return '<span class="ep-tag ep-tag--lang">' + l + '</span>'; }).join('');
@@ -735,7 +758,9 @@
                 '</div>' +
                 '<div class="ep-card-field">' +
                   '<div class="ep-label">Venue</div>' +
-                  '<div class="ep-val">' + ev.venue + '</div>' +
+                  '<div class="ep-val">' + (evSafeUrl(ev.addressLink)
+                     ? '<a href="' + evEsc(evSafeUrl(ev.addressLink)) + '" target="_blank" rel="noopener" class="ep-venue-link">' + ev.venue + ' <span aria-hidden="true">↗</span></a>'
+                     : ev.venue) + '</div>' +
                 '</div>' +
                 '<div class="ep-card-field">' +
                   '<div class="ep-label">Supporting Language</div>' +
@@ -758,6 +783,7 @@
                   '<div class="ep-val">' + ev.rsvp + '</div>' +
                 '</div>' +
               '</div>' +
+              eventActionsHtml(ev) +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -940,7 +966,8 @@
       startTime: ev.startTime, endTime: ev.endTime, cities: ev.cities, country: ev.country, venue: ev.venue,
       languages: ev.languages, supportingLanguages: ev.supportingLanguages, communities: ev.communities,
       format: ev.format, type: ev.type, requirement: ev.requirement, moderator: ev.moderator,
-      networking: ev.networking, rsvp: ev.rsvp, entranceFee: ev.entranceFee, overview: ev.overview };
+      networking: ev.networking, rsvp: ev.rsvp, entranceFee: ev.entranceFee, overview: ev.overview,
+      addressLink: ev.addressLink, registerLink: ev.registerLink, externalLink: ev.externalLink };
   }
   async function onSaveClick(btn) {
     var key = btn.dataset.save;
@@ -1120,6 +1147,6 @@
     }, 2000);
   })();
 </script>
-<script src="../assets/js/nav.js?v=32" defer></script>
+<script src="../assets/js/nav.js?v=33" defer></script>
 </body>
 </html>

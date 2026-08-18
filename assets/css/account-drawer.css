@@ -290,3 +290,5 @@
 .acct-ev-tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .7rem; }
 .acct-ev-tag { font-size: .68rem; font-weight: 700; background: var(--abg); color: var(--amid); padding: .22rem .6rem; border-radius: 100px; }
 .acct-ev-tag--lang { background: var(--aysoft); color: #6a5800; }
+.acct-ev-addr { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.acct-ev-addr:hover { color: #9a7d00; }
