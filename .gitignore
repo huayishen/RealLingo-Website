@@ -11,3 +11,6 @@ RealLingo Founding Partners/
 
 # Raw product source material (processed copies live in assets/img/)
 RealLingo Marketplace/
+
+# Supabase Edge Function source (contains a secret token; deployed on Supabase)
+supabase/

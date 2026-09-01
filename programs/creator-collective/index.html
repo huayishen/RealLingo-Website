@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+<link rel="apple-touch-icon" href="../../assets/img/favicon.png">
+<title>Creator Collective (RLCC) — Language & Culture Creators | RealLingo</title>
+<meta name="description" content="The RealLingo Creator Collective (RLCC) connects language and culture content creators across China and emerging markets — monthly webinars, meet-ups, and a community that grows together.">
+<link rel="canonical" href="https://thereallingo.com/programs/creator-collective/">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RealLingo">
+<meta property="og:title" content="Creator Collective (RLCC) | RealLingo">
+<meta property="og:description" content="Connect with language & culture content creators across China and emerging markets — webinars, meet-ups, and a growing creator community.">
+<meta property="og:url" content="https://thereallingo.com/programs/creator-collective/">
+<meta property="og:image" content="https://thereallingo.com/assets/img/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Creator Collective (RLCC) | RealLingo">
+<meta name="twitter:description" content="Connect with language & culture content creators across China and emerging markets.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css?v=35">
+<style>
+  /* ═══════════════════════════════════════════════════════════════
+     Creator Collective (RLCC) — an "Our Programs" showcase page.
+     Shares the RealLingo system: cream-white ground, centered header,
+     white rounded cards with a yellow gradient top accent + soft shadow,
+     yellow-pale chips, dark pill CTAs. Same system, different content.
+  ═══════════════════════════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --pg-dark:#111216; --pg-mid:#4a4840; --pg-soft:#8a8878; --pg-y:#ffeb99; --pg-ym:#f5d96a; --pg-yp:#fff7d6; --pg-border:rgba(17,18,22,.09); }
+  body { font-family: var(--font-sans); background: var(--cream-white, #fffff2); color: var(--pg-dark); }
+
+  .pg-wrap { max-width: 1000px; margin: 0 auto; padding: 3.4rem 1.25rem 4.5rem; }
+
+  /* ── Event-style photo hero (full-bleed image + dark overlay) ── */
+  .rlcc-hero {
+    position: relative; display: flex; align-items: center; justify-content: center; text-align: center;
+    min-height: min(80vh, 700px); padding: 4rem 1.5rem;
+    background: #14151a url("../../assets/img/rlcc-hero.jpg") center/cover no-repeat;
+  }
+  .rlcc-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(17,18,22,.66) 0%, rgba(17,18,22,.48) 42%, rgba(17,18,22,.82) 100%); }
+  .rlcc-hero-inner { position: relative; z-index: 1; max-width: 760px; color: #fff; }
+  .rlcc-eyebrow { font-size: .72rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--pg-y); margin-bottom: 1.1rem; }
+  .rlcc-title { font-family: var(--font-serif); font-weight: 400; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.08; letter-spacing: -.01em; text-shadow: 0 2px 30px rgba(0,0,0,.4); }
+  .rlcc-title em { font-style: italic; color: var(--pg-y); }
+  .rlcc-sub { margin: 1.3rem auto 0; max-width: 620px; font-size: clamp(1rem, 2.2vw, 1.15rem); line-height: 1.65; color: rgba(255,255,255,.85); }
+  .rlcc-cta-row { margin-top: 2.1rem; display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center; }
+  .rlcc-cta, .rlcc-cta-outline { display: inline-flex; align-items: center; gap: .5rem; padding: .95rem 2rem; border-radius: 100px; font-weight: 700; font-size: .98rem; text-decoration: none; transition: transform .16s ease, box-shadow .16s ease, background .16s ease, border-color .16s ease; }
+  .rlcc-cta { background: var(--pg-y); color: var(--pg-dark); }
+  .rlcc-cta:hover { transform: translateY(-2px); background: #fff; box-shadow: 0 16px 34px -14px rgba(0,0,0,.55); }
+  .rlcc-cta-outline { background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.55); }
+  .rlcc-cta-outline:hover { transform: translateY(-2px); background: rgba(255,255,255,.16); border-color: #fff; }
+  @media (max-width: 560px) { .rlcc-cta, .rlcc-cta-outline { width: 100%; justify-content: center; } }
+
+  /* Hero */
+  .pg-hero { text-align: center; max-width: 720px; margin: 0 auto 2.6rem; }
+  .pg-crumb { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--pg-mid); margin-bottom: 1rem; }
+  .pg-h1 { font-size: clamp(2.1rem, 5vw, 3.2rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; color: var(--pg-dark); }
+  .pg-h1 em { font-style: normal; background: linear-gradient(180deg, transparent 62%, var(--pg-y) 62%); padding: 0 .08em; }
+  .pg-lede { margin: 1.2rem auto 0; max-width: 640px; font-size: 1.08rem; line-height: 1.65; color: var(--pg-mid); }
+  .pg-cta-row { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center; }
+  .pg-btn { display: inline-flex; align-items: center; gap: .5rem; padding: .9rem 1.8rem; border-radius: 100px; font-weight: 700; font-size: .98rem; text-decoration: none; transition: transform .16s ease, box-shadow .16s ease, background .16s ease; }
+  .pg-btn--primary { background: var(--pg-dark); color: #fff; }
+  .pg-btn--primary:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -14px rgba(17,18,22,.55); }
+  .pg-btn--ghost { background: #fff; color: var(--pg-dark); border: 1px solid var(--pg-border); }
+  .pg-btn--ghost:hover { transform: translateY(-2px); background: var(--pg-yp); }
+
+  /* Community proof (creators) */
+  .pg-proof { display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem; margin-top: 1.6rem; }
+  .pg-proof .chip { font-size: .82rem; font-weight: 700; color: #6a5800; background: var(--pg-yp); border: 1px solid rgba(230,198,74,.5); border-radius: 100px; padding: .35rem .9rem; }
+
+  /* Section scaffolding */
+  .pg-sec { margin-top: 3.2rem; }
+  .pg-sec-eyebrow { font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--pg-soft); text-align: center; margin-bottom: .6rem; }
+  .pg-sec-title { font-size: clamp(1.5rem, 3.4vw, 2rem); font-weight: 800; letter-spacing: -.02em; text-align: center; color: var(--pg-dark); margin-bottom: 1.6rem; }
+
+  .pg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.1rem; }
+  .pg-card { position: relative; overflow: hidden; background: #fff; border: 1px solid var(--pg-border); border-radius: 18px; padding: 1.5rem 1.35rem; box-shadow: 0 18px 44px -30px rgba(17,18,22,.4); }
+  .pg-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--pg-y), var(--pg-ym)); }
+  .pg-card .ico { font-size: 1.6rem; }
+  .pg-card h3 { font-size: 1.05rem; font-weight: 800; margin: .6rem 0 .35rem; }
+  .pg-card p { font-size: .9rem; line-height: 1.55; color: var(--pg-mid); }
+
+  /* Numbered steps */
+  .pg-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.1rem; counter-reset: step; }
+  .pg-step { background: #fff; border: 1px solid var(--pg-border); border-radius: 18px; padding: 1.5rem 1.35rem; }
+  .pg-step .n { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: var(--pg-y); color: var(--pg-dark); font-weight: 800; font-size: .95rem; margin-bottom: .7rem; }
+  .pg-step h3 { font-size: 1rem; font-weight: 800; margin-bottom: .3rem; }
+  .pg-step p { font-size: .88rem; line-height: 1.55; color: var(--pg-mid); }
+
+  /* Closing CTA band */
+  .pg-band { margin-top: 3.4rem; background: var(--pg-dark); border-radius: 22px; padding: clamp(2.2rem, 5vw, 3.2rem); text-align: center; color: #fff; }
+  .pg-band h2 { font-size: clamp(1.6rem, 3.6vw, 2.2rem); font-weight: 800; letter-spacing: -.02em; }
+  .pg-band h2 em { font-style: normal; color: var(--pg-y); }
+  .pg-band p { margin: .8rem auto 1.6rem; max-width: 520px; color: rgba(255,255,255,.7); line-height: 1.6; font-size: 1rem; }
+  .pg-band .pg-btn--primary { background: var(--pg-y); color: var(--pg-dark); }
+  .pg-band .pg-btn--primary:hover { background: #fff; }
+  .pg-band-cta { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center; }
+  .pg-band .pg-btn--ghost { background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.5); }
+  .pg-band .pg-btn--ghost:hover { background: rgba(255,255,255,.16); border-color: #fff; transform: translateY(-2px); }
+
+  .pg-back { display: block; text-align: center; margin-top: 1.8rem; font-weight: 700; color: var(--pg-dark); text-decoration: none; }
+  .pg-back:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<section class="rlcc-hero">
+  <div class="rlcc-hero-overlay"></div>
+  <div class="rlcc-hero-inner">
+    <div class="rlcc-eyebrow">Our Programs · Creator Collective</div>
+    <h1 class="rlcc-title">Where language creators <em>grow together</em></h1>
+    <p class="rlcc-sub">RLCC is a flagship RealLingo program connecting language &amp; culture content creators across China and the emerging markets — monthly webinars, meet-ups, and a community that grows together.</p>
+    <div class="rlcc-cta-row">
+      <a class="rlcc-cta" href="https://forms.gle/t1ynTqy8ddKbaq7j9" target="_blank" rel="noopener">Join the Collective</a>
+      <a class="rlcc-cta-outline" href="../../eventpartners/">See Upcoming Sessions</a>
+    </div>
+  </div>
+</section>
+
+<main class="pg-wrap">
+
+  <!-- Who it's for -->
+  <section class="pg-sec">
+    <div class="pg-sec-eyebrow">Who it's for</div>
+    <h2 class="pg-sec-title">You don't need to be a big name — just curious</h2>
+    <div class="pg-grid">
+      <div class="pg-card"><div class="ico">🌱</div><h3>Creators of every size</h3><p>All follower counts and experience levels are welcome. What matters is your motivation and passion for language &amp; culture content.</p></div>
+      <div class="pg-card"><div class="ico">💼</div><h3>Working professionals</h3><p>Digital marketing, PR, media and related fields — bring your expertise and learn alongside fellow creators.</p></div>
+      <div class="pg-card"><div class="ico">🌍</div><h3>A cross-border network</h3><p>A fast-growing community of Chinese, Arabic, French, Korean and Spanish creators across China and the Middle East.</p></div>
+    </div>
+  </section>
+
+  <!-- How sessions work -->
+  <section class="pg-sec">
+    <div class="pg-sec-eyebrow">How a session works</div>
+    <h2 class="pg-sec-title">A 1–2 hour online panel</h2>
+    <div class="pg-steps">
+      <div class="pg-step"><span class="n">1</span><h3>Welcome &amp; Intro</h3><p>A brief introduction of the speakers, participants, and the Collective.</p></div>
+      <div class="pg-step"><span class="n">2</span><h3>Speaker's Talk</h3><p>Invited speakers share their experience and perspective on language &amp; culture content creation.</p></div>
+      <div class="pg-step"><span class="n">3</span><h3>Insights Exchange</h3><p>A moderated discussion with pre-prepared questions, so speakers trade practical, real-world insights.</p></div>
+      <div class="pg-step"><span class="n">4</span><h3>Audience Q&amp;A</h3><p>Participants ask questions and engage directly with the speakers.</p></div>
+    </div>
+  </section>
+
+  <!-- How creators contribute -->
+  <section class="pg-sec">
+    <div class="pg-sec-eyebrow">Be part of it</div>
+    <h2 class="pg-sec-title">Three ways creators shape the community</h2>
+    <div class="pg-grid">
+      <div class="pg-card"><div class="ico">🗣️</div><h3>Creator Forums</h3><p>Share knowledge, inspire peers, and empower emerging content creators.</p></div>
+      <div class="pg-card"><div class="ico">🤝</div><h3>Collaborate</h3><p>Connect with community members to spark innovation and sustainable content creation.</p></div>
+      <div class="pg-card"><div class="ico">📣</div><h3>Community Ambassadors</h3><p>Provide marketing support for RealLingo events and our partners across regions.</p></div>
+    </div>
+  </section>
+
+  <!-- Become a speaker -->
+  <section class="pg-sec">
+    <div class="pg-sec-eyebrow">Become a speaker</div>
+    <h2 class="pg-sec-title">Two simple steps to the panel</h2>
+    <div class="pg-steps">
+      <div class="pg-step"><span class="n">1</span><h3>Confirm your interest</h3><p>Send the event coordinator a headshot, your preferred name, and your professional title &amp; organization.</p></div>
+      <div class="pg-step"><span class="n">2</span><h3>Prepare for the webinar</h3><p>A week before, share your proposed talk title and any materials — then receive the discussion questions to prepare with plenty of time.</p></div>
+    </div>
+  </section>
+
+  <div class="pg-band">
+    <h2>Ready to <em>create with us</em>?</h2>
+    <p>Join the RealLingo Creator Collective — speak on a panel, collaborate with fellow creators, or just come learn. We'd love to hear from you.</p>
+    <div class="pg-band-cta">
+      <a class="pg-btn pg-btn--primary" href="https://forms.gle/t1ynTqy8ddKbaq7j9" target="_blank" rel="noopener">Get Involved →</a>
+      <a class="pg-btn pg-btn--ghost" href="../../assets/docs/reallingo-speakers-proposal.pdf" target="_blank" rel="noopener" download>Download Proposal ↓</a>
+    </div>
+  </div>
+
+  <a href="../../about/launch/" class="pg-back">← Back to RealLingo</a>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+  window.SITE_ROOT = "../../";
+  window.SITE_SECTION = "programs";
+  window.SITE_PAGE = "programs/creator-collective";
+</script>
+<script src="../../assets/js/nav.js?v=35" defer></script>
+</body>
+</html>
