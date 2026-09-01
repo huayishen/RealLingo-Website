@@ -43,10 +43,10 @@
   function ensureDrawer() {
     if (window.openAccountDrawer) return Promise.resolve();
     if (_drawerLoading) return _drawerLoading;
-    loadCss(ROOT + 'assets/css/account-drawer.css?v=35');
-    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=35'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=35'); })
-      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=35'); });
+    loadCss(ROOT + 'assets/css/account-drawer.css?v=36');
+    _drawerLoading = (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=36'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=36'); })
+      .then(function () { return loadScript(ROOT + 'assets/js/account-drawer.js?v=36'); });
     return _drawerLoading;
   }
   function openAccountDrawerLazy(e) {
@@ -87,8 +87,8 @@
   // Marketing pages don't load supabase-js, so detect that here, establish the
   // session, then drop them on their dashboard already logged in — no 2nd login.
   function loadAuthStack() {
-    return (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=35'))
-      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=35'); });
+    return (window.getSupabaseClient ? Promise.resolve() : loadScript(ROOT + 'assets/js/supabase-client.js?v=36'))
+      .then(function () { return window.RA ? null : loadScript(ROOT + 'assets/js/auth.js?v=36'); });
   }
   function waitForSession(sb) {
     return sb.auth.getSession().then(function (r) {
@@ -196,7 +196,7 @@
   }
 
   function loadPartial(name, targetId, after) {
-    fetch(ROOT + 'partials/' + name + '?v=35')   // versioned so header/footer partials refresh with each release
+    fetch(ROOT + 'partials/' + name + '?v=36')   // versioned so header/footer partials refresh with each release
       .then(function (r) { return r.text(); })
       .then(function (html) {
         var target = document.getElementById(targetId);
@@ -215,7 +215,10 @@
     var burger = target.querySelector('#siteBurger');
 
     if (SECTION) {
-      var active = target.querySelector('.site-nav-item[data-section="' + SECTION + '"]');
+      // Marketplace & Open Sources now live under the "Our Programs" nav item,
+      // so highlight that parent when on those pages.
+      var navSection = (SECTION === 'marketplace' || SECTION === 'opensource') ? 'programs' : SECTION;
+      var active = target.querySelector('.site-nav-item[data-section="' + navSection + '"]');
       if (active) active.classList.add('active');
     }
 
