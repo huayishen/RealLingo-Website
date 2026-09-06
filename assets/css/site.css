@@ -109,6 +109,7 @@
 .site-dd a {
   display: block; padding: .65rem .85rem; border-radius: 9px;
   font-size: .84rem; font-weight: 600; color: var(--text-mid); text-decoration: none;
+  white-space: nowrap;
   transition: background .15s, color .15s;
 }
 .site-dd a:hover { background: var(--cream); color: var(--dark); }
@@ -246,6 +247,8 @@
    partners are added — a wider basis than the others so new entries have
    room before the list needs to wrap onto extra lines. */
 .site-ftr-col--partners { flex: 1.4 1 200px; }
+.site-ftr-col--programs { flex: 1.2 1 190px; }
+.site-ftr-col--programs a { white-space: nowrap; }
 .site-ftr-brand .site-logo { color: var(--yellow); font-size: 1.3rem; }
 .site-ftr-tag { margin-top: .85rem; font-size: .82rem; line-height: 1.6; color: rgba(255,255,255,.4); max-width: 26ch; }
 .site-ftr-col h4 { font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 1rem; }
