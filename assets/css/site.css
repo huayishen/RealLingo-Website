@@ -265,6 +265,7 @@
 }
 .site-ftr-email-btn:hover { color: var(--yellow); }
 .site-ftr-email-reveal { display: flex; align-items: center; gap: .5rem; margin-top: .4rem; font-size: .8rem; }
+.site-ftr-email-reveal[hidden] { display: none; }
 .site-ftr-email-text { color: var(--yellow); user-select: all; }
 .site-ftr-copy-btn {
   display: flex; align-items: center; justify-content: center;
