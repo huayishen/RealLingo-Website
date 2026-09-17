@@ -196,7 +196,7 @@
   }
 
   function loadPartial(name, targetId, after) {
-    fetch(ROOT + 'partials/' + name + '?v=37')   // versioned so header/footer partials refresh with each release
+    fetch(ROOT + 'partials/' + name + '?v=38')   // versioned so header/footer partials refresh with each release
       .then(function (r) { return r.text(); })
       .then(function (html) {
         var target = document.getElementById(targetId);
