@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../assets/img/favicon.png">
+<title>Our Programs | RealLingo</title>
+<meta name="description" content="Explore RealLingo's programs — language communities, events, academy, marketplace and open resources.">
+<link rel="canonical" href="https://thereallingo.com/programs/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/site.css?v=37">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow-x: hidden; }
+
+/* ── Page wrapper ─── */
+.pg-wrap {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+/* ── Hero header ─── */
+.pg-head {
+  padding: 3.5rem 5vw 2rem;
+  max-width: 1280px; margin: 0 auto; width: 100%;
+  position: relative; z-index: 2;
+}
+.pg-eyebrow {
+  font-size: .68rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(255,235,153,.5); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: .6rem;
+}
+.pg-eyebrow::before { content: ''; display: block; width: 20px; height: 1px; background: rgba(255,235,153,.4); }
+.pg-title {
+  font-family: var(--font-serif); font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 400; line-height: 1.05; letter-spacing: -.02em; color: #fff;
+}
+.pg-title em { font-style: italic; color: #ffeb99; }
+.pg-sub {
+  margin-top: .75rem; font-size: 1rem; color: rgba(255,255,255,.45); max-width: 440px; line-height: 1.65;
+}
+
+/* ── Programs grid ─── */
+.pg-grid {
+  max-width: 1280px; margin: 0 auto; padding: 0 5vw 4rem;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 52vh 48vh;
+  gap: 1rem;
+}
+
+/* Each portal card */
+.pg-card {
+  border-radius: 24px; overflow: hidden; position: relative;
+  cursor: pointer; text-decoration: none; display: block;
+  transition: transform .4s cubic-bezier(.25,.46,.45,.94);
+  outline: none;
+  opacity: 0; transform: translateY(30px);
+  animation: pgReveal .7s cubic-bezier(.25,.46,.45,.94) forwards;
+}
+@keyframes pgReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+.pg-card:nth-child(1) { animation-delay: .05s; }
+.pg-card:nth-child(2) { animation-delay: .12s; }
+.pg-card:nth-child(3) { animation-delay: .19s; }
+.pg-card:nth-child(4) { animation-delay: .26s; }
+.pg-card:nth-child(5) { animation-delay: .33s; grid-column: 1 / -1; max-height: 200px; }
+
+/* Base backgrounds */
+.pg-card--rlcc   { background: #1a160b; }
+.pg-card--rltt   { background: #0f1318; }
+.pg-card--rla    { background: #0d1019; }
+.pg-card--market { background: #130d0a; }
+.pg-card--open   { background: #0a1210; }
+
+/* Ambient glow behind each card */
+.pg-card--rlcc::before   { background: radial-gradient(ellipse 60% 60% at 70% 30%, rgba(255,200,50,.15), transparent); }
+.pg-card--rltt::before   { background: radial-gradient(ellipse 60% 60% at 30% 70%, rgba(100,160,255,.12), transparent); }
+.pg-card--rla::before    { background: radial-gradient(ellipse 60% 60% at 80% 20%, rgba(180,120,255,.12), transparent); }
+.pg-card--market::before { background: radial-gradient(ellipse 60% 60% at 20% 80%, rgba(255,140,60,.12), transparent); }
+.pg-card--open::before   { background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(60,220,140,.1), transparent); }
+.pg-card::before { content: ''; position: absolute; inset: 0; z-index: 0; transition: opacity .5s; }
+
+/* Noise texture overlay */
+.pg-card::after {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat; background-size: 200px;
+  mix-blend-mode: overlay; opacity: .4;
+}
+
+/* Dimming on group hover */
+.pg-grid:has(.pg-card:hover) .pg-card:not(:hover) { opacity: .4; }
+
+/* Card hover effects */
+.pg-card:hover { transform: scale(1.012); z-index: 10; }
+.pg-card:hover::before { opacity: 1.6; }
+
+/* Card content */
+.pg-card-inner {
+  position: absolute; inset: 0; z-index: 2;
+  padding: 2.25rem 2.5rem;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+}
+.pg-card-top { display: flex; flex-direction: column; gap: .5rem; }
+.pg-card-num {
+  font-family: var(--font-serif); font-size: 5rem; font-weight: 400; font-style: italic;
+  line-height: 1; letter-spacing: -.04em; color: rgba(255,255,255,.07);
+  position: absolute; top: 1.5rem; right: 2rem;
+  transition: color .4s;
+}
+.pg-card:hover .pg-card-num { color: rgba(255,255,255,.12); }
+.pg-card-tag {
+  display: inline-block; font-size: .6rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,.12); border-radius: 999px; padding: .22rem .7rem;
+  color: rgba(255,255,255,.4); width: fit-content;
+  transition: border-color .3s, color .3s;
+}
+.pg-card:hover .pg-card-tag { border-color: rgba(255,255,255,.3); color: rgba(255,255,255,.7); }
+.pg-card-name {
+  font-family: var(--font-serif); font-size: clamp(1.6rem, 2.8vw, 2.6rem);
+  font-weight: 400; font-style: italic; line-height: 1.1; letter-spacing: -.02em;
+  color: #fff; max-width: 320px;
+}
+.pg-card--open .pg-card-name { max-width: none; }
+
+.pg-card-desc {
+  font-size: .9rem; line-height: 1.6; color: rgba(255,255,255,.45);
+  max-width: 340px; margin-top: .5rem;
+  opacity: 0; transform: translateY(8px);
+  transition: opacity .35s .05s, transform .35s .05s;
+}
+.pg-card:hover .pg-card-desc { opacity: 1; transform: translateY(0); }
+
+/* Bottom row */
+.pg-card-bot {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.pg-card-cta {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-size: .78rem; font-weight: 700; letter-spacing: .05em;
+  color: rgba(255,255,255,.3);
+  transition: color .3s, gap .3s;
+}
+.pg-card:hover .pg-card-cta { color: #ffeb99; gap: .75rem; }
+.pg-card-cta svg { transition: transform .3s; }
+.pg-card:hover .pg-card-cta svg { transform: translateX(4px); }
+.pg-card-ico { font-size: 1.75rem; opacity: .5; transition: opacity .3s, transform .3s; }
+.pg-card:hover .pg-card-ico { opacity: 1; transform: scale(1.15); }
+
+/* Accent line at top of card */
+.pg-card-accent {
+  position: absolute; top: 0; left: 2rem; right: 2rem; height: 1.5px;
+  border-radius: 0 0 2px 2px; z-index: 3;
+  opacity: 0; transition: opacity .4s;
+  transform-origin: left;
+  transform: scaleX(0); transition: transform .5s cubic-bezier(.25,.46,.45,.94), opacity .3s;
+}
+.pg-card:hover .pg-card-accent { opacity: 1; transform: scaleX(1); }
+.pg-card--rlcc   .pg-card-accent { background: linear-gradient(90deg, #ffeb99, #f5d96a); }
+.pg-card--rltt   .pg-card-accent { background: linear-gradient(90deg, #7eb8f7, #4a9ef0); }
+.pg-card--rla    .pg-card-accent { background: linear-gradient(90deg, #c4a0ff, #9b6dff); }
+.pg-card--market .pg-card-accent { background: linear-gradient(90deg, #ffb07a, #ff8040); }
+.pg-card--open   .pg-card-accent { background: linear-gradient(90deg, #5de8a0, #25d366); }
+
+/* ── Floating background particles ── */
+.pg-particles {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+}
+.pg-particle {
+  position: absolute; border-radius: 50%;
+  animation: pgFloat var(--d, 8s) ease-in-out infinite alternate;
+  animation-delay: var(--delay, 0s);
+  opacity: .035;
+}
+@keyframes pgFloat {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(var(--tx, 30px), var(--ty, -40px)); }
+}
+
+@media (max-width: 900px) {
+  .pg-grid { grid-template-columns: 1fr; grid-template-rows: repeat(5, 44vh); }
+  .pg-card:nth-child(5) { grid-column: auto; max-height: none; }
+}
+@media (max-width: 600px) {
+  .pg-head { padding: 2rem 1.5rem 1.5rem; }
+  .pg-grid { padding: 0 1.5rem 3rem; gap: .75rem; grid-template-rows: repeat(5, 52vw); }
+  .pg-card-inner { padding: 1.5rem; }
+  .pg-card-num { font-size: 3.5rem; }
+  .pg-card-name { font-size: 1.5rem; }
+  .pg-grid:has(.pg-card:hover) .pg-card:not(:hover) { opacity: .65; }
+}
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<!-- Background particles -->
+<div class="pg-particles" aria-hidden="true">
+  <div class="pg-particle" style="width:400px;height:400px;top:10%;left:15%;background:#ffeb99;--d:11s;--delay:-2s;--tx:60px;--ty:-80px;"></div>
+  <div class="pg-particle" style="width:300px;height:300px;top:60%;right:10%;background:#7eb8f7;--d:9s;--delay:-5s;--tx:-40px;--ty:60px;"></div>
+  <div class="pg-particle" style="width:200px;height:200px;top:40%;left:50%;background:#5de8a0;--d:13s;--delay:-1s;--tx:50px;--ty:-30px;"></div>
+</div>
+
+<div class="pg-wrap">
+  <header class="pg-head" style="position:relative;z-index:2;">
+    <div class="pg-eyebrow">RealLingo · The Ecosystem</div>
+    <h1 class="pg-title">Choose your <em>journey.</em></h1>
+    <p class="pg-sub">Five ways to be part of RealLingo — each a different door into the world of language, community and culture.</p>
+  </header>
+
+  <main style="position:relative;z-index:2;">
+    <div class="pg-grid">
+
+      <!-- 01 RLCC -->
+      <a class="pg-card pg-card--rlcc" href="../programs/creator-collective/">
+        <div class="pg-card-accent"></div>
+        <div class="pg-card-num">01</div>
+        <div class="pg-card-inner">
+          <div class="pg-card-top">
+            <span class="pg-card-tag">Creator Collective</span>
+            <h2 class="pg-card-name">Connect With Language Content Creators</h2>
+            <p class="pg-card-desc">For educators, storytellers and builders creating content and communities around language. Collaborate, grow, and shape the future of RealLingo.</p>
+          </div>
+          <div class="pg-card-bot">
+            <span class="pg-card-ico">🎙️</span>
+            <span class="pg-card-cta">
+              Join RLCC
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 17 17 3M7 3h10v10"/></svg>
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 02 Talk & Table -->
+      <a class="pg-card pg-card--rltt" href="../programs/talk-and-table/">
+        <div class="pg-card-accent"></div>
+        <div class="pg-card-num">02</div>
+        <div class="pg-card-inner">
+          <div class="pg-card-top">
+            <span class="pg-card-tag">Talk &amp; Table · RLTT</span>
+            <h2 class="pg-card-name">City-Based Language Club</h2>
+            <p class="pg-card-desc">Casual, multilingual meetups at cafés and libraries. No curriculum — just real people, real conversations, and a table between you.</p>
+          </div>
+          <div class="pg-card-bot">
+            <span class="pg-card-ico">☕</span>
+            <span class="pg-card-cta">
+              Find a session
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 17 17 3M7 3h10v10"/></svg>
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 03 RLA -->
+      <a class="pg-card pg-card--rla" href="../programs/language-academy/">
+        <div class="pg-card-accent"></div>
+        <div class="pg-card-num">03</div>
+        <div class="pg-card-inner">
+          <div class="pg-card-top">
+            <span class="pg-card-tag">RealLingo Academy · RLA</span>
+            <h2 class="pg-card-name">Language Workshop at Your City</h2>
+            <p class="pg-card-desc">Structured, tutor-led sessions for real learners. Starting with Mandarin Chinese — cohort-based, community-rooted, culturally immersive.</p>
+          </div>
+          <div class="pg-card-bot">
+            <span class="pg-card-ico">🀄</span>
+            <span class="pg-card-cta">
+              Register interest
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 17 17 3M7 3h10v10"/></svg>
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 04 Marketplace -->
+      <a class="pg-card pg-card--market" href="../resources/marketplace/">
+        <div class="pg-card-accent"></div>
+        <div class="pg-card-num">04</div>
+        <div class="pg-card-inner">
+          <div class="pg-card-top">
+            <span class="pg-card-tag">Marketplace</span>
+            <h2 class="pg-card-name">Empower Your Language-Learning</h2>
+            <p class="pg-card-desc">Audiobooks, flashcard decks, learning guides and digital products — curated by the RealLingo community for real learners.</p>
+          </div>
+          <div class="pg-card-bot">
+            <span class="pg-card-ico">🛍️</span>
+            <span class="pg-card-cta">
+              Browse marketplace
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 17 17 3M7 3h10v10"/></svg>
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 05 Open Source -->
+      <a class="pg-card pg-card--open" href="../resources/">
+        <div class="pg-card-accent"></div>
+        <div class="pg-card-num">05</div>
+        <div class="pg-card-inner">
+          <div class="pg-card-top">
+            <span class="pg-card-tag">Open Source · Free Resources</span>
+            <h2 class="pg-card-name">Language Resources, Free for Everyone</h2>
+            <p class="pg-card-desc">Scholarships, study apps, learning guides, and community-curated content — open to all, no login required.</p>
+          </div>
+          <div class="pg-card-bot">
+            <span class="pg-card-ico">🌐</span>
+            <span class="pg-card-cta">
+              Explore resources
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 17 17 3M7 3h10v10"/></svg>
+            </span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </main>
+</div>
+
+<div id="site-footer"></div>
+
+<script>
+  window.SITE_ROOT = "../";
+  window.SITE_SECTION = "programs";
+  window.SITE_PAGE = "programs";
+
+  /* Mouse parallax on cards */
+  (function () {
+    var cards = document.querySelectorAll('.pg-card');
+    document.addEventListener('mousemove', function (e) {
+      var cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+      var dx = (e.clientX - cx) / cx, dy = (e.clientY - cy) / cy;
+      cards.forEach(function (card, i) {
+        var depth = 0.008 + (i % 3) * 0.003;
+        var tx = dx * 8 * depth * 1000;
+        var ty = dy * 6 * depth * 1000;
+        card.style.setProperty('--px', tx + 'px');
+        card.style.setProperty('--py', ty + 'px');
+      });
+    });
+  })();
+</script>
+<script src="../assets/js/nav.js?v=37" defer></script>
+</body>
+</html>

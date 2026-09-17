@@ -5,176 +5,186 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="../../assets/img/favicon.png">
 <link rel="apple-touch-icon" href="../../assets/img/favicon.png">
-<title>RealLingo Language Academy (RLLA) — In-Person Language Workshops | RealLingo</title>
-<meta name="description" content="RealLingo Language Academy (RLLA) is RealLingo's in-person learning program — a tutor leads small groups of learners through paid, structured workshops at partner venues. Join a workshop, or host one at your venue.">
+<title>RL Academy — Language Workshops | RealLingo</title>
+<meta name="description" content="RealLingo Language Academy — in-person, tutor-led language workshops. Register your interest or host a workshop at your venue.">
 <link rel="canonical" href="https://thereallingo.com/programs/language-academy/">
 <meta name="robots" content="index, follow">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="RealLingo">
-<meta property="og:title" content="RealLingo Language Academy (RLLA) | RealLingo">
-<meta property="og:description" content="In-person, tutor-led language workshops — join a workshop, or host one at your venue.">
-<meta property="og:url" content="https://thereallingo.com/programs/language-academy/">
-<meta property="og:image" content="https://thereallingo.com/assets/img/og-image.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="RealLingo Language Academy (RLLA) | RealLingo">
-<meta name="twitter:description" content="In-person, tutor-led language workshops — join a workshop, or host one at your venue.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/css/site.css?v=37">
 <style>
-  /* RealLingo Language Academy (RLLA) — "Our Programs" showcase; shares the RealLingo system. */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --pg-dark:#111216; --pg-mid:#4a4840; --pg-soft:#8a8878; --pg-y:#ffeb99; --pg-ym:#f5d96a; --pg-yp:#fff7d6; --pg-border:rgba(17,18,22,.09); }
-  body { font-family: var(--font-sans); background: var(--cream-white, #fffff2); color: var(--pg-dark); }
+  body { font-family: var(--font-sans); background: var(--cream-white, #fffff2); color: #111216; }
 
-  .pg-wrap { max-width: 1000px; margin: 0 auto; padding: 3.4rem 1.25rem 4.5rem; }
+  /* ── Hero ─────────────────────────────────── */
+  .rla-hero {
+    background: #111216;
+    padding: 5rem 5vw 4rem;
+    text-align: center;
+  }
+  .rla-eyebrow {
+    font-size: .68rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+    color: rgba(255,235,153,.55); margin-bottom: 1.4rem;
+    display: flex; align-items: center; justify-content: center; gap: .7rem;
+  }
+  .rla-eyebrow::before, .rla-eyebrow::after { content: ''; display: block; width: 24px; height: 1px; background: rgba(255,235,153,.3); }
+  .rla-h1 {
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: clamp(2.4rem, 5.5vw, 4rem);
+    font-weight: 400; line-height: 1.1; color: #fff;
+    letter-spacing: -.02em; max-width: 640px; margin: 0 auto .9rem;
+  }
+  .rla-h1 em { font-style: italic; color: #ffeb99; }
+  .rla-sub {
+    font-size: 1.05rem; color: rgba(255,255,255,.55); line-height: 1.65;
+    max-width: 520px; margin: 0 auto;
+  }
 
-  .pg-hero { text-align: center; max-width: 720px; margin: 0 auto 2.6rem; }
-  .pg-crumb { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--pg-mid); margin-bottom: 1rem; }
-  .pg-h1 { font-size: clamp(2.1rem, 5vw, 3.2rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; color: var(--pg-dark); }
-  .pg-h1 em { font-style: normal; background: linear-gradient(180deg, transparent 62%, var(--pg-y) 62%); padding: 0 .08em; }
-  .pg-lede { margin: 1.2rem auto 0; max-width: 640px; font-size: 1.08rem; line-height: 1.65; color: var(--pg-mid); }
-  .pg-cta-row { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center; }
-  .pg-btn { display: inline-flex; align-items: center; gap: .5rem; padding: .9rem 1.8rem; border-radius: 100px; font-weight: 700; font-size: .98rem; text-decoration: none; transition: transform .16s ease, box-shadow .16s ease, background .16s ease; }
-  .pg-btn--primary { background: var(--pg-dark); color: #fff; }
-  .pg-btn--primary:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -14px rgba(17,18,22,.55); }
-  .pg-btn--ghost { background: #fff; color: var(--pg-dark); border: 1px solid var(--pg-border); }
-  .pg-btn--ghost:hover { transform: translateY(-2px); background: var(--pg-yp); }
+  /* ── Pills row ───────────────────────────── */
+  .rla-pills {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem;
+    padding: 2rem 5vw 0;
+    background: #111216;
+  }
+  .rla-pill {
+    display: inline-flex; align-items: center; gap: .45rem;
+    font-size: .8rem; font-weight: 700;
+    background: rgba(255,235,153,.08); color: rgba(255,235,153,.75);
+    border: 1px solid rgba(255,235,153,.15); border-radius: 999px;
+    padding: .4rem .95rem;
+  }
 
-  /* "Partner Your Venue" language picker (EN / AR proposal download) */
-  .vp-pick { position: relative; display: inline-block; }
-  .vp-pick summary { list-style: none; cursor: pointer; }
-  .vp-pick summary::-webkit-details-marker { display: none; }
-  .vp-menu { position: absolute; left: 50%; transform: translateX(-50%); top: calc(100% + .55rem); z-index: 30; min-width: 236px; background: #fff; border: 1px solid var(--pg-border); border-radius: 14px; box-shadow: 0 22px 55px -22px rgba(17,18,22,.5); padding: .4rem; text-align: left; }
-  .vp-menu a { display: flex; align-items: center; gap: .55rem; padding: .72rem .9rem; border-radius: 10px; text-decoration: none; color: var(--pg-dark); font-weight: 700; font-size: .92rem; }
-  .vp-menu a:hover { background: var(--pg-yp); }
-  .vp-menu a[dir="rtl"] { flex-direction: row-reverse; text-align: right; }
+  /* ── Divider into cream ──────────────────── */
+  .rla-divider {
+    height: 56px; background: linear-gradient(to bottom, #111216, var(--cream-white, #fffff2));
+  }
 
-  .pg-sec { margin-top: 3.2rem; }
-  .pg-sec-eyebrow { font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--pg-soft); text-align: center; margin-bottom: .6rem; }
-  .pg-sec-title { font-size: clamp(1.5rem, 3.4vw, 2rem); font-weight: 800; letter-spacing: -.02em; text-align: center; color: var(--pg-dark); margin-bottom: 1.6rem; }
+  /* ── Two-col layout ─────────────────────── */
+  .rla-body {
+    max-width: 1160px; margin: 0 auto;
+    padding: 0 5vw 5rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start;
+  }
 
-  /* Format cards */
-  .pg-formats { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
-  .pg-format { position: relative; overflow: hidden; background: #fff; border: 1px solid var(--pg-border); border-radius: 20px; padding: 1.8rem 1.6rem; box-shadow: 0 18px 44px -30px rgba(17,18,22,.4); }
-  .pg-format::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--pg-y), var(--pg-ym)); }
-  .pg-format .ico { font-size: 1.9rem; }
-  .pg-format h3 { font-size: 1.2rem; font-weight: 800; margin: .55rem 0 .2rem; }
-  .pg-format .freq { font-size: .72rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #6a5800; background: var(--pg-yp); border: 1px solid rgba(230,198,74,.5); border-radius: 100px; padding: .22rem .6rem; display: inline-block; margin-bottom: .7rem; }
-  .pg-format p { font-size: .92rem; line-height: 1.6; color: var(--pg-mid); }
+  /* ── Info column ─────────────────────────── */
+  .rla-info-col { padding-top: .5rem; }
+  .rla-section-label {
+    font-size: .68rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
+    color: rgba(17,18,22,.35); margin-bottom: .7rem;
+  }
+  .rla-info-h2 {
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 400; line-height: 1.15;
+    color: #111216; letter-spacing: -.02em; margin-bottom: 1rem;
+  }
+  .rla-info-h2 em { font-style: italic; color: #8a5c00; }
+  .rla-info-p { font-size: .97rem; line-height: 1.7; color: rgba(17,18,22,.6); margin-bottom: 1.6rem; }
 
-  .pg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.1rem; }
-  .pg-card { position: relative; overflow: hidden; background: #fff; border: 1px solid var(--pg-border); border-radius: 18px; padding: 1.5rem 1.35rem; box-shadow: 0 18px 44px -30px rgba(17,18,22,.4); }
-  .pg-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--pg-y), var(--pg-ym)); }
-  .pg-card .ico { font-size: 1.6rem; }
-  .pg-card h3 { font-size: 1.02rem; font-weight: 800; margin: .6rem 0 .35rem; }
-  .pg-card p { font-size: .9rem; line-height: 1.55; color: var(--pg-mid); }
+  .rla-what { list-style: none; display: flex; flex-direction: column; gap: .7rem; margin-bottom: 2rem; }
+  .rla-what li {
+    display: flex; align-items: flex-start; gap: .75rem;
+    font-size: .93rem; line-height: 1.55; color: rgba(17,18,22,.75);
+  }
+  .rla-what-ico {
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: 10px;
+    background: #ffeb99; display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; margin-top: .05rem;
+  }
 
-  .pg-band { margin-top: 3.4rem; background: var(--pg-dark); border-radius: 22px; padding: clamp(2.2rem, 5vw, 3.2rem); text-align: center; color: #fff; }
-  .pg-band .pg-sec-eyebrow { color: rgba(255,235,153,.6); }
-  .pg-band h2 { font-size: clamp(1.6rem, 3.6vw, 2.2rem); font-weight: 800; letter-spacing: -.02em; }
-  .pg-band h2 em { font-style: normal; color: var(--pg-y); }
-  .pg-band p { margin: .8rem auto 1.6rem; max-width: 560px; color: rgba(255,255,255,.7); line-height: 1.6; font-size: 1rem; }
-  .pg-band .pg-btn--primary { background: var(--pg-y); color: var(--pg-dark); }
-  .pg-band .pg-btn--primary:hover { background: #fff; }
+  .rla-venue-band {
+    background: #111216; border-radius: 18px; padding: 1.6rem 1.8rem;
+    color: #fff; margin-top: .5rem;
+  }
+  .rla-venue-band .rla-section-label { color: rgba(255,235,153,.45); margin-bottom: .5rem; }
+  .rla-venue-band p { font-size: .9rem; color: rgba(255,255,255,.6); line-height: 1.6; margin-bottom: 1.2rem; }
+  .rla-venue-btns { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .rla-btn {
+    display: inline-flex; align-items: center; gap: .4rem;
+    padding: .7rem 1.35rem; border-radius: 999px; font-weight: 700; font-size: .88rem;
+    text-decoration: none; transition: transform .15s, background .15s;
+  }
+  .rla-btn--yellow { background: #ffeb99; color: #111216; }
+  .rla-btn--yellow:hover { background: #f5d96a; transform: translateY(-2px); }
+  .rla-btn--ghost { background: rgba(255,255,255,.1); color: #fff; border: 1px solid rgba(255,255,255,.15); }
+  .rla-btn--ghost:hover { background: rgba(255,255,255,.18); transform: translateY(-2px); }
 
-  .pg-back { display: block; text-align: center; margin-top: 1.8rem; font-weight: 700; color: var(--pg-dark); text-decoration: none; }
-  .pg-back:hover { text-decoration: underline; }
+  /* ── CTA card ────────────────────────────── */
+  .rla-cta-card {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 1rem;
+    position: sticky; top: 2rem; padding-top: .5rem;
+  }
+  .rla-cta-card p { font-size: .92rem; color: rgba(17,18,22,.55); line-height: 1.6; }
+  .rla-btn--dark { background: #111216; color: #ffeb99; }
+  .rla-btn--dark:hover { background: #2a2b30; transform: translateY(-2px); }
+
+  @media (max-width: 860px) {
+    .rla-body { grid-template-columns: 1fr; }
+    .rla-form-col { order: -1; }
+  }
+  @media (max-width: 480px) {
+    .rla-hero { padding: 4rem 1.4rem 3rem; }
+    .rla-pills { padding: 1.5rem 1.4rem 0; }
+    .rla-body { padding: 0 1.4rem 4rem; }
+  }
 </style>
 </head>
 <body>
 
 <div id="site-header"></div>
 
-<main class="pg-wrap">
-  <section class="pg-hero">
-    <div class="pg-crumb">Our Programs / Language Academy</div>
-    <h1 class="pg-h1">RealLingo Language Academy — <em>real teachers, real progress</em></h1>
-    <p class="pg-lede">RLLA is RealLingo's in-person learning program. A dedicated tutor leads small groups of learners through structured, paid workshops at partner venues — starting with our flagship Chinese Workshop and growing to more languages across the region.</p>
-    <div class="pg-cta-row">
-      <a class="pg-btn pg-btn--primary" href="../../eventpartners/">Find a Workshop Near You</a>
-      <details class="vp-pick">
-        <summary class="pg-btn pg-btn--ghost">Partner Your Venue ▾</summary>
-        <div class="vp-menu">
-          <a href="../../assets/docs/cities-venue-partnership-en.pdf" target="_blank" rel="noopener">📄 English proposal (EN)</a>
-          <a href="../../assets/docs/cities-venue-partnership-ar.pdf" target="_blank" rel="noopener" dir="rtl">📄 النسخة العربية (AR)</a>
-        </div>
-      </details>
-    </div>
-  </section>
+<section class="rla-hero">
+  <div class="rla-eyebrow">RL Academy</div>
+  <h1 class="rla-h1">Learn a language<br><em>face to face.</em></h1>
+  <p class="rla-sub">Small groups, expert tutors, real venues. Starting with Mandarin Chinese — more languages on the way.</p>
+</section>
 
-  <!-- How it works -->
-  <section class="pg-sec">
-    <div class="pg-sec-eyebrow">How the Academy works</div>
-    <h2 class="pg-sec-title">A tutor, a group, a real workshop</h2>
-    <div class="pg-grid">
-      <div class="pg-card"><div class="ico">👩‍🏫</div><h3>Expert tutor</h3><p>Every workshop is led by a qualified, native-level tutor who guides the group from the front.</p></div>
-      <div class="pg-card"><div class="ico">👥</div><h3>Small groups of learners</h3><p>Learners join a cohort, so everyone gets real attention and plenty of speaking time.</p></div>
-      <div class="pg-card"><div class="ico">📍</div><h3>In-person workshop</h3><p>Sessions run face-to-face at a partner venue — structured, hands-on and social.</p></div>
-      <div class="pg-card"><div class="ico">💳</div><h3>Paid enrollment</h3><p>Learners pay to join a course of workshops, so tutors are fairly paid and quality stays high.</p></div>
-    </div>
-  </section>
+<div class="rla-pills">
+  <span class="rla-pill">🀄 Chinese Workshop</span>
+  <span class="rla-pill">👩‍🏫 Tutor-led</span>
+  <span class="rla-pill">📍 In-person</span>
+  <span class="rla-pill">👥 Small groups</span>
+  <span class="rla-pill">🌱 More languages coming</span>
+</div>
 
-  <!-- What we teach -->
-  <section class="pg-sec">
-    <div class="pg-sec-eyebrow">What we teach</div>
-    <h2 class="pg-sec-title">Our workshops</h2>
-    <div class="pg-formats">
-      <div class="pg-format">
-        <div class="ico">🀄</div>
-        <h3>Chinese Workshop</h3>
-        <span class="freq">Monthly · language &amp; culture</span>
-        <p>A focused session introducing Mandarin basics and Chinese culture — especially popular with Arabic-speaking professionals and the business community.</p>
-      </div>
-      <div class="pg-format">
-        <div class="ico">🌱</div>
-        <h3>More languages coming</h3>
-        <span class="freq">Rolling out</span>
-        <p>Arabic, English and more tutor-led workshops are on the way as the Academy grows across the region.</p>
+<div class="rla-divider" aria-hidden="true"></div>
+
+<div class="rla-body">
+
+  <!-- Info column -->
+  <div class="rla-info-col">
+    <div class="rla-section-label">How it works</div>
+    <h2 class="rla-info-h2">A tutor, a group,<br><em>a real session.</em></h2>
+    <p class="rla-info-p">RealLingo Academy runs structured, paid workshops at partner venues — combining language practice with community.</p>
+
+    <ul class="rla-what">
+      <li><span class="rla-what-ico">👩‍🏫</span><span><strong>Expert tutor</strong> — qualified, native-level teacher every session</span></li>
+      <li><span class="rla-what-ico">👥</span><span><strong>Small cohorts</strong> — real attention, plenty of speaking time</span></li>
+      <li><span class="rla-what-ico">📍</span><span><strong>In-person</strong> — structured workshops at partner cafés & venues</span></li>
+      <li><span class="rla-what-ico">💳</span><span><strong>Paid enrollment</strong> — tutors are fairly compensated, quality stays high</span></li>
+    </ul>
+
+    <div class="rla-venue-band">
+      <div class="rla-section-label">For Venue Partners</div>
+      <p>We bring the tutor, the curriculum and the paying learners. You provide the space — no commission, no hassle, new recurring footfall.</p>
+      <div class="rla-venue-btns">
+        <a href="../../assets/docs/cities-venue-partnership-en.pdf" target="_blank" rel="noopener" class="rla-btn rla-btn--yellow">🇬🇧 Download Proposal</a>
+        <a href="../../assets/docs/cities-venue-partnership-ar.pdf" target="_blank" rel="noopener" class="rla-btn rla-btn--ghost" dir="rtl">🇸🇦 النسخة العربية</a>
       </div>
     </div>
-  </section>
-
-  <!-- For learners -->
-  <section class="pg-sec">
-    <div class="pg-sec-eyebrow">For learners</div>
-    <h2 class="pg-sec-title">Actually make progress</h2>
-    <div class="pg-grid">
-      <div class="pg-card"><div class="ico">🎯</div><h3>Structured progress</h3><p>A clear curriculum and a real tutor mean you move forward, session by session.</p></div>
-      <div class="pg-card"><div class="ico">🤝</div><h3>Learn together</h3><p>Small cohorts keep it social and motivating — practise with peers, not alone.</p></div>
-      <div class="pg-card"><div class="ico">🗣️</div><h3>Speak from day one</h3><p>Hands-on, in-person workshops get you speaking and using the language right away.</p></div>
-    </div>
-  </section>
-
-  <!-- For venues -->
-  <section class="pg-sec">
-    <div class="pg-sec-eyebrow">For venues</div>
-    <h2 class="pg-sec-title">Host a workshop — lend us your space</h2>
-    <div class="pg-grid">
-      <div class="pg-card"><div class="ico">🆓</div><h3>Just the space</h3><p>We simply need a free room or quiet corner for the workshop — no rent, no fee.</p></div>
-      <div class="pg-card"><div class="ico">💯</div><h3>No commission</h3><p>We take zero commission from your business — learners pay RealLingo for tuition, not you.</p></div>
-      <div class="pg-card"><div class="ico">☕</div><h3>New footfall &amp; F&amp;B</h3><p>Paying learners arrive early and stay after — ordering food &amp; drinks, all revenue yours.</p></div>
-      <div class="pg-card"><div class="ico">🔁</div><h3>Recurring sessions</h3><p>Monthly workshops bring a steady, returning crowd to your venue.</p></div>
-      <div class="pg-card"><div class="ico">📣</div><h3>Brand exposure</h3><p>Your venue is featured across RealLingo's channels, community groups and partner network.</p></div>
-      <div class="pg-card"><div class="ico">🏛️</div><h3>Cultural branding</h3><p>Position your space as a learning and culture hub that resonates with the community.</p></div>
-    </div>
-  </section>
-
-  <div class="pg-band">
-    <h2>Bring a language classroom to <em>your venue</em></h2>
-    <p>We bring the tutor, the curriculum and the paying learners. You provide a free space — no commission, no hassle — and gain new footfall, F&amp;B and community goodwill.</p>
-    <details class="vp-pick">
-      <summary class="pg-btn pg-btn--primary">Partner Your Venue ▾</summary>
-      <div class="vp-menu">
-        <a href="../../assets/docs/cities-venue-partnership-en.pdf" target="_blank" rel="noopener">📄 English proposal (EN)</a>
-        <a href="../../assets/docs/cities-venue-partnership-ar.pdf" target="_blank" rel="noopener" dir="rtl">📄 النسخة العربية (AR)</a>
-      </div>
-    </details>
   </div>
 
-  <a href="../../about/launch/" class="pg-back">← Back to RealLingo</a>
-</main>
+  <!-- CTA card -->
+  <div class="rla-form-col">
+    <div class="rla-cta-card">
+      <p>Interested in the next cohort? Register your interest and we'll reach out when a seat opens near you.</p>
+      <a href="https://forms.gle/XpTHAushwW1f6iWT8" target="_blank" rel="noopener" class="rla-btn rla-btn--dark">
+        Register Interest →
+      </a>
+    </div>
+  </div>
+
+</div>
 
 <div id="site-footer"></div>
 

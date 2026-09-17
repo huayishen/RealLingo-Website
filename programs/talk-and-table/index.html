@@ -5,164 +5,1111 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="../../assets/img/favicon.png">
 <link rel="apple-touch-icon" href="../../assets/img/favicon.png">
-<title>Talk &amp; Table (RLTT) — In-Venue Language Meetups | RealLingo</title>
-<meta name="description" content="Talk & Table (RLTT) is RealLingo's in-venue language experience — real conversations over coffee at partner cafés. Join a session, or host one at your venue.">
+<title>Talk &amp; Table — Language Lovers Around Town | RealLingo</title>
+<meta name="description" content="Talk & Table (RLTT) brings language lovers together over coffee. Join a session near you — real conversations, real people, real languages.">
 <link rel="canonical" href="https://thereallingo.com/programs/talk-and-table/">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RealLingo">
-<meta property="og:title" content="Talk &amp; Table (RLTT) | RealLingo">
-<meta property="og:description" content="RealLingo's in-venue language experience — real conversations over coffee at partner cafés. Join a session, or host one at your venue.">
+<meta property="og:title" content="Talk &amp; Table — Language Lovers Around Town | RealLingo">
+<meta property="og:description" content="Grab a coffee, meet new people, and practice languages through real conversations.">
 <meta property="og:url" content="https://thereallingo.com/programs/talk-and-table/">
 <meta property="og:image" content="https://thereallingo.com/assets/img/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Talk &amp; Table (RLTT) | RealLingo">
-<meta name="twitter:description" content="In-venue language meetups over coffee — join a session, or host one at your venue.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/css/site.css?v=37">
 <style>
-  /* Talk & Table (RLTT) — "Our Programs" showcase; shares the RealLingo system. */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --pg-dark:#111216; --pg-mid:#4a4840; --pg-soft:#8a8878; --pg-y:#ffeb99; --pg-ym:#f5d96a; --pg-yp:#fff7d6; --pg-border:rgba(17,18,22,.09); }
-  body { font-family: var(--font-sans); background: var(--cream-white, #fffff2); color: var(--pg-dark); }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .pg-wrap { max-width: 1000px; margin: 0 auto; padding: 3.4rem 1.25rem 4.5rem; }
+:root {
+  --tt-dark:   #111216;
+  --tt-mid:    #4a4840;
+  --tt-soft:   #8a8878;
+  --tt-y:      #ffeb99;
+  --tt-ym:     #f5d96a;
+  --tt-yp:     #fff7d6;
+  --tt-border: rgba(17,18,22,.08);
+  --tt-cream:  #fffff2;
+}
+body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--tt-dark); }
 
-  .pg-hero { text-align: center; max-width: 720px; margin: 0 auto 2.6rem; }
-  .pg-crumb { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--pg-mid); margin-bottom: 1rem; }
-  .pg-h1 { font-size: clamp(2.1rem, 5vw, 3.2rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; color: var(--pg-dark); }
-  .pg-h1 em { font-style: normal; background: linear-gradient(180deg, transparent 62%, var(--pg-y) 62%); padding: 0 .08em; }
-  .pg-lede { margin: 1.2rem auto 0; max-width: 640px; font-size: 1.08rem; line-height: 1.65; color: var(--pg-mid); }
-  .pg-cta-row { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center; }
-  .pg-btn { display: inline-flex; align-items: center; gap: .5rem; padding: .9rem 1.8rem; border-radius: 100px; font-weight: 700; font-size: .98rem; text-decoration: none; transition: transform .16s ease, box-shadow .16s ease, background .16s ease; }
-  .pg-btn--primary { background: var(--pg-dark); color: #fff; }
-  .pg-btn--primary:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -14px rgba(17,18,22,.55); }
-  .pg-btn--ghost { background: #fff; color: var(--pg-dark); border: 1px solid var(--pg-border); }
-  .pg-btn--ghost:hover { transform: translateY(-2px); background: var(--pg-yp); }
+/* ── Utility ─────────────────────────────────── */
+.tt-eyebrow {
+  font-size: .68rem; font-weight: 800; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--tt-soft);
+  margin-bottom: .75rem;
+}
+.tt-h2 {
+  font-family: var(--font-serif); font-size: clamp(1.85rem, 3.8vw, 2.9rem);
+  font-weight: 400; line-height: 1.18; letter-spacing: -.01em;
+}
+.tt-h2 em { font-style: italic; }
+.tt-btn {
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .85rem 1.8rem; border-radius: 100px;
+  font-family: var(--font-sans); font-weight: 700; font-size: .95rem;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: transform .16s, box-shadow .16s, background .16s;
+}
+.tt-btn--dark  { background: var(--tt-dark); color: #fff; }
+.tt-btn--dark:hover  { transform: translateY(-2px); box-shadow: 0 16px 34px -14px rgba(17,18,22,.5); }
+.tt-btn--ghost { background: #fff; color: var(--tt-dark); border: 1.5px solid var(--tt-border); }
+.tt-btn--ghost:hover { background: var(--tt-yp); transform: translateY(-2px); }
+.tt-btn--yellow { background: var(--tt-y); color: var(--tt-dark); }
+.tt-btn--yellow:hover { background: var(--tt-ym); transform: translateY(-2px); box-shadow: 0 12px 28px -10px rgba(245,217,106,.5); }
 
-  /* "Partner Your Venue" language picker (EN / AR proposal download) */
-  .vp-pick { position: relative; display: inline-block; }
-  .vp-pick summary { list-style: none; cursor: pointer; }
-  .vp-pick summary::-webkit-details-marker { display: none; }
-  .vp-menu { position: absolute; left: 50%; transform: translateX(-50%); top: calc(100% + .55rem); z-index: 30; min-width: 236px; background: #fff; border: 1px solid var(--pg-border); border-radius: 14px; box-shadow: 0 22px 55px -22px rgba(17,18,22,.5); padding: .4rem; text-align: left; }
-  .vp-menu a { display: flex; align-items: center; gap: .55rem; padding: .72rem .9rem; border-radius: 10px; text-decoration: none; color: var(--pg-dark); font-weight: 700; font-size: .92rem; }
-  .vp-menu a:hover { background: var(--pg-yp); }
-  .vp-menu a[dir="rtl"] { flex-direction: row-reverse; text-align: right; }
+/* ── Hero ────────────────────────────────────── */
+.tt-hero {
+  position: relative; min-height: min(80vh, 700px);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  overflow: hidden; background: #111216;
+}
 
-  .pg-sec { margin-top: 3.2rem; }
-  .pg-sec-eyebrow { font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--pg-soft); text-align: center; margin-bottom: .6rem; }
-  .pg-sec-title { font-size: clamp(1.5rem, 3.4vw, 2rem); font-weight: 800; letter-spacing: -.02em; text-align: center; color: var(--pg-dark); margin-bottom: 1.6rem; }
+/* Crossfade slideshow */
+.tt-hero-slides { position: absolute; inset: 0; z-index: 0; }
+.tt-hero-slide {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center 30%;
+  opacity: 0; transition: opacity 1.4s ease-in-out;
+}
+.tt-hero-slide.active { opacity: 1; }
+.tt-hero-slide:nth-child(1) { background-image: url('../../assets/img/tt/tt-3.jpg'); background-position: center 35%; }
+.tt-hero-slide:nth-child(2) { background-image: url('../../assets/img/tt/tt-5.jpg'); background-position: center 40%; }
+.tt-hero-slide:nth-child(3) { background-image: url('../../assets/img/tt/tt-9.jpg'); background-position: center 30%; }
+.tt-hero-slide:nth-child(4) { background-image: url('../../assets/img/tt/tt-8.jpg'); background-position: center 35%; }
 
-  /* Two format cards */
-  .pg-formats { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
-  .pg-format { position: relative; overflow: hidden; background: #fff; border: 1px solid var(--pg-border); border-radius: 20px; padding: 1.8rem 1.6rem; box-shadow: 0 18px 44px -30px rgba(17,18,22,.4); }
-  .pg-format::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--pg-y), var(--pg-ym)); }
-  .pg-format .ico { font-size: 1.9rem; }
-  .pg-format h3 { font-size: 1.2rem; font-weight: 800; margin: .55rem 0 .2rem; }
-  .pg-format .freq { font-size: .72rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #6a5800; background: var(--pg-yp); border: 1px solid rgba(230,198,74,.5); border-radius: 100px; padding: .22rem .6rem; display: inline-block; margin-bottom: .7rem; }
-  .pg-format p { font-size: .92rem; line-height: 1.6; color: var(--pg-mid); }
+.tt-hero-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(17,18,22,.18) 0%,
+    rgba(17,18,22,.25) 40%,
+    rgba(17,18,22,.72) 80%,
+    rgba(17,18,22,.88) 100%
+  );
+}
+.tt-hero-content {
+  position: relative; z-index: 2;
+  padding: 3.5rem 5vw 4rem;
+  max-width: 860px;
+}
+.tt-hero-badge {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--tt-y); color: var(--tt-dark);
+  font-size: .7rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase;
+  padding: .32rem .8rem; border-radius: 100px; margin-bottom: 1.4rem;
+}
+.tt-hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--tt-dark); }
+.tt-hero-h1 {
+  font-family: var(--font-serif); font-size: clamp(2.4rem, 5.8vw, 4.4rem);
+  font-weight: 400; line-height: 1.1; color: #fff;
+  text-shadow: 0 4px 30px rgba(0,0,0,.3);
+  margin-bottom: 1.1rem;
+}
+.tt-hero-h1 em { font-style: italic; color: var(--tt-y); }
+.tt-hero-sub {
+  font-size: clamp(1rem, 2vw, 1.2rem); color: rgba(255,255,255,.8);
+  line-height: 1.6; max-width: 540px; margin-bottom: 2rem;
+}
+.tt-hero-ctas { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 2.5rem; }
 
-  .pg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.1rem; }
-  .pg-card { position: relative; overflow: hidden; background: #fff; border: 1px solid var(--pg-border); border-radius: 18px; padding: 1.5rem 1.35rem; box-shadow: 0 18px 44px -30px rgba(17,18,22,.4); }
-  .pg-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--pg-y), var(--pg-ym)); }
-  .pg-card .ico { font-size: 1.6rem; }
-  .pg-card h3 { font-size: 1.02rem; font-weight: 800; margin: .6rem 0 .35rem; }
-  .pg-card p { font-size: .9rem; line-height: 1.55; color: var(--pg-mid); }
+/* City name ticker in hero */
+.tt-city-ticker {
+  display: flex; align-items: center; gap: .75rem;
+  font-size: .8rem; color: rgba(255,255,255,.55);
+  letter-spacing: .06em; text-transform: uppercase; font-weight: 600;
+}
+.tt-city-ticker-label { white-space: nowrap; }
+.tt-city-ticker-track {
+  overflow: hidden; height: 1.4em; position: relative; min-width: 180px;
+}
+.tt-city-ticker-items {
+  display: flex; flex-direction: column;
+  animation: tickerScroll 12s linear infinite;
+}
+.tt-city-ticker-item { height: 1.4em; white-space: nowrap; color: rgba(255,255,255,.9); }
+@keyframes tickerScroll {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
+}
 
-  .pg-band { margin-top: 3.4rem; background: var(--pg-dark); border-radius: 22px; padding: clamp(2.2rem, 5vw, 3.2rem); text-align: center; color: #fff; }
-  .pg-band .pg-sec-eyebrow { color: rgba(255,235,153,.6); }
-  .pg-band h2 { font-size: clamp(1.6rem, 3.6vw, 2.2rem); font-weight: 800; letter-spacing: -.02em; }
-  .pg-band h2 em { font-style: normal; color: var(--pg-y); }
-  .pg-band p { margin: .8rem auto 1.6rem; max-width: 560px; color: rgba(255,255,255,.7); line-height: 1.6; font-size: 1rem; }
-  .pg-band .pg-btn--primary { background: var(--pg-y); color: var(--pg-dark); }
-  .pg-band .pg-btn--primary:hover { background: #fff; }
+/* ── Community Cities ───────────────────────── */
+.tt-cities-section {
+  background: var(--tt-cream); padding: 5rem 5vw;
+}
+.tt-cities-inner { max-width: 1200px; margin: 0 auto; }
+.tt-cities-head { margin-bottom: 3rem; }
+.tt-cities-head .tt-h2 { margin-top: .5rem; }
 
-  .pg-back { display: block; text-align: center; margin-top: 1.8rem; font-weight: 700; color: var(--pg-dark); text-decoration: none; }
-  .pg-back:hover { text-decoration: underline; }
+/* Animated city display */
+.tt-city-stage {
+  text-align: center; padding: 3.5rem 2rem 3rem;
+  background: var(--tt-dark); border-radius: 28px;
+  margin-bottom: 2rem; overflow: hidden; position: relative;
+}
+.tt-city-stage-bg {
+  position: absolute; inset: 0; opacity: .07;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent, transparent 40px,
+    rgba(255,235,153,.4) 40px, rgba(255,235,153,.4) 41px
+  );
+}
+.tt-city-display {
+  position: relative; z-index: 1;
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 9vw, 7rem);
+  color: #fff; line-height: 1.1;
+  letter-spacing: -.02em;
+  cursor: pointer; text-decoration: none;
+  display: block;
+  transition: color .3s;
+}
+.tt-city-display:hover { color: var(--tt-y); }
+.tt-city-display .city-native { display: block; font-style: italic; }
+.tt-city-display .city-en    { display: block; font-family: var(--font-sans); font-size: clamp(1rem, 2.5vw, 1.6rem); font-style: normal; font-weight: 300; color: rgba(255,255,255,.5); margin-top: .35rem; letter-spacing: .1em; text-transform: uppercase; }
+.tt-city-display .city-sub   { display: block; font-family: var(--font-sans); font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--tt-y); margin-top: .6rem; }
+
+/* Nav dots */
+.tt-city-nav {
+  display: flex; justify-content: center; gap: .55rem;
+  margin-top: 1.5rem;
+}
+.tt-city-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,.22); border: none; cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+.tt-city-dot.active { background: var(--tt-y); transform: scale(1.25); }
+
+/* City cards grid */
+.tt-city-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+.tt-city-card {
+  display: flex; flex-direction: column; gap: .3rem;
+  background: #fff; border: 1px solid var(--tt-border);
+  border-radius: 18px; padding: 1.5rem 1.6rem;
+  text-decoration: none; color: inherit;
+  transition: box-shadow .2s, transform .2s;
+  position: relative; overflow: hidden;
+}
+.tt-city-card::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--tt-y), var(--tt-ym));
+}
+.tt-city-card:hover { box-shadow: 0 8px 28px rgba(17,18,22,.1); transform: translateY(-3px); }
+.tt-city-card-flag { font-size: 1.8rem; margin-bottom: .3rem; }
+.tt-city-card-native { font-family: var(--font-serif); font-size: 1.6rem; line-height: 1.15; font-weight: 400; }
+.tt-city-card-en { font-size: .78rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--tt-soft); margin-top: .1rem; }
+.tt-city-card-region { font-size: .82rem; color: var(--tt-soft); margin-top: .25rem; }
+.tt-city-card-cta {
+  display: inline-flex; align-items: center; gap: .35rem;
+  margin-top: auto; padding-top: 1rem;
+  font-size: .8rem; font-weight: 700;
+  color: #25d366;
+}
+.tt-city-card-cta svg { stroke: #25d366; }
+
+/* ── Experience section ─────────────────────── */
+.tt-exp-section { padding: 5rem 0 2rem; }
+.tt-exp-inner { max-width: 1280px; margin: 0 auto; }
+.tt-exp-head { margin-bottom: 4rem; max-width: 600px; padding: 0 5vw; }
+.tt-exp-head .tt-h2 { margin-top: .5rem; }
+.tt-exp-head p { margin-top: .8rem; font-size: 1rem; line-height: 1.65; color: var(--tt-mid); }
+
+/* Editorial rows */
+.tt-exp-rows { display: flex; flex-direction: column; }
+.tt-exp-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  min-height: 420px; overflow: hidden;
+  opacity: 0; transform: translateY(40px);
+  transition: opacity .8s cubic-bezier(.25,.46,.45,.94), transform .8s cubic-bezier(.25,.46,.45,.94);
+}
+.tt-exp-row.visible { opacity: 1; transform: translateY(0); }
+.tt-exp-row:nth-child(2) { transition-delay: .1s; }
+.tt-exp-row:nth-child(3) { transition-delay: .2s; }
+
+/* Flip alternate rows */
+.tt-exp-row--flip .tt-exp-row-photo { order: 2; }
+.tt-exp-row--flip .tt-exp-row-text  { order: 1; }
+
+/* Photo side */
+.tt-exp-row-photo {
+  position: relative; overflow: hidden;
+}
+.tt-exp-row-photo img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 1.2s cubic-bezier(.25,.46,.45,.94);
+  transform: scale(1.04);
+}
+.tt-exp-row:hover .tt-exp-row-photo img { transform: scale(1); }
+.tt-exp-row-photo-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(17,18,22,.25) 0%, transparent 60%);
+  transition: opacity .6s;
+}
+.tt-exp-row:hover .tt-exp-row-photo-overlay { opacity: 0; }
+
+/* Text side */
+.tt-exp-row-text {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 4rem 5vw; position: relative;
+}
+.tt-exp-row-num {
+  font-family: var(--tt-serif); font-size: 6rem; font-style: italic;
+  line-height: 1; letter-spacing: -.04em; font-weight: 400;
+  color: rgba(17,18,22,.07); margin-bottom: -.5rem; pointer-events: none;
+}
+.tt-exp-row-ico { font-size: 1.4rem; margin-bottom: .75rem; }
+.tt-exp-row-title {
+  font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 800; line-height: 1.15; margin-bottom: .75rem;
+}
+.tt-exp-row-text p { font-size: 1rem; line-height: 1.7; color: var(--tt-mid); max-width: 380px; }
+
+/* Alternating background tints */
+.tt-exp-row:nth-child(odd)  { background: var(--tt-cream); }
+.tt-exp-row:nth-child(even) { background: #fff; }
+
+/* ── Event cards section ────────────────────── */
+.tt-events-section { background: var(--tt-dark); padding: 5rem 5vw; }
+.tt-events-inner { max-width: 1200px; margin: 0 auto; }
+.tt-events-head { margin-bottom: 2.5rem; }
+.tt-events-head .tt-eyebrow { color: rgba(255,235,153,.6); }
+.tt-events-head .tt-h2 { color: #fff; }
+.tt-events-head .tt-h2 em { color: var(--tt-y); }
+.tt-events-head p { margin-top: .6rem; font-size: 1rem; color: rgba(255,255,255,.6); }
+
+.tt-events-grid {
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  margin-bottom: 2rem;
+}
+.tt-event-card {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 18px; padding: 1.5rem 1.4rem;
+  display: flex; flex-direction: column; gap: .3rem;
+  text-decoration: none; color: #fff;
+  transition: background .2s, border-color .2s, transform .2s;
+  position: relative; overflow: hidden;
+}
+.tt-event-card::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--tt-y), var(--tt-ym));
+}
+.tt-event-card:hover {
+  background: rgba(255,235,153,.1); border-color: rgba(255,235,153,.3);
+  transform: translateY(-3px);
+}
+.tt-event-badge {
+  font-size: .62rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--tt-ym); margin-bottom: .5rem;
+}
+.tt-event-name { font-size: 1.05rem; font-weight: 800; line-height: 1.25; }
+.tt-event-meta { list-style: none; display: flex; flex-direction: column; gap: .28rem; margin-top: .7rem; }
+.tt-event-meta li { font-size: .82rem; color: rgba(255,255,255,.6); display: flex; align-items: baseline; gap: .4rem; }
+.tt-event-meta li strong { color: rgba(255,255,255,.9); }
+.tt-event-langs { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .9rem; }
+.tt-event-lang-tag {
+  font-size: .72rem; font-weight: 700; padding: .2rem .55rem;
+  background: rgba(255,235,153,.15); border: 1px solid rgba(255,235,153,.25);
+  color: var(--tt-y); border-radius: 100px;
+}
+.tt-event-join {
+  display: inline-flex; align-items: center; gap: .35rem;
+  margin-top: auto; padding-top: 1.1rem;
+  font-size: .82rem; font-weight: 700; color: var(--tt-y);
+}
+
+.tt-events-all {
+  display: flex; justify-content: center;
+}
+
+/* ── Living Gallery ─────────────────────────── */
+.tt-gallery-section { padding: 5rem 0 6rem; overflow: hidden; }
+.tt-gallery-head {
+  max-width: 1200px; margin: 0 auto 2.5rem; padding: 0 5vw;
+  display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+}
+.tt-gallery-head .tt-h2 { margin-top: .4rem; }
+.tt-gallery-counter {
+  font-family: var(--tt-serif); font-size: 2.5rem; font-style: italic;
+  color: rgba(17,18,22,.15); letter-spacing: -.03em; white-space: nowrap; line-height: 1;
+}
+
+.tt-gallery-viewport {
+  position: relative; overflow: hidden; height: 520px; cursor: grab; user-select: none;
+}
+.tt-gallery-viewport.dragging { cursor: grabbing; }
+
+.tt-gallery-track {
+  display: flex; height: 100%;
+  transition: transform .75s cubic-bezier(.22,.68,0,1.2);
+  will-change: transform;
+}
+.tt-gallery-slide {
+  flex: 0 0 72%; position: relative; padding: 0 .875rem;
+  transition: opacity .6s, transform .6s;
+  opacity: .35; transform: scale(.94);
+}
+.tt-gallery-slide.active { opacity: 1; transform: scale(1); }
+.tt-gallery-slide img {
+  width: 100%; height: 100%; object-fit: cover;
+  border-radius: 22px; display: block; pointer-events: none;
+}
+.tt-gallery-slide.active img {
+  animation: ttKenBurns 5s ease-out forwards;
+}
+@keyframes ttKenBurns { from { transform: scale(1.05) } to { transform: scale(1) } }
+
+/* Caption */
+.tt-gallery-cap {
+  position: absolute; bottom: 1.75rem; left: 1.875rem; right: 1.875rem;
+  padding: .9rem 1.1rem; border-radius: 14px;
+  background: rgba(17,18,22,.6); backdrop-filter: blur(12px) saturate(1.4);
+  color: #fff; pointer-events: none;
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .45s .1s, transform .45s .1s;
+}
+.tt-gallery-slide.active .tt-gallery-cap { opacity: 1; transform: translateY(0); }
+.tt-gallery-cap-text { font-size: .85rem; line-height: 1.5; }
+.tt-gallery-cap-meta { font-size: .67rem; color: rgba(255,255,255,.45); margin-top: .25rem; letter-spacing: .08em; text-transform: uppercase; }
+
+/* Progress bar */
+.tt-gallery-prog {
+  position: absolute; bottom: 0; left: .875rem; right: .875rem;
+  height: 3px; background: rgba(255,255,255,.12); border-radius: 99px; overflow: hidden;
+  opacity: 0; transition: opacity .3s;
+}
+.tt-gallery-slide.active .tt-gallery-prog { opacity: 1; }
+.tt-gallery-prog-bar {
+  height: 100%; background: #ffeb99; border-radius: 99px;
+  transform-origin: left; transform: scaleX(0);
+}
+.tt-gallery-prog-bar.run { animation: ttProg 4s linear forwards; }
+@keyframes ttProg { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+
+/* Nav row */
+.tt-gallery-nav {
+  max-width: 1200px; margin: 1.75rem auto 0; padding: 0 5vw;
+  display: flex; align-items: center; gap: 1.25rem;
+}
+.tt-gallery-dots { display: flex; gap: .5rem; flex: 1; align-items: center; }
+.tt-gallery-dot {
+  height: 3px; border-radius: 2px; border: none; cursor: pointer;
+  background: rgba(17,18,22,.15); transition: background .25s, width .3s ease;
+  width: 22px;
+}
+.tt-gallery-dot.active { background: #111216; width: 44px; }
+.tt-gallery-arrows { display: flex; gap: .5rem; }
+.tt-gallery-arrow {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1.5px solid rgba(17,18,22,.14); background: #fff;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background .18s, border-color .18s, color .18s; color: #111216;
+}
+.tt-gallery-arrow:hover { background: #111216; color: #fff; border-color: #111216; }
+
+/* ── CTA band ─────────────────────────────────── */
+.tt-cta-band {
+  position: relative; overflow: hidden;
+  min-height: 400px; display: flex; align-items: center;
+}
+.tt-cta-band-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background: url('../../assets/img/tt/tt-dammam2.jpg') center 35% / cover no-repeat;
+  filter: brightness(.45) saturate(.8);
+}
+.tt-cta-band-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(90deg, rgba(17,18,22,.85) 0%, rgba(17,18,22,.4) 100%);
+}
+.tt-cta-band-content {
+  position: relative; z-index: 2;
+  max-width: 1200px; margin: 0 auto;
+  padding: 5rem 5vw; width: 100%;
+}
+.tt-cta-band-content .tt-eyebrow { color: rgba(255,235,153,.7); }
+.tt-cta-band-content .tt-h2 { color: #fff; max-width: 560px; }
+.tt-cta-band-content .tt-h2 em { color: var(--tt-y); }
+.tt-cta-band-content p { margin-top: .8rem; max-width: 480px; font-size: 1rem; color: rgba(255,255,255,.7); line-height: 1.65; }
+.tt-cta-band-btns { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; align-items: flex-start; }
+
+/* ── Download picker ─────────────────────────── */
+.tt-dl-picker { position: relative; }
+.tt-btn--dl {
+  background: rgba(255,255,255,.12); color: #fff;
+  border: 1.5px solid rgba(255,255,255,.35);
+  backdrop-filter: blur(8px);
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .85rem 1.6rem; border-radius: 100px;
+  font-family: var(--font-sans); font-weight: 700; font-size: .95rem;
+  cursor: pointer; transition: background .2s, transform .16s;
+}
+.tt-btn--dl:hover { background: rgba(255,255,255,.2); transform: translateY(-2px); }
+.tt-dl-caret { transition: transform .25s; }
+.tt-dl-picker.open .tt-dl-caret { transform: rotate(180deg); }
+.tt-dl-menu {
+  position: absolute; bottom: calc(100% + 10px); left: 0;
+  background: #fff; border-radius: 16px; min-width: 260px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.22), 0 2px 8px rgba(0,0,0,.1);
+  overflow: hidden;
+  opacity: 0; transform: translateY(8px) scale(.97);
+  transition: opacity .2s, transform .2s;
+  pointer-events: none; z-index: 20;
+}
+.tt-dl-picker.open .tt-dl-menu { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+.tt-dl-opt {
+  display: flex; align-items: center; gap: .75rem; padding: .9rem 1.1rem;
+  text-decoration: none; color: #111216;
+  transition: background .15s;
+}
+.tt-dl-opt:not(:last-child) { border-bottom: 1px solid rgba(0,0,0,.06); }
+.tt-dl-opt:hover { background: #fff7d6; }
+.tt-dl-flag { font-size: 1.4rem; line-height: 1; }
+.tt-dl-opt strong { display: block; font-size: .92rem; font-weight: 700; }
+.tt-dl-opt small { display: block; font-size: .75rem; color: #8a8878; margin-top: .1rem; }
+.tt-dl-arr { margin-left: auto; color: #8a8878; font-size: .9rem; }
+
+  /* ── Download confirm modal (TT) ────────────── */
+  .tt-dl-modal-backdrop {
+    position: fixed; inset: 0; z-index: 900;
+    background: rgba(17,18,22,.55); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.5rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity .22s ease;
+  }
+  .tt-dl-modal-backdrop.open { opacity: 1; pointer-events: auto; }
+  .tt-dl-modal {
+    background: #fff; border-radius: 22px;
+    padding: 2.4rem 2rem 2rem; max-width: 440px; width: 100%;
+    text-align: center;
+    transform: translateY(12px) scale(.97);
+    transition: transform .22s ease;
+    box-shadow: 0 24px 60px rgba(0,0,0,.22);
+  }
+  .tt-dl-modal-backdrop.open .tt-dl-modal { transform: translateY(0) scale(1); }
+  .tt-dl-modal-icon { font-size: 2.8rem; margin-bottom: 1.1rem; display: block; }
+  .tt-dl-modal h3 { font-family: var(--font-serif); font-size: 1.45rem; font-weight: 400; color: #111216; margin-bottom: .65rem; }
+  .tt-dl-modal p { font-size: .93rem; color: #4a4840; line-height: 1.6; margin-bottom: 1.5rem; }
+  .tt-dl-modal-opts { display: flex; flex-direction: column; gap: .55rem; margin-bottom: 1rem; }
+  .tt-dl-modal-opt {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .85rem 1.1rem; border-radius: 14px;
+    background: #f8f7f0; border: 1.5px solid rgba(17,18,22,.08);
+    text-decoration: none; color: #111216;
+    font-weight: 700; font-size: .93rem;
+    transition: background .15s, border-color .15s;
+  }
+  .tt-dl-modal-opt:hover { background: #fff7d6; border-color: rgba(245,217,106,.5); }
+  .tt-dl-modal-opt-flag { font-size: 1.4rem; line-height: 1; }
+  .tt-dl-modal-opt-info { text-align: left; flex: 1; }
+  .tt-dl-modal-opt-info strong { display: block; font-size: .92rem; }
+  .tt-dl-modal-opt-info small { display: block; font-size: .75rem; color: #8a8878; font-weight: 400; margin-top: .1rem; }
+  .tt-dl-modal-opt-arr { color: #8a8878; font-size: .9rem; margin-left: auto; }
+  .tt-dl-modal-cancel {
+    background: none; border: none; cursor: pointer;
+    font-family: var(--font-sans); font-size: .88rem; font-weight: 600;
+    color: rgba(17,18,22,.4); padding: .4rem .8rem; border-radius: 8px;
+    transition: color .15s, background .15s;
+  }
+  .tt-dl-modal-cancel:hover { color: #111216; background: rgba(17,18,22,.06); }
+
+/* ── Data Viz Band ───────────────────────────── */
+.tt-data-band { background: var(--tt-dark); padding: 4rem 5vw; }
+.tt-data-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem; align-items: center;
+}
+.tt-data-eyebrow {
+  font-size: .68rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(255,235,153,.45); margin-bottom: 1.6rem;
+}
+.tt-data-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem 2rem; margin-bottom: 2.5rem; }
+.tt-data-stat {}
+.tt-data-val {
+  font-family: var(--font-serif); font-size: clamp(2.4rem, 4vw, 3.2rem);
+  font-weight: 400; color: var(--tt-y); line-height: 1;
+}
+.tt-data-lbl {
+  font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.35); margin-top: .35rem;
+}
+.tt-data-langs-title {
+  font-size: .66rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(255,255,255,.22); margin-bottom: .65rem;
+}
+.tt-data-lang-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+.tt-lang-tag {
+  font-size: .75rem; font-weight: 600; padding: .28rem .7rem;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 100px; color: rgba(255,255,255,.6);
+}
+.tt-data-map-label {
+  font-size: .66rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(255,235,153,.4); margin-bottom: .9rem;
+}
+.tt-data-map-wrap {
+  background: rgba(255,255,255,.03); border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.07); overflow: hidden; position: relative;
+}
+.tt-world-map { width: 100%; display: block; }
+.tt-map-city-dot { transition: r .3s; }
+.tt-map-city-dot:hover { r: 7; }
+@media (max-width: 800px) {
+  .tt-data-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+@media (max-width: 500px) {
+  .tt-data-stats { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+}
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 820px) {
+  .tt-exp-row { grid-template-columns: 1fr; min-height: auto; }
+  .tt-exp-row--flip .tt-exp-row-photo { order: 0; }
+  .tt-exp-row--flip .tt-exp-row-text  { order: 1; }
+  .tt-exp-row-photo { height: 280px; }
+  .tt-exp-row-text { padding: 2rem 5vw; }
+  .tt-exp-row-num { font-size: 4rem; }
+  .tt-gallery-viewport { height: 380px; }
+  .tt-gallery-slide { flex: 0 0 82%; }
+}
+@media (max-width: 600px) {
+  .tt-hero-content { padding: 2.5rem 1.4rem 3rem; }
+  .tt-hero-ctas { flex-direction: column; align-items: flex-start; }
+  .tt-hero-ctas .tt-btn { width: 100%; justify-content: center; }
+  .tt-cities-section, .tt-exp-section, .tt-gallery-section { padding: 3.5rem 0; }
+  .tt-gallery-viewport { height: 300px; }
+  .tt-gallery-slide { flex: 0 0 88%; }
+  .tt-events-section { padding: 3.5rem 1.4rem; }
+  .tt-cta-band-content { padding: 3.5rem 1.4rem; }
+  .tt-cta-band-btns { flex-direction: column; }
+  .tt-cta-band-btns .tt-btn { width: 100%; justify-content: center; }
+}
+  /* ── Session Archive ───────────────────────── */
+  .tt-archive { background: var(--cream-white, #fffff2); padding: 4rem 5vw; }
+  .tt-archive-inner { max-width: 1000px; margin: 0 auto; }
+  .tt-archive-label { font-size: .68rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: rgba(17,18,22,.35); margin-bottom: .5rem; }
+  .tt-archive-h2 { font-family: var(--font-serif, Georgia, serif); font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 400; line-height: 1.15; letter-spacing: -.02em; margin-bottom: 1.8rem; }
+  .tt-archive-h2 em { font-style: italic; }
+  /* ── Session venue link ─────────────────────── */
+  .tt-arc-venue {
+    display: inline-flex; align-items: center; gap: .32rem;
+    font-size: .78rem; font-weight: 600; color: rgba(17,18,22,.55);
+    text-decoration: none; min-width: 0;
+    transition: color .15s;
+  }
+  .tt-arc-venue:hover { color: #b07800; }
+  .tt-arc-venue-arrow {
+    font-size: .7rem; flex-shrink: 0; color: rgba(17,18,22,.3);
+    transition: color .15s, transform .15s;
+  }
+  .tt-arc-venue:hover .tt-arc-venue-arrow { color: #b07800; transform: translate(1px,-1px); }
+  .tt-arc-venue-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ── Sort controls ──────────────────────────── */
+  .tt-archive-controls {
+    display: flex; align-items: center; gap: .55rem;
+    flex-wrap: wrap; margin-bottom: 1rem;
+  }
+  .tt-arc-ctrl-label {
+    font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    color: rgba(17,18,22,.3); margin-right: .15rem;
+  }
+  .tt-arc-ctrl-btn {
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .32rem .75rem; border-radius: 100px;
+    font-family: var(--font-sans); font-size: .76rem; font-weight: 700;
+    border: 1.5px solid rgba(17,18,22,.12); background: #fff;
+    color: rgba(17,18,22,.5); cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .tt-arc-ctrl-btn:hover { border-color: rgba(17,18,22,.25); color: #111216; }
+  .tt-arc-ctrl-btn.active {
+    background: #111216; border-color: #111216; color: #fff;
+  }
+  .tt-arc-ctrl-sep { width: 1px; height: 1.1rem; background: rgba(17,18,22,.1); margin: 0 .1rem; }
+
+  /* Language filter dropdown */
+  .tt-arc-lang-filter { position: relative; }
+  .tt-arc-lang-select {
+    appearance: none; -webkit-appearance: none;
+    padding: .32rem 1.75rem .32rem .75rem; border-radius: 100px;
+    font-family: var(--font-sans); font-size: .76rem; font-weight: 700;
+    border: 1.5px solid rgba(17,18,22,.12); background: #fff;
+    color: rgba(17,18,22,.5); cursor: pointer;
+    transition: border-color .15s, color .15s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right .6rem center;
+  }
+  .tt-arc-lang-select:hover { border-color: rgba(17,18,22,.25); color: #111216; }
+  .tt-arc-lang-select:focus { outline: none; border-color: #111216; color: #111216; }
+  .tt-arc-lang-select.active { background-color: #111216; color: #fff; border-color: #111216;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23fff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  .tt-archive-list { display: flex; flex-direction: column; gap: 1px; background: rgba(17,18,22,.09); border: 1px solid rgba(17,18,22,.09); border-radius: 18px; overflow: visible; }
+  .tt-archive-row {
+    background: #fff; padding: 1.25rem 1.5rem;
+    display: grid; grid-template-columns: 110px 1fr auto;
+    align-items: center; gap: 1.25rem;
+    transition: background .25s, transform .2s, box-shadow .2s;
+    cursor: default; position: relative;
+  }
+  .tt-archive-row:first-child { border-radius: 18px 18px 0 0; }
+  .tt-archive-row:last-child  { border-radius: 0 0 18px 18px; }
+  .tt-archive-row:only-child  { border-radius: 18px; }
+  .tt-archive-row:hover {
+    background: #fff7d6;
+    transform: translateY(-2px) scale(1.005);
+    box-shadow: 0 8px 28px -10px rgba(17,18,22,.14);
+    z-index: 1;
+  }
+  .tt-archive-row:hover .tt-arc-metric-val { color: #8a5c00; }
+
+  .tt-arc-date { font-size: .78rem; font-weight: 800; color: rgba(17,18,22,.4); white-space: nowrap; }
+
+  /* All four stat counters in a flex row */
+  .tt-arc-metrics { display: flex; gap: 1.1rem; justify-content: flex-end; align-items: center; }
+
+  /* Shared metric block */
+  .tt-arc-metric { text-align: center; position: relative; }
+  .tt-arc-metric-val { font-size: 1.2rem; font-weight: 800; color: #111216; line-height: 1; }
+  .tt-arc-metric-lbl { font-size: .62rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: rgba(17,18,22,.4); margin-top: .15rem; }
+
+  /* Interactive metrics (langs + countries) */
+  .tt-arc-metric--interactive { cursor: pointer; }
+  .tt-arc-metric--interactive .tt-arc-metric-val {
+    text-decoration: underline dotted rgba(17,18,22,.25);
+    text-underline-offset: 3px;
+    transition: color .2s, text-decoration-color .2s;
+  }
+  .tt-arc-metric--interactive:hover .tt-arc-metric-val,
+  .tt-arc-metric--interactive.open .tt-arc-metric-val { color: #b07800; text-decoration-color: #b07800; }
+
+  /* Divider between the two groups */
+  .tt-arc-metric-sep { width: 1px; height: 2rem; background: rgba(17,18,22,.1); flex-shrink: 0; }
+
+  /* Pop-up tooltip */
+  .tt-arc-popup {
+    position: absolute; bottom: calc(100% + 10px); left: 50%;
+    transform: translateX(-50%) scale(.93);
+    transform-origin: bottom center;
+    background: #111216; color: #fff;
+    border-radius: 14px; padding: .85rem 1.1rem;
+    min-width: 170px; max-width: 260px;
+    box-shadow: 0 12px 36px rgba(0,0,0,.22);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .18s ease, transform .18s ease;
+    z-index: 100;
+    white-space: nowrap;
+  }
+  .tt-arc-popup::after {
+    content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    border: 6px solid transparent; border-top-color: #111216;
+  }
+  .tt-arc-metric--interactive:hover .tt-arc-popup,
+  .tt-arc-metric--interactive.open .tt-arc-popup {
+    opacity: 1; transform: translateX(-50%) scale(1); pointer-events: auto;
+  }
+  .tt-arc-popup-title { font-size: .58rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,235,153,.5); margin-bottom: .55rem; }
+
+  /* Languages grid inside popup */
+  .tt-arc-popup-langs { display: flex; flex-wrap: wrap; gap: .3rem .5rem; }
+  .tt-arc-popup-lang {
+    font-size: .85rem; color: #fff;
+    background: rgba(255,255,255,.08); border-radius: 6px;
+    padding: .15rem .45rem;
+  }
+
+  /* Countries grid inside popup */
+  .tt-arc-popup-countries { display: flex; flex-direction: column; gap: .3rem; }
+  .tt-arc-popup-country { display: flex; align-items: center; gap: .45rem; font-size: .82rem; color: rgba(255,255,255,.85); white-space: nowrap; }
+  .tt-arc-popup-flag { font-size: 1rem; line-height: 1; }
+
+  @media (max-width: 700px) {
+    .tt-archive-row { grid-template-columns: 1fr 1fr; row-gap: .8rem; }
+    .tt-arc-date { grid-column: 1 / -1; }
+    .tt-arc-metrics { justify-content: flex-start; grid-column: 1 / -1; }
+    .tt-arc-popup { left: 0; transform: translateX(0) scale(.93); }
+    .tt-arc-popup::after { left: 20%; }
+    .tt-arc-metric--interactive:hover .tt-arc-popup,
+    .tt-arc-metric--interactive.open .tt-arc-popup { transform: translateX(0) scale(1); }
+  }
 </style>
 </head>
 <body>
 
 <div id="site-header"></div>
 
-<main class="pg-wrap">
-  <section class="pg-hero">
-    <div class="pg-crumb">Our Programs / Talk &amp; Table</div>
-    <h1 class="pg-h1">Talk &amp; Table — <em>real conversations over coffee</em></h1>
-    <p class="pg-lede">RLTT is RealLingo's in-venue language experience. We bring language learners, expats and professionals together at premium partner cafés — relaxed 1–2 hour sessions, usually on Thursday evenings, where people connect over shared languages and cultures.</p>
-    <div class="pg-cta-row">
-      <a class="pg-btn pg-btn--primary" href="../../eventpartners/">Find a Session Near You</a>
-      <details class="vp-pick">
-        <summary class="pg-btn pg-btn--ghost">Partner Your Venue ▾</summary>
-        <div class="vp-menu">
-          <a href="../../assets/docs/cities-venue-partnership-en.pdf" target="_blank" rel="noopener">📄 English proposal (EN)</a>
-          <a href="../../assets/docs/cities-venue-partnership-ar.pdf" target="_blank" rel="noopener" dir="rtl">📄 النسخة العربية (AR)</a>
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section class="tt-hero" id="top">
+  <div class="tt-hero-slides" aria-hidden="true">
+    <div class="tt-hero-slide active"></div>
+    <div class="tt-hero-slide"></div>
+    <div class="tt-hero-slide"></div>
+    <div class="tt-hero-slide"></div>
+  </div>
+  <div class="tt-hero-overlay" aria-hidden="true"></div>
+
+  <div class="tt-hero-content">
+    <div class="tt-hero-badge">
+      <span class="tt-hero-badge-dot" aria-hidden="true"></span>
+      Talk &amp; Table · Cities@RealLingo
+    </div>
+    <h1 class="tt-hero-h1">Language lovers<br><em>around the town.</em></h1>
+    <p class="tt-hero-sub">Grab a coffee, meet new people, and practice languages through real conversations.</p>
+
+    <div class="tt-hero-ctas">
+      <a href="../../join-us/community/" class="tt-btn tt-btn--yellow">Join Our Community →</a>
+      <a href="#venue-partner" class="tt-btn tt-btn--ghost" style="color:#111216;border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.85);">Be Our Partner</a>
+      <a href="https://forms.gle/TrqQHVcp5DGhRgrV9" target="_blank" rel="noopener" class="tt-btn tt-btn--ghost" style="color:#111216;border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.85);">Join Talk&amp;Table Team</a>
+    </div>
+
+    <div class="tt-city-ticker" aria-label="Communities active in">
+      <span class="tt-city-ticker-label">Active in</span>
+      <div class="tt-city-ticker-track" aria-hidden="true">
+        <div class="tt-city-ticker-items">
+          <span class="tt-city-ticker-item">الخبر · Khobar</span>
+          <span class="tt-city-ticker-item">北京 · Beijing</span>
+          <span class="tt-city-ticker-item">المنامة · Manama</span>
+          <span class="tt-city-ticker-item">Dar es Salaam</span>
+          <span class="tt-city-ticker-item">新加坡 · Singapore</span>
+          <span class="tt-city-ticker-item">الخبر · Khobar</span>
+          <span class="tt-city-ticker-item">北京 · Beijing</span>
+          <span class="tt-city-ticker-item">المنامة · Manama</span>
+          <span class="tt-city-ticker-item">Dar es Salaam</span>
+          <span class="tt-city-ticker-item">新加坡 · Singapore</span>
         </div>
-      </details>
-    </div>
-  </section>
-
-  <!-- The format -->
-  <section class="pg-sec">
-    <div class="pg-sec-eyebrow">How we gather</div>
-    <h2 class="pg-sec-title">The Polyglot Club</h2>
-    <div class="pg-formats">
-      <div class="pg-format">
-        <div class="ico">🌐</div>
-        <h3>Polyglot Club</h3>
-        <span class="freq">Bi-weekly · multilingual mixer</span>
-        <p>A lively gathering where language learners, expats and professionals connect over shared languages and cultures in a relaxed café setting.</p>
-      </div>
-      <div class="pg-format">
-        <div class="ico">🀄</div>
-        <h3>Looking for the Chinese Workshop?</h3>
-        <span class="freq">Now in the Academy</span>
-        <p>Structured, tutor-led Chinese sessions have moved to the <a href="../language-academy/">RealLingo Language Academy (RLLA)</a> — in-person workshops with a real teacher and a cohort of learners.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- For participants -->
-  <section class="pg-sec">
-    <div class="pg-sec-eyebrow">For guests</div>
-    <h2 class="pg-sec-title">Come as you are</h2>
-    <div class="pg-grid">
-      <div class="pg-card"><div class="ico">☕</div><h3>Relaxed &amp; social</h3><p>No classroom, no pressure — just good conversation over coffee with a friendly, multilingual crowd.</p></div>
-      <div class="pg-card"><div class="ico">🗓️</div><h3>Regular &amp; local</h3><p>Sessions run ~1–2 hours, typically Thursday evenings, at partner cafés across the Eastern Province.</p></div>
-      <div class="pg-card"><div class="ico">🌏</div><h3>Every language welcome</h3><p>Practice Chinese, Arabic, English and more with expats, professionals and curious locals.</p></div>
-    </div>
-  </section>
+<!-- ══════════════════════════════════════════
+     DATA VIZ BAND
+══════════════════════════════════════════ -->
+<section class="tt-data-band rv">
+  <div class="tt-data-inner">
 
-  <!-- For venues -->
-  <section class="pg-sec">
-    <div class="pg-sec-eyebrow">For venues</div>
-    <h2 class="pg-sec-title">Host Talk &amp; Table at your café</h2>
-    <div class="pg-grid">
-      <div class="pg-card"><div class="ico">👥</div><h3>Guaranteed guests</h3><p>10–20 engaged guests per event, each ordering directly at your venue — a quiet evening turned lively.</p></div>
-      <div class="pg-card"><div class="ico">✨</div><h3>Zero hassle</h3><p>We handle guest acquisition, promotion and facilitation. You provide the space and hospitality you do best.</p></div>
-      <div class="pg-card"><div class="ico">🔁</div><h3>Recurring footfall</h3><p>Bi-weekly or monthly events build a loyal, returning crowd — predictable, dependable revenue.</p></div>
-      <div class="pg-card"><div class="ico">📣</div><h3>Brand exposure</h3><p>Your venue is featured across RealLingo's social media, community groups and partner network.</p></div>
-      <div class="pg-card"><div class="ico">🏛️</div><h3>Cultural branding</h3><p>Position your venue as a cultural destination — openness and community that resonate with the region.</p></div>
-      <div class="pg-card"><div class="ico">💯</div><h3>Keep 100% of F&amp;B</h3><p>You keep all food &amp; beverage revenue. Your first event can go live within two weeks.</p></div>
-    </div>
-  </section>
-
-  <div class="pg-band">
-    <h2>Turn a quiet Thursday into a <em>community night</em></h2>
-    <p>Whether you want to join a session or host one at your café, Talk &amp; Table brings the right crowd together over language, culture — and coffee.</p>
-    <details class="vp-pick">
-      <summary class="pg-btn pg-btn--primary">Partner Your Venue ▾</summary>
-      <div class="vp-menu">
-        <a href="../../assets/docs/cities-venue-partnership-en.pdf" target="_blank" rel="noopener">📄 English proposal (EN)</a>
-        <a href="../../assets/docs/cities-venue-partnership-ar.pdf" target="_blank" rel="noopener" dir="rtl">📄 النسخة العربية (AR)</a>
+    <div class="tt-data-left">
+      <div class="tt-data-eyebrow">By the numbers</div>
+      <div class="tt-data-stats">
+        <div class="tt-data-stat">
+          <div class="tt-data-val" data-count="2">2</div>
+          <div class="tt-data-lbl">Sessions held</div>
+        </div>
+        <div class="tt-data-stat">
+          <div class="tt-data-val" data-count="15">15</div>
+          <div class="tt-data-lbl">Total attendees</div>
+        </div>
+        <div class="tt-data-stat">
+          <div class="tt-data-val" data-count="8">8</div>
+          <div class="tt-data-lbl">Languages spoken</div>
+        </div>
+        <div class="tt-data-stat">
+          <div class="tt-data-val" data-count="4">4</div>
+          <div class="tt-data-lbl">Countries</div>
+        </div>
       </div>
-    </details>
+      <div class="tt-data-langs">
+        <div class="tt-data-langs-title">Languages spoken so far</div>
+        <div class="tt-data-lang-tags">
+          <span class="tt-lang-tag">Chinese 🇨🇳</span>
+          <span class="tt-lang-tag">Arabic 🇸🇦</span>
+          <span class="tt-lang-tag">Bangla 🇧🇩</span>
+          <span class="tt-lang-tag">German 🇩🇪</span>
+          <span class="tt-lang-tag">Danish 🇩🇰</span>
+          <span class="tt-lang-tag">Korean 🇰🇷</span>
+          <span class="tt-lang-tag">French 🇫🇷</span>
+          <span class="tt-lang-tag">Spanish 🇪🇸</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tt-data-right">
+      <div class="tt-data-map-label">Active &amp; upcoming cities</div>
+      <div class="tt-data-map-wrap">
+        <svg class="tt-world-map" viewBox="300 65 535 225" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="ttMapGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M40 0L0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
+            </pattern>
+            <filter id="ttGlow" x="-80%" y="-80%" width="260%" height="260%">
+              <feGaussianBlur stdDeviation="4" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <rect x="300" y="65" width="535" height="225" fill="url(#ttMapGrid)"/>
+
+          <!-- ── Background landmasses (context only) ── -->
+          <!-- Africa -->
+          <path d="M387,122 L451,118 L471,133 L513,160 L513,173 L505,200 L490,215 L487,233 L465,265 L440,268 L420,245 L404,220 L404,189 L364,167 L370,145 Z" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <!-- Europe -->
+          <path d="M308,92 L360,76 L385,80 L400,88 L413,88 L418,96 L405,106 L390,110 L362,108 L335,100 Z" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <!-- India -->
+          <path d="M542,142 L580,132 L607,140 L606,152 L589,167 L571,183 L557,174 L544,158 Z" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <!-- SE Asia -->
+          <path d="M650,151 L693,155 L718,165 L718,180 L700,190 L678,192 L658,185 L636,178 L620,168 L620,158 L633,152 Z" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+
+          <!-- ── Represented countries (highlighted) ── -->
+          <!-- Saudi Arabia -->
+          <path d="M478,138 L487,129 L493,133 L504,130 L506,136 L513,147 L522,147 L522,152 L518,160 L504,164 L496,162 L493,167 L487,153 L480,140 Z" fill="rgba(255,235,153,0.14)" stroke="rgba(255,235,153,0.38)" stroke-width="1"/>
+          <!-- Yemen -->
+          <path d="M496,162 L504,164 L518,160 L521,166 L515,172 L505,176 L496,173 L492,168 Z" fill="rgba(255,235,153,0.1)" stroke="rgba(255,235,153,0.28)" stroke-width="0.8"/>
+          <!-- China -->
+          <path d="M567,111 L593,96 L644,93 L667,93 L684,82 L700,93 L689,107 L671,120 L671,133 L664,144 L653,151 L640,151 L629,151 L618,149 L618,142 L578,133 L573,120 Z" fill="rgba(255,235,153,0.14)" stroke="rgba(255,235,153,0.38)" stroke-width="1"/>
+          <!-- Germany (too small for polygon — shown as outlined circle) -->
+          <circle cx="400" cy="92" r="7" fill="rgba(255,235,153,0.12)" stroke="rgba(255,235,153,0.35)" stroke-width="1"/>
+          <text x="400" y="79" text-anchor="middle" fill="rgba(255,235,153,0.65)" font-size="8" font-family="'Be Vietnam Pro',sans-serif" font-weight="700">Germany</text>
+
+          <!-- ── Active city dots (glow) ── -->
+          <!-- Khobar -->
+          <circle cx="506" cy="148" r="16" fill="#ffeb99" opacity="0.08" filter="url(#ttGlow)"/>
+          <circle cx="506" cy="148" r="5.5" fill="#ffeb99" opacity="0.95"/>
+          <text x="506" y="136" text-anchor="middle" fill="#ffeb99" font-size="9" font-family="'Be Vietnam Pro',sans-serif" font-weight="700">Khobar</text>
+
+          <!-- Beijing -->
+          <circle cx="659" cy="111" r="16" fill="#ffeb99" opacity="0.08" filter="url(#ttGlow)"/>
+          <circle cx="659" cy="111" r="5.5" fill="#ffeb99" opacity="0.95"/>
+          <text x="659" y="99" text-anchor="middle" fill="#ffeb99" font-size="9" font-family="'Be Vietnam Pro',sans-serif" font-weight="700">Beijing</text>
+
+          <!-- ── Expanding cities ── -->
+          <!-- Tanzania -->
+          <circle cx="487" cy="215" r="4.5" fill="rgba(255,235,153,0.38)"/>
+          <text x="487" y="228" text-anchor="middle" fill="rgba(255,255,255,0.36)" font-size="8" font-family="'Be Vietnam Pro',sans-serif">Tanzania</text>
+          <!-- Singapore -->
+          <circle cx="630" cy="197" r="4.5" fill="rgba(255,235,153,0.38)"/>
+          <text x="630" y="210" text-anchor="middle" fill="rgba(255,255,255,0.36)" font-size="8" font-family="'Be Vietnam Pro',sans-serif">Singapore</text>
+          <!-- Qatar (near Khobar) -->
+          <circle cx="521" cy="151" r="3" fill="rgba(255,235,153,0.32)"/>
+        </svg>
+        <div style="padding:.6rem 1rem .75rem;display:flex;gap:1.4rem;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.06);">
+          <span style="display:flex;align-items:center;gap:.45rem;font-size:.7rem;color:rgba(255,235,153,.8);font-weight:700;">
+            <svg viewBox="0 0 10 10" width="10" height="10"><rect width="10" height="10" rx="2" fill="rgba(255,235,153,0.18)" stroke="rgba(255,235,153,0.5)" stroke-width="1"/></svg> Countries represented
+          </span>
+          <span style="display:flex;align-items:center;gap:.45rem;font-size:.7rem;color:rgba(255,235,153,.8);font-weight:700;">
+            <svg viewBox="0 0 8 8" width="8" height="8"><circle cx="4" cy="4" r="4" fill="#ffeb99"/></svg> Active city
+          </span>
+          <span style="display:flex;align-items:center;gap:.45rem;font-size:.7rem;color:rgba(255,255,255,.32);font-weight:700;">
+            <svg viewBox="0 0 8 8" width="8" height="8"><circle cx="4" cy="4" r="4" fill="rgba(255,235,153,0.38)"/></svg> Expanding
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SESSION ARCHIVE
+══════════════════════════════════════════ -->
+<section class="tt-archive" id="archive">
+  <div class="tt-archive-inner">
+    <div class="tt-archive-label rv">Session Archive</div>
+    <h2 class="tt-archive-h2 rv rv--delay-1">Past Talk&amp;Table Sessions<br><em>@Khobar, Saudi Arabia</em></h2>
+    <div class="tt-archive-controls rv rv--delay-2" id="ttArcControls" aria-label="Sort and filter sessions">
+      <span class="tt-arc-ctrl-label">Sort</span>
+      <button type="button" class="tt-arc-ctrl-btn active" data-sort="date" data-dir="desc" id="ttSortNewest">Newest first</button>
+      <button type="button" class="tt-arc-ctrl-btn" data-sort="date" data-dir="asc" id="ttSortOldest">Oldest first</button>
+      <span class="tt-arc-ctrl-sep"></span>
+      <span class="tt-arc-ctrl-label">Language</span>
+      <div class="tt-arc-lang-filter">
+        <select class="tt-arc-lang-select" id="ttLangFilter" aria-label="Filter by language">
+          <option value="">All languages</option>
+        </select>
+      </div>
+    </div>
+    <div class="tt-archive-list rv rv--delay-2" id="ttArcList">
+
+      <div class="tt-archive-row"
+           data-langs="中文,বাংলা,العربية,Deutsch,Dansk,한국어"
+           data-countries="🇸🇦 Saudi Arabia,🇾🇪 Yemen,🇨🇳 China,🇩🇪 Germany"
+           data-date="2026-06-10"
+           data-venue="Takyah game تكية"
+           data-venue-url="https://maps.app.goo.gl/muS2L6fVgBVtVD2H6">
+        <div class="tt-arc-date">Jun 10, 2026</div>
+        <div style="min-width:0"><a class="tt-arc-venue" href="https://maps.app.goo.gl/muS2L6fVgBVtVD2H6" target="_blank" rel="noopener"><span class="tt-arc-venue-name">Takyah game تكية</span><span class="tt-arc-venue-arrow">↗</span></a></div>
+        <div class="tt-arc-metrics">
+          <div class="tt-arc-metric tt-arc-metric--interactive" tabindex="0" aria-label="6 languages spoken" role="button">
+            <div class="tt-arc-metric-val">6</div>
+            <div class="tt-arc-metric-lbl">Languages</div>
+            <div class="tt-arc-popup" role="tooltip">
+              <div class="tt-arc-popup-title">Spoken Languages</div>
+              <div class="tt-arc-popup-langs"></div>
+            </div>
+          </div>
+          <div class="tt-arc-metric tt-arc-metric--interactive" tabindex="0" aria-label="4 countries represented" role="button">
+            <div class="tt-arc-metric-val">4</div>
+            <div class="tt-arc-metric-lbl">Countries</div>
+            <div class="tt-arc-popup" role="tooltip">
+              <div class="tt-arc-popup-title">Represented Countries</div>
+              <div class="tt-arc-popup-countries"></div>
+            </div>
+          </div>
+          <div class="tt-arc-metric-sep"></div>
+          <div class="tt-arc-metric"><div class="tt-arc-metric-val">8</div><div class="tt-arc-metric-lbl">Attendees</div></div>
+          <div class="tt-arc-metric"><div class="tt-arc-metric-val">2</div><div class="tt-arc-metric-lbl">Moderators</div></div>
+        </div>
+      </div>
+
+      <div class="tt-archive-row"
+           data-langs="中文,বাংলা,العربية,Français,Español,한국어"
+           data-countries="🇸🇦 Saudi Arabia,🇾🇪 Yemen,🇨🇳 China"
+           data-date="2026-06-03"
+           data-venue="Takyah game تكية"
+           data-venue-url="https://maps.app.goo.gl/muS2L6fVgBVtVD2H6">
+        <div class="tt-arc-date">Jun 3, 2026</div>
+        <div style="min-width:0"><a class="tt-arc-venue" href="https://maps.app.goo.gl/muS2L6fVgBVtVD2H6" target="_blank" rel="noopener"><span class="tt-arc-venue-name">Takyah game تكية</span><span class="tt-arc-venue-arrow">↗</span></a></div>
+        <div class="tt-arc-metrics">
+          <div class="tt-arc-metric tt-arc-metric--interactive" tabindex="0" aria-label="6 languages spoken" role="button">
+            <div class="tt-arc-metric-val">6</div>
+            <div class="tt-arc-metric-lbl">Languages</div>
+            <div class="tt-arc-popup" role="tooltip">
+              <div class="tt-arc-popup-title">Spoken Languages</div>
+              <div class="tt-arc-popup-langs"></div>
+            </div>
+          </div>
+          <div class="tt-arc-metric tt-arc-metric--interactive" tabindex="0" aria-label="3 countries represented" role="button">
+            <div class="tt-arc-metric-val">3</div>
+            <div class="tt-arc-metric-lbl">Countries</div>
+            <div class="tt-arc-popup" role="tooltip">
+              <div class="tt-arc-popup-title">Represented Countries</div>
+              <div class="tt-arc-popup-countries"></div>
+            </div>
+          </div>
+          <div class="tt-arc-metric-sep"></div>
+          <div class="tt-arc-metric"><div class="tt-arc-metric-val">7</div><div class="tt-arc-metric-lbl">Attendees</div></div>
+          <div class="tt-arc-metric"><div class="tt-arc-metric-val">2</div><div class="tt-arc-metric-lbl">Moderators</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     WHAT TO EXPECT — gallery format
+══════════════════════════════════════════ -->
+<section class="tt-gallery-section" id="experience">
+  <div class="tt-gallery-head">
+    <div>
+      <div class="tt-eyebrow">What to expect</div>
+      <h2 class="tt-h2">Come as you are.<br><em>Leave with new friends.</em></h2>
+    </div>
+    <div class="tt-gallery-counter" id="ttGalCounter" aria-live="polite">1 / 3</div>
   </div>
 
-  <a href="../../about/launch/" class="pg-back">← Back to RealLingo</a>
-</main>
+  <div class="tt-gallery-viewport" id="ttGalViewport" role="region" aria-label="What to expect at Talk&amp;Table">
+    <div class="tt-gallery-track" id="ttGalTrack">
+
+      <div class="tt-gallery-slide active" role="group" aria-label="1 of 3">
+        <img src="../../assets/img/tt/tt-1.jpg" alt="People in conversation at a Talk&amp;Table session" loading="lazy">
+        <div class="tt-gallery-cap">
+          <div class="tt-gallery-cap-text">☕ <strong>Real conversations over coffee</strong> — relaxed 1–2 hour sessions in a warm café. No strangers, just language lovers with something to say.</div>
+          <div class="tt-gallery-cap-meta">01 of 03</div>
+        </div>
+        <div class="tt-gallery-prog"><div class="tt-gallery-prog-bar run"></div></div>
+      </div>
+
+      <div class="tt-gallery-slide" role="group" aria-label="2 of 3">
+        <img src="../../assets/img/tt/tt-4.jpg" alt="Talk&amp;Table activity cards and materials on table" loading="lazy">
+        <div class="tt-gallery-cap">
+          <div class="tt-gallery-cap-text">🃏 <strong>Games &amp; activities</strong> — language icebreakers and prompts keep the energy alive, even if you're nervous about speaking.</div>
+          <div class="tt-gallery-cap-meta">02 of 03</div>
+        </div>
+        <div class="tt-gallery-prog"><div class="tt-gallery-prog-bar"></div></div>
+      </div>
+
+      <div class="tt-gallery-slide" role="group" aria-label="3 of 3">
+        <img src="../../assets/img/tt/tt-2.jpg" alt="Group of attendees at Talk&amp;Table session" loading="lazy">
+        <div class="tt-gallery-cap">
+          <div class="tt-gallery-cap-text">🗓️ <strong>Regular &amp; local</strong> — bi-weekly or monthly, usually Thursday evenings. The same crowd, the same city, until it feels like home.</div>
+          <div class="tt-gallery-cap-meta">03 of 03</div>
+        </div>
+        <div class="tt-gallery-prog"><div class="tt-gallery-prog-bar"></div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tt-gallery-nav">
+    <div class="tt-gallery-dots" id="ttGalDots" role="tablist" aria-label="Gallery navigation"></div>
+    <div class="tt-gallery-arrows">
+      <button class="tt-gallery-arrow" id="ttGalPrev" aria-label="Previous">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M10 3L5 8l5 5"/></svg>
+      </button>
+      <button class="tt-gallery-arrow" id="ttGalNext" aria-label="Next">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M6 3l5 5-5 5"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CTA BAND
+══════════════════════════════════════════ -->
+<section class="tt-cta-band" id="venue-partner">
+  <div class="tt-cta-band-bg" aria-hidden="true"></div>
+  <div class="tt-cta-band-overlay" aria-hidden="true"></div>
+  <div class="tt-cta-band-content">
+    <div class="tt-eyebrow">For Venue Partners</div>
+    <h2 class="tt-h2" style="color:#fff;">Turn a quiet Thursday<br>into a <em>community night.</em></h2>
+    <p>Host Talk&amp;Table at your café. We bring 10–20 engaged guests every session — you keep 100% of F&amp;B. Zero hassle, recurring footfall, real cultural impact.</p>
+    <div class="tt-cta-band-btns">
+      <div class="tt-email-reveal-wrap" style="position:relative;display:inline-block;">
+        <button type="button" class="tt-btn tt-btn--yellow" id="ttContactBtn" aria-expanded="false">Contact Us →</button>
+        <div class="tt-email-popup" id="ttEmailPopup" hidden style="position:absolute;top:calc(100% + 10px);left:0;background:#fff;border-radius:12px;padding:.65rem 1rem;align-items:center;gap:.6rem;box-shadow:0 8px 28px rgba(0,0,0,.18);white-space:nowrap;z-index:10;">
+          <a href="mailto:pr@thereallingo.com" style="font-size:.9rem;font-weight:600;color:#111216;text-decoration:none;">pr@thereallingo.com</a>
+          <button type="button" id="ttEmailCopy" aria-label="Copy email" style="background:none;border:none;cursor:pointer;padding:.2rem;color:#555;display:flex;align-items:center;">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+        </div>
+      </div>
+      <button type="button" class="tt-btn tt-btn--dl" id="ttDlToggle">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 13h12"/></svg>
+        Download Proposal
+      </button>
+    </div>
+    <div style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:2rem;">
+      <div style="color:rgba(255,255,255,.7);font-size:.88rem;display:flex;align-items:center;gap:.5rem;"><span style="color:var(--tt-y);font-size:1.1rem;">✓</span> 10–20 guests per event</div>
+      <div style="color:rgba(255,255,255,.7);font-size:.88rem;display:flex;align-items:center;gap:.5rem;"><span style="color:var(--tt-y);font-size:1.1rem;">✓</span> You keep 100% of F&amp;B</div>
+      <div style="color:rgba(255,255,255,.7);font-size:.88rem;display:flex;align-items:center;gap:.5rem;"><span style="color:var(--tt-y);font-size:1.1rem;">✓</span> We handle everything else</div>
+      <div style="color:rgba(255,255,255,.7);font-size:.88rem;display:flex;align-items:center;gap:.5rem;"><span style="color:var(--tt-y);font-size:1.1rem;">✓</span> Live in as little as 2 weeks</div>
+    </div>
+  </div>
+</section>
+
+<!-- Download proposal modal -->
+<div class="tt-dl-modal-backdrop" id="ttDlBackdrop" role="dialog" aria-modal="true" aria-labelledby="ttDlTitle">
+  <div class="tt-dl-modal">
+    <span class="tt-dl-modal-icon" aria-hidden="true">📄</span>
+    <h3 id="ttDlTitle">Download Venue Partnership Deck</h3>
+    <p>Get our full venue proposal with event formats, audience reach, and co-branding options. Available in English and Arabic.</p>
+    <div class="tt-dl-modal-opts">
+      <a class="tt-dl-modal-opt" href="../../assets/docs/cities-venue-partnership-en.pdf" target="_blank" rel="noopener" download>
+        <span class="tt-dl-modal-opt-flag">🇬🇧</span>
+        <span class="tt-dl-modal-opt-info"><strong>English Version</strong><small>Partnership Proposal EN</small></span>
+        <span class="tt-dl-modal-opt-arr">↗</span>
+      </a>
+      <a class="tt-dl-modal-opt" href="../../assets/docs/cities-venue-partnership-ar.pdf" target="_blank" rel="noopener" download dir="rtl">
+        <span class="tt-dl-modal-opt-flag">🇸🇦</span>
+        <span class="tt-dl-modal-opt-info" dir="ltr"><strong>النسخة العربية</strong><small>مقترح الشراكة</small></span>
+        <span class="tt-dl-modal-opt-arr">↗</span>
+      </a>
+    </div>
+    <button type="button" class="tt-dl-modal-cancel" id="ttDlCancel">Maybe Later</button>
+  </div>
+</div>
 
 <div id="site-footer"></div>
 
@@ -170,7 +1117,423 @@
   window.SITE_ROOT = "../../";
   window.SITE_SECTION = "programs";
   window.SITE_PAGE = "programs/talk-and-table";
+
+  /* ── Data viz counter animation ─────────────────────── */
+  (function () {
+    var els = document.querySelectorAll('[data-count]');
+    if (!els.length || !('IntersectionObserver' in window)) return;
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var el = e.target;
+        var target = parseInt(el.getAttribute('data-count'), 10);
+        var start = Date.now(), dur = 1400;
+        obs.unobserve(el);
+        (function tick() {
+          var p = Math.min((Date.now() - start) / dur, 1);
+          var ease = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(ease * target);
+          if (p < 1) requestAnimationFrame(tick);
+        })();
+      });
+    }, { threshold: 0.6 });
+    els.forEach(function (el) { obs.observe(el); });
+  })();
+
+  /* ── Hero slideshow ─────────────────────────────────── */
+  (function () {
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.tt-hero-slide'));
+    if (slides.length < 2) return;
+    var current = 0;
+    setInterval(function () {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }, 4000);
+  })();
+
+  /* ── Experience rows: scroll reveal ─────────────────── */
+  (function () {
+    var rows = document.querySelectorAll('.tt-exp-reveal');
+    if (!rows.length) return;
+    if (!('IntersectionObserver' in window)) {
+      rows.forEach(function (r) { r.classList.add('visible'); }); return;
+    }
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    rows.forEach(function (r) { obs.observe(r); });
+  })();
+
+  /* ── Living Gallery ─────────────────────────────────── */
+  (function () {
+    var viewport  = document.getElementById('ttGalViewport');
+    var track     = document.getElementById('ttGalTrack');
+    var dotsWrap  = document.getElementById('ttGalDots');
+    var counter   = document.getElementById('ttGalCounter');
+    var prevBtn   = document.getElementById('ttGalPrev');
+    var nextBtn   = document.getElementById('ttGalNext');
+    if (!viewport || !track) return;
+
+    var slides  = Array.prototype.slice.call(track.querySelectorAll('.tt-gallery-slide'));
+    var total   = slides.length;
+    var active  = 0;
+    var timer   = null;
+    var paused  = false;
+    var DELAY   = 4000;
+
+    /* Build dots */
+    slides.forEach(function (_, i) {
+      var d = document.createElement('button');
+      d.type = 'button'; d.className = 'tt-gallery-dot' + (i === 0 ? ' active' : '');
+      d.setAttribute('role', 'tab'); d.setAttribute('aria-label', 'Photo ' + (i + 1));
+      d.addEventListener('click', function () { goTo(i, true); });
+      dotsWrap.appendChild(d);
+    });
+
+    function getOffset(idx) {
+      var vw = viewport.offsetWidth;
+      var slide = slides[idx];
+      var sw = slide.offsetWidth;
+      var sl = slide.offsetLeft;
+      return -(sl - (vw - sw) / 2);
+    }
+
+    function resetProgress(idx) {
+      var bar = slides[idx].querySelector('.tt-gallery-prog-bar');
+      if (!bar) return;
+      bar.classList.remove('run');
+      void bar.offsetWidth; /* reflow to restart animation */
+      bar.classList.add('run');
+    }
+
+    function goTo(idx, manual) {
+      slides[active].classList.remove('active');
+      var prevBar = slides[active].querySelector('.tt-gallery-prog-bar');
+      if (prevBar) prevBar.classList.remove('run');
+      active = (idx + total) % total;
+      slides[active].classList.add('active');
+      track.style.transform = 'translateX(' + getOffset(active) + 'px)';
+      dotsWrap.querySelectorAll('.tt-gallery-dot').forEach(function (d, i) { d.classList.toggle('active', i === active); });
+      counter.textContent = (active + 1) + ' / ' + total;
+      if (!paused) resetProgress(active);
+      if (manual) { clearInterval(timer); if (!paused) timer = setInterval(advance, DELAY); }
+    }
+
+    function advance() { goTo(active + 1, false); resetProgress(active); }
+
+    function start() { timer = setInterval(advance, DELAY); resetProgress(active); }
+    function stop()  { clearInterval(timer); timer = null; }
+
+    /* Init position */
+    track.style.transition = 'none';
+    track.style.transform  = 'translateX(' + getOffset(0) + 'px)';
+    setTimeout(function () { track.style.transition = ''; start(); }, 50);
+
+    prevBtn.addEventListener('click', function () { goTo(active - 1, true); });
+    nextBtn.addEventListener('click', function () { goTo(active + 1, true); });
+
+    viewport.addEventListener('mouseenter', function () { paused = true; stop(); var bar = slides[active].querySelector('.tt-gallery-prog-bar'); if (bar) bar.style.animationPlayState = 'paused'; });
+    viewport.addEventListener('mouseleave', function () { paused = false; var bar = slides[active].querySelector('.tt-gallery-prog-bar'); if (bar) bar.style.animationPlayState = 'running'; start(); });
+
+    window.addEventListener('resize', function () { track.style.transition = 'none'; track.style.transform = 'translateX(' + getOffset(active) + 'px)'; setTimeout(function () { track.style.transition = ''; }, 50); });
+
+    /* Drag / swipe */
+    var startX = 0, startOffset = 0, dragging = false, moved = false;
+    function getMatrix() { var m = new DOMMatrix(getComputedStyle(track).transform); return m.m41; }
+    function dragStart(e) { dragging = true; moved = false; stop(); startX = e.touches ? e.touches[0].pageX : e.pageX; startOffset = getMatrix(); viewport.classList.add('dragging'); }
+    function dragMove(e) {
+      if (!dragging) return;
+      var dx = (e.touches ? e.touches[0].pageX : e.pageX) - startX;
+      if (Math.abs(dx) > 5) { moved = true; if (e.cancelable) e.preventDefault(); }
+      track.style.transition = 'none';
+      track.style.transform = 'translateX(' + (startOffset + dx) + 'px)';
+    }
+    function dragEnd(e) {
+      if (!dragging) return; dragging = false; viewport.classList.remove('dragging');
+      track.style.transition = '';
+      var dx = (e.changedTouches ? e.changedTouches[0].pageX : (e.pageX || startX)) - startX;
+      if (Math.abs(dx) > 60) { goTo(dx < 0 ? active + 1 : active - 1, true); }
+      else { track.style.transform = 'translateX(' + getOffset(active) + 'px)'; if (!paused) start(); }
+    }
+    viewport.addEventListener('mousedown',  dragStart);
+    viewport.addEventListener('mousemove',  dragMove);
+    viewport.addEventListener('mouseup',    dragEnd);
+    viewport.addEventListener('mouseleave', function (e) { if (dragging) dragEnd(e); });
+    viewport.addEventListener('touchstart', dragStart, { passive: true });
+    viewport.addEventListener('touchmove',  dragMove, { passive: false });
+    viewport.addEventListener('touchend',   dragEnd);
+  })();
+
+  /* ── Download proposal modal ────────────────────────── */
+  (function () {
+    var toggle   = document.getElementById('ttDlToggle');
+    var backdrop = document.getElementById('ttDlBackdrop');
+    var cancel   = document.getElementById('ttDlCancel');
+    if (!toggle || !backdrop) return;
+    function openModal()  { backdrop.classList.add('open');    cancel.focus(); }
+    function closeModal() { backdrop.classList.remove('open'); toggle.focus(); }
+    toggle.addEventListener('click', openModal);
+    cancel.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', function (e) { if (e.target === backdrop) closeModal(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal(); });
+    backdrop.querySelectorAll('.tt-dl-modal-opt').forEach(function (a) {
+      a.addEventListener('click', function () { setTimeout(closeModal, 300); });
+    });
+  })();
+
+  /* ── City stage: cycling city names ─────────────────── */
+  (function () {
+    var CITIES = [
+      { native: 'الخبر · المنامة', en: 'Khobar & Manama', sub: '🇸🇦🇧🇭 Saudi Arabia · Bahrain · Join on WhatsApp →', url: 'https://chat.whatsapp.com/ITixzsnV9RR7fVU3SVfO6P?s=sh&p=i&mlu=4&ilr=4' },
+      { native: '北京',            en: 'Beijing',          sub: '🇨🇳 China · Join on WhatsApp →',                   url: 'https://chat.whatsapp.com/GHBIVl7OJI7Ds5feTOfKpP?s=sh&p=i&mlu=4&ilr=4' },
+      { native: 'Dar es Salaam',   en: 'Tanzania',         sub: '🇹🇿 East Africa · Join on WhatsApp →',             url: 'https://chat.whatsapp.com/EIwYWAL5plWEOVb3fx08qC?s=cl&p=i&mlu=4&ilr=4' },
+      { native: '新加坡',          en: 'Singapore',        sub: '🇸🇬 Southeast Asia · Join on WhatsApp →',          url: 'https://chat.whatsapp.com/LWZgst1bo5y3O2joCKSXZN?s=cl&p=i&mlu=4&ilr=4' },
+    ];
+
+    var displayEl  = document.getElementById('ttCityDisplay');
+    var nativeEl   = document.getElementById('ttCityNative');
+    var enEl       = document.getElementById('ttCityEn');
+    var subEl      = document.getElementById('ttCitySub');
+    var navEl      = document.getElementById('ttCityNav');
+    if (!displayEl || !navEl) return;
+
+    var idx = 0;
+    var timer = null;
+
+    // Build nav dots
+    CITIES.forEach(function (_, i) {
+      var dot = document.createElement('button');
+      dot.className = 'tt-city-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('type', 'button');
+      dot.setAttribute('role', 'tab');
+      dot.setAttribute('aria-label', CITIES[i].en);
+      dot.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+      dot.addEventListener('click', function () { goTo(i, true); });
+      navEl.appendChild(dot);
+    });
+
+    function updateDisplay(i, animate) {
+      var city = CITIES[i];
+      if (animate) {
+        displayEl.style.opacity = '0';
+        displayEl.style.transform = 'translateY(12px)';
+        displayEl.style.transition = 'opacity .25s ease, transform .25s ease';
+      }
+      setTimeout(function () {
+        nativeEl.textContent = city.native;
+        enEl.textContent     = city.en;
+        subEl.textContent    = city.sub;
+        displayEl.href       = city.url;
+        displayEl.setAttribute('aria-label', 'Join ' + city.en + ' community on WhatsApp');
+        if (animate) {
+          displayEl.style.opacity = '';
+          displayEl.style.transform = '';
+        }
+        // Update dots
+        var dots = navEl.querySelectorAll('.tt-city-dot');
+        dots.forEach(function (dot, j) {
+          dot.classList.toggle('active', j === i);
+          dot.setAttribute('aria-selected', j === i ? 'true' : 'false');
+        });
+      }, animate ? 220 : 0);
+    }
+
+    function goTo(i, manual) {
+      idx = i;
+      updateDisplay(i, true);
+      if (manual) {
+        clearInterval(timer);
+        timer = setInterval(advance, 3500);
+      }
+    }
+
+    function advance() {
+      goTo((idx + 1) % CITIES.length, false);
+    }
+
+    timer = setInterval(advance, 3500);
+  })();
+
+  /* ── Photo strip: drag to scroll ─────────────── */
+  (function () {
+    var strip = document.getElementById('ttStrip');
+    if (!strip) return;
+    var isDown = false, startX = 0, scroll = 0;
+    strip.addEventListener('mousedown', function (e) {
+      isDown = true; strip.style.cursor = 'grabbing';
+      startX = e.pageX; scroll = strip.scrollLeft;
+    });
+    window.addEventListener('mouseup', function () { isDown = false; strip.style.cursor = 'grab'; });
+    strip.addEventListener('mousemove', function (e) {
+      if (!isDown) return;
+      e.preventDefault();
+      strip.scrollLeft = scroll - (e.pageX - startX);
+    });
+  })();
+
+  // ── Contact Us email reveal ──────────────────────────────
+  (function () {
+    var btn   = document.getElementById('ttContactBtn');
+    var popup = document.getElementById('ttEmailPopup');
+    var copy  = document.getElementById('ttEmailCopy');
+    if (!btn || !popup) return;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = popup.hidden;
+      popup.hidden = !open;
+      popup.style.display = open ? 'flex' : 'none';
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function () { popup.hidden = true; popup.style.display = 'none'; btn.setAttribute('aria-expanded','false'); });
+    popup.addEventListener('click', function (e) { e.stopPropagation(); });
+    if (copy) {
+      copy.addEventListener('click', function () {
+        navigator.clipboard.writeText('pr@thereallingo.com').then(function () {
+          copy.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+          setTimeout(function () { copy.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>'; }, 1800);
+        });
+      });
+    }
+  })();
 </script>
 <script src="../../assets/js/nav.js?v=37" defer></script>
+<script>
+(function () {
+  /* Populate popup content from data-attrs, then wire hover/tap/keyboard */
+  document.querySelectorAll('.tt-archive-row').forEach(function (row) {
+    var langs     = (row.dataset.langs     || '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+    var countries = (row.dataset.countries || '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+
+    var metrics = row.querySelectorAll('.tt-arc-metric--interactive');
+    var langMetric    = metrics[0];
+    var countryMetric = metrics[1];
+
+    if (langMetric) {
+      var langsEl = langMetric.querySelector('.tt-arc-popup-langs');
+      if (langsEl) {
+        langs.forEach(function (l) {
+          var span = document.createElement('span');
+          span.className = 'tt-arc-popup-lang';
+          span.textContent = l;
+          langsEl.appendChild(span);
+        });
+      }
+    }
+
+    if (countryMetric) {
+      var countriesEl = countryMetric.querySelector('.tt-arc-popup-countries');
+      if (countriesEl) {
+        countries.forEach(function (c) {
+          /* Format: "🇸🇦 Saudi Arabia" */
+          var parts = c.split(' ');
+          var flag  = parts[0];
+          var name  = parts.slice(1).join(' ');
+          var div = document.createElement('div');
+          div.className = 'tt-arc-popup-country';
+          div.innerHTML = '<span class="tt-arc-popup-flag">' + flag + '</span><span>' + name + '</span>';
+          countriesEl.appendChild(div);
+        });
+      }
+    }
+
+    /* Wire open/close for touch */
+    metrics.forEach(function (m) {
+      m.addEventListener('click', function (e) {
+        var isOpen = m.classList.contains('open');
+        /* Close all others */
+        row.querySelectorAll('.tt-arc-metric--interactive').forEach(function(o){ o.classList.remove('open'); });
+        if (!isOpen) m.classList.add('open');
+        e.stopPropagation();
+      });
+      m.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          m.click();
+        }
+        if (e.key === 'Escape') m.classList.remove('open');
+      });
+    });
+  });
+
+  /* Click outside closes all */
+  document.addEventListener('click', function () {
+    document.querySelectorAll('.tt-arc-metric--interactive.open').forEach(function(m){ m.classList.remove('open'); });
+  });
+
+  /* ── Archive sort + language filter ─────────── */
+  (function () {
+    var list   = document.getElementById('ttArcList');
+    var btns   = document.querySelectorAll('#ttArcControls .tt-arc-ctrl-btn');
+    var select = document.getElementById('ttLangFilter');
+    if (!list) return;
+
+    /* Populate language dropdown from all rows */
+    var allLangs = [];
+    list.querySelectorAll('.tt-archive-row').forEach(function (r) {
+      (r.dataset.langs || '').split(',').forEach(function (l) {
+        l = l.trim();
+        if (l && allLangs.indexOf(l) === -1) allLangs.push(l);
+      });
+    });
+    allLangs.sort().forEach(function (l) {
+      var opt = document.createElement('option');
+      opt.value = l; opt.textContent = l;
+      select.appendChild(opt);
+    });
+
+    var currentSort = { key: 'date', dir: 'desc' };
+    var currentLang = '';
+
+    function applyFilters() {
+      var rows = Array.prototype.slice.call(list.querySelectorAll('.tt-archive-row'));
+
+      /* Filter */
+      rows.forEach(function (r) {
+        var langs = (r.dataset.langs || '').split(',').map(function(s){ return s.trim(); });
+        var show  = !currentLang || langs.indexOf(currentLang) !== -1;
+        r.style.display = show ? '' : 'none';
+      });
+
+      /* Sort visible rows */
+      var visible = rows.filter(function (r) { return r.style.display !== 'none'; });
+      visible.sort(function (a, b) {
+        if (currentSort.key === 'date') {
+          var va = a.dataset.date || '', vb = b.dataset.date || '';
+          return currentSort.dir === 'desc' ? vb.localeCompare(va) : va.localeCompare(vb);
+        }
+        return 0;
+      });
+      visible.forEach(function (r) { list.appendChild(r); });
+
+      /* Re-apply border-radius */
+      var all = list.querySelectorAll('.tt-archive-row:not([style*="display: none"])');
+      all.forEach(function (r, i) {
+        r.style.borderRadius = '';
+        if (all.length === 1) { r.style.borderRadius = '18px'; return; }
+        if (i === 0) r.style.borderRadius = '18px 18px 0 0';
+        else if (i === all.length - 1) r.style.borderRadius = '0 0 18px 18px';
+      });
+    }
+
+    btns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        btns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentSort = { key: btn.dataset.sort, dir: btn.dataset.dir };
+        applyFilters();
+      });
+    });
+
+    if (select) {
+      select.addEventListener('change', function () {
+        currentLang = select.value;
+        select.classList.toggle('active', !!currentLang);
+        applyFilters();
+      });
+    }
+  })();
+})();
+</script>
 </body>
 </html>

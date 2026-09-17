@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+<link rel="apple-touch-icon" href="../../assets/img/favicon.png">
+<title>Join Our Community — RealLingo</title>
+<meta name="description" content="Join RealLingo communities across Khobar, Manama, Beijing, Singapore and more — WhatsApp groups, Creator Collective, and RL Academy.">
+<link rel="canonical" href="https://thereallingo.com/join-us/community/">
+<meta name="robots" content="index, follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css?v=37">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-sans); background: #111216; }
+
+  /* ── Join Our Community ───────────────────────────────────── */
+  .joc-section { background: #111216; padding: 0; position: relative; overflow: hidden; }
+
+  /* ── 4-city mosaic background (2×2 grid) ── */
+  .joc-mosaic {
+    position: absolute; inset: 0; z-index: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    overflow: hidden;
+  }
+  .joc-mosaic-panel {
+    position: relative; overflow: hidden;
+    background-size: cover; background-position: center;
+    transition: filter 0.5s ease, transform 0.5s ease;
+    cursor: pointer;
+  }
+  .joc-mosaic-panel:hover { filter: brightness(1.15); transform: scale(1.03); }
+
+  /* yellow tint layer per panel */
+  .joc-mosaic-panel::before {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(255,235,153,.28);
+    transition: opacity .5s ease; z-index: 1;
+  }
+  /* dark layer over everything for readability */
+  .joc-mosaic-panel::after {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(17,18,22,.55);
+    transition: opacity .5s ease; z-index: 2;
+  }
+  .joc-mosaic-panel:hover::after { opacity: .35; }
+  .joc-mosaic-panel.active::after { opacity: .38; }
+  .joc-mosaic-panel.active::before { opacity: 1.0; }
+
+  /* thin grid gap lines */
+  .joc-mosaic { gap: 2px; }
+
+  /* city name label on each panel */
+  .joc-mosaic-label {
+    position: absolute; bottom: 1.75rem; left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    z-index: 3; text-align: center; pointer-events: none;
+    opacity: 0; transition: opacity .35s ease, transform .35s ease;
+    white-space: nowrap;
+  }
+  .joc-mosaic-panel:hover .joc-mosaic-label,
+  .joc-mosaic-panel.active .joc-mosaic-label {
+    opacity: 1; transform: translateX(-50%) translateY(0);
+  }
+  .joc-mosaic-label-native {
+    font-family: var(--font-serif); font-style: italic;
+    font-size: 1.1rem; color: #fff;
+    text-shadow: 0 2px 10px rgba(0,0,0,.5);
+    display: block; margin-bottom: .2rem;
+  }
+  .joc-mosaic-label-en {
+    font-size: .62rem; font-weight: 800; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--yellow); display: block;
+    text-shadow: 0 1px 4px rgba(0,0,0,.4);
+  }
+
+  /* active city: yellow accent bar at bottom */
+  .joc-mosaic-panel.active .joc-mosaic-accent {
+    opacity: 1; transform: scaleX(1);
+  }
+  .joc-mosaic-accent {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: var(--yellow); z-index: 4;
+    opacity: 0; transform: scaleX(0.3);
+    transition: opacity .5s ease, transform .5s ease;
+    transform-origin: left;
+  }
+
+  /* keep old photo div hidden (JS still references it — now noop) */
+  .joc-section-photo { display: none; }
+  .joc-section-overlay { display: none; }
+
+  /* 1. Dark city stage */
+  .joc-stage {
+    background: transparent; padding: 5rem 4rem 4.5rem;
+    text-align: center; position: relative; z-index: 2;
+  }
+  .joc-stage-photo { display: none; }
+  .joc-stage-bg    { display: none; }
+  .joc-stage-inner { max-width: 1280px; margin: 0 auto; position: relative; z-index: 2; }
+  .joc-kicker { font-size: .7rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 3rem; }
+  .joc-display { min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .joc-display-native {
+    font-family: var(--font-serif); font-size: clamp(3rem, 8vw, 6.5rem);
+    color: #fff; line-height: 1.05; font-style: italic; letter-spacing: -.02em;
+    transition: opacity .3s, transform .3s;
+  }
+  .joc-display-en {
+    font-family: var(--font-sans); font-size: clamp(.75rem, 1.6vw, .95rem);
+    color: rgba(255,255,255,.35); font-weight: 300; letter-spacing: .18em;
+    text-transform: uppercase; margin-top: .5rem;
+    transition: opacity .3s, transform .3s;
+  }
+  .joc-display-sub {
+    font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: #ffeb99; margin-top: .75rem; cursor: pointer;
+    transition: opacity .3s, color .2s; text-decoration: none; display: inline-block;
+  }
+  .joc-display-sub:hover { color: #fff; }
+  .joc-dots { display: flex; justify-content: center; gap: .5rem; margin-top: 2rem; }
+  .joc-dot {
+    width: 6px; height: 6px; border-radius: 50%; border: none; cursor: pointer;
+    background: rgba(255,255,255,.18); transition: background .2s, transform .2s;
+  }
+  .joc-dot.active { background: #ffeb99; transform: scale(1.4); }
+
+  /* 2. Tab selection bar */
+  .joc-tabs-section { background: transparent; padding: 2.5rem 4rem 0; position: relative; z-index: 2; }
+  .joc-tabs-header { max-width: 1280px; margin: 0 auto 1.25rem; }
+  .joc-tabs-eyebrow {
+    font-size: .68rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(255,255,255,.45); margin-bottom: .4rem;
+  }
+  .joc-tabs-wrap { max-width: 1280px; margin: 0 auto; }
+  .joc-tabs {
+    display: inline-flex; align-items: center;
+    background: rgba(255,255,255,.1); border-radius: 999px; padding: .3rem; gap: .2rem;
+    backdrop-filter: blur(8px);
+  }
+  .joc-tab {
+    padding: .6rem 1.35rem; border-radius: 999px;
+    font-family: var(--font-sans); font-size: .88rem; font-weight: 600;
+    border: none; cursor: pointer; background: transparent;
+    color: rgba(255,255,255,.55); transition: background .2s, color .2s;
+    white-space: nowrap;
+  }
+  .joc-tab:hover:not(.active) { background: rgba(255,255,255,.1); color: #fff; }
+  .joc-tab.active { background: #fff; color: #111216; }
+
+  /* 3. Content panels */
+  .joc-content { background: transparent; padding: 2.5rem 0 5rem; position: relative; z-index: 2; }
+  .joc-content-panel { display: none; }
+  .joc-content-panel.active { display: block; }
+
+  /* Cities carousel (inside panel) */
+  .joc-viewport-wrap { max-width: 1280px; margin: 0 auto; }
+  .joc-viewport {
+    overflow: hidden; position: relative; cursor: grab; user-select: none;
+    padding: 0 4rem 1rem;
+  }
+  .joc-viewport.dragging { cursor: grabbing; }
+  .joc-track { display: flex; gap: 1.25rem; }
+
+  .joc-city-card {
+    flex: 0 0 272px; min-height: 330px;
+    background: #fff; border: 1px solid rgba(0,0,0,.07); border-radius: 20px;
+    text-decoration: none; color: inherit;
+    transition: box-shadow .2s, transform .2s;
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+  .joc-city-card:hover { box-shadow: 0 10px 32px rgba(0,0,0,.1); transform: translateY(-3px); }
+  .joc-city-card-top {
+    padding: 1.75rem 1.75rem 1.25rem; flex: 1;
+    display: flex; flex-direction: column;
+  }
+  .joc-city-flag { font-size: 2rem; line-height: 1; margin-bottom: .75rem; }
+  .joc-city-native {
+    font-family: var(--font-serif); font-size: 1.75rem; line-height: 1.15;
+    font-style: italic; letter-spacing: -.01em; margin-bottom: .2rem;
+  }
+  .joc-city-name { font-size: .65rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--text-soft); }
+  .joc-city-region { font-size: .8rem; color: var(--text-soft); margin-top: .2rem; flex: 1; }
+  .joc-city-card-foot {
+    padding: 1rem 1.75rem 1.5rem;
+    border-top: 1px solid rgba(0,0,0,.06);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .joc-city-cta { font-size: .78rem; font-weight: 700; color: #25d366; display: flex; align-items: center; gap: .35rem; }
+  .joc-city-accent { width: 8px; height: 8px; border-radius: 50%; background: #25d366; }
+
+  /* RLCC panel */
+  .joc-rlcc-wrap { max-width: 1280px; margin: 0 auto; padding: 0 4rem; }
+  .joc-rlcc-card {
+    background: #111216; border-radius: 24px; padding: 2.5rem 2.75rem;
+    max-width: 680px; color: #fff;
+  }
+  .joc-rlcc-top { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
+  .joc-rlcc-avatar {
+    width: 52px; height: 52px; border-radius: 50%; background: rgba(255,235,153,.12);
+    display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;
+  }
+  .joc-rlcc-meta { flex: 1; }
+  .joc-rlcc-meta-tag { font-size: .6rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,235,153,.5); margin-bottom: .2rem; }
+  .joc-rlcc-meta-name { font-weight: 700; font-size: 1rem; color: #fff; }
+  .joc-rlcc-wa-badge {
+    display: inline-flex; align-items: center; gap: .35rem;
+    background: #25d366; border-radius: 999px; padding: .3rem .7rem;
+    font-size: .68rem; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .joc-rlcc-desc { font-size: .92rem; color: rgba(255,255,255,.6); line-height: 1.65; margin-bottom: 2rem; border-left: 2px solid rgba(255,235,153,.2); padding-left: 1rem; }
+  .joc-rlcc-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+  .joc-rlcc-btn-wa {
+    display: inline-flex; align-items: center; gap: .45rem;
+    background: #25d366; color: #fff; font-weight: 700; font-size: .88rem;
+    padding: .75rem 1.4rem; border-radius: 100px; text-decoration: none;
+    transition: filter .2s, transform .15s;
+  }
+  .joc-rlcc-btn-wa:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .joc-rlcc-btn-page {
+    display: inline-flex; align-items: center; gap: .45rem;
+    background: rgba(255,255,255,.1); color: #fff; font-weight: 700; font-size: .88rem;
+    padding: .75rem 1.4rem; border-radius: 100px; text-decoration: none;
+    border: 1px solid rgba(255,255,255,.15);
+    transition: background .2s, transform .15s;
+  }
+  .joc-rlcc-btn-page:hover { background: rgba(255,255,255,.16); transform: translateY(-1px); }
+
+  /* RLA panel */
+  .joc-rla-wrap { max-width: 1280px; margin: 0 auto; padding: 0 4rem; display: flex; gap: 2.5rem; align-items: flex-start; }
+  .joc-rla-info { flex: 0 0 280px; }
+  .joc-rla-ico { font-size: 2rem; margin-bottom: .75rem; }
+  .joc-rla-title { font-family: var(--font-serif); font-size: 1.6rem; font-style: italic; font-weight: 400; line-height: 1.2; margin-bottom: .75rem; color: #fff; }
+  .joc-rla-sub { font-size: .9rem; color: rgba(255,255,255,.6); line-height: 1.65; }
+  .joc-rla-frame-wrap {
+    flex: 1; background: #fff; border: 1px solid rgba(0,0,0,.07);
+    border-radius: 20px; overflow: hidden; min-height: 520px;
+  }
+  .joc-rla-frame-wrap iframe { width: 100%; height: 540px; border: none; display: block; }
+
+  @media (max-width: 900px) {
+    .joc-rla-wrap { flex-direction: column; }
+    .joc-rla-info { flex: none; }
+  }
+  @media (max-width: 768px) {
+    .joc-stage { padding: 4rem 1.5rem 3.5rem; }
+    .joc-tabs-section { padding: 2rem 1.5rem 0; }
+    .joc-viewport { padding: 0 1.5rem 1rem; }
+    .joc-rlcc-wrap, .joc-rla-wrap { padding: 0 1.5rem; }
+    .joc-city-card { flex: 0 0 240px; }
+    .joc-rlcc-actions { flex-direction: column; }
+    .joc-rlcc-btn-wa, .joc-rlcc-btn-page { width: 100%; justify-content: center; }
+    .joc-tabs { width: 100%; }
+    .joc-tab { flex: 1; text-align: center; font-size: .8rem; padding: .6rem .75rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<!-- ── Join Our Community ─────────────────────────────────── -->
+<section class="joc-section" id="join-community">
+
+  <!-- 4-city mosaic background -->
+  <div class="joc-mosaic" id="jocMosaic" aria-hidden="true">
+    <div class="joc-mosaic-panel" id="jocMPanel0"
+         style="background-image:url('../../assets/img/community/khobar-1.jpg')">
+      <div class="joc-mosaic-label">
+        <span class="joc-mosaic-label-native">الخبر · المنامة</span>
+        <span class="joc-mosaic-label-en">Khobar &amp; Manama</span>
+      </div>
+      <div class="joc-mosaic-accent"></div>
+    </div>
+    <div class="joc-mosaic-panel" id="jocMPanel1"
+         style="background-image:url('../../assets/img/community/beijing-1.jpg')">
+      <div class="joc-mosaic-label">
+        <span class="joc-mosaic-label-native">北京</span>
+        <span class="joc-mosaic-label-en">Beijing</span>
+      </div>
+      <div class="joc-mosaic-accent"></div>
+    </div>
+    <div class="joc-mosaic-panel" id="jocMPanel2"
+         style="background-image:url('../../assets/img/community/beijing-2.jpg')">
+      <div class="joc-mosaic-label">
+        <span class="joc-mosaic-label-native">Dar es Salaam</span>
+        <span class="joc-mosaic-label-en">Tanzania</span>
+      </div>
+      <div class="joc-mosaic-accent"></div>
+    </div>
+    <div class="joc-mosaic-panel" id="jocMPanel3"
+         style="background-image:url('../../assets/img/community/singapore-1.png')">
+      <div class="joc-mosaic-label">
+        <span class="joc-mosaic-label-native">新加坡</span>
+        <span class="joc-mosaic-label-en">Singapore</span>
+      </div>
+      <div class="joc-mosaic-accent"></div>
+    </div>
+  </div>
+
+  <!-- legacy hidden elements JS still references -->
+  <div class="joc-section-photo" id="jocSectionBg" aria-hidden="true"></div>
+
+  <!-- 1. Dark animated city stage -->
+  <div class="joc-stage">
+    <div class="joc-stage-photo" id="jocStageBg" aria-hidden="true"></div>
+    <div class="joc-stage-bg" aria-hidden="true"></div>
+    <div class="joc-stage-inner">
+      <div class="joc-kicker">Join Our Community</div>
+      <div class="joc-display">
+        <div class="joc-display-native" id="jocNative">الخبر · المنامة</div>
+        <div class="joc-display-en" id="jocEn">Khobar &amp; Manama</div>
+        <a class="joc-display-sub" id="jocSub" href="https://chat.whatsapp.com/ITixzsnV9RR7fVU3SVfO6P?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">🇸🇦🇧🇭 Saudi Arabia · Bahrain · Join on WhatsApp →</a>
+      </div>
+      <div class="joc-dots" id="jocDots"></div>
+    </div>
+  </div>
+
+  <!-- 2. Tab selection bar -->
+  <div class="joc-tabs-section">
+    <div class="joc-tabs-header">
+      <div class="joc-tabs-eyebrow">Join Our Community</div>
+    </div>
+    <div class="joc-tabs-wrap">
+      <div class="joc-tabs" role="tablist">
+        <button class="joc-tab active" data-prog="cities" role="tab" aria-selected="true" type="button">Cities@RealLingo</button>
+        <button class="joc-tab" data-prog="rlcc" role="tab" aria-selected="false" type="button">Creator Collective</button>
+        <button class="joc-tab" data-prog="rla" role="tab" aria-selected="false" type="button">RL Academy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Content panels -->
+  <div class="joc-content">
+
+    <!-- Cities panel — auto-scrolling carousel -->
+    <div class="joc-content-panel active" id="joc-panel-cities">
+      <div class="joc-viewport-wrap">
+      <div class="joc-viewport" id="jocViewport" role="list" aria-label="WhatsApp community groups">
+        <div class="joc-track" id="jocTrack">
+          <a class="joc-city-card" href="https://chat.whatsapp.com/ITixzsnV9RR7fVU3SVfO6P?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" role="listitem">
+            <div class="joc-city-card-top">
+              <span class="joc-city-flag">🇸🇦🇧🇭</span>
+              <span class="joc-city-native">الخبر · المنامة</span>
+              <span class="joc-city-name">Khobar &amp; Manama</span>
+              <span class="joc-city-region">Saudi Arabia · Bahrain</span>
+            </div>
+            <div class="joc-city-card-foot">
+              <span class="joc-city-cta">Join on WhatsApp <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 17 17 3M7 3h10v10"/></svg></span>
+              <span class="joc-city-accent"></span>
+            </div>
+          </a>
+          <a class="joc-city-card" href="https://chat.whatsapp.com/GHBIVl7OJI7Ds5feTOfKpP?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" role="listitem">
+            <div class="joc-city-card-top">
+              <span class="joc-city-flag">🇨🇳</span>
+              <span class="joc-city-native">北京</span>
+              <span class="joc-city-name">Beijing</span>
+              <span class="joc-city-region">China</span>
+            </div>
+            <div class="joc-city-card-foot">
+              <span class="joc-city-cta">Join on WhatsApp <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 17 17 3M7 3h10v10"/></svg></span>
+              <span class="joc-city-accent"></span>
+            </div>
+          </a>
+          <a class="joc-city-card" href="https://chat.whatsapp.com/EIwYWAL5plWEOVb3fx08qC?s=cl&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" role="listitem">
+            <div class="joc-city-card-top">
+              <span class="joc-city-flag">🇹🇿</span>
+              <span class="joc-city-native">Dar es Salaam</span>
+              <span class="joc-city-name">Tanzania</span>
+              <span class="joc-city-region">East Africa</span>
+            </div>
+            <div class="joc-city-card-foot">
+              <span class="joc-city-cta">Join on WhatsApp <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 17 17 3M7 3h10v10"/></svg></span>
+              <span class="joc-city-accent"></span>
+            </div>
+          </a>
+          <a class="joc-city-card" href="https://chat.whatsapp.com/LWZgst1bo5y3O2joCKSXZN?s=cl&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" role="listitem">
+            <div class="joc-city-card-top">
+              <span class="joc-city-flag">🇸🇬</span>
+              <span class="joc-city-native">新加坡</span>
+              <span class="joc-city-name">Singapore</span>
+              <span class="joc-city-region">Southeast Asia</span>
+            </div>
+            <div class="joc-city-card-foot">
+              <span class="joc-city-cta">Join on WhatsApp <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 17 17 3M7 3h10v10"/></svg></span>
+              <span class="joc-city-accent"></span>
+            </div>
+          </a>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <!-- RLCC panel -->
+    <div class="joc-content-panel" id="joc-panel-rlcc">
+      <div class="joc-rlcc-wrap">
+        <div class="joc-rlcc-card">
+          <div class="joc-rlcc-top">
+            <div class="joc-rlcc-avatar">🎙️</div>
+            <div class="joc-rlcc-meta">
+              <div class="joc-rlcc-meta-tag">WhatsApp Group</div>
+              <div class="joc-rlcc-meta-name">RealLingo Creator Collective</div>
+            </div>
+            <span class="joc-rlcc-wa-badge">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.953 0C5.354 0 0 5.343 0 11.926c0 2.098.549 4.116 1.594 5.894L.057 23.857a.5.5 0 00.614.62l6.178-1.616A11.898 11.898 0 0011.953 23.85c6.598 0 11.952-5.343 11.952-11.926C23.905 5.343 18.551 0 11.953 0zm0 21.796a9.845 9.845 0 01-5.014-1.374l-.36-.214-3.727.976.995-3.63-.234-.373a9.816 9.816 0 01-1.506-5.255C2.107 6.503 6.622 2 11.953 2c5.33 0 9.845 4.503 9.845 10.054-.001 5.552-4.516 9.742-9.845 9.742z"/></svg>
+              WhatsApp
+            </span>
+          </div>
+          <p class="joc-rlcc-desc">Creators, educators, and storytellers shaping the future of language and cultural content creation. Join the community building what comes next.</p>
+          <div class="joc-rlcc-actions">
+            <a href="https://chat.whatsapp.com/LiIeGX44xtF9nxIBFFZjpK?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" class="joc-rlcc-btn-wa">Join on WhatsApp ↗</a>
+            <a href="../../programs/creator-collective/" class="joc-rlcc-btn-page">Learn More →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RLA panel -->
+    <div class="joc-content-panel" id="joc-panel-rla">
+      <div class="joc-rlcc-wrap">
+        <div class="joc-rlcc-card">
+          <div class="joc-rlcc-top">
+            <div class="joc-rlcc-avatar">🀄</div>
+            <div class="joc-rlcc-meta">
+              <div class="joc-rlcc-meta-tag">RL Academy</div>
+              <div class="joc-rlcc-meta-name">Chinese Workshop</div>
+            </div>
+          </div>
+          <p class="joc-rlcc-desc">Structured, tutor-led Chinese sessions for all levels. Register your interest and we'll reach out with the next cohort details.</p>
+          <div class="joc-rlcc-actions">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdQ-CBeXqYphFwx5YMeyhokgB8qs2B2hdJo5MJlDnbJOwt4WA/viewform" target="_blank" rel="noopener noreferrer" class="joc-rlcc-btn-wa">Register Interest →</a>
+            <a href="../../programs/rl-academy/" class="joc-rlcc-btn-page">Learn More →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<div id="site-footer"></div>
+
+<script>
+  window.SITE_ROOT = "../../";
+  window.SITE_SECTION = "joinus";
+  window.SITE_PAGE = "join-us/community";
+
+  /* ── Join Our Community ─────────────────────────────────── */
+  (function () {
+    var SITE_ROOT_PATH = (typeof window.SITE_ROOT !== 'undefined' ? window.SITE_ROOT : '../../');
+    var CITIES = [
+      { native: 'الخبر · المنامة', en: 'Khobar & Manama',  sub: '🇸🇦🇧🇭 Saudi Arabia · Bahrain · Join on WhatsApp →', url: 'https://chat.whatsapp.com/ITixzsnV9RR7fVU3SVfO6P?s=sh&p=i&mlu=4&ilr=4', photo: 'assets/img/community/khobar-1.jpg' },
+      { native: '北京',             en: 'Beijing',           sub: '🇨🇳 China · Join on WhatsApp →',                    url: 'https://chat.whatsapp.com/GHBIVl7OJI7Ds5feTOfKpP?s=sh&p=i&mlu=4&ilr=4', photo: 'assets/img/community/beijing-1.jpg' },
+      { native: 'Dar es Salaam',    en: 'Tanzania',          sub: '🇹🇿 East Africa · Join on WhatsApp →',              url: 'https://chat.whatsapp.com/EIwYWAL5plWEOVb3fx08qC?s=cl&p=i&mlu=4&ilr=4', photo: '' },
+      { native: '新加坡',           en: 'Singapore',         sub: '🇸🇬 Southeast Asia · Join on WhatsApp →',           url: 'https://chat.whatsapp.com/LWZgst1bo5y3O2joCKSXZN?s=cl&p=i&mlu=4&ilr=4', photo: 'assets/img/community/singapore-1.png' },
+    ];
+    var nativeEl = document.getElementById('jocNative');
+    var enEl     = document.getElementById('jocEn');
+    var subEl    = document.getElementById('jocSub');
+    var dotsEl   = document.getElementById('jocDots');
+    var stageBg  = document.getElementById('jocSectionBg');
+    if (!nativeEl) return;
+    var cityIdx = 0;
+    function setDisplay(c, animate) {
+      if (stageBg) {
+        if (c.photo) {
+          stageBg.style.backgroundImage = 'url(' + SITE_ROOT_PATH + c.photo + ')';
+          stageBg.classList.add('visible');
+        } else {
+          stageBg.classList.remove('visible');
+        }
+      }
+      if (animate) { nativeEl.style.cssText = 'opacity:0;transform:translateY(10px)'; enEl.style.cssText = 'opacity:0;transform:translateY(10px)'; subEl.style.opacity = '0'; }
+      setTimeout(function () {
+        nativeEl.textContent = c.native; enEl.textContent = c.en; subEl.textContent = c.sub; subEl.href = c.url;
+        nativeEl.style.cssText = ''; enEl.style.cssText = ''; subEl.style.opacity = '';
+      }, animate ? 220 : 0);
+    }
+    function buildDots() {
+      dotsEl.innerHTML = '';
+      CITIES.forEach(function (_, i) {
+        var d = document.createElement('button'); d.type = 'button';
+        d.className = 'joc-dot' + (i === 0 ? ' active' : '');
+        d.setAttribute('aria-label', 'City ' + (i + 1));
+        (function (idx) { d.addEventListener('click', function () { cityIdx = idx; showCity(true); }); })(i);
+        dotsEl.appendChild(d);
+      });
+    }
+    /* Sync mosaic active panel */
+    var mosaicPanels = [0,1,2,3].map(function(i){ return document.getElementById('jocMPanel' + i); });
+    function setMosaicActive(idx) {
+      mosaicPanels.forEach(function(p, i) { if (p) p.classList.toggle('active', i === idx); });
+    }
+    mosaicPanels.forEach(function(p, i) {
+      if (p) p.addEventListener('click', function() { cityIdx = i; showCity(true); });
+    });
+
+    function showCity(animate) {
+      setDisplay(CITIES[cityIdx], animate);
+      setMosaicActive(cityIdx);
+      dotsEl.querySelectorAll('.joc-dot').forEach(function (d, i) { d.classList.toggle('active', i === cityIdx); });
+    }
+    buildDots();
+    setInterval(function () { cityIdx = (cityIdx + 1) % CITIES.length; showCity(true); }, 3500);
+
+    /* Selector cards — show / hide panels */
+    var selCards = document.querySelectorAll('.joc-tab[data-prog]');
+    var panels   = { cities: document.getElementById('joc-panel-cities'), rlcc: document.getElementById('joc-panel-rlcc'), rla: document.getElementById('joc-panel-rla') };
+    function selectProg(prog) {
+      selCards.forEach(function (c) {
+        var on = c.dataset.prog === prog;
+        c.classList.toggle('active', on);
+        c.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      Object.keys(panels).forEach(function (k) { if (panels[k]) panels[k].classList.toggle('active', k === prog); });
+    }
+    selCards.forEach(function (c) { c.addEventListener('click', function () { selectProg(c.dataset.prog); }); });
+
+    /* Auto-scrolling carousel (seamless RAF loop) */
+    var viewport = document.getElementById('jocViewport');
+    var track    = document.getElementById('jocTrack');
+    if (!viewport || !track) return;
+
+    var origCards = Array.prototype.slice.call(track.children);
+    origCards.forEach(function (card) { track.appendChild(card.cloneNode(true)); });
+
+    viewport.style.overflowX = 'hidden';
+    var halfW = 0, raf = null, paused = false, startX = 0, dragDelta = 0, isDragging = false, moved = false;
+
+    function measure() { halfW = track.scrollWidth / 2; }
+    measure();
+
+    var pos = 0;
+    function tick() {
+      if (!paused) {
+        pos += 0.6;
+        if (pos >= halfW) pos -= halfW;
+        track.style.transform = 'translateX(-' + pos + 'px)';
+      }
+      raf = requestAnimationFrame(tick);
+    }
+    raf = requestAnimationFrame(tick);
+
+    viewport.addEventListener('mouseenter', function () { paused = true; });
+    viewport.addEventListener('mouseleave', function () { paused = false; });
+
+    viewport.style.cursor = 'grab';
+    function onDown(e) {
+      isDragging = true; moved = false; paused = true;
+      startX = e.touches ? e.touches[0].pageX : e.pageX;
+      dragDelta = 0;
+      viewport.style.cursor = 'grabbing';
+    }
+    function onMove(e) {
+      if (!isDragging) return;
+      var dx = (e.touches ? e.touches[0].pageX : e.pageX) - startX;
+      if (Math.abs(dx) > 4) { moved = true; if (e.cancelable) e.preventDefault(); }
+      pos -= (dx - dragDelta); startX = e.touches ? e.touches[0].pageX : e.pageX;
+      if (pos < 0) pos += halfW; if (pos >= halfW) pos -= halfW;
+      track.style.transform = 'translateX(-' + pos + 'px)';
+    }
+    function onUp() { isDragging = false; paused = false; viewport.style.cursor = 'grab'; }
+    viewport.addEventListener('mousedown',  onDown);
+    viewport.addEventListener('mousemove',  onMove);
+    viewport.addEventListener('mouseup',    onUp);
+    viewport.addEventListener('mouseleave', onUp);
+    viewport.addEventListener('touchstart', onDown, { passive: true });
+    viewport.addEventListener('touchmove',  onMove, { passive: false });
+    viewport.addEventListener('touchend',   onUp);
+    track.querySelectorAll('a.joc-city-card').forEach(function (card) {
+      card.addEventListener('click', function (e) { if (moved) e.preventDefault(); });
+    });
+    window.addEventListener('resize', measure);
+  })();
+</script>
+<script src="../../assets/js/nav.js?v=37" defer></script>
+</body>
+</html>

@@ -353,3 +353,37 @@
     loadPartial('footer.html', 'site-footer', initFooter);
   });
 })();
+
+/* ── SGYN-style scroll-reveal + text-roll ──────────────────────────── */
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* scroll-reveal: .rv elements */
+  var rvEls = document.querySelectorAll('.rv, .rv-children');
+  if (reduce) {
+    rvEls.forEach(function(el){ el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
+    rvEls.forEach(function(el){ io.observe(el); });
+    setTimeout(function(){ rvEls.forEach(function(el){ el.classList.add('in'); }); }, 6000);
+  }
+
+  /* text-roll: [data-roll] elements get letter-split */
+  document.querySelectorAll('[data-roll]').forEach(function(el){
+    var txt = (el.dataset.rollText || el.textContent || '').trim();
+    var arrow = '';
+    if (/\s→$/.test(txt)){ arrow = '→'; txt = txt.replace(/\s*→$/, ''); }
+    var html = '';
+    txt.split('').forEach(function(c, i){
+      var ch = c === ' ' ? '&nbsp;' : c.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      var d = ' style="transition-delay:' + (i * 18) + 'ms"';
+      html += '<span class="tr"><i' + d + '>' + ch + '</i><i' + d + '>' + ch + '</i></span>';
+    });
+    if (arrow) html += ' <span class="roll-arrow">→</span>';
+    el.innerHTML = html;
+  });
+})();
