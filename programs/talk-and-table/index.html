@@ -366,6 +366,20 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 }
 @keyframes ttKenBurns { from { transform: scale(1.05) } to { transform: scale(1) } }
 
+/* Multi-image cycling within a single slide */
+.tt-gallery-imgs { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 22px; overflow: hidden; }
+.tt-gallery-imgs img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; animation: ttImgCycle 9s linear infinite; }
+.tt-gallery-imgs img:nth-child(1) { animation-delay: 0s; }
+.tt-gallery-imgs img:nth-child(2) { animation-delay: 3s; }
+.tt-gallery-imgs img:nth-child(3) { animation-delay: 6s; }
+@keyframes ttImgCycle {
+  0%   { opacity: 0; }
+  5%   { opacity: 1; }
+  28%  { opacity: 1; }
+  33%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
 /* Caption */
 .tt-gallery-cap {
   position: absolute; bottom: 1.75rem; left: 1.875rem; right: 1.875rem;
@@ -1022,7 +1036,11 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
       </div>
 
       <div class="tt-gallery-slide" role="group" aria-label="2 of 4">
-        <img src="../../assets/img/tt/tt-4.jpg" alt="Talk&amp;Table activity cards and materials on table" loading="lazy">
+        <div class="tt-gallery-imgs">
+          <img src="../../assets/img/tt/tt-4.jpg" alt="Talk&amp;Table activity cards and materials on table" loading="lazy">
+          <img src="../../assets/img/tt/tt-4b.jpg" alt="Talk&amp;Table session moment" loading="lazy">
+          <img src="../../assets/img/tt/tt-4c.jpg" alt="Talk&amp;Table session moment" loading="lazy">
+        </div>
         <div class="tt-gallery-cap">
           <div class="tt-gallery-cap-text">🃏 <strong>Games &amp; activities</strong> — language icebreakers and prompts keep the energy alive, even if you're nervous about speaking.</div>
           <div class="tt-gallery-cap-meta">02 of 04</div>
