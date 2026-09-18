@@ -367,7 +367,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 @keyframes ttKenBurns { from { transform: scale(1.05) } to { transform: scale(1) } }
 
 /* Multi-image cycling within a single slide */
-.tt-gallery-imgs { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 22px; overflow: hidden; }
+.tt-gallery-imgs { position: absolute; inset: 0 .875rem; border-radius: 22px; overflow: hidden; }
 .tt-gallery-imgs img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; animation: ttImgCycle 9s linear infinite; }
 .tt-gallery-imgs img:nth-child(1) { animation-delay: 0s; }
 .tt-gallery-imgs img:nth-child(2) { animation-delay: 3s; }
