@@ -75,7 +75,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   opacity: 0; transition: opacity 1.4s ease-in-out;
 }
 .tt-hero-slide.active { opacity: 1; }
-.tt-hero-slide:nth-child(1) { background-image: url('../../assets/img/tt/tt-9.jpg'); background-position: center 30%; }
+.tt-hero-slide:nth-child(1) { background-image: none; }
 
 .tt-hero-overlay {
   position: absolute; inset: 0; z-index: 1;
@@ -601,6 +601,10 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
+.tt-lang-native { display: inline; }
+.tt-lang-en { display: none; }
+.tt-lang-tag:hover .tt-lang-native { display: none; }
+.tt-lang-tag:hover .tt-lang-en { display: inline; }
 .tt-lang-tag {
   display: inline-flex; align-items: center; gap: .35rem; flex-shrink: 0;
   font-size: .78rem; font-weight: 700; padding: .35rem .8rem;
@@ -902,22 +906,22 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
         <div class="tt-data-langs-title">Languages spoken so far</div>
         <div class="tt-lang-ticker-mask">
           <div class="tt-lang-ticker-track">
-            <span class="tt-lang-tag">Chinese 🇨🇳</span>
-            <span class="tt-lang-tag">Arabic 🇸🇦</span>
-            <span class="tt-lang-tag">Bangla 🇧🇩</span>
-            <span class="tt-lang-tag">German 🇩🇪</span>
-            <span class="tt-lang-tag">Danish 🇩🇰</span>
-            <span class="tt-lang-tag">Korean 🇰🇷</span>
-            <span class="tt-lang-tag">French 🇫🇷</span>
-            <span class="tt-lang-tag">Spanish 🇪🇸</span>
-            <span class="tt-lang-tag">Chinese 🇨🇳</span>
-            <span class="tt-lang-tag">Arabic 🇸🇦</span>
-            <span class="tt-lang-tag">Bangla 🇧🇩</span>
-            <span class="tt-lang-tag">German 🇩🇪</span>
-            <span class="tt-lang-tag">Danish 🇩🇰</span>
-            <span class="tt-lang-tag">Korean 🇰🇷</span>
-            <span class="tt-lang-tag">French 🇫🇷</span>
-            <span class="tt-lang-tag">Spanish 🇪🇸</span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">中文 🇨🇳</span><span class="tt-lang-en">Chinese 🇨🇳</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">العربية 🇸🇦</span><span class="tt-lang-en">Arabic 🇸🇦</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">বাংলা 🇧🇩</span><span class="tt-lang-en">Bangla 🇧🇩</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">Deutsch 🇩🇪</span><span class="tt-lang-en">German 🇩🇪</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">Dansk 🇩🇰</span><span class="tt-lang-en">Danish 🇩🇰</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">한국어 🇰🇷</span><span class="tt-lang-en">Korean 🇰🇷</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">Français 🇫🇷</span><span class="tt-lang-en">French 🇫🇷</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">Español 🇪🇸</span><span class="tt-lang-en">Spanish 🇪🇸</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">中文 🇨🇳</span><span class="tt-lang-en">Chinese 🇨🇳</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">العربية 🇸🇦</span><span class="tt-lang-en">Arabic 🇸🇦</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">বাংলা 🇧🇩</span><span class="tt-lang-en">Bangla 🇧🇩</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">Deutsch 🇩🇪</span><span class="tt-lang-en">German 🇩🇪</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">Dansk 🇩🇰</span><span class="tt-lang-en">Danish 🇩🇰</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">한국어 🇰🇷</span><span class="tt-lang-en">Korean 🇰🇷</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">Français 🇫🇷</span><span class="tt-lang-en">French 🇫🇷</span></span>
+            <span class="tt-lang-tag"><span class="tt-lang-native">Español 🇪🇸</span><span class="tt-lang-en">Spanish 🇪🇸</span></span>
           </div>
         </div>
       </div>
@@ -1040,8 +1044,9 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
     <div class="tt-route-stop">
       <div class="tt-route-polaroid">
         <div class="tt-route-tape"></div>
-        <div class="tt-route-photo tt-route-photo--single">
+        <div class="tt-route-photo">
           <img src="../../assets/img/tt/tt-1.jpg" alt="People in conversation at a Talk&amp;Table session" loading="lazy">
+          <img src="../../assets/img/tt/tt-10.jpg" alt="Talk&amp;Table session real moment" loading="lazy">
         </div>
         <div class="tt-route-polaroid-caption">Talk &amp; Table · Real moments</div>
       </div>
@@ -1496,7 +1501,8 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   if (!container) return;
   if (typeof d3 === 'undefined' || typeof topojson === 'undefined') return;
 
-  var repCountries = new Set(['682','156','276','208','410','250','724','50','834','702']);
+  /* Only session attendee countries — Tanzania/Singapore are expanding cities, not attendee countries */
+  var repCountries = new Set(['682','156','276','208','410','250','724','50']);
   /* Active cities: [lon, lat, label] */
   var activeCities = [
     [50.2, 26.3, 'Khobar'],
@@ -1506,6 +1512,17 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   var expCities = [
     [39.3, -6.8, 'Dar es Salaam'],
     [103.8, 1.35, 'Singapore']
+  ];
+  /* Language popups per country: [lon, lat, native, english, anchor] */
+  var langLabels = [
+    [45,  24,   'العربية', 'Arabic',  'middle'],
+    [104, 35,   '中文',     'Chinese', 'middle'],
+    [10,  51.5, 'Deutsch', 'German',  'middle'],
+    [10,  56.5, 'Dansk',   'Danish',  'middle'],
+    [128, 37,   '한국어',   'Korean',  'middle'],
+    [2,   46,   'Français','French',  'middle'],
+    [-4,  40,   'Español', 'Spanish', 'middle'],
+    [90,  23.5, 'বাংলা',   'Bangla',  'middle'],
   ];
 
   var w = 800, h = 384;
@@ -1571,6 +1588,76 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
         .attr('font-weight','700')
         .text(c[2]);
     });
+
+    /* ── Language popup bubbles (cycling) ── */
+    var labelGs = langLabels.map(function (c) {
+      var pt = proj([c[0], c[1]]);
+      if (!pt) return null;
+      var native = c[2], english = c[3];
+      var padX = 9, padY = 5, r = 9;
+
+      var g = svg.append('g')
+        .attr('transform', 'translate(' + pt[0] + ',' + (pt[1] - 18) + ')')
+        .style('opacity', 0).style('pointer-events', 'none');
+
+      /* pill background */
+      var bg = g.append('rect')
+        .attr('rx', r).attr('ry', r)
+        .attr('fill', 'rgba(17,18,22,0.88)')
+        .attr('stroke', '#c9973a').attr('stroke-width', 1);
+
+      /* native text (default) */
+      var tNative = g.append('text')
+        .attr('text-anchor', 'middle').attr('dy', '0.35em')
+        .attr('fill', '#ffeb99').attr('font-size', 11)
+        .attr('font-family', "'Be Vietnam Pro',sans-serif").attr('font-weight', '700')
+        .text(native);
+
+      /* english text (shown on hover via JS) */
+      var tEn = g.append('text')
+        .attr('text-anchor', 'middle').attr('dy', '0.35em')
+        .attr('fill', '#ffeb99').attr('font-size', 11)
+        .attr('font-family', "'Be Vietnam Pro',sans-serif").attr('font-weight', '700')
+        .text(english).style('display', 'none');
+
+      /* size pill to text — approximate: ~7px per char */
+      var nativeW = Math.max(native.length * 8, 40);
+      var hw = nativeW / 2 + padX;
+      bg.attr('x', -hw).attr('y', -padY - 6).attr('width', hw * 2).attr('height', (padY + 6) * 2);
+
+      /* connector dot */
+      g.append('circle').attr('cy', padY + 8).attr('r', 2).attr('fill', '#c9973a');
+
+      /* hover: swap native ↔ english */
+      g.style('pointer-events', 'all');
+      g.on('mouseenter', function () {
+        tNative.style('display', 'none');
+        var enW = Math.max(english.length * 7, 40);
+        var ehw = enW / 2 + padX;
+        bg.attr('x', -ehw).attr('width', ehw * 2);
+        tEn.style('display', null);
+      }).on('mouseleave', function () {
+        tEn.style('display', 'none');
+        var nw = Math.max(native.length * 8, 40);
+        var nhw = nw / 2 + padX;
+        bg.attr('x', -nhw).attr('width', nhw * 2);
+        tNative.style('display', null);
+      });
+
+      return g;
+    }).filter(Boolean);
+
+    /* cycle: show one label at a time, rotating every 1.8s */
+    var ci = 0;
+    function cycleLabel() {
+      labelGs.forEach(function (g) { g.transition().duration(250).style('opacity', 0); });
+      var cur = labelGs[ci];
+      cur.transition().duration(300).style('opacity', 1);
+      ci = (ci + 1) % labelGs.length;
+    }
+    cycleLabel();
+    setInterval(cycleLabel, 1800);
+
   }).catch(function () {});
 })();
 </script>
