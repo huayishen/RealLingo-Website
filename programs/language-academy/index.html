@@ -180,8 +180,15 @@
   }
   .rla-cta-heading {
     font-family: var(--font-serif, Georgia, serif);
-    font-size: clamp(1.4rem, 2.2vw, 1.75rem); font-weight: 400; line-height: 1.2;
+    font-size: clamp(1.4rem, 2.2vw, 1.75rem); font-weight: 400; line-height: 1.4;
     color: #111216; letter-spacing: -.02em;
+  }
+  .rla-cta-heading .hl {
+    background: #ffeb99;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    padding: .05em .18em;
+    border-radius: 3px;
   }
   .rla-cta-sub {
     font-size: .97rem; color: rgba(17,18,22,.6); line-height: 1.6; margin-top: -.6rem;
@@ -261,7 +268,7 @@
   <!-- CTA card -->
   <div class="rla-form-col">
     <div class="rla-cta-card">
-      <h3 class="rla-cta-heading">Looking for in-person language workshops?</h3>
+      <h3 class="rla-cta-heading"><span class="hl">Looking for in-person language workshops?</span></h3>
       <p class="rla-cta-sub">Learn a language in a small group with RealLingo Academy!</p>
       <ul class="rla-cta-list">
         <li>Led by experienced tutors at partner cafés and venues</li>
