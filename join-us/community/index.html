@@ -170,8 +170,55 @@
   }
   .joc-map-svg { width: 100%; height: auto; display: block; }
   .joc-map-land { fill: #1c2035; stroke: #252b42; stroke-width: 0.4; }
+  .joc-map-land--rep { fill: #2e2a18; stroke: #5a4e1a; stroke-width: 0.5; }
   .joc-map-border { fill: none; stroke: #2e3450; stroke-width: 0.4; }
   .joc-map-sphere { fill: #10121a; }
+
+  /* ── Map legend ── */
+  .joc-map-legend {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem;
+    padding: .9rem 1.4rem;
+    border-top: 1px solid rgba(255,255,255,.06);
+    font-size: .75rem; color: rgba(255,255,255,.4); font-weight: 600; letter-spacing: .04em;
+  }
+  .joc-map-legend-item { display: flex; align-items: center; gap: .45rem; }
+  .joc-legend-swatch { width: 14px; height: 14px; border-radius: 3px; background: #2e2a18; border: 1px solid #5a4e1a; }
+  .joc-legend-dot-active { width: 10px; height: 10px; border-radius: 50%; background: #ffeb99; box-shadow: 0 0 6px rgba(255,235,153,.5); }
+  .joc-legend-dot-exp { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.25); border: 1px solid rgba(255,255,255,.2); }
+
+  /* ── Language ticker ── */
+  .joc-ticker-section {
+    overflow: hidden; padding: 2.5rem 0 0;
+    position: relative;
+  }
+  .joc-ticker-eyebrow {
+    font-size: .62rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+    color: rgba(255,255,255,.25); margin-bottom: 1rem; padding: 0 5vw;
+  }
+  .joc-ticker-mask {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+  }
+  .joc-ticker-track {
+    display: flex; gap: .75rem;
+    width: max-content;
+    animation: jocTicker 28s linear infinite;
+  }
+  .joc-ticker-track:hover { animation-play-state: paused; }
+  @keyframes jocTicker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .joc-ticker-pill {
+    display: inline-flex; align-items: center; gap: .5rem; flex-shrink: 0;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09);
+    border-radius: 999px; padding: .55rem 1.1rem;
+    font-size: .88rem; font-weight: 700; color: rgba(255,255,255,.75);
+    white-space: nowrap;
+    transition: background .2s, border-color .2s;
+  }
+  .joc-ticker-pill:hover { background: rgba(255,235,153,.08); border-color: rgba(255,235,153,.2); color: #ffeb99; }
   .joc-map-grid { stroke: rgba(255,255,255,.04); stroke-width: 0.5; fill: none; }
 
   .joc-map-pin { cursor: pointer; }
@@ -437,6 +484,12 @@
             </a>
           </div>
 
+          <!-- Map legend -->
+          <div class="joc-map-legend">
+            <span class="joc-map-legend-item"><span class="joc-legend-swatch"></span> Countries represented</span>
+            <span class="joc-map-legend-item"><span class="joc-legend-dot-active"></span> Active city</span>
+            <span class="joc-map-legend-item"><span class="joc-legend-dot-exp"></span> Expanding</span>
+          </div>
         </div>
       </div>
     </div>
@@ -485,6 +538,44 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- Language ticker -->
+  <div class="joc-ticker-section">
+    <div class="joc-ticker-eyebrow">Languages spoken so far</div>
+    <div class="joc-ticker-mask">
+      <div class="joc-ticker-track" id="jocTickerTrack">
+        <span class="joc-ticker-pill">Chinese 🇨🇳</span>
+        <span class="joc-ticker-pill">Arabic 🇸🇦</span>
+        <span class="joc-ticker-pill">Bangla 🇧🇩</span>
+        <span class="joc-ticker-pill">German 🇩🇪</span>
+        <span class="joc-ticker-pill">Danish 🇩🇰</span>
+        <span class="joc-ticker-pill">Korean 🇰🇷</span>
+        <span class="joc-ticker-pill">French 🇫🇷</span>
+        <span class="joc-ticker-pill">Spanish 🇪🇸</span>
+        <span class="joc-ticker-pill">Swahili 🇹🇿</span>
+        <span class="joc-ticker-pill">Malay 🇸🇬</span>
+        <span class="joc-ticker-pill">English 🇬🇧</span>
+        <span class="joc-ticker-pill">Hindi 🇮🇳</span>
+        <span class="joc-ticker-pill">Turkish 🇹🇷</span>
+        <span class="joc-ticker-pill">Italian 🇮🇹</span>
+        <!-- duplicate set for seamless loop -->
+        <span class="joc-ticker-pill">Chinese 🇨🇳</span>
+        <span class="joc-ticker-pill">Arabic 🇸🇦</span>
+        <span class="joc-ticker-pill">Bangla 🇧🇩</span>
+        <span class="joc-ticker-pill">German 🇩🇪</span>
+        <span class="joc-ticker-pill">Danish 🇩🇰</span>
+        <span class="joc-ticker-pill">Korean 🇰🇷</span>
+        <span class="joc-ticker-pill">French 🇫🇷</span>
+        <span class="joc-ticker-pill">Spanish 🇪🇸</span>
+        <span class="joc-ticker-pill">Swahili 🇹🇿</span>
+        <span class="joc-ticker-pill">Malay 🇸🇬</span>
+        <span class="joc-ticker-pill">English 🇬🇧</span>
+        <span class="joc-ticker-pill">Hindi 🇮🇳</span>
+        <span class="joc-ticker-pill">Turkish 🇹🇷</span>
+        <span class="joc-ticker-pill">Italian 🇮🇹</span>
+      </div>
+    </div>
   </div>
 
 </section>
@@ -607,10 +698,36 @@
         var countries = topojson.feature(world, world.objects.countries);
         var borders   = topojson.mesh(world, world.objects.countries, function (a, b) { return a !== b; });
 
+        /* Countries where RealLingo community members are from */
+        var repCountries = new Set([
+          '682', /* Saudi Arabia */
+          '156', /* China */
+          '834', /* Tanzania */
+          '702', /* Singapore */
+          '276', /* Germany */
+          '826', /* United Kingdom */
+          '36',  /* Australia */
+          '818', /* Egypt */
+          '784', /* UAE */
+          '792', /* Turkey */
+          '356', /* India */
+          '410', /* South Korea */
+          '400', /* Jordan */
+          '422', /* Lebanon */
+          '586', /* Pakistan */
+          '250', /* France */
+          '724', /* Spain */
+          '380', /* Italy */
+          '840', /* USA */
+          '124', /* Canada */
+        ]);
+
         svg.append('g').selectAll('path')
           .data(countries.features)
           .join('path')
-          .attr('class', 'joc-map-land')
+          .attr('class', function (d) {
+            return repCountries.has(String(d.id)) ? 'joc-map-land joc-map-land--rep' : 'joc-map-land';
+          })
           .attr('d', geoPath);
 
         svg.append('path')
