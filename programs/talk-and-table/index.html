@@ -939,6 +939,12 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 .tt-phone-embed {
   width: 100%;
   background: #000;
+  position: relative;
+}
+/* Cover the embed's own header (collab tag, location) */
+.tt-phone-embed-cover {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 72px; background: #000; z-index: 2; pointer-events: none;
 }
 .tt-phone-embed iframe,
 .tt-phone-embed .instagram-media {
@@ -1284,6 +1290,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
           </div>
           <!-- Reel embed -->
           <div class="tt-phone-embed">
+            <div class="tt-phone-embed-cover"></div>
             <blockquote class="instagram-media"
               data-instgrm-permalink="https://www.instagram.com/reel/DdAQ5a_I1-X/?utm_source=ig_embed"
               data-instgrm-version="14"
