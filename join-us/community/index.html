@@ -13,6 +13,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/css/site.css?v=39">
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js" defer></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -167,7 +169,9 @@
     overflow: hidden; user-select: none;
   }
   .joc-map-svg { width: 100%; height: auto; display: block; }
-  .joc-map-land { fill: #1c2035; stroke: #252b42; stroke-width: 0.6; }
+  .joc-map-land { fill: #1c2035; stroke: #252b42; stroke-width: 0.4; }
+  .joc-map-border { fill: none; stroke: #2e3450; stroke-width: 0.4; }
+  .joc-map-sphere { fill: #10121a; }
   .joc-map-grid { stroke: rgba(255,255,255,.04); stroke-width: 0.5; fill: none; }
 
   .joc-map-pin { cursor: pointer; }
@@ -378,88 +382,13 @@
   <!-- 3. Content panels -->
   <div class="joc-content">
 
-    <!-- Cities panel — world map -->
+    <!-- Cities panel — world map (D3 rendered) -->
     <div class="joc-content-panel active" id="joc-panel-cities">
       <div class="joc-map-wrap">
         <div class="joc-map-container" id="jocMapContainer">
+          <!-- D3 inserts SVG here at load time -->
 
-          <!-- SVG world map (Eastern Hemisphere: lon -20→160, lat -45→65)
-               x = (lon + 20) * 5   y = (65 - lat) * 4.36  viewBox 0 0 900 480 -->
-          <svg class="joc-map-svg" viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <!-- Grid lines -->
-            <line class="joc-map-grid" x1="0" y1="240" x2="900" y2="240"/><!-- equator -->
-            <line class="joc-map-grid" x1="0" y1="349" x2="900" y2="349"/><!-- tropic capricorn -->
-            <line class="joc-map-grid" x1="0" y1="131" x2="900" y2="131"/><!-- tropic cancer -->
-
-            <!-- AFRICA -->
-            <polygon class="joc-map-land" points="
-              70,127 55,157 15,218 30,235 75,262 110,262
-              145,271 145,295 160,358 170,412 195,436
-              235,432 255,414 275,388 300,315 300,302
-              315,278 355,232 320,234 315,218 285,192
-              265,153 225,148 165,140 150,122 110,122 95,127
-            "/>
-
-            <!-- ARABIAN PENINSULA -->
-            <polygon class="joc-map-land" points="
-              270,153 290,153 340,157 375,179 395,183
-              400,207 365,227 320,231 290,213 290,187 285,165
-            "/>
-
-            <!-- EUROPE (rough) -->
-            <polygon class="joc-map-land" points="
-              55,92 55,75 75,66 85,27 135,27 225,22
-              240,48 260,79 240,92 210,122 180,118
-              170,88 155,79
-            "/>
-
-            <!-- INDIA -->
-            <polygon class="joc-map-land" points="
-              400,153 430,135 520,162 560,188
-              500,218 500,249 485,249 470,222 425,179
-            "/>
-
-            <!-- CHINA + EAST ASIA -->
-            <polygon class="joc-map-land" points="
-              490,109 625,96 720,74 735,118 755,136
-              750,145 700,188 640,188 600,183 560,162
-            "/>
-
-            <!-- SE ASIA (Indochina + Malay Peninsula) -->
-            <polygon class="joc-map-land" points="
-              600,183 640,192 645,214 635,236 605,258
-              620,278 605,271 595,249
-            "/>
-
-            <!-- SUMATRA -->
-            <polygon class="joc-map-land" points="580,259 630,268 630,309 600,305"/>
-
-            <!-- BORNEO -->
-            <polygon class="joc-map-land" points="645,275 680,253 690,257 685,275 680,301 670,301"/>
-
-            <!-- SRI LANKA -->
-            <ellipse class="joc-map-land" cx="498" cy="258" rx="7" ry="10"/>
-
-            <!-- City pins (cx,cy): Khobar=351,169 · Beijing=682,110 · Dar es Salaam=297,313 · Singapore=619,278 -->
-            <g class="joc-map-pin" data-city="khobar" tabindex="0" role="button" aria-label="Khobar &amp; Manama community group">
-              <circle class="joc-map-pin-pulse" cx="351" cy="169" r="12"/>
-              <circle class="joc-map-pin-dot" cx="351" cy="169" r="5"/>
-            </g>
-            <g class="joc-map-pin" data-city="beijing" tabindex="0" role="button" aria-label="Beijing community group">
-              <circle class="joc-map-pin-pulse" cx="682" cy="110" r="12"/>
-              <circle class="joc-map-pin-dot" cx="682" cy="110" r="5"/>
-            </g>
-            <g class="joc-map-pin" data-city="dar" tabindex="0" role="button" aria-label="Dar es Salaam community group">
-              <circle class="joc-map-pin-pulse" cx="297" cy="313" r="12"/>
-              <circle class="joc-map-pin-dot" cx="297" cy="313" r="5"/>
-            </g>
-            <g class="joc-map-pin" data-city="singapore" tabindex="0" role="button" aria-label="Singapore community group">
-              <circle class="joc-map-pin-pulse" cx="619" cy="278" r="12"/>
-              <circle class="joc-map-pin-dot" cx="619" cy="278" r="5"/>
-            </g>
-          </svg>
-
-          <!-- Popups (positioned via JS) -->
+          <!-- Popups (auto-cycle; hover to pause; pin click to jump) -->
           <div class="joc-map-popup" id="jocPopup-khobar">
             <button class="joc-popup-close" aria-label="Close">✕</button>
             <span class="joc-popup-flag">🇸🇦🇧🇭</span>
@@ -638,74 +567,167 @@
     }
     selCards.forEach(function (c) { c.addEventListener('click', function () { selectProg(c.dataset.prog); }); });
 
-    /* World map popups */
-    var container = document.getElementById('jocMapContainer');
-    if (!container) return;
-
-    /* Pin positions as % of SVG viewBox (900 x 480) */
-    var pins = {
-      khobar:    { x: 351/900, y: 169/480 },
-      beijing:   { x: 682/900, y: 110/480 },
-      dar:       { x: 297/900, y: 313/480 },
-      singapore: { x: 619/900, y: 278/480 }
-    };
-
-    var openPopup = null;
-
-    function positionPopup(popup, pinX, pinY) {
-      var cw = container.offsetWidth;
-      var ch = container.offsetHeight;
-      var pw = popup.offsetWidth || 220;
-      var ph = popup.offsetHeight || 180;
-      var px = pinX * cw;
-      var py = pinY * ch;
-      /* Default: above and centered on pin; flip if too close to edges */
-      var left = Math.min(Math.max(px - pw / 2, 8), cw - pw - 8);
-      var top  = py - ph - 16;
-      if (top < 8) top = py + 20;
-      popup.style.left = left + 'px';
-      popup.style.top  = top  + 'px';
-    }
-
-    function openCity(city) {
-      if (openPopup) { openPopup.classList.remove('open'); }
-      var popup = document.getElementById('jocPopup-' + city);
-      if (!popup) return;
-      popup.style.left = '0'; popup.style.top = '0';
-      popup.classList.add('open');
-      openPopup = popup;
-      var pin = pins[city];
-      if (pin) positionPopup(popup, pin.x, pin.y);
-    }
-
-    container.querySelectorAll('.joc-map-pin').forEach(function (pin) {
-      function activate() { openCity(pin.dataset.city); }
-      pin.addEventListener('click', activate);
-      pin.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
-    });
-
-    container.querySelectorAll('.joc-popup-close').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var popup = btn.closest('.joc-map-popup');
-        if (popup) { popup.classList.remove('open'); if (openPopup === popup) openPopup = null; }
-      });
-    });
-
-    document.addEventListener('click', function (e) {
-      if (openPopup && !openPopup.contains(e.target) && !e.target.closest('.joc-map-pin')) {
-        openPopup.classList.remove('open'); openPopup = null;
-      }
-    });
-
-    window.addEventListener('resize', function () {
-      if (openPopup) {
-        var city = openPopup.id.replace('jocPopup-', '');
-        var pin  = pins[city];
-        if (pin) positionPopup(openPopup, pin.x, pin.y);
-      }
-    });
+    /* World map — D3 (deferred scripts available at window load) */
   })();
+
+  window.addEventListener('load', function () {
+    var mapContainer = document.getElementById('jocMapContainer');
+    if (!mapContainer || typeof d3 === 'undefined' || typeof topojson === 'undefined') return;
+
+    var W = 960, H = 500;
+    var cityDefs = [
+      { key: 'khobar',    lon: 50.2,   lat: 26.3  },
+      { key: 'beijing',   lon: 116.4,  lat: 39.9  },
+      { key: 'dar',       lon: 39.3,   lat: -6.8  },
+      { key: 'singapore', lon: 103.8,  lat: 1.3   }
+    ];
+
+    var projection = d3.geoNaturalEarth1()
+      .scale(W / (2 * Math.PI) * 0.9)
+      .translate([W / 2, H / 2 + 20]);
+
+    var geoPath = d3.geoPath().projection(projection);
+
+    var svg = d3.select(mapContainer).insert('svg', ':first-child')
+      .attr('viewBox', '0 0 ' + W + ' ' + H)
+      .attr('width',  '100%')
+      .attr('height', 'auto')
+      .attr('aria-hidden', 'true')
+      .attr('class', 'joc-map-svg');
+
+    /* Ocean background */
+    svg.append('path')
+      .datum({ type: 'Sphere' })
+      .attr('class', 'joc-map-sphere')
+      .attr('d', geoPath);
+
+    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+      .then(function (r) { return r.json(); })
+      .then(function (world) {
+        var countries = topojson.feature(world, world.objects.countries);
+        var borders   = topojson.mesh(world, world.objects.countries, function (a, b) { return a !== b; });
+
+        svg.append('g').selectAll('path')
+          .data(countries.features)
+          .join('path')
+          .attr('class', 'joc-map-land')
+          .attr('d', geoPath);
+
+        svg.append('path')
+          .datum(borders)
+          .attr('class', 'joc-map-border')
+          .attr('d', geoPath);
+
+        /* Compute & store fractional pin positions */
+        cityDefs.forEach(function (c) {
+          var xy = projection([c.lon, c.lat]);
+          c.fx = xy[0] / W;
+          c.fy = xy[1] / H;
+        });
+
+        /* Draw pins */
+        cityDefs.forEach(function (c, i) {
+          var g = svg.append('g')
+            .attr('class', 'joc-map-pin')
+            .attr('data-city', c.key)
+            .attr('tabindex', '0')
+            .attr('role', 'button')
+            .attr('transform', 'translate(' + (c.fx * W) + ',' + (c.fy * H) + ')');
+
+          g.append('circle')
+            .attr('class', 'joc-map-pin-pulse')
+            .attr('r', 14)
+            .style('animation-delay', (i * 0.5) + 's');
+
+          g.append('circle')
+            .attr('class', 'joc-map-pin-dot')
+            .attr('r', 5);
+        });
+
+        /* ── Popup cycling & interaction ── */
+        var cityMap    = {};
+        cityDefs.forEach(function (c) { cityMap[c.key] = c; });
+        var cityKeys   = cityDefs.map(function (c) { return c.key; });
+        var activeIdx  = 0;
+        var openPopup  = null;
+        var cycleTimer = null;
+        var hovering   = false;
+
+        function positionPopup(popup, fx, fy) {
+          var cw = mapContainer.offsetWidth;
+          var ch = mapContainer.offsetHeight;
+          var pw = popup.offsetWidth  || 220;
+          var ph = popup.offsetHeight || 185;
+          var px = fx * cw, py = fy * ch;
+          var left = Math.min(Math.max(px - pw / 2, 8), cw - pw - 8);
+          var top  = py - ph - 18;
+          if (top < 8) top = py + 22;
+          popup.style.left = left + 'px';
+          popup.style.top  = top  + 'px';
+        }
+
+        function showCity(key) {
+          if (openPopup) openPopup.classList.remove('open');
+          var c = cityMap[key];
+          var popup = document.getElementById('jocPopup-' + key);
+          if (!popup || !c) return;
+          popup.classList.add('open');
+          openPopup = popup;
+          positionPopup(popup, c.fx, c.fy);
+          /* Highlight active pin */
+          mapContainer.querySelectorAll('.joc-map-pin').forEach(function (p) {
+            p.classList.toggle('active', p.getAttribute('data-city') === key);
+          });
+        }
+
+        function advance() {
+          activeIdx = (activeIdx + 1) % cityKeys.length;
+          showCity(cityKeys[activeIdx]);
+        }
+
+        function startCycle() { if (!cycleTimer) cycleTimer = setInterval(advance, 3500); }
+        function stopCycle()  { clearInterval(cycleTimer); cycleTimer = null; }
+
+        /* Popup hover pause / resume */
+        mapContainer.querySelectorAll('.joc-map-popup').forEach(function (popup) {
+          popup.addEventListener('mouseenter', function () { hovering = true;  stopCycle(); });
+          popup.addEventListener('mouseleave', function () { hovering = false; startCycle(); });
+        });
+
+        /* Pin click: jump to city */
+        mapContainer.addEventListener('click', function (e) {
+          var pin = e.target.closest('.joc-map-pin');
+          if (!pin) return;
+          var key = pin.getAttribute('data-city');
+          activeIdx = cityKeys.indexOf(key);
+          showCity(key);
+          stopCycle();
+          if (!hovering) startCycle();
+        });
+
+        /* Close button */
+        mapContainer.querySelectorAll('.joc-popup-close').forEach(function (btn) {
+          btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var p = btn.closest('.joc-map-popup');
+            if (p) { p.classList.remove('open'); if (openPopup === p) openPopup = null; }
+          });
+        });
+
+        /* Reposition on resize */
+        window.addEventListener('resize', function () {
+          if (openPopup) {
+            var key = openPopup.id.replace('jocPopup-', '');
+            var c   = cityMap[key];
+            if (c) positionPopup(openPopup, c.fx, c.fy);
+          }
+        });
+
+        /* Kick off */
+        showCity(cityKeys[0]);
+        startCycle();
+      });
+  });
 </script>
 <script src="../../assets/js/nav.js?v=38" defer></script>
 </body>
