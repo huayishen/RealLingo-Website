@@ -10,164 +10,197 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Alice&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/site.css?v=38">
+<link rel="stylesheet" href="../assets/css/site.css?v=39">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow-x: hidden; }
 
-/* ── Page wrapper ─── */
-.pg-wrap {
-  min-height: 100vh;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-}
-
-/* ── Hero header ─── */
+/* ── Page header ─── */
 .pg-head {
-  padding: 3.5rem 5vw 2rem;
-  max-width: 1280px; margin: 0 auto; width: 100%;
+  padding: 4rem 5vw 1rem;
+  max-width: 760px; margin: 0 auto; text-align: center;
   position: relative; z-index: 2;
 }
 .pg-eyebrow {
   font-size: .68rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
   color: rgba(255,235,153,.5); margin-bottom: 1rem;
-  display: flex; align-items: center; gap: .6rem;
+  display: flex; align-items: center; justify-content: center; gap: .6rem;
 }
-.pg-eyebrow::before { content: ''; display: block; width: 20px; height: 1px; background: rgba(255,235,153,.4); }
+.pg-eyebrow::before, .pg-eyebrow::after { content: ''; display: block; width: 20px; height: 1px; background: rgba(255,235,153,.4); }
 .pg-title {
-  font-family: var(--font-serif); font-size: clamp(2.2rem, 5vw, 4rem);
+  font-family: var(--font-serif); font-size: clamp(2.2rem, 5vw, 3.8rem);
   font-weight: 400; line-height: 1.05; letter-spacing: -.02em; color: #fff;
 }
 .pg-title em { font-style: italic; color: #ffeb99; }
 .pg-sub {
-  margin-top: .75rem; font-size: 1rem; color: rgba(255,255,255,.45); max-width: 440px; line-height: 1.65;
+  margin-top: .75rem; font-size: 1rem; color: rgba(255,255,255,.4); line-height: 1.65;
 }
 
-/* ── Programs grid ─── */
-.pg-grid {
-  max-width: 1280px; margin: 0 auto; padding: 0 5vw 4rem;
-  width: 100%;
+/* ── Roadmap container ─── */
+.rdm-wrap {
+  max-width: 900px; margin: 0 auto;
+  padding: 3rem 5vw 6rem;
+  position: relative; z-index: 2;
+}
+
+/* Central spine */
+.rdm-spine {
+  position: absolute;
+  left: 50%; top: 0; bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,.07);
+  z-index: 0;
+}
+.rdm-spine-fill {
+  position: absolute; top: 0; left: 0; right: 0;
+  background: linear-gradient(to bottom, #ffeb99 0%, rgba(255,235,153,.2) 100%);
+  height: 0%;
+  transition: height 1.2s cubic-bezier(.25,.46,.45,.94);
+  border-radius: 2px;
+}
+
+/* ── Stop row ─── */
+.rdm-stop {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 52vh 48vh;
-  gap: 1rem;
+  grid-template-columns: 1fr 60px 1fr;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 2.5rem;
+  position: relative; z-index: 1;
 }
 
-/* Each portal card */
-.pg-card {
-  border-radius: 24px; overflow: hidden; position: relative;
-  cursor: pointer; text-decoration: none; display: block;
-  transition: transform .4s cubic-bezier(.25,.46,.45,.94);
-  outline: none;
-  opacity: 0; transform: translateY(30px);
-  animation: pgReveal .7s cubic-bezier(.25,.46,.45,.94) forwards;
+/* Even stops: card on right */
+.rdm-stop:nth-child(even) .rdm-card { grid-column: 3; }
+.rdm-stop:nth-child(even) .rdm-node { grid-column: 2; }
+.rdm-stop:nth-child(even) .rdm-spacer { grid-column: 1; }
+
+/* Odd stops: card on left */
+.rdm-stop:nth-child(odd) .rdm-card { grid-column: 1; }
+.rdm-stop:nth-child(odd) .rdm-node { grid-column: 2; }
+.rdm-stop:nth-child(odd) .rdm-spacer { grid-column: 3; }
+
+/* ── Node badge ─── */
+.rdm-node {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  position: relative; z-index: 2;
+  cursor: pointer;
 }
-@keyframes pgReveal {
-  to { opacity: 1; transform: translateY(0); }
+.rdm-node-badge {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #1a1c22;
+  border: 2px solid rgba(255,255,255,.12);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); font-size: 1rem; font-style: italic;
+  color: rgba(255,255,255,.35);
+  transition: border-color .35s, color .35s, box-shadow .35s, background .35s;
+  position: relative;
 }
-.pg-card:nth-child(1) { animation-delay: .05s; }
-.pg-card:nth-child(2) { animation-delay: .12s; }
-.pg-card:nth-child(3) { animation-delay: .19s; }
-.pg-card:nth-child(4) { animation-delay: .26s; }
-.pg-card:nth-child(5) { animation-delay: .33s; grid-column: 1 / -1; max-height: 200px; }
-
-/* Base backgrounds */
-.pg-card--rlcc   { background: #1a160b; }
-.pg-card--rltt   { background: #0f1318; }
-.pg-card--rla    { background: #0d1019; }
-.pg-card--market { background: #130d0a; }
-.pg-card--open   { background: #0a1210; }
-
-/* Ambient glow behind each card */
-.pg-card--rlcc::before   { background: radial-gradient(ellipse 60% 60% at 70% 30%, rgba(255,200,50,.15), transparent); }
-.pg-card--rltt::before   { background: radial-gradient(ellipse 60% 60% at 30% 70%, rgba(100,160,255,.12), transparent); }
-.pg-card--rla::before    { background: radial-gradient(ellipse 60% 60% at 80% 20%, rgba(180,120,255,.12), transparent); }
-.pg-card--market::before { background: radial-gradient(ellipse 60% 60% at 20% 80%, rgba(255,140,60,.12), transparent); }
-.pg-card--open::before   { background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(60,220,140,.1), transparent); }
-.pg-card::before { content: ''; position: absolute; inset: 0; z-index: 0; transition: opacity .5s; }
-
-/* Noise texture overlay */
-.pg-card::after {
-  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  background-repeat: repeat; background-size: 200px;
-  mix-blend-mode: overlay; opacity: .4;
+.rdm-node-badge::after {
+  content: '';
+  position: absolute; inset: -5px; border-radius: 50%;
+  border: 1px solid transparent;
+  transition: border-color .35s;
 }
-
-/* Dimming on group hover */
-.pg-grid:has(.pg-card:hover) .pg-card:not(:hover) { opacity: .4; }
-
-/* Card hover effects */
-.pg-card:hover { transform: scale(1.012); z-index: 10; }
-.pg-card:hover::before { opacity: 1.6; }
-
-/* Card content */
-.pg-card-inner {
-  position: absolute; inset: 0; z-index: 2;
-  padding: 2.25rem 2.5rem;
-  display: flex; flex-direction: column;
-  justify-content: space-between;
+.rdm-stop.is-active .rdm-node-badge {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255,255,255,.04);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 12%, transparent),
+              0 0 20px color-mix(in srgb, var(--accent) 20%, transparent);
 }
-.pg-card-top { display: flex; flex-direction: column; gap: .5rem; }
-.pg-card-num {
-  font-family: var(--font-serif); font-size: 5rem; font-weight: 400; font-style: italic;
-  line-height: 1; letter-spacing: -.04em; color: rgba(255,255,255,.07);
-  position: absolute; top: 1.5rem; right: 2rem;
-  transition: color .4s;
+.rdm-stop.is-active .rdm-node-badge::after { border-color: color-mix(in srgb, var(--accent) 25%, transparent); }
+.rdm-node-ico { font-size: 1.1rem; opacity: .3; transition: opacity .35s, transform .35s; }
+.rdm-stop.is-active .rdm-node-ico { opacity: 1; transform: scale(1.2); }
+
+/* ── Card ─── */
+.rdm-card {
+  display: block; text-decoration: none;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 20px; padding: 1.6rem 1.8rem;
+  position: relative; overflow: hidden;
+  transition: border-color .35s, background .35s, transform .35s;
+  cursor: pointer;
 }
-.pg-card:hover .pg-card-num { color: rgba(255,255,255,.12); }
-.pg-card-tag {
-  display: inline-block; font-size: .6rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-  border: 1px solid rgba(255,255,255,.12); border-radius: 999px; padding: .22rem .7rem;
-  color: rgba(255,255,255,.4); width: fit-content;
+.rdm-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--glow);
+  opacity: 0; transition: opacity .4s;
+  pointer-events: none;
+}
+.rdm-stop.is-active .rdm-card {
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  background: rgba(255,255,255,.05);
+  transform: translateX(var(--card-dx, 0));
+}
+.rdm-stop.is-active .rdm-card::before { opacity: 1; }
+
+.rdm-card-tag {
+  display: inline-block; font-size: .58rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,.12); border-radius: 999px; padding: .2rem .65rem;
+  color: rgba(255,255,255,.35); margin-bottom: .6rem;
   transition: border-color .3s, color .3s;
 }
-.pg-card:hover .pg-card-tag { border-color: rgba(255,255,255,.3); color: rgba(255,255,255,.7); }
-.pg-card-name {
-  font-family: 'Times New Roman', Times, serif; font-size: clamp(1.25rem, 2.1vw, 1.9rem);
-  font-weight: 400; font-style: normal; line-height: 1.15; letter-spacing: -.01em;
-  color: #fff; max-width: 320px;
-}
-.pg-card--open .pg-card-name { max-width: none; }
+.rdm-stop.is-active .rdm-card-tag { border-color: color-mix(in srgb, var(--accent) 45%, transparent); color: var(--accent); }
 
-.pg-card-desc {
-  font-family: 'Be Vietnam Pro', sans-serif; font-size: .9rem; line-height: 1.6; color: rgba(255,255,255,.45);
-  max-width: 340px; margin-top: .5rem;
-  opacity: 0; transform: translateY(8px);
-  transition: opacity .35s .05s, transform .35s .05s;
+.rdm-card-name {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+  font-weight: 400; line-height: 1.2; color: #fff;
+  margin-bottom: .4rem;
 }
-.pg-card:hover .pg-card-desc { opacity: 1; transform: translateY(0); }
+.rdm-card-desc {
+  font-size: .88rem; color: rgba(255,255,255,.4); line-height: 1.6;
+  max-height: 0; overflow: hidden;
+  transition: max-height .4s cubic-bezier(.25,.46,.45,.94), opacity .3s;
+  opacity: 0;
+}
+.rdm-stop.is-active .rdm-card-desc { max-height: 80px; opacity: 1; }
 
-/* Bottom row */
-.pg-card-bot {
-  display: flex; align-items: center; justify-content: space-between;
+.rdm-card-cta {
+  display: inline-flex; align-items: center; gap: .45rem;
+  margin-top: .8rem;
+  font-size: .78rem; font-weight: 700; letter-spacing: .04em;
+  color: var(--accent); opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .3s .1s, transform .3s .1s;
 }
-.pg-card-cta {
-  display: inline-flex; align-items: center; gap: .5rem;
-  font-size: .78rem; font-weight: 700; letter-spacing: .05em;
-  color: rgba(255,255,255,.3);
-  transition: color .3s, gap .3s;
-}
-.pg-card:hover .pg-card-cta { color: #ffeb99; gap: .75rem; }
-.pg-card-cta svg { transition: transform .3s; }
-.pg-card:hover .pg-card-cta svg { transform: translateX(4px); }
-.pg-card-ico { font-size: 1.75rem; opacity: .5; transition: opacity .3s, transform .3s; }
-.pg-card:hover .pg-card-ico { opacity: 1; transform: scale(1.15); }
+.rdm-stop.is-active .rdm-card-cta { opacity: 1; transform: translateY(0); }
+.rdm-card-cta svg { transition: transform .25s; }
+.rdm-card:hover .rdm-card-cta svg { transform: translateX(3px); }
 
-/* Accent line at top of card */
-.pg-card-accent {
-  position: absolute; top: 0; left: 2rem; right: 2rem; height: 1.5px;
-  border-radius: 0 0 2px 2px; z-index: 3;
-  opacity: 0; transition: opacity .4s;
-  transform-origin: left;
-  transform: scaleX(0); transition: transform .5s cubic-bezier(.25,.46,.45,.94), opacity .3s;
+/* Connector line card → node */
+.rdm-connector {
+  height: 2px; background: rgba(255,255,255,.06);
+  grid-column: span 1;
+  transition: background .35s;
+  align-self: center;
 }
-.pg-card:hover .pg-card-accent { opacity: 1; transform: scaleX(1); }
-.pg-card--rlcc   .pg-card-accent { background: linear-gradient(90deg, #ffeb99, #f5d96a); }
-.pg-card--rltt   .pg-card-accent { background: linear-gradient(90deg, #7eb8f7, #4a9ef0); }
-.pg-card--rla    .pg-card-accent { background: linear-gradient(90deg, #c4a0ff, #9b6dff); }
-.pg-card--market .pg-card-accent { background: linear-gradient(90deg, #ffb07a, #ff8040); }
-.pg-card--open   .pg-card-accent { background: linear-gradient(90deg, #5de8a0, #25d366); }
+.rdm-stop:nth-child(odd)  .rdm-connector { grid-column: 1; /* not used directly */ }
+.rdm-stop.is-active .rdm-connector { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+
+/* Per-stop accent colors */
+.rdm-stop--rlcc   { --accent: #ffeb99; --glow: radial-gradient(ellipse 80% 80% at 20% 50%, rgba(255,200,50,.1), transparent); --card-dx: -4px; }
+.rdm-stop--rltt   { --accent: #7eb8f7; --glow: radial-gradient(ellipse 80% 80% at 80% 50%, rgba(100,160,255,.1), transparent); --card-dx: 4px; }
+.rdm-stop--rla    { --accent: #c4a0ff; --glow: radial-gradient(ellipse 80% 80% at 20% 50%, rgba(180,120,255,.1), transparent); --card-dx: -4px; }
+.rdm-stop--market { --accent: #ffb07a; --glow: radial-gradient(ellipse 80% 80% at 80% 50%, rgba(255,140,60,.1), transparent); --card-dx: 4px; }
+.rdm-stop--open   { --accent: #5de8a0; --glow: radial-gradient(ellipse 80% 80% at 20% 50%, rgba(60,220,140,.1), transparent); --card-dx: -4px; }
+
+/* ── End node ─── */
+.rdm-end {
+  display: flex; flex-direction: column; align-items: center; gap: .75rem;
+  padding-top: 1rem; position: relative; z-index: 2; text-align: center;
+}
+.rdm-end-badge {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, #ffeb99, #f5d96a);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 0 0 8px rgba(255,235,153,.1), 0 0 30px rgba(255,235,153,.2);
+}
+.rdm-end-text { font-size: .82rem; color: rgba(255,255,255,.3); letter-spacing: .06em; }
 
 /* ── Floating background particles ── */
 .pg-particles {
@@ -177,24 +210,44 @@ body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow
   position: absolute; border-radius: 50%;
   animation: pgFloat var(--d, 8s) ease-in-out infinite alternate;
   animation-delay: var(--delay, 0s);
-  opacity: .035;
+  opacity: .03;
 }
 @keyframes pgFloat {
   from { transform: translate(0, 0); }
   to   { transform: translate(var(--tx, 30px), var(--ty, -40px)); }
 }
 
-@media (max-width: 900px) {
-  .pg-grid { grid-template-columns: 1fr; grid-template-rows: repeat(5, 44vh); }
-  .pg-card:nth-child(5) { grid-column: auto; max-height: none; }
+/* ── Entrance animation ── */
+.rdm-stop {
+  opacity: 0; transform: translateY(24px);
+  animation: stopIn .6s cubic-bezier(.25,.46,.45,.94) forwards;
 }
-@media (max-width: 600px) {
-  .pg-head { padding: 2rem 1.5rem 1.5rem; }
-  .pg-grid { padding: 0 1.5rem 3rem; gap: .75rem; grid-template-rows: repeat(5, 52vw); }
-  .pg-card-inner { padding: 1.5rem; }
-  .pg-card-num { font-size: 3.5rem; }
-  .pg-card-name { font-size: 1.5rem; }
-  .pg-grid:has(.pg-card:hover) .pg-card:not(:hover) { opacity: .65; }
+.rdm-stop:nth-child(1) { animation-delay: .1s; }
+.rdm-stop:nth-child(2) { animation-delay: .2s; }
+.rdm-stop:nth-child(3) { animation-delay: .3s; }
+.rdm-stop:nth-child(4) { animation-delay: .4s; }
+.rdm-stop:nth-child(5) { animation-delay: .5s; }
+@keyframes stopIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .rdm-spine { left: 28px; }
+  .rdm-wrap { padding: 2rem 1.2rem 5rem; }
+  .rdm-stop {
+    grid-template-columns: 56px 1fr;
+    grid-template-rows: auto;
+  }
+  .rdm-stop .rdm-node,
+  .rdm-stop:nth-child(even) .rdm-node,
+  .rdm-stop:nth-child(odd) .rdm-node { grid-column: 1; grid-row: 1; }
+  .rdm-stop .rdm-card,
+  .rdm-stop:nth-child(even) .rdm-card,
+  .rdm-stop:nth-child(odd) .rdm-card { grid-column: 2; grid-row: 1; }
+  .rdm-stop .rdm-spacer { display: none; }
+  .rdm-stop--rltt { --card-dx: 0; }
+  .rdm-stop--market { --card-dx: 0; }
 }
 </style>
 </head>
@@ -209,118 +262,95 @@ body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow
   <div class="pg-particle" style="width:200px;height:200px;top:40%;left:50%;background:#5de8a0;--d:13s;--delay:-1s;--tx:50px;--ty:-30px;"></div>
 </div>
 
-<div class="pg-wrap">
-  <header class="pg-head" style="position:relative;z-index:2;">
-    <div class="pg-eyebrow">RealLingo · The Ecosystem</div>
-    <h1 class="pg-title">Choose your <em>journey.</em></h1>
-    <p class="pg-sub">Five ways to be part of RealLingo — each a different door into the world of language, community and culture.</p>
-  </header>
+<header class="pg-head">
+  <div class="pg-eyebrow">RealLingo · The Ecosystem</div>
+  <h1 class="pg-title">Choose your <em>journey.</em></h1>
+  <p class="pg-sub">Five ways to be part of RealLingo — each a different door into the world of language, community and culture.</p>
+</header>
 
-  <main style="position:relative;z-index:2;">
-    <div class="pg-grid">
+<div class="rdm-wrap">
+  <div class="rdm-spine"><div class="rdm-spine-fill" id="spineFill"></div></div>
 
-      <!-- 01 RLCC -->
-      <a class="pg-card pg-card--rlcc" href="../programs/creator-collective/">
-        <div class="pg-card-accent"></div>
-        <div class="pg-card-num">01</div>
-        <div class="pg-card-inner">
-          <div class="pg-card-top">
-            <span class="pg-card-tag">RLCC</span>
-            <h2 class="pg-card-name">Creator Collective</h2>
-            <p class="pg-card-desc">For educators, storytellers and builders. Collaborate, grow, and shape RealLingo.</p>
-          </div>
-          <div class="pg-card-bot">
-            <span class="pg-card-ico">🎙️</span>
-            <span class="pg-card-cta">
-              Join RLCC
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 17 17 3M7 3h10v10"/></svg>
-            </span>
-          </div>
-        </div>
-      </a>
-
-      <!-- 02 Talk & Table -->
-      <a class="pg-card pg-card--rltt" href="../programs/talk-and-table/">
-        <div class="pg-card-accent"></div>
-        <div class="pg-card-num">02</div>
-        <div class="pg-card-inner">
-          <div class="pg-card-top">
-            <span class="pg-card-tag">RLTT</span>
-            <h2 class="pg-card-name">Talk &amp; Table</h2>
-            <p class="pg-card-desc">Multilingual meetups at cafés. Real people, real conversations.</p>
-          </div>
-          <div class="pg-card-bot">
-            <span class="pg-card-ico">☕</span>
-            <span class="pg-card-cta">
-              Find a session
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 17 17 3M7 3h10v10"/></svg>
-            </span>
-          </div>
-        </div>
-      </a>
-
-      <!-- 03 RLA -->
-      <a class="pg-card pg-card--rla" href="../programs/language-academy/">
-        <div class="pg-card-accent"></div>
-        <div class="pg-card-num">03</div>
-        <div class="pg-card-inner">
-          <div class="pg-card-top">
-            <span class="pg-card-tag">RLA</span>
-            <h2 class="pg-card-name">RL Academy</h2>
-            <p class="pg-card-desc">Tutor-led sessions. Starting with Mandarin Chinese.</p>
-          </div>
-          <div class="pg-card-bot">
-            <span class="pg-card-ico">🀄</span>
-            <span class="pg-card-cta">
-              Register interest
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 17 17 3M7 3h10v10"/></svg>
-            </span>
-          </div>
-        </div>
-      </a>
-
-      <!-- 04 Marketplace -->
-      <a class="pg-card pg-card--market" href="../resources/marketplace/">
-        <div class="pg-card-accent"></div>
-        <div class="pg-card-num">04</div>
-        <div class="pg-card-inner">
-          <div class="pg-card-top">
-            <span class="pg-card-tag">MKT</span>
-            <h2 class="pg-card-name">Marketplace</h2>
-            <p class="pg-card-desc">Audiobooks, flashcard decks, and learning products.</p>
-          </div>
-          <div class="pg-card-bot">
-            <span class="pg-card-ico">🛍️</span>
-            <span class="pg-card-cta">
-              Browse marketplace
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 17 17 3M7 3h10v10"/></svg>
-            </span>
-          </div>
-        </div>
-      </a>
-
-      <!-- 05 Open Source -->
-      <a class="pg-card pg-card--open" href="../resources/">
-        <div class="pg-card-accent"></div>
-        <div class="pg-card-num">05</div>
-        <div class="pg-card-inner">
-          <div class="pg-card-top">
-            <span class="pg-card-tag">OSR</span>
-            <h2 class="pg-card-name">Open Sources</h2>
-            <p class="pg-card-desc">Scholarships, apps, and guides — open to all.</p>
-          </div>
-          <div class="pg-card-bot">
-            <span class="pg-card-ico">🌐</span>
-            <span class="pg-card-cta">
-              Explore resources
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 17 17 3M7 3h10v10"/></svg>
-            </span>
-          </div>
-        </div>
-      </a>
-
+  <!-- Stop 01 RLCC — card left -->
+  <div class="rdm-stop rdm-stop--rlcc is-active" id="stop-1">
+    <a class="rdm-card" href="../programs/creator-collective/">
+      <span class="rdm-card-tag">RLCC</span>
+      <h2 class="rdm-card-name">Creator Collective</h2>
+      <p class="rdm-card-desc">For educators, storytellers and builders. Collaborate, grow, and shape RealLingo.</p>
+      <span class="rdm-card-cta">Join RLCC <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M3 17 17 3M7 3h10v10"/></svg></span>
+    </a>
+    <div class="rdm-node">
+      <div class="rdm-node-badge">01</div>
+      <div class="rdm-node-ico">🎙️</div>
     </div>
-  </main>
+    <div class="rdm-spacer"></div>
+  </div>
+
+  <!-- Stop 02 T&T — card right -->
+  <div class="rdm-stop rdm-stop--rltt" id="stop-2">
+    <div class="rdm-spacer"></div>
+    <div class="rdm-node">
+      <div class="rdm-node-badge">02</div>
+      <div class="rdm-node-ico">☕</div>
+    </div>
+    <a class="rdm-card" href="../programs/talk-and-table/">
+      <span class="rdm-card-tag">RLTT</span>
+      <h2 class="rdm-card-name">Talk &amp; Table</h2>
+      <p class="rdm-card-desc">Multilingual meetups at cafés. Real people, real conversations.</p>
+      <span class="rdm-card-cta">Find a session <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M3 17 17 3M7 3h10v10"/></svg></span>
+    </a>
+  </div>
+
+  <!-- Stop 03 RLA — card left -->
+  <div class="rdm-stop rdm-stop--rla" id="stop-3">
+    <a class="rdm-card" href="../programs/language-academy/">
+      <span class="rdm-card-tag">RLA</span>
+      <h2 class="rdm-card-name">RL Academy</h2>
+      <p class="rdm-card-desc">Tutor-led workshops in small groups. Starting with Mandarin Chinese.</p>
+      <span class="rdm-card-cta">Register interest <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M3 17 17 3M7 3h10v10"/></svg></span>
+    </a>
+    <div class="rdm-node">
+      <div class="rdm-node-badge">03</div>
+      <div class="rdm-node-ico">🀄</div>
+    </div>
+    <div class="rdm-spacer"></div>
+  </div>
+
+  <!-- Stop 04 Marketplace — card right -->
+  <div class="rdm-stop rdm-stop--market" id="stop-4">
+    <div class="rdm-spacer"></div>
+    <div class="rdm-node">
+      <div class="rdm-node-badge">04</div>
+      <div class="rdm-node-ico">🛍️</div>
+    </div>
+    <a class="rdm-card" href="../resources/marketplace/">
+      <span class="rdm-card-tag">MKT</span>
+      <h2 class="rdm-card-name">Marketplace</h2>
+      <p class="rdm-card-desc">Audiobooks, flashcard decks, and learning products.</p>
+      <span class="rdm-card-cta">Browse marketplace <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M3 17 17 3M7 3h10v10"/></svg></span>
+    </a>
+  </div>
+
+  <!-- Stop 05 Open Sources — card left -->
+  <div class="rdm-stop rdm-stop--open" id="stop-5">
+    <a class="rdm-card" href="../resources/">
+      <span class="rdm-card-tag">OSR</span>
+      <h2 class="rdm-card-name">Open Sources</h2>
+      <p class="rdm-card-desc">Scholarships, apps, and guides — open to all.</p>
+      <span class="rdm-card-cta">Explore resources <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M3 17 17 3M7 3h10v10"/></svg></span>
+    </a>
+    <div class="rdm-node">
+      <div class="rdm-node-badge">05</div>
+      <div class="rdm-node-ico">🌐</div>
+    </div>
+    <div class="rdm-spacer"></div>
+  </div>
+
+  <!-- End node -->
+  <div class="rdm-end" style="animation: stopIn .6s .6s cubic-bezier(.25,.46,.45,.94) both;">
+    <div class="rdm-end-badge">✦</div>
+    <div class="rdm-end-text">Your journey starts here</div>
+  </div>
 </div>
 
 <div id="site-footer"></div>
@@ -330,20 +360,40 @@ body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow
   window.SITE_SECTION = "programs";
   window.SITE_PAGE = "programs";
 
-  /* Mouse parallax on cards */
   (function () {
-    var cards = document.querySelectorAll('.pg-card');
-    document.addEventListener('mousemove', function (e) {
-      var cx = window.innerWidth / 2, cy = window.innerHeight / 2;
-      var dx = (e.clientX - cx) / cx, dy = (e.clientY - cy) / cy;
-      cards.forEach(function (card, i) {
-        var depth = 0.008 + (i % 3) * 0.003;
-        var tx = dx * 8 * depth * 1000;
-        var ty = dy * 6 * depth * 1000;
-        card.style.setProperty('--px', tx + 'px');
-        card.style.setProperty('--py', ty + 'px');
-      });
+    var stops = document.querySelectorAll('.rdm-stop');
+    var spineFill = document.getElementById('spineFill');
+
+    function activate(el) {
+      stops.forEach(function(s) { s.classList.remove('is-active'); });
+      el.classList.add('is-active');
+      // Fill spine to this stop's position
+      var wrap = el.closest('.rdm-wrap');
+      var wrapTop = wrap.getBoundingClientRect().top + window.scrollY;
+      var stopMid = el.getBoundingClientRect().top + window.scrollY + el.offsetHeight / 2;
+      var wrapH = wrap.offsetHeight;
+      var pct = Math.min(100, Math.max(0, (stopMid - wrapTop) / wrapH * 100));
+      spineFill.style.height = pct + '%';
+    }
+
+    stops.forEach(function(stop) {
+      stop.addEventListener('mouseenter', function() { activate(stop); });
     });
+
+    // Scroll-based activation
+    function onScroll() {
+      var mid = window.scrollY + window.innerHeight * 0.55;
+      var best = null, bestDist = Infinity;
+      stops.forEach(function(stop) {
+        var top = stop.getBoundingClientRect().top + window.scrollY;
+        var dist = Math.abs(top + stop.offsetHeight / 2 - mid);
+        if (dist < bestDist) { bestDist = dist; best = stop; }
+      });
+      if (best) activate(best);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
   })();
 </script>
 <script src="../assets/js/nav.js?v=38" defer></script>
