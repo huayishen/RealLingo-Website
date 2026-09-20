@@ -486,7 +486,7 @@
 
           <!-- Map legend -->
           <div class="joc-map-legend">
-            <span class="joc-map-legend-item"><span class="joc-legend-swatch"></span> Countries represented</span>
+            <span class="joc-map-legend-item"><span class="joc-legend-swatch"></span> Community countries</span>
             <span class="joc-map-legend-item"><span class="joc-legend-dot-active"></span> Active city</span>
             <span class="joc-map-legend-item"><span class="joc-legend-dot-exp"></span> Expanding</span>
           </div>
@@ -698,28 +698,13 @@
         var countries = topojson.feature(world, world.objects.countries);
         var borders   = topojson.mesh(world, world.objects.countries, function (a, b) { return a !== b; });
 
-        /* Countries where RealLingo community members are from */
+        /* Countries with active RealLingo communities */
         var repCountries = new Set([
-          '682', /* Saudi Arabia */
-          '156', /* China */
-          '834', /* Tanzania */
-          '702', /* Singapore */
-          '276', /* Germany */
-          '826', /* United Kingdom */
-          '36',  /* Australia */
-          '818', /* Egypt */
-          '784', /* UAE */
-          '792', /* Turkey */
-          '356', /* India */
-          '410', /* South Korea */
-          '400', /* Jordan */
-          '422', /* Lebanon */
-          '586', /* Pakistan */
-          '250', /* France */
-          '724', /* Spain */
-          '380', /* Italy */
-          '840', /* USA */
-          '124', /* Canada */
+          '682', /* Saudi Arabia — Khobar (active) */
+          '156', /* China — Beijing (active) */
+          '834', /* Tanzania — Dar es Salaam (expanding) */
+          '702', /* Singapore (expanding) */
+          '276', /* Germany (expanding) */
         ]);
 
         svg.append('g').selectAll('path')
