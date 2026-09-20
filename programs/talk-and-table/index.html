@@ -586,23 +586,61 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   font-size: .66rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
   color: rgba(255,255,255,.22); margin-bottom: .65rem;
 }
-.tt-data-lang-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
-.tt-lang-tag {
-  font-size: .75rem; font-weight: 600; padding: .28rem .7rem;
-  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
-  border-radius: 100px; color: rgba(255,255,255,.6);
+/* ── Language ticker ── */
+.tt-lang-ticker-mask {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
 }
+.tt-lang-ticker-track {
+  display: flex; gap: .5rem; width: max-content;
+  animation: ttLangTicker 22s linear infinite;
+}
+.tt-lang-ticker-track:hover { animation-play-state: paused; }
+@keyframes ttLangTicker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.tt-lang-tag {
+  display: inline-flex; align-items: center; gap: .35rem; flex-shrink: 0;
+  font-size: .78rem; font-weight: 700; padding: .35rem .8rem;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 100px; color: rgba(255,255,255,.7); white-space: nowrap;
+  transition: background .2s, border-color .2s, color .2s;
+}
+.tt-lang-tag:hover { background: rgba(255,235,153,.1); border-color: rgba(255,235,153,.25); color: #ffeb99; }
 .tt-data-map-label {
   font-size: .66rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
   color: rgba(255,235,153,.4); margin-bottom: .9rem;
 }
 .tt-data-map-wrap {
-  background: rgba(255,255,255,.03); border-radius: 18px;
+  background: #10121a; border-radius: 18px;
   border: 1px solid rgba(255,255,255,.07); overflow: hidden; position: relative;
 }
 .tt-world-map { width: 100%; display: block; }
 .tt-map-city-dot { transition: r .3s; }
 .tt-map-city-dot:hover { r: 7; }
+/* D3 map styles */
+.tt-d3-map-svg { width: 100%; height: auto; display: block; }
+.tt-d3-sphere { fill: #10121a; }
+.tt-d3-land { fill: #1c2035; stroke: #252b42; stroke-width: 0.4; }
+.tt-d3-land--rep { fill: #3a3010; stroke: #c9973a; stroke-width: 0.6; }
+.tt-d3-border { fill: none; stroke: #2e3450; stroke-width: 0.3; }
+@keyframes jocPinPulse { 0%,100% { r:10; opacity:.18; } 50% { r:16; opacity:.06; } }
+.tt-d3-pin-pulse { fill: rgba(255,235,153,.18); animation: jocPinPulse 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.tt-d3-pin-dot { fill: #ffeb99; }
+.tt-d3-pin-exp { fill: rgba(255,235,153,.38); }
+/* Map legend */
+.tt-map-legend {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 1rem;
+  padding: .75rem 1.2rem;
+  border-top: 1px solid rgba(255,255,255,.06);
+  font-size: .72rem; color: rgba(255,255,255,.4); font-weight: 600; letter-spacing: .04em;
+}
+.tt-map-legend-item { display: flex; align-items: center; gap: .4rem; }
+.tt-legend-swatch { width: 12px; height: 12px; border-radius: 3px; background: #3a3010; border: 1px solid #c9973a; }
+.tt-legend-dot-active { width: 8px; height: 8px; border-radius: 50%; background: #ffeb99; box-shadow: 0 0 5px rgba(255,235,153,.5); }
+.tt-legend-dot-exp { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.25); border: 1px solid rgba(255,255,255,.2); }
 @media (max-width: 800px) {
   .tt-data-inner { grid-template-columns: 1fr; gap: 2.5rem; }
 }
@@ -786,6 +824,8 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
     .tt-arc-metric--interactive.open .tt-arc-popup { transform: translateX(0) scale(1); }
   }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js" defer></script>
 </head>
 <body>
 
@@ -863,15 +903,25 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
       </div>
       <div class="tt-data-langs">
         <div class="tt-data-langs-title">Languages spoken so far</div>
-        <div class="tt-data-lang-tags">
-          <span class="tt-lang-tag">Chinese 🇨🇳</span>
-          <span class="tt-lang-tag">Arabic 🇸🇦</span>
-          <span class="tt-lang-tag">Bangla 🇧🇩</span>
-          <span class="tt-lang-tag">German 🇩🇪</span>
-          <span class="tt-lang-tag">Danish 🇩🇰</span>
-          <span class="tt-lang-tag">Korean 🇰🇷</span>
-          <span class="tt-lang-tag">French 🇫🇷</span>
-          <span class="tt-lang-tag">Spanish 🇪🇸</span>
+        <div class="tt-lang-ticker-mask">
+          <div class="tt-lang-ticker-track">
+            <span class="tt-lang-tag">Chinese 🇨🇳</span>
+            <span class="tt-lang-tag">Arabic 🇸🇦</span>
+            <span class="tt-lang-tag">Bangla 🇧🇩</span>
+            <span class="tt-lang-tag">German 🇩🇪</span>
+            <span class="tt-lang-tag">Danish 🇩🇰</span>
+            <span class="tt-lang-tag">Korean 🇰🇷</span>
+            <span class="tt-lang-tag">French 🇫🇷</span>
+            <span class="tt-lang-tag">Spanish 🇪🇸</span>
+            <span class="tt-lang-tag">Chinese 🇨🇳</span>
+            <span class="tt-lang-tag">Arabic 🇸🇦</span>
+            <span class="tt-lang-tag">Bangla 🇧🇩</span>
+            <span class="tt-lang-tag">German 🇩🇪</span>
+            <span class="tt-lang-tag">Danish 🇩🇰</span>
+            <span class="tt-lang-tag">Korean 🇰🇷</span>
+            <span class="tt-lang-tag">French 🇫🇷</span>
+            <span class="tt-lang-tag">Spanish 🇪🇸</span>
+          </div>
         </div>
       </div>
     </div>
@@ -879,70 +929,11 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
     <div class="tt-data-right">
       <div class="tt-data-map-label">Active &amp; upcoming cities</div>
       <div class="tt-data-map-wrap">
-        <svg class="tt-world-map" viewBox="300 65 535 225" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="ttMapGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M40 0L0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
-            </pattern>
-            <filter id="ttGlow" x="-80%" y="-80%" width="260%" height="260%">
-              <feGaussianBlur stdDeviation="4" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-          </defs>
-          <rect x="300" y="65" width="535" height="225" fill="url(#ttMapGrid)"/>
-
-          <!-- ── Background landmasses (context only) ── -->
-          <!-- Africa -->
-          <path d="M387,122 L451,118 L471,133 L513,160 L513,173 L505,200 L490,215 L487,233 L465,265 L440,268 L420,245 L404,220 L404,189 L364,167 L370,145 Z" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
-          <!-- Europe -->
-          <path d="M308,92 L360,76 L385,80 L400,88 L413,88 L418,96 L405,106 L390,110 L362,108 L335,100 Z" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
-          <!-- India -->
-          <path d="M542,142 L580,132 L607,140 L606,152 L589,167 L571,183 L557,174 L544,158 Z" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
-          <!-- SE Asia -->
-          <path d="M650,151 L693,155 L718,165 L718,180 L700,190 L678,192 L658,185 L636,178 L620,168 L620,158 L633,152 Z" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
-
-          <!-- ── Represented countries (highlighted) ── -->
-          <!-- Saudi Arabia -->
-          <path d="M478,138 L487,129 L493,133 L504,130 L506,136 L513,147 L522,147 L522,152 L518,160 L504,164 L496,162 L493,167 L487,153 L480,140 Z" fill="rgba(255,235,153,0.14)" stroke="rgba(255,235,153,0.38)" stroke-width="1"/>
-          <!-- Yemen -->
-          <path d="M496,162 L504,164 L518,160 L521,166 L515,172 L505,176 L496,173 L492,168 Z" fill="rgba(255,235,153,0.1)" stroke="rgba(255,235,153,0.28)" stroke-width="0.8"/>
-          <!-- China -->
-          <path d="M567,111 L593,96 L644,93 L667,93 L684,82 L700,93 L689,107 L671,120 L671,133 L664,144 L653,151 L640,151 L629,151 L618,149 L618,142 L578,133 L573,120 Z" fill="rgba(255,235,153,0.14)" stroke="rgba(255,235,153,0.38)" stroke-width="1"/>
-          <!-- Germany (too small for polygon — shown as outlined circle) -->
-          <circle cx="400" cy="92" r="7" fill="rgba(255,235,153,0.12)" stroke="rgba(255,235,153,0.35)" stroke-width="1"/>
-          <text x="400" y="79" text-anchor="middle" fill="rgba(255,235,153,0.65)" font-size="8" font-family="'Be Vietnam Pro',sans-serif" font-weight="700">Germany</text>
-
-          <!-- ── Active city dots (glow) ── -->
-          <!-- Khobar -->
-          <circle cx="506" cy="148" r="16" fill="#ffeb99" opacity="0.08" filter="url(#ttGlow)"/>
-          <circle cx="506" cy="148" r="5.5" fill="#ffeb99" opacity="0.95"/>
-          <text x="506" y="136" text-anchor="middle" fill="#ffeb99" font-size="9" font-family="'Be Vietnam Pro',sans-serif" font-weight="700">Khobar</text>
-
-          <!-- Beijing -->
-          <circle cx="659" cy="111" r="16" fill="#ffeb99" opacity="0.08" filter="url(#ttGlow)"/>
-          <circle cx="659" cy="111" r="5.5" fill="#ffeb99" opacity="0.95"/>
-          <text x="659" y="99" text-anchor="middle" fill="#ffeb99" font-size="9" font-family="'Be Vietnam Pro',sans-serif" font-weight="700">Beijing</text>
-
-          <!-- ── Expanding cities ── -->
-          <!-- Tanzania -->
-          <circle cx="487" cy="215" r="4.5" fill="rgba(255,235,153,0.38)"/>
-          <text x="487" y="228" text-anchor="middle" fill="rgba(255,255,255,0.36)" font-size="8" font-family="'Be Vietnam Pro',sans-serif">Tanzania</text>
-          <!-- Singapore -->
-          <circle cx="630" cy="197" r="4.5" fill="rgba(255,235,153,0.38)"/>
-          <text x="630" y="210" text-anchor="middle" fill="rgba(255,255,255,0.36)" font-size="8" font-family="'Be Vietnam Pro',sans-serif">Singapore</text>
-          <!-- Qatar (near Khobar) -->
-          <circle cx="521" cy="151" r="3" fill="rgba(255,235,153,0.32)"/>
-        </svg>
-        <div style="padding:.6rem 1rem .75rem;display:flex;gap:1.4rem;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.06);">
-          <span style="display:flex;align-items:center;gap:.45rem;font-size:.7rem;color:rgba(255,235,153,.8);font-weight:700;">
-            <svg viewBox="0 0 10 10" width="10" height="10"><rect width="10" height="10" rx="2" fill="rgba(255,235,153,0.18)" stroke="rgba(255,235,153,0.5)" stroke-width="1"/></svg> Countries represented
-          </span>
-          <span style="display:flex;align-items:center;gap:.45rem;font-size:.7rem;color:rgba(255,235,153,.8);font-weight:700;">
-            <svg viewBox="0 0 8 8" width="8" height="8"><circle cx="4" cy="4" r="4" fill="#ffeb99"/></svg> Active city
-          </span>
-          <span style="display:flex;align-items:center;gap:.45rem;font-size:.7rem;color:rgba(255,255,255,.32);font-weight:700;">
-            <svg viewBox="0 0 8 8" width="8" height="8"><circle cx="4" cy="4" r="4" fill="rgba(255,235,153,0.38)"/></svg> Expanding
-          </span>
+        <div id="ttMapContainer" style="width:100%;min-height:220px;"></div>
+        <div class="tt-map-legend">
+          <span class="tt-map-legend-item"><span class="tt-legend-swatch"></span> Countries represented</span>
+          <span class="tt-map-legend-item"><span class="tt-legend-dot-active"></span> Active city</span>
+          <span class="tt-map-legend-item"><span class="tt-legend-dot-exp"></span> Expanding</span>
         </div>
       </div>
     </div>
@@ -1498,6 +1489,93 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
     }
   })();
 })();
+</script>
+<script>
+/* ── T&T D3 World Map ─────────────────────────────── */
+window.addEventListener('load', function () {
+(function () {
+  var container = document.getElementById('ttMapContainer');
+  if (!container) return;
+  if (typeof d3 === 'undefined' || typeof topojson === 'undefined') return;
+
+  var repCountries = new Set(['682','156','276','208','410','250','724','50','834','702']);
+  /* Active cities: [lon, lat, label] */
+  var activeCities = [
+    [50.2, 26.3, 'Khobar'],
+    [116.4, 39.9, 'Beijing']
+  ];
+  /* Expanding cities */
+  var expCities = [
+    [39.3, -6.8, 'Dar es Salaam'],
+    [103.8, 1.35, 'Singapore']
+  ];
+
+  var w = container.offsetWidth || 560;
+  var h = Math.round(w * 0.48);
+
+  var svg = d3.select('#ttMapContainer').append('svg')
+    .attr('class', 'tt-d3-map-svg')
+    .attr('viewBox', '0 0 ' + w + ' ' + h)
+    .attr('preserveAspectRatio', 'xMidYMid meet');
+
+  var proj = d3.geoNaturalEarth1()
+    .scale(w / 6.5)
+    .translate([w / 2, h / 2]);
+  var path = d3.geoPath().projection(proj);
+
+  svg.append('path')
+    .datum({type:'Sphere'})
+    .attr('class','tt-d3-sphere')
+    .attr('d', path);
+
+  d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function (world) {
+    var countries = topojson.feature(world, world.objects.countries);
+    svg.selectAll('.tt-d3-land')
+      .data(countries.features)
+      .enter().append('path')
+      .attr('class', function (d) {
+        return repCountries.has(String(d.id)) ? 'tt-d3-land tt-d3-land--rep' : 'tt-d3-land';
+      })
+      .attr('d', path);
+
+    svg.append('path')
+      .datum(topojson.mesh(world, world.objects.countries, function (a, b) { return a !== b; }))
+      .attr('class','tt-d3-border')
+      .attr('d', path);
+
+    /* Expanding city dots */
+    expCities.forEach(function (c) {
+      var pt = proj([c[0], c[1]]);
+      if (!pt) return;
+      svg.append('circle').attr('cx', pt[0]).attr('cy', pt[1]).attr('r', 4)
+        .attr('class','tt-d3-pin-exp');
+      svg.append('text').attr('x', pt[0]).attr('y', pt[1] + 13)
+        .attr('text-anchor','middle')
+        .attr('fill','rgba(255,255,255,.32)')
+        .attr('font-size', Math.max(7, w/80))
+        .attr('font-family',"'Be Vietnam Pro',sans-serif")
+        .text(c[2]);
+    });
+
+    /* Active city pulse + dot */
+    activeCities.forEach(function (c) {
+      var pt = proj([c[0], c[1]]);
+      if (!pt) return;
+      svg.append('circle').attr('cx', pt[0]).attr('cy', pt[1]).attr('r', 12)
+        .attr('class','tt-d3-pin-pulse');
+      svg.append('circle').attr('cx', pt[0]).attr('cy', pt[1]).attr('r', 4.5)
+        .attr('class','tt-d3-pin-dot');
+      svg.append('text').attr('x', pt[0]).attr('y', pt[1] - 9)
+        .attr('text-anchor','middle')
+        .attr('fill','#ffeb99')
+        .attr('font-size', Math.max(8, w/70))
+        .attr('font-family',"'Be Vietnam Pro',sans-serif")
+        .attr('font-weight','700')
+        .text(c[2]);
+    });
+  }).catch(function () {});
+})();
+});
 </script>
 </body>
 </html>
