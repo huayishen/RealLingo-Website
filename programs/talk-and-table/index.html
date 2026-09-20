@@ -872,94 +872,120 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 }
 .tt-reel-link:hover { color: #8a5c00; }
 
-/* Phone frame */
+/* ── Phone frame ──────────────────────────────── */
 .tt-phone-wrap {
-  display: flex; justify-content: center;
+  display: flex; justify-content: center; align-items: flex-start;
   animation: ttPhoneFloat 5s ease-in-out infinite alternate;
 }
 @keyframes ttPhoneFloat {
-  0%   { transform: translateY(0) rotate(-1deg); }
-  100% { transform: translateY(-16px) rotate(1deg); }
+  0%   { transform: translateY(0) rotate(-1.2deg); }
+  100% { transform: translateY(-18px) rotate(1deg); }
 }
 .tt-phone {
-  position: relative; width: 310px;
-  background: #0a0a0a;
-  border-radius: 44px;
-  padding: 14px 10px 22px;
+  position: relative; width: 300px;
+  background: #0a0a0a; border-radius: 48px;
+  padding: 12px 8px 16px;
   box-shadow:
-    0 0 0 1.5px #2a2a2a,
+    0 0 0 1.5px #333,
     0 0 0 3px #111,
-    0 32px 64px rgba(0,0,0,.28),
-    0 8px 24px rgba(0,0,0,.18);
+    inset 0 0 0 1px rgba(255,255,255,.04),
+    0 40px 80px rgba(0,0,0,.5),
+    0 12px 32px rgba(0,0,0,.3);
 }
 /* Dynamic island */
 .tt-phone-island {
-  width: 90px; height: 28px;
-  background: #0a0a0a; border-radius: 20px;
-  margin: 0 auto 10px;
+  width: 88px; height: 26px;
+  background: #000; border-radius: 20px;
+  margin: 0 auto 8px;
   position: relative; z-index: 2;
   display: flex; align-items: center; justify-content: center; gap: 6px;
 }
 .tt-phone-island::before {
-  content: ''; width: 8px; height: 8px; border-radius: 50%;
-  background: #1a1a1a; box-shadow: inset 0 0 0 2px #222;
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: #1a1a1a; box-shadow: inset 0 0 0 1.5px #2a2a2a;
 }
 .tt-phone-island::after {
-  content: ''; width: 32px; height: 8px; border-radius: 4px;
+  content: ''; width: 30px; height: 7px; border-radius: 4px;
   background: #1a1a1a;
 }
-/* Screen */
+/* Screen — fixed 9:18 ratio, full crop */
 .tt-phone-screen {
-  border-radius: 28px; overflow: hidden;
-  background: #000;
-  position: relative;
+  border-radius: 36px; overflow: hidden;
+  background: #000; position: relative;
+  aspect-ratio: 9 / 18;
 }
+/* IG status bar (fake) */
+.tt-phone-status {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 5;
+  background: linear-gradient(to bottom, rgba(0,0,0,.7) 0%, transparent 100%);
+  padding: 8px 16px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  pointer-events: none;
+}
+.tt-phone-status-time { font-size: 11px; font-weight: 700; color: #fff; font-family: var(--font-sans, sans-serif); }
+.tt-phone-status-icons { display: flex; align-items: center; gap: 4px; }
+.tt-phone-status-icons svg { width: 13px; height: 13px; fill: #fff; }
 /* IG header bar */
 .tt-phone-ig-header {
-  background: #000; padding: 8px 12px 6px;
-  display: flex; align-items: center; gap: 8px;
+  position: absolute; top: 28px; left: 0; right: 0; z-index: 5;
+  padding: 6px 12px 8px;
+  background: linear-gradient(to bottom, rgba(0,0,0,.6) 0%, transparent 100%);
+  display: flex; align-items: center; gap: 8px; pointer-events: none;
 }
 .tt-phone-ig-avatar {
-  width: 28px; height: 28px; border-radius: 50%;
+  width: 30px; height: 30px; border-radius: 50%;
   background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
   padding: 2px; flex-shrink: 0;
 }
+/* Pure-CSS avatar: cream circle + italic R */
 .tt-phone-ig-avatar-inner {
   width: 100%; height: 100%; border-radius: 50%;
-  background-image: url('../../assets/img/logo-cream-bg-mark.png');
-  background-size: cover; background-position: center;
+  background: #ffeb99;
+  display: flex; align-items: center; justify-content: center;
+  font-family: Georgia, serif; font-size: 13px; font-weight: 700;
+  font-style: italic; color: #111216; line-height: 1;
 }
-.tt-phone-ig-name { font-size: 10px; font-weight: 700; color: #fff; font-family: var(--font-sans, sans-serif); line-height: 1.2; }
-.tt-phone-ig-handle { font-size: 9px; color: rgba(255,255,255,.45); font-weight: 400; }
-.tt-phone-ig-follow { margin-left: auto; font-size: 9px; font-weight: 700; color: #0095f6; font-family: var(--font-sans, sans-serif); }
-
-/* Embed container — crops IG's own header/caption, shows only video */
+.tt-phone-ig-name { font-size: 10px; font-weight: 700; color: #fff; font-family: var(--font-sans, sans-serif); line-height: 1.2; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+.tt-phone-ig-handle { font-size: 9px; color: rgba(255,255,255,.6); font-weight: 400; }
+.tt-phone-ig-follow { margin-left: auto; font-size: 10px; font-weight: 800; color: #fff; font-family: var(--font-sans, sans-serif); background: rgba(255,255,255,.18); border-radius: 6px; padding: 3px 8px; }
+/* IG right-side action icons */
+.tt-phone-ig-side {
+  position: absolute; right: 10px; bottom: 60px; z-index: 5;
+  display: flex; flex-direction: column; align-items: center; gap: 18px;
+  pointer-events: none;
+}
+.tt-phone-ig-side svg { width: 22px; height: 22px; stroke: #fff; fill: none; stroke-width: 1.8; filter: drop-shadow(0 1px 3px rgba(0,0,0,.5)); }
+.tt-phone-ig-side-count { font-size: 9px; font-weight: 700; color: #fff; font-family: var(--font-sans, sans-serif); margin-top: -12px; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+/* Bottom gradient + caption bar */
+.tt-phone-ig-bottom {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 5;
+  background: linear-gradient(to top, rgba(0,0,0,.65) 0%, transparent 100%);
+  padding: 20px 12px 12px;
+  pointer-events: none;
+}
+.tt-phone-ig-caption { font-size: 9px; color: rgba(255,255,255,.8); font-family: var(--font-sans, sans-serif); line-height: 1.4; }
+.tt-phone-ig-music { display: flex; align-items: center; gap: 5px; margin-top: 5px; }
+.tt-phone-ig-music svg { width: 10px; height: 10px; fill: #fff; }
+.tt-phone-ig-music span { font-size: 9px; color: rgba(255,255,255,.7); font-family: var(--font-sans, sans-serif); }
+/* Home bar */
+.tt-phone-bar {
+  width: 80px; height: 4px; background: rgba(255,255,255,.18);
+  border-radius: 2px; margin: 8px auto 0;
+}
+/* Embed fills full screen */
 .tt-phone-embed {
-  width: 100%; background: #000;
-  position: relative; overflow: hidden;
-}
-/* Black covers to hide IG's embedded header (profile/collab/location) and footer (caption/actions) */
-.tt-phone-embed-cover-top {
-  position: absolute; top: 0; left: 0; right: 0;
-  height: 88px; background: #000; z-index: 2; pointer-events: none;
-}
-.tt-phone-embed-cover-bot {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: 64px; background: #000; z-index: 2; pointer-events: none;
+  position: absolute; inset: 0; overflow: hidden;
+  background: #000;
 }
 .tt-phone-embed iframe,
 .tt-phone-embed .instagram-media {
   display: block !important;
   min-width: unset !important;
   width: 100% !important;
+  height: 100% !important;
   border: none !important;
   border-radius: 0 !important;
   margin: 0 !important;
-}
-/* Home bar */
-.tt-phone-bar {
-  width: 90px; height: 4px; background: rgba(255,255,255,.2);
-  border-radius: 2px; margin: 8px auto 0;
 }
 
 @media (max-width: 700px) {
@@ -1273,24 +1299,44 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
       <div class="tt-phone">
         <div class="tt-phone-island"></div>
         <div class="tt-phone-screen">
-          <!-- IG header -->
+          <!-- Embed fills full screen -->
+          <div class="tt-phone-embed">
+            <blockquote class="instagram-media"
+              data-instgrm-permalink="https://www.instagram.com/reel/DdAQ5a_I1-X/?utm_source=ig_embed"
+              data-instgrm-version="14"
+              style="background:#000;border:0;border-radius:0;box-shadow:none;margin:0;max-width:100%;min-width:unset;padding:0;width:100%;height:100%;">
+            </blockquote>
+          </div>
+          <!-- Overlaid IG UI (status + header + side actions + bottom) -->
+          <div class="tt-phone-status">
+            <span class="tt-phone-status-time">9:41</span>
+            <div class="tt-phone-status-icons">
+              <svg viewBox="0 0 24 24"><path d="M1 6l5 5 5-5"/><path d="M1 1h9v9"/><path d="M23 18l-5-5-5 5"/><path d="M23 23H14v-9"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M1 8.5L12 2l11 6.5V22H1z"/></svg>
+              <svg viewBox="0 0 24 24"><rect x="1" y="6" width="18" height="12" rx="2"/><path d="M23 10v4"/></svg>
+            </div>
+          </div>
           <div class="tt-phone-ig-header">
-            <div class="tt-phone-ig-avatar"><div class="tt-phone-ig-avatar-inner"></div></div>
+            <div class="tt-phone-ig-avatar"><div class="tt-phone-ig-avatar-inner">R</div></div>
             <div>
               <div class="tt-phone-ig-name">reallingo_ksa</div>
               <div class="tt-phone-ig-handle">@myreallingo</div>
             </div>
             <div class="tt-phone-ig-follow">Follow</div>
           </div>
-          <!-- Reel embed -->
-          <div class="tt-phone-embed">
-            <div class="tt-phone-embed-cover-top"></div>
-            <div class="tt-phone-embed-cover-bot"></div>
-            <blockquote class="instagram-media"
-              data-instgrm-permalink="https://www.instagram.com/reel/DdAQ5a_I1-X/?utm_source=ig_embed"
-              data-instgrm-version="14"
-              style="background:#000;border:0;border-radius:0;box-shadow:none;margin:0;max-width:100%;min-width:unset;padding:0;width:100%;">
-            </blockquote>
+          <div class="tt-phone-ig-side">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span class="tt-phone-ig-side-count">284</span>
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span class="tt-phone-ig-side-count">12</span>
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </div>
+          <div class="tt-phone-ig-bottom">
+            <div class="tt-phone-ig-caption">Language lovers around Khobar 🌍✨</div>
+            <div class="tt-phone-ig-music">
+              <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              <span>Original audio · reallingo_ksa</span>
+            </div>
           </div>
         </div>
         <div class="tt-phone-bar"></div>
