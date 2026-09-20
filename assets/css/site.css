@@ -251,9 +251,10 @@
 
 /* Right sub-panel */
 .site-overlay-sub-wrap {
-  padding-top: .4rem; min-width: 220px; position: relative;
+  padding-top: .4rem; min-width: 260px; position: relative; min-height: 320px;
 }
 .site-overlay-sub {
+  position: absolute; top: 0; left: 0;
   display: none; flex-direction: column; gap: .2rem;
   opacity: 0; transform: translateX(12px);
   transition: opacity .3s cubic-bezier(.22,1,.36,1), transform .3s cubic-bezier(.22,1,.36,1);
@@ -509,22 +510,20 @@
 .rv-children.in > *:nth-child(5) { transition-delay: .33s; }
 .rv-children.in > *:nth-child(6) { transition-delay: .4s; }
 
-/* ── Hero title highlight slide-in animation ── */
-@keyframes hlSlide {
-  from { background-size: 0% 100%; }
-  to   { background-size: 100% 100%; }
+/* ── Hero word flash animation ── */
+@keyframes wordFlash {
+  0%, 100% { background-color: transparent; color: #fff; }
+  4%        { background-color: var(--yellow); color: var(--dark); }
+  16%       { background-color: var(--yellow); color: var(--dark); }
+  22%       { background-color: transparent; color: #fff; }
 }
-.hero-hl {
-  background-image: linear-gradient(to right, var(--yellow) 0%, var(--yellow) 100%);
-  background-repeat: no-repeat;
-  background-position: 0 88%;
-  background-size: 0% 45%;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-  padding: .06em .18em;
-  border-radius: 3px;
-  color: var(--dark) !important;
-  animation: hlSlide .65s cubic-bezier(.22,1,.36,1) 1s forwards;
+.hw {
+  display: inline-block;
+  border-radius: 4px;
+  padding: .02em .06em;
+  margin: 0 -.03em;
+  animation: wordFlash calc(var(--hw-total, 5) * .75s) linear infinite;
+  animation-delay: calc(var(--hw-i, 0) * .75s);
 }
 
 /* Text-roll hover: letter-by-letter roll effect on CTAs */
