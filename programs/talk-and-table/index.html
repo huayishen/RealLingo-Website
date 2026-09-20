@@ -329,50 +329,107 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   display: flex; justify-content: center;
 }
 
-/* ── Living Gallery ─────────────────────────── */
-.tt-gallery-section { padding: 5rem 0 6rem; overflow: hidden; }
-.tt-gallery-head {
-  max-width: 1200px; margin: 0 auto 2.5rem; padding: 0 5vw;
-  display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+/* ── Route Map / Journal ───────────────────── */
+.tt-route-section { padding: 5rem 5vw 6rem; background: var(--cream-white); }
+.tt-route-head { max-width: 640px; margin: 0 auto 4.5rem; text-align: center; }
+.tt-route-head .tt-h2 { margin-top: .4rem; }
+
+.tt-route-body {
+  max-width: 1000px; margin: 0 auto;
+  position: relative;
 }
-.tt-gallery-head .tt-h2 { margin-top: .4rem; }
-.tt-gallery-counter {
-  font-family: var(--tt-serif); font-size: 2.5rem; font-style: italic;
-  color: rgba(17,18,22,.15); letter-spacing: -.03em; white-space: nowrap; line-height: 1;
+.tt-route-body::before {
+  content: '';
+  position: absolute; left: 50%; top: 56px; bottom: 56px;
+  width: 0; border-left: 2px dashed rgba(17,18,22,.13);
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
-.tt-gallery-viewport {
-  position: relative; overflow: hidden; height: 520px; cursor: grab; user-select: none;
+.tt-route-stop {
+  display: grid;
+  grid-template-columns: 1fr 64px 1fr;
+  gap: 2.25rem;
+  align-items: center;
+  margin-bottom: 4rem;
 }
-.tt-gallery-viewport.dragging { cursor: grabbing; }
+.tt-route-stop:nth-child(even) .tt-route-polaroid { order: 3; }
+.tt-route-stop:nth-child(even) .tt-route-card    { order: 1; }
+.tt-route-stop:nth-child(even) .tt-route-node    { order: 2; }
 
-.tt-gallery-track {
-  display: flex; height: 100%;
-  transition: transform .75s cubic-bezier(.22,.68,0,1.2);
-  will-change: transform;
+/* Polaroid */
+.tt-route-polaroid {
+  background: #fff;
+  padding: 10px 10px 52px;
+  box-shadow: 4px 10px 32px rgba(17,18,22,.10);
+  transform: rotate(-2deg);
+  transition: transform .35s ease, box-shadow .35s;
+  position: relative;
 }
-.tt-gallery-slide {
-  flex: 0 0 72%; position: relative; padding: 0 .875rem;
-  aspect-ratio: 3/2;
-  transition: opacity .6s, transform .6s;
-  opacity: .35; transform: scale(.94);
+.tt-route-polaroid:hover { transform: rotate(0deg) scale(1.02); box-shadow: 8px 18px 44px rgba(17,18,22,.14); }
+.tt-route-stop:nth-child(even) .tt-route-polaroid { transform: rotate(2deg); }
+.tt-route-stop:nth-child(even) .tt-route-polaroid:hover { transform: rotate(0deg) scale(1.02); }
+
+.tt-route-tape {
+  position: absolute; top: -13px; left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 62px; height: 20px;
+  background: rgba(255,235,153,.70); border-radius: 2px; pointer-events: none;
 }
-.tt-gallery-slide.active { opacity: 1; transform: scale(1); }
-.tt-gallery-slide img {
+
+.tt-route-photo {
+  aspect-ratio: 4/3; position: relative; overflow: hidden; background: var(--yellow);
+}
+.tt-route-photo img {
+  position: absolute; inset: 0;
   width: 100%; height: 100%; object-fit: cover;
-  border-radius: 22px; display: block; pointer-events: none;
+  opacity: 0; animation: ttImgCycle2 6s linear infinite;
 }
-.tt-gallery-slide.active > img {
-  animation: ttKenBurns 5s ease-out forwards;
-}
-@keyframes ttKenBurns { from { transform: scale(1.05) } to { transform: scale(1) } }
+.tt-route-photo img:nth-child(1) { animation-delay: 0s; }
+.tt-route-photo img:nth-child(2) { animation-delay: 3s; }
+.tt-route-photo--single img { opacity: 1; animation: none; }
 
-/* Multi-image cycling within a single slide */
-.tt-gallery-imgs { position: absolute; inset: 0 .875rem; border-radius: 22px; overflow: hidden; }
-.tt-gallery-imgs img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; animation: ttImgCycle 9s linear infinite; }
-.tt-gallery-imgs img:nth-child(1) { animation-delay: 0s; }
-.tt-gallery-imgs img:nth-child(2) { animation-delay: 3s; }
-.tt-gallery-imgs img:nth-child(3) { animation-delay: 6s; }
+.tt-route-polaroid-caption {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  text-align: center; padding: .5rem;
+  font-size: .62rem; font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; color: rgba(17,18,22,.28);
+}
+
+/* Center node */
+.tt-route-node {
+  display: flex; flex-direction: column; align-items: center; gap: .5rem;
+}
+.tt-route-num {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--dark); color: var(--yellow);
+  font-family: var(--tt-serif); font-size: 1.1rem; font-style: italic;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(17,18,22,.28);
+  flex-shrink: 0; position: relative; z-index: 1;
+}
+
+/* Text card */
+.tt-route-card {
+  background: #fff; border-radius: 20px;
+  padding: 1.75rem 1.875rem;
+  box-shadow: 2px 6px 20px rgba(17,18,22,.06);
+  border: 1.5px solid rgba(17,18,22,.06);
+}
+.tt-route-card-icon { font-size: 1.75rem; margin-bottom: .5rem; display: block; }
+.tt-route-card-title {
+  font-family: var(--tt-serif); font-size: 1.25rem;
+  font-weight: 700; font-style: italic;
+  color: var(--dark); margin-bottom: .6rem; line-height: 1.3;
+}
+.tt-route-card-desc { font-size: .875rem; line-height: 1.72; color: rgba(17,18,22,.52); margin: 0; }
+.tt-route-card-stamp {
+  margin-top: 1.25rem;
+  font-size: .6rem; font-weight: 800; letter-spacing: .14em;
+  text-transform: uppercase; color: rgba(17,18,22,.2);
+  border-top: 1px solid rgba(17,18,22,.06); padding-top: .75rem;
+}
+
 @keyframes ttImgCycle {
   0%   { opacity: 0; }
   5%   { opacity: 1; }
@@ -380,10 +437,6 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   33%  { opacity: 0; }
   100% { opacity: 0; }
 }
-/* 2-image variant */
-.tt-gallery-imgs--2 img { animation: ttImgCycle2 6s linear infinite; }
-.tt-gallery-imgs--2 img:nth-child(1) { animation-delay: 0s; }
-.tt-gallery-imgs--2 img:nth-child(2) { animation-delay: 3s; }
 @keyframes ttImgCycle2 {
   0%   { opacity: 0; }
   6%   { opacity: 1; }
@@ -392,53 +445,18 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   100% { opacity: 0; }
 }
 
-/* Caption */
-.tt-gallery-cap {
-  position: absolute; bottom: 1.75rem; left: 1.875rem; right: 1.875rem;
-  padding: .9rem 1.1rem; border-radius: 14px;
-  background: rgba(17,18,22,.6); backdrop-filter: blur(12px) saturate(1.4);
-  color: #fff; pointer-events: none;
-  opacity: 0; transform: translateY(10px);
-  transition: opacity .45s .1s, transform .45s .1s;
+@media (max-width: 700px) {
+  .tt-route-section { padding: 4rem 5vw 5rem; }
+  .tt-route-stop {
+    grid-template-columns: 1fr;
+    gap: 1.25rem; margin-bottom: 3rem;
+  }
+  .tt-route-stop:nth-child(even) .tt-route-polaroid { order: 1; }
+  .tt-route-stop:nth-child(even) .tt-route-card    { order: 2; }
+  .tt-route-stop:nth-child(even) .tt-route-node    { order: 0; }
+  .tt-route-node { flex-direction: row; }
+  .tt-route-body::before { display: none; }
 }
-.tt-gallery-slide.active .tt-gallery-cap { opacity: 1; transform: translateY(0); }
-.tt-gallery-cap-text { font-size: .85rem; line-height: 1.5; }
-.tt-gallery-cap-meta { font-size: .67rem; color: rgba(255,255,255,.45); margin-top: .25rem; letter-spacing: .08em; text-transform: uppercase; }
-
-/* Progress bar */
-.tt-gallery-prog {
-  position: absolute; bottom: 0; left: .875rem; right: .875rem;
-  height: 3px; background: rgba(255,255,255,.12); border-radius: 99px; overflow: hidden;
-  opacity: 0; transition: opacity .3s;
-}
-.tt-gallery-slide.active .tt-gallery-prog { opacity: 1; }
-.tt-gallery-prog-bar {
-  height: 100%; background: #ffeb99; border-radius: 99px;
-  transform-origin: left; transform: scaleX(0);
-}
-.tt-gallery-prog-bar.run { animation: ttProg 4s linear forwards; }
-@keyframes ttProg { from { transform: scaleX(0) } to { transform: scaleX(1) } }
-
-/* Nav row */
-.tt-gallery-nav {
-  max-width: 1200px; margin: 1.75rem auto 0; padding: 0 5vw;
-  display: flex; align-items: center; gap: 1.25rem;
-}
-.tt-gallery-dots { display: flex; gap: .5rem; flex: 1; align-items: center; }
-.tt-gallery-dot {
-  height: 3px; border-radius: 2px; border: none; cursor: pointer;
-  background: rgba(17,18,22,.15); transition: background .25s, width .3s ease;
-  width: 22px;
-}
-.tt-gallery-dot.active { background: #111216; width: 44px; }
-.tt-gallery-arrows { display: flex; gap: .5rem; }
-.tt-gallery-arrow {
-  width: 40px; height: 40px; border-radius: 50%;
-  border: 1.5px solid rgba(17,18,22,.14); background: #fff;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: background .18s, border-color .18s, color .18s; color: #111216;
-}
-.tt-gallery-arrow:hover { background: #111216; color: #fff; border-color: #111216; }
 
 /* ── CTA band ─────────────────────────────────── */
 .tt-cta-band {
@@ -1024,67 +1042,84 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 </section>
 
 <!-- ══════════════════════════════════════════
-     WHAT TO EXPECT — gallery format
+     WHAT TO EXPECT — route map
 ══════════════════════════════════════════ -->
-<section class="tt-gallery-section" id="experience">
-  <div class="tt-gallery-head">
-    <div>
-      <div class="tt-eyebrow">What to expect</div>
-      <h2 class="tt-h2">Come as you are.<br><em>Leave with new friends.</em></h2>
-    </div>
-    <div class="tt-gallery-counter" id="ttGalCounter" aria-live="polite">1 / 3</div>
+<section class="tt-route-section" id="experience">
+  <div class="tt-route-head">
+    <div class="tt-eyebrow">What to expect</div>
+    <h2 class="tt-h2">Come as you are.<br><em>Leave with new friends.</em></h2>
   </div>
 
-  <div class="tt-gallery-viewport" id="ttGalViewport" role="region" aria-label="What to expect at Talk&amp;Table">
-    <div class="tt-gallery-track" id="ttGalTrack">
+  <div class="tt-route-body">
 
-      <div class="tt-gallery-slide active" role="group" aria-label="1 of 3">
-        <img src="../../assets/img/tt/tt-1.jpg" alt="People in conversation at a Talk&amp;Table session" loading="lazy">
-        <div class="tt-gallery-cap">
-          <div class="tt-gallery-cap-text">☕ <strong>Real conversations over coffee</strong> — relaxed 1–2 hour sessions in a warm café. No strangers, just language lovers with something to say.</div>
-          <div class="tt-gallery-cap-meta">01 of 03</div>
+    <!-- Stop 01 -->
+    <div class="tt-route-stop">
+      <div class="tt-route-polaroid">
+        <div class="tt-route-tape"></div>
+        <div class="tt-route-photo tt-route-photo--single">
+          <img src="../../assets/img/tt/tt-1.jpg" alt="People in conversation at a Talk&amp;Table session" loading="lazy">
         </div>
-        <div class="tt-gallery-prog"><div class="tt-gallery-prog-bar run"></div></div>
+        <div class="tt-route-polaroid-caption">Talk &amp; Table · Real moments</div>
       </div>
 
-      <div class="tt-gallery-slide" role="group" aria-label="2 of 3">
-        <div class="tt-gallery-imgs tt-gallery-imgs--2">
-          <img src="../../assets/img/tt/tt-4.jpg" alt="Talk&amp;Table activity cards and materials on table" loading="lazy">
-          <img src="../../assets/img/tt/tt-4b.jpg" alt="Talk&amp;Table session moment" loading="lazy">
-        </div>
-        <div class="tt-gallery-cap">
-          <div class="tt-gallery-cap-text">🃏 <strong>Games &amp; activities</strong> — language icebreakers and prompts keep the energy alive, even if you're nervous about speaking.</div>
-          <div class="tt-gallery-cap-meta">02 of 03</div>
-        </div>
-        <div class="tt-gallery-prog"><div class="tt-gallery-prog-bar"></div></div>
+      <div class="tt-route-node">
+        <div class="tt-route-num">01</div>
       </div>
 
-      <div class="tt-gallery-slide" role="group" aria-label="3 of 3">
-        <div class="tt-gallery-imgs tt-gallery-imgs--2">
-          <img src="../../assets/img/tt/tt-2.jpg" alt="Group of attendees at Talk&amp;Table session" loading="lazy">
+      <div class="tt-route-card">
+        <span class="tt-route-card-icon">☕</span>
+        <div class="tt-route-card-title">Real conversations over coffee</div>
+        <p class="tt-route-card-desc">Relaxed 1–2 hour sessions in a warm café. No strangers — just language lovers with something to say. Show up, sit down, start talking.</p>
+        <div class="tt-route-card-stamp">Stop 01 of 03</div>
+      </div>
+    </div>
+
+    <!-- Stop 02 -->
+    <div class="tt-route-stop">
+      <div class="tt-route-polaroid">
+        <div class="tt-route-tape"></div>
+        <div class="tt-route-photo">
+          <img src="../../assets/img/tt/tt-4.jpg" alt="Talk&amp;Table activity cards and materials" loading="lazy">
+          <img src="../../assets/img/tt/tt-4b.jpg" alt="Talk&amp;Table games in action" loading="lazy">
+        </div>
+        <div class="tt-route-polaroid-caption">Games &amp; Icebreakers</div>
+      </div>
+
+      <div class="tt-route-node">
+        <div class="tt-route-num">02</div>
+      </div>
+
+      <div class="tt-route-card">
+        <span class="tt-route-card-icon">🃏</span>
+        <div class="tt-route-card-title">Games &amp; activities</div>
+        <p class="tt-route-card-desc">Language icebreakers and prompt cards keep the energy alive — even if you're nervous about speaking. They make it easy to keep the conversation going.</p>
+        <div class="tt-route-card-stamp">Stop 02 of 03</div>
+      </div>
+    </div>
+
+    <!-- Stop 03 -->
+    <div class="tt-route-stop">
+      <div class="tt-route-polaroid">
+        <div class="tt-route-tape"></div>
+        <div class="tt-route-photo">
+          <img src="../../assets/img/tt/tt-2.jpg" alt="Group of attendees at a Talk&amp;Table session" loading="lazy">
           <img src="../../assets/img/tt/tt-14b.jpg" alt="Talk&amp;Table session attendees" loading="lazy">
         </div>
-        <div class="tt-gallery-cap">
-          <div class="tt-gallery-cap-text">🗓️ <strong>Regular &amp; local</strong> — bi-weekly or monthly, usually Thursday evenings. The same crowd, the same city, until it feels like home.</div>
-          <div class="tt-gallery-cap-meta">03 of 03</div>
-        </div>
-        <div class="tt-gallery-prog"><div class="tt-gallery-prog-bar"></div></div>
+        <div class="tt-route-polaroid-caption">Regular &amp; Local</div>
       </div>
 
+      <div class="tt-route-node">
+        <div class="tt-route-num">03</div>
+      </div>
 
+      <div class="tt-route-card">
+        <span class="tt-route-card-icon">🗓️</span>
+        <div class="tt-route-card-title">Regular &amp; local</div>
+        <p class="tt-route-card-desc">Bi-weekly or monthly, usually Thursday evenings. The same crowd, the same city — until it starts to feel like home.</p>
+        <div class="tt-route-card-stamp">Stop 03 of 03</div>
+      </div>
     </div>
-  </div>
 
-  <div class="tt-gallery-nav">
-    <div class="tt-gallery-dots" id="ttGalDots" role="tablist" aria-label="Gallery navigation"></div>
-    <div class="tt-gallery-arrows">
-      <button class="tt-gallery-arrow" id="ttGalPrev" aria-label="Previous">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M10 3L5 8l5 5"/></svg>
-      </button>
-      <button class="tt-gallery-arrow" id="ttGalNext" aria-label="Next">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M6 3l5 5-5 5"/></svg>
-      </button>
-    </div>
   </div>
 </section>
 
@@ -1196,106 +1231,6 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
       entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
     }, { threshold: 0.15 });
     rows.forEach(function (r) { obs.observe(r); });
-  })();
-
-  /* ── Living Gallery ─────────────────────────────────── */
-  (function () {
-    var viewport  = document.getElementById('ttGalViewport');
-    var track     = document.getElementById('ttGalTrack');
-    var dotsWrap  = document.getElementById('ttGalDots');
-    var counter   = document.getElementById('ttGalCounter');
-    var prevBtn   = document.getElementById('ttGalPrev');
-    var nextBtn   = document.getElementById('ttGalNext');
-    if (!viewport || !track) return;
-
-    var slides  = Array.prototype.slice.call(track.querySelectorAll('.tt-gallery-slide'));
-    var total   = slides.length;
-    var active  = 0;
-    var timer   = null;
-    var paused  = false;
-    var DELAY   = 4000;
-
-    /* Build dots */
-    slides.forEach(function (_, i) {
-      var d = document.createElement('button');
-      d.type = 'button'; d.className = 'tt-gallery-dot' + (i === 0 ? ' active' : '');
-      d.setAttribute('role', 'tab'); d.setAttribute('aria-label', 'Photo ' + (i + 1));
-      d.addEventListener('click', function () { goTo(i, true); });
-      dotsWrap.appendChild(d);
-    });
-
-    function getOffset(idx) {
-      var vw = viewport.offsetWidth;
-      var slide = slides[idx];
-      var sw = slide.offsetWidth;
-      var sl = slide.offsetLeft;
-      return -(sl - (vw - sw) / 2);
-    }
-
-    function resetProgress(idx) {
-      var bar = slides[idx].querySelector('.tt-gallery-prog-bar');
-      if (!bar) return;
-      bar.classList.remove('run');
-      void bar.offsetWidth; /* reflow to restart animation */
-      bar.classList.add('run');
-    }
-
-    function goTo(idx, manual) {
-      slides[active].classList.remove('active');
-      var prevBar = slides[active].querySelector('.tt-gallery-prog-bar');
-      if (prevBar) prevBar.classList.remove('run');
-      active = (idx + total) % total;
-      slides[active].classList.add('active');
-      track.style.transform = 'translateX(' + getOffset(active) + 'px)';
-      dotsWrap.querySelectorAll('.tt-gallery-dot').forEach(function (d, i) { d.classList.toggle('active', i === active); });
-      counter.textContent = (active + 1) + ' / ' + total;
-      if (!paused) resetProgress(active);
-      if (manual) { clearInterval(timer); if (!paused) timer = setInterval(advance, DELAY); }
-    }
-
-    function advance() { goTo(active + 1, false); resetProgress(active); }
-
-    function start() { timer = setInterval(advance, DELAY); resetProgress(active); }
-    function stop()  { clearInterval(timer); timer = null; }
-
-    /* Init position */
-    track.style.transition = 'none';
-    track.style.transform  = 'translateX(' + getOffset(0) + 'px)';
-    setTimeout(function () { track.style.transition = ''; start(); }, 50);
-
-    prevBtn.addEventListener('click', function () { goTo(active - 1, true); });
-    nextBtn.addEventListener('click', function () { goTo(active + 1, true); });
-
-    viewport.addEventListener('mouseenter', function () { paused = true; stop(); var bar = slides[active].querySelector('.tt-gallery-prog-bar'); if (bar) bar.style.animationPlayState = 'paused'; });
-    viewport.addEventListener('mouseleave', function () { paused = false; var bar = slides[active].querySelector('.tt-gallery-prog-bar'); if (bar) bar.style.animationPlayState = 'running'; start(); });
-
-    window.addEventListener('resize', function () { track.style.transition = 'none'; track.style.transform = 'translateX(' + getOffset(active) + 'px)'; setTimeout(function () { track.style.transition = ''; }, 50); });
-
-    /* Drag / swipe */
-    var startX = 0, startOffset = 0, dragging = false, moved = false;
-    function getMatrix() { var m = new DOMMatrix(getComputedStyle(track).transform); return m.m41; }
-    function dragStart(e) { dragging = true; moved = false; stop(); startX = e.touches ? e.touches[0].pageX : e.pageX; startOffset = getMatrix(); viewport.classList.add('dragging'); }
-    function dragMove(e) {
-      if (!dragging) return;
-      var dx = (e.touches ? e.touches[0].pageX : e.pageX) - startX;
-      if (Math.abs(dx) > 5) { moved = true; if (e.cancelable) e.preventDefault(); }
-      track.style.transition = 'none';
-      track.style.transform = 'translateX(' + (startOffset + dx) + 'px)';
-    }
-    function dragEnd(e) {
-      if (!dragging) return; dragging = false; viewport.classList.remove('dragging');
-      track.style.transition = '';
-      var dx = (e.changedTouches ? e.changedTouches[0].pageX : (e.pageX || startX)) - startX;
-      if (Math.abs(dx) > 60) { goTo(dx < 0 ? active + 1 : active - 1, true); }
-      else { track.style.transform = 'translateX(' + getOffset(active) + 'px)'; if (!paused) start(); }
-    }
-    viewport.addEventListener('mousedown',  dragStart);
-    viewport.addEventListener('mousemove',  dragMove);
-    viewport.addEventListener('mouseup',    dragEnd);
-    viewport.addEventListener('mouseleave', function (e) { if (dragging) dragEnd(e); });
-    viewport.addEventListener('touchstart', dragStart, { passive: true });
-    viewport.addEventListener('touchmove',  dragMove, { passive: false });
-    viewport.addEventListener('touchend',   dragEnd);
   })();
 
   /* ── Download proposal modal ────────────────────────── */

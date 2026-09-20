@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/site.css?v=38">
+<link rel="stylesheet" href="../../assets/css/site.css?v=39">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -158,34 +158,75 @@
   .joc-content-panel { display: none; }
   .joc-content-panel.active { display: block; }
 
-  /* Cities carousel (inside panel) */
-  .joc-viewport-wrap { max-width: 1280px; margin: 0 auto; }
-  .joc-viewport {
-    overflow: hidden; position: relative; cursor: grab; user-select: none;
-    padding: 0 4rem 1rem;
+  /* Cities world map */
+  .joc-map-wrap {
+    max-width: 1280px; margin: 0 auto; padding: 0 4rem;
   }
-  .joc-viewport.dragging { cursor: grabbing; }
-  .joc-track { display: flex; gap: 1.25rem; }
+  .joc-map-container {
+    position: relative; background: #10121a; border-radius: 22px;
+    overflow: hidden; user-select: none;
+  }
+  .joc-map-svg { width: 100%; height: auto; display: block; }
+  .joc-map-land { fill: #1c2035; stroke: #252b42; stroke-width: 0.6; }
+  .joc-map-grid { stroke: rgba(255,255,255,.04); stroke-width: 0.5; fill: none; }
 
-  .joc-city-card {
-    flex: 0 0 272px; min-height: 330px;
-    background: #fff; border: 1px solid rgba(0,0,0,.07); border-radius: 20px;
-    text-decoration: none; color: inherit;
-    transition: box-shadow .2s, transform .2s;
-    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  .joc-map-pin { cursor: pointer; }
+  .joc-map-pin-pulse {
+    fill: rgba(255,235,153,.18);
+    animation: jocPinPulse 2.4s ease-in-out infinite;
+    transform-box: fill-box; transform-origin: center;
   }
-  .joc-city-card:hover { box-shadow: 0 10px 32px rgba(0,0,0,.1); transform: translateY(-3px); }
-  .joc-city-card-top {
-    padding: 1.75rem 1.75rem 1.25rem; flex: 1;
-    display: flex; flex-direction: column;
+  .joc-map-pin:nth-child(2) .joc-map-pin-pulse { animation-delay: .4s; }
+  .joc-map-pin:nth-child(3) .joc-map-pin-pulse { animation-delay: .8s; }
+  .joc-map-pin:nth-child(4) .joc-map-pin-pulse { animation-delay: 1.2s; }
+  @keyframes jocPinPulse {
+    0%, 100% { r: 12; opacity: .6; }
+    50%       { r: 18; opacity: .15; }
   }
-  .joc-city-flag { font-size: 2rem; line-height: 1; margin-bottom: .75rem; }
-  .joc-city-native {
-    font-family: var(--font-serif); font-size: 1.75rem; line-height: 1.15;
-    font-style: italic; letter-spacing: -.01em; margin-bottom: .2rem;
+  .joc-map-pin-dot { fill: #ffeb99; transition: r .2s; }
+  .joc-map-pin:hover .joc-map-pin-dot { r: 7; }
+
+  .joc-map-popup {
+    position: absolute; background: #fff; border-radius: 18px;
+    padding: 1.2rem 1.4rem; min-width: 210px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.32), 0 4px 12px rgba(0,0,0,.14);
+    opacity: 0; pointer-events: none;
+    transform: scale(.9) translateY(8px);
+    transition: opacity .22s, transform .22s;
+    z-index: 10;
   }
-  .joc-city-name { font-size: .65rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--text-soft); }
-  .joc-city-region { font-size: .8rem; color: var(--text-soft); margin-top: .2rem; flex: 1; }
+  .joc-map-popup.open {
+    opacity: 1; pointer-events: auto;
+    transform: scale(1) translateY(0);
+  }
+  .joc-popup-close {
+    position: absolute; top: .6rem; right: .6rem;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(17,18,22,.07); border: none; cursor: pointer;
+    font-size: .75rem; color: rgba(17,18,22,.4);
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+  .joc-popup-close:hover { background: rgba(17,18,22,.13); }
+  .joc-popup-flag { font-size: 1.5rem; display: block; margin-bottom: .3rem; }
+  .joc-popup-native {
+    font-family: var(--font-serif); font-size: 1.3rem; font-style: italic;
+    color: #111216; line-height: 1.2; margin-bottom: .1rem;
+  }
+  .joc-popup-en {
+    font-size: .62rem; font-weight: 800; letter-spacing: .11em;
+    text-transform: uppercase; color: rgba(17,18,22,.35); margin-bottom: .2rem;
+  }
+  .joc-popup-region { font-size: .8rem; color: rgba(17,18,22,.45); margin-bottom: .9rem; }
+  .joc-popup-btn {
+    display: flex; align-items: center; gap: .45rem;
+    background: #111216; color: #fff;
+    padding: .65rem 1.1rem; border-radius: 100px;
+    font-size: .82rem; font-weight: 700; text-decoration: none;
+    transition: background .18s;
+  }
+  .joc-popup-btn:hover { background: #25d366; }
+
   .joc-city-card-foot {
     padding: 1rem 1.75rem 1.5rem;
     border-top: 1px solid rgba(0,0,0,.06);
@@ -250,9 +291,8 @@
   @media (max-width: 768px) {
     .joc-stage { padding: 4rem 1.5rem 3.5rem; }
     .joc-tabs-section { padding: 2rem 1.5rem 0; }
-    .joc-viewport { padding: 0 1.5rem 1rem; }
+    .joc-map-wrap { padding: 0 1.5rem; }
     .joc-rlcc-wrap, .joc-rla-wrap { padding: 0 1.5rem; }
-    .joc-city-card { flex: 0 0 240px; }
     .joc-rlcc-actions { flex-direction: column; }
     .joc-rlcc-btn-wa, .joc-rlcc-btn-page { width: 100%; justify-content: center; }
     .joc-tabs { width: 100%; }
@@ -338,61 +378,137 @@
   <!-- 3. Content panels -->
   <div class="joc-content">
 
-    <!-- Cities panel — auto-scrolling carousel -->
+    <!-- Cities panel — world map -->
     <div class="joc-content-panel active" id="joc-panel-cities">
-      <div class="joc-viewport-wrap">
-      <div class="joc-viewport" id="jocViewport" role="list" aria-label="WhatsApp community groups">
-        <div class="joc-track" id="jocTrack">
-          <a class="joc-city-card" href="https://chat.whatsapp.com/ITixzsnV9RR7fVU3SVfO6P?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" role="listitem">
-            <div class="joc-city-card-top">
-              <span class="joc-city-flag">🇸🇦🇧🇭</span>
-              <span class="joc-city-native">الخبر · المنامة</span>
-              <span class="joc-city-name">Khobar &amp; Manama</span>
-              <span class="joc-city-region">Saudi Arabia · Bahrain</span>
-            </div>
-            <div class="joc-city-card-foot">
-              <span class="joc-city-cta">Join on WhatsApp <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 17 17 3M7 3h10v10"/></svg></span>
-              <span class="joc-city-accent"></span>
-            </div>
-          </a>
-          <a class="joc-city-card" href="https://chat.whatsapp.com/GHBIVl7OJI7Ds5feTOfKpP?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" role="listitem">
-            <div class="joc-city-card-top">
-              <span class="joc-city-flag">🇨🇳</span>
-              <span class="joc-city-native">北京</span>
-              <span class="joc-city-name">Beijing</span>
-              <span class="joc-city-region">China</span>
-            </div>
-            <div class="joc-city-card-foot">
-              <span class="joc-city-cta">Join on WhatsApp <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 17 17 3M7 3h10v10"/></svg></span>
-              <span class="joc-city-accent"></span>
-            </div>
-          </a>
-          <a class="joc-city-card" href="https://chat.whatsapp.com/EIwYWAL5plWEOVb3fx08qC?s=cl&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" role="listitem">
-            <div class="joc-city-card-top">
-              <span class="joc-city-flag">🇹🇿</span>
-              <span class="joc-city-native">Dar es Salaam</span>
-              <span class="joc-city-name">Tanzania</span>
-              <span class="joc-city-region">East Africa</span>
-            </div>
-            <div class="joc-city-card-foot">
-              <span class="joc-city-cta">Join on WhatsApp <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 17 17 3M7 3h10v10"/></svg></span>
-              <span class="joc-city-accent"></span>
-            </div>
-          </a>
-          <a class="joc-city-card" href="https://chat.whatsapp.com/LWZgst1bo5y3O2joCKSXZN?s=cl&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" role="listitem">
-            <div class="joc-city-card-top">
-              <span class="joc-city-flag">🇸🇬</span>
-              <span class="joc-city-native">新加坡</span>
-              <span class="joc-city-name">Singapore</span>
-              <span class="joc-city-region">Southeast Asia</span>
-            </div>
-            <div class="joc-city-card-foot">
-              <span class="joc-city-cta">Join on WhatsApp <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 17 17 3M7 3h10v10"/></svg></span>
-              <span class="joc-city-accent"></span>
-            </div>
-          </a>
+      <div class="joc-map-wrap">
+        <div class="joc-map-container" id="jocMapContainer">
+
+          <!-- SVG world map (Eastern Hemisphere: lon -20→160, lat -45→65)
+               x = (lon + 20) * 5   y = (65 - lat) * 4.36  viewBox 0 0 900 480 -->
+          <svg class="joc-map-svg" viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Grid lines -->
+            <line class="joc-map-grid" x1="0" y1="240" x2="900" y2="240"/><!-- equator -->
+            <line class="joc-map-grid" x1="0" y1="349" x2="900" y2="349"/><!-- tropic capricorn -->
+            <line class="joc-map-grid" x1="0" y1="131" x2="900" y2="131"/><!-- tropic cancer -->
+
+            <!-- AFRICA -->
+            <polygon class="joc-map-land" points="
+              70,127 55,157 15,218 30,235 75,262 110,262
+              145,271 145,295 160,358 170,412 195,436
+              235,432 255,414 275,388 300,315 300,302
+              315,278 355,232 320,234 315,218 285,192
+              265,153 225,148 165,140 150,122 110,122 95,127
+            "/>
+
+            <!-- ARABIAN PENINSULA -->
+            <polygon class="joc-map-land" points="
+              270,153 290,153 340,157 375,179 395,183
+              400,207 365,227 320,231 290,213 290,187 285,165
+            "/>
+
+            <!-- EUROPE (rough) -->
+            <polygon class="joc-map-land" points="
+              55,92 55,75 75,66 85,27 135,27 225,22
+              240,48 260,79 240,92 210,122 180,118
+              170,88 155,79
+            "/>
+
+            <!-- INDIA -->
+            <polygon class="joc-map-land" points="
+              400,153 430,135 520,162 560,188
+              500,218 500,249 485,249 470,222 425,179
+            "/>
+
+            <!-- CHINA + EAST ASIA -->
+            <polygon class="joc-map-land" points="
+              490,109 625,96 720,74 735,118 755,136
+              750,145 700,188 640,188 600,183 560,162
+            "/>
+
+            <!-- SE ASIA (Indochina + Malay Peninsula) -->
+            <polygon class="joc-map-land" points="
+              600,183 640,192 645,214 635,236 605,258
+              620,278 605,271 595,249
+            "/>
+
+            <!-- SUMATRA -->
+            <polygon class="joc-map-land" points="580,259 630,268 630,309 600,305"/>
+
+            <!-- BORNEO -->
+            <polygon class="joc-map-land" points="645,275 680,253 690,257 685,275 680,301 670,301"/>
+
+            <!-- SRI LANKA -->
+            <ellipse class="joc-map-land" cx="498" cy="258" rx="7" ry="10"/>
+
+            <!-- City pins (cx,cy): Khobar=351,169 · Beijing=682,110 · Dar es Salaam=297,313 · Singapore=619,278 -->
+            <g class="joc-map-pin" data-city="khobar" tabindex="0" role="button" aria-label="Khobar &amp; Manama community group">
+              <circle class="joc-map-pin-pulse" cx="351" cy="169" r="12"/>
+              <circle class="joc-map-pin-dot" cx="351" cy="169" r="5"/>
+            </g>
+            <g class="joc-map-pin" data-city="beijing" tabindex="0" role="button" aria-label="Beijing community group">
+              <circle class="joc-map-pin-pulse" cx="682" cy="110" r="12"/>
+              <circle class="joc-map-pin-dot" cx="682" cy="110" r="5"/>
+            </g>
+            <g class="joc-map-pin" data-city="dar" tabindex="0" role="button" aria-label="Dar es Salaam community group">
+              <circle class="joc-map-pin-pulse" cx="297" cy="313" r="12"/>
+              <circle class="joc-map-pin-dot" cx="297" cy="313" r="5"/>
+            </g>
+            <g class="joc-map-pin" data-city="singapore" tabindex="0" role="button" aria-label="Singapore community group">
+              <circle class="joc-map-pin-pulse" cx="619" cy="278" r="12"/>
+              <circle class="joc-map-pin-dot" cx="619" cy="278" r="5"/>
+            </g>
+          </svg>
+
+          <!-- Popups (positioned via JS) -->
+          <div class="joc-map-popup" id="jocPopup-khobar">
+            <button class="joc-popup-close" aria-label="Close">✕</button>
+            <span class="joc-popup-flag">🇸🇦🇧🇭</span>
+            <div class="joc-popup-native">الخبر · المنامة</div>
+            <div class="joc-popup-en">Khobar &amp; Manama</div>
+            <div class="joc-popup-region">Saudi Arabia · Bahrain</div>
+            <a class="joc-popup-btn" href="https://chat.whatsapp.com/ITixzsnV9RR7fVU3SVfO6P?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 0C4.477 0 0 4.373 0 9.765c0 1.73.463 3.35 1.27 4.753L0 20l5.666-1.235A10.07 10.07 0 0010 19.53c5.523 0 10-4.374 10-9.765C20 4.373 15.523 0 10 0zm4.94 13.627c-.207.576-1.2 1.099-1.657 1.168-.424.063-.963.09-1.554-.098-.358-.114-.819-.266-1.406-.52-2.468-1.057-4.079-3.52-4.204-3.683-.122-.163-1.003-1.323-1.003-2.526 0-1.202.638-1.795.864-2.04a.91.91 0 01.659-.307c.164 0 .328.003.472.009.152.007.354-.057.555.42.207.49.701 1.695.763 1.818.061.122.102.266.02.43-.082.163-.122.265-.243.408l-.365.423c-.122.122-.248.254-.107.498.142.244.629 1.025 1.35 1.66.928.822 1.71 1.075 1.955 1.197.244.122.386.103.53-.061.141-.163.608-.706.77-.949.163-.243.325-.204.548-.122.224.082 1.42.666 1.664.789.244.122.406.183.467.285.061.101.061.583-.146 1.16z"/></svg>
+              Join on WhatsApp
+            </a>
+          </div>
+
+          <div class="joc-map-popup" id="jocPopup-beijing">
+            <button class="joc-popup-close" aria-label="Close">✕</button>
+            <span class="joc-popup-flag">🇨🇳</span>
+            <div class="joc-popup-native">北京</div>
+            <div class="joc-popup-en">Beijing</div>
+            <div class="joc-popup-region">China</div>
+            <a class="joc-popup-btn" href="https://chat.whatsapp.com/GHBIVl7OJI7Ds5feTOfKpP?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 0C4.477 0 0 4.373 0 9.765c0 1.73.463 3.35 1.27 4.753L0 20l5.666-1.235A10.07 10.07 0 0010 19.53c5.523 0 10-4.374 10-9.765C20 4.373 15.523 0 10 0zm4.94 13.627c-.207.576-1.2 1.099-1.657 1.168-.424.063-.963.09-1.554-.098-.358-.114-.819-.266-1.406-.52-2.468-1.057-4.079-3.52-4.204-3.683-.122-.163-1.003-1.323-1.003-2.526 0-1.202.638-1.795.864-2.04a.91.91 0 01.659-.307c.164 0 .328.003.472.009.152.007.354-.057.555.42.207.49.701 1.695.763 1.818.061.122.102.266.02.43-.082.163-.122.265-.243.408l-.365.423c-.122.122-.248.254-.107.498.142.244.629 1.025 1.35 1.66.928.822 1.71 1.075 1.955 1.197.244.122.386.103.53-.061.141-.163.608-.706.77-.949.163-.243.325-.204.548-.122.224.082 1.42.666 1.664.789.244.122.406.183.467.285.061.101.061.583-.146 1.16z"/></svg>
+              Join on WhatsApp
+            </a>
+          </div>
+
+          <div class="joc-map-popup" id="jocPopup-dar">
+            <button class="joc-popup-close" aria-label="Close">✕</button>
+            <span class="joc-popup-flag">🇹🇿</span>
+            <div class="joc-popup-native">Dar es Salaam</div>
+            <div class="joc-popup-en">Dar es Salaam</div>
+            <div class="joc-popup-region">East Africa</div>
+            <a class="joc-popup-btn" href="https://chat.whatsapp.com/EIwYWAL5plWEOVb3fx08qC?s=cl&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 0C4.477 0 0 4.373 0 9.765c0 1.73.463 3.35 1.27 4.753L0 20l5.666-1.235A10.07 10.07 0 0010 19.53c5.523 0 10-4.374 10-9.765C20 4.373 15.523 0 10 0zm4.94 13.627c-.207.576-1.2 1.099-1.657 1.168-.424.063-.963.09-1.554-.098-.358-.114-.819-.266-1.406-.52-2.468-1.057-4.079-3.52-4.204-3.683-.122-.163-1.003-1.323-1.003-2.526 0-1.202.638-1.795.864-2.04a.91.91 0 01.659-.307c.164 0 .328.003.472.009.152.007.354-.057.555.42.207.49.701 1.695.763 1.818.061.122.102.266.02.43-.082.163-.122.265-.243.408l-.365.423c-.122.122-.248.254-.107.498.142.244.629 1.025 1.35 1.66.928.822 1.71 1.075 1.955 1.197.244.122.386.103.53-.061.141-.163.608-.706.77-.949.163-.243.325-.204.548-.122.224.082 1.42.666 1.664.789.244.122.406.183.467.285.061.101.061.583-.146 1.16z"/></svg>
+              Join on WhatsApp
+            </a>
+          </div>
+
+          <div class="joc-map-popup" id="jocPopup-singapore">
+            <button class="joc-popup-close" aria-label="Close">✕</button>
+            <span class="joc-popup-flag">🇸🇬</span>
+            <div class="joc-popup-native">新加坡</div>
+            <div class="joc-popup-en">Singapore</div>
+            <div class="joc-popup-region">Southeast Asia</div>
+            <a class="joc-popup-btn" href="https://chat.whatsapp.com/LWZgst1bo5y3O2joCKSXZN?s=cl&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 0C4.477 0 0 4.373 0 9.765c0 1.73.463 3.35 1.27 4.753L0 20l5.666-1.235A10.07 10.07 0 0010 19.53c5.523 0 10-4.374 10-9.765C20 4.373 15.523 0 10 0zm4.94 13.627c-.207.576-1.2 1.099-1.657 1.168-.424.063-.963.09-1.554-.098-.358-.114-.819-.266-1.406-.52-2.468-1.057-4.079-3.52-4.204-3.683-.122-.163-1.003-1.323-1.003-2.526 0-1.202.638-1.795.864-2.04a.91.91 0 01.659-.307c.164 0 .328.003.472.009.152.007.354-.057.555.42.207.49.701 1.695.763 1.818.061.122.102.266.02.43-.082.163-.122.265-.243.408l-.365.423c-.122.122-.248.254-.107.498.142.244.629 1.025 1.35 1.66.928.822 1.71 1.075 1.955 1.197.244.122.386.103.53-.061.141-.163.608-.706.77-.949.163-.243.325-.204.548-.122.224.082 1.42.666 1.664.789.244.122.406.183.467.285.061.101.061.583-.146 1.16z"/></svg>
+              Join on WhatsApp
+            </a>
+          </div>
+
         </div>
-      </div>
       </div>
     </div>
 
@@ -522,61 +638,73 @@
     }
     selCards.forEach(function (c) { c.addEventListener('click', function () { selectProg(c.dataset.prog); }); });
 
-    /* Auto-scrolling carousel (seamless RAF loop) */
-    var viewport = document.getElementById('jocViewport');
-    var track    = document.getElementById('jocTrack');
-    if (!viewport || !track) return;
+    /* World map popups */
+    var container = document.getElementById('jocMapContainer');
+    if (!container) return;
 
-    var origCards = Array.prototype.slice.call(track.children);
-    origCards.forEach(function (card) { track.appendChild(card.cloneNode(true)); });
+    /* Pin positions as % of SVG viewBox (900 x 480) */
+    var pins = {
+      khobar:    { x: 351/900, y: 169/480 },
+      beijing:   { x: 682/900, y: 110/480 },
+      dar:       { x: 297/900, y: 313/480 },
+      singapore: { x: 619/900, y: 278/480 }
+    };
 
-    viewport.style.overflowX = 'hidden';
-    var halfW = 0, raf = null, paused = false, startX = 0, dragDelta = 0, isDragging = false, moved = false;
+    var openPopup = null;
 
-    function measure() { halfW = track.scrollWidth / 2; }
-    measure();
-
-    var pos = 0;
-    function tick() {
-      if (!paused) {
-        pos += 0.6;
-        if (pos >= halfW) pos -= halfW;
-        track.style.transform = 'translateX(-' + pos + 'px)';
-      }
-      raf = requestAnimationFrame(tick);
+    function positionPopup(popup, pinX, pinY) {
+      var cw = container.offsetWidth;
+      var ch = container.offsetHeight;
+      var pw = popup.offsetWidth || 220;
+      var ph = popup.offsetHeight || 180;
+      var px = pinX * cw;
+      var py = pinY * ch;
+      /* Default: above and centered on pin; flip if too close to edges */
+      var left = Math.min(Math.max(px - pw / 2, 8), cw - pw - 8);
+      var top  = py - ph - 16;
+      if (top < 8) top = py + 20;
+      popup.style.left = left + 'px';
+      popup.style.top  = top  + 'px';
     }
-    raf = requestAnimationFrame(tick);
 
-    viewport.addEventListener('mouseenter', function () { paused = true; });
-    viewport.addEventListener('mouseleave', function () { paused = false; });
+    function openCity(city) {
+      if (openPopup) { openPopup.classList.remove('open'); }
+      var popup = document.getElementById('jocPopup-' + city);
+      if (!popup) return;
+      popup.style.left = '0'; popup.style.top = '0';
+      popup.classList.add('open');
+      openPopup = popup;
+      var pin = pins[city];
+      if (pin) positionPopup(popup, pin.x, pin.y);
+    }
 
-    viewport.style.cursor = 'grab';
-    function onDown(e) {
-      isDragging = true; moved = false; paused = true;
-      startX = e.touches ? e.touches[0].pageX : e.pageX;
-      dragDelta = 0;
-      viewport.style.cursor = 'grabbing';
-    }
-    function onMove(e) {
-      if (!isDragging) return;
-      var dx = (e.touches ? e.touches[0].pageX : e.pageX) - startX;
-      if (Math.abs(dx) > 4) { moved = true; if (e.cancelable) e.preventDefault(); }
-      pos -= (dx - dragDelta); startX = e.touches ? e.touches[0].pageX : e.pageX;
-      if (pos < 0) pos += halfW; if (pos >= halfW) pos -= halfW;
-      track.style.transform = 'translateX(-' + pos + 'px)';
-    }
-    function onUp() { isDragging = false; paused = false; viewport.style.cursor = 'grab'; }
-    viewport.addEventListener('mousedown',  onDown);
-    viewport.addEventListener('mousemove',  onMove);
-    viewport.addEventListener('mouseup',    onUp);
-    viewport.addEventListener('mouseleave', onUp);
-    viewport.addEventListener('touchstart', onDown, { passive: true });
-    viewport.addEventListener('touchmove',  onMove, { passive: false });
-    viewport.addEventListener('touchend',   onUp);
-    track.querySelectorAll('a.joc-city-card').forEach(function (card) {
-      card.addEventListener('click', function (e) { if (moved) e.preventDefault(); });
+    container.querySelectorAll('.joc-map-pin').forEach(function (pin) {
+      function activate() { openCity(pin.dataset.city); }
+      pin.addEventListener('click', activate);
+      pin.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
     });
-    window.addEventListener('resize', measure);
+
+    container.querySelectorAll('.joc-popup-close').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var popup = btn.closest('.joc-map-popup');
+        if (popup) { popup.classList.remove('open'); if (openPopup === popup) openPopup = null; }
+      });
+    });
+
+    document.addEventListener('click', function (e) {
+      if (openPopup && !openPopup.contains(e.target) && !e.target.closest('.joc-map-pin')) {
+        openPopup.classList.remove('open'); openPopup = null;
+      }
+    });
+
+    window.addEventListener('resize', function () {
+      if (openPopup) {
+        var city = openPopup.id.replace('jocPopup-', '');
+        var pin  = pins[city];
+        if (pin) positionPopup(openPopup, pin.x, pin.y);
+      }
+    });
   })();
 </script>
 <script src="../../assets/js/nav.js?v=38" defer></script>
