@@ -331,7 +331,10 @@
       }
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && overlay && overlay.classList.contains('open')) closeOverlay();
+      if (e.key === 'Escape' && overlay && overlay.classList.contains('open')) {
+        e.preventDefault();
+        closeOverlay();
+      }
     });
     // Resolve data-href links inside overlay
     if (overlay) {
