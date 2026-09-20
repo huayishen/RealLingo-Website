@@ -19,48 +19,76 @@
 
   /* ── Hero ─────────────────────────────────── */
   .rla-hero {
-    background: #111216;
-    padding: 7rem 5vw 7rem;
-    text-align: left;
-    position: relative;
-    min-height: 520px;
-    display: flex; align-items: center;
-    overflow: hidden;
+    position: relative; min-height: min(80vh, 700px);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    overflow: hidden; background: #111216;
   }
   /* Photo slideshow background */
   .rla-hero-slides { position: absolute; inset: 0; z-index: 0; }
   .rla-hero-slide {
     position: absolute; inset: 0;
     background-size: cover; background-position: center;
-    opacity: 0; transition: opacity 1.2s ease;
+    opacity: 0; transition: opacity 1.4s ease-in-out;
   }
   .rla-hero-slide.active { opacity: 1; }
-  .rla-hero-slide::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(to right, rgba(0,0,0,.72) 0%, rgba(0,0,0,.45) 55%, rgba(0,0,0,.15) 100%);
+  .rla-hero-overlay {
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(
+      180deg,
+      rgba(17,18,22,.18) 0%,
+      rgba(17,18,22,.25) 40%,
+      rgba(17,18,22,.72) 80%,
+      rgba(17,18,22,.88) 100%
+    );
   }
-  .rla-hero-content { position: relative; z-index: 1; max-width: 600px; }
-  .rla-eyebrow {
-    font-size: .68rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
-    color: rgba(255,235,153,.55); margin-bottom: 1.4rem;
-    display: flex; align-items: center; gap: .7rem;
+  .rla-hero-content { position: relative; z-index: 2; padding: 3.5rem 5vw 4rem; max-width: 860px; }
+  .rla-hero-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: #ffeb99; color: #111216;
+    font-size: .7rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase;
+    padding: .32rem .8rem; border-radius: 100px; margin-bottom: 1.4rem;
   }
-  .rla-eyebrow::before { content: ''; display: block; width: 24px; height: 1px; background: rgba(255,235,153,.3); }
+  .rla-hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #111216; }
   .rla-h1 {
     font-family: var(--font-serif, Georgia, serif);
-    font-size: clamp(2.4rem, 5.5vw, 4rem);
+    font-size: clamp(2.4rem, 5.8vw, 4.4rem);
     font-weight: 400; line-height: 1.1; color: #fff;
-    letter-spacing: -.02em; max-width: 600px; margin: 0 0 .9rem;
+    text-shadow: 0 4px 30px rgba(0,0,0,.3);
+    letter-spacing: -.02em; margin: 0 0 1.1rem;
   }
   .rla-h1 em { font-style: italic; color: #ffeb99; }
   .rla-sub {
-    font-size: 1.05rem; color: rgba(255,255,255,.6); line-height: 1.65;
-    max-width: 480px;
+    font-size: clamp(1rem, 2vw, 1.2rem); color: rgba(255,255,255,.8); line-height: 1.6;
+    max-width: 540px; margin-bottom: 2rem;
   }
+  .rla-hero-ctas { display: flex; flex-wrap: wrap; gap: .75rem; }
+  .rla-btn-hero {
+    display: inline-flex; align-items: center; gap: .45rem;
+    padding: .85rem 1.8rem; border-radius: 100px;
+    font-family: var(--font-sans); font-weight: 700; font-size: .95rem;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: transform .16s, box-shadow .16s, background .16s;
+  }
+  .rla-btn-hero--yellow { background: #ffeb99; color: #111216; }
+  .rla-btn-hero--yellow:hover { background: #f5d96a; transform: translateY(-2px); box-shadow: 0 12px 28px -10px rgba(245,217,106,.5); }
+  .rla-btn-hero--ghost { background: rgba(255,255,255,.85); color: #111216; border: 1.5px solid rgba(255,255,255,.35); }
+  .rla-btn-hero--ghost:hover { background: #fff7d6; transform: translateY(-2px); }
+
+  /* City ticker */
+  .rla-city-ticker {
+    display: flex; align-items: center; gap: .75rem; margin-top: 2.5rem;
+    font-size: .8rem; color: rgba(255,255,255,.55);
+    letter-spacing: .06em; text-transform: uppercase; font-weight: 600;
+  }
+  .rla-city-ticker-label { white-space: nowrap; }
+  .rla-city-ticker-track { overflow: hidden; height: 1.4em; position: relative; min-width: 180px; }
+  .rla-city-ticker-items { display: flex; flex-direction: column; animation: rlaCityTicker 10s linear infinite; }
+  .rla-city-ticker-item { height: 1.4em; white-space: nowrap; color: rgba(255,255,255,.9); }
+  @keyframes rlaCityTicker { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
 
   /* ── Floating pills ───────────────────────── */
   .rla-pills {
-    position: absolute; inset: 0; pointer-events: none;
+    position: absolute; inset: 0; pointer-events: none; z-index: 3;
   }
   .rla-pill {
     position: absolute;
@@ -175,8 +203,8 @@
     .rla-form-col { order: -1; }
   }
   @media (max-width: 480px) {
-    .rla-hero { padding: 4rem 1.4rem 5rem; }
-    .rla-pills { padding: 0 1.4rem; }
+    .rla-hero-content { padding: 2.5rem 1.4rem 3rem; }
+    .rla-hero-ctas { flex-direction: column; align-items: flex-start; }
     .rla-body { padding: 0 1.4rem 4rem; }
   }
 </style>
@@ -185,16 +213,37 @@
 
 <div id="site-header"></div>
 
-<section class="rla-hero">
-  <div class="rla-hero-slides">
+<section class="rla-hero" id="top">
+  <div class="rla-hero-slides" aria-hidden="true">
     <div class="rla-hero-slide active" style="background-image:url('../../assets/img/rla/rla-1.jpg')"></div>
     <div class="rla-hero-slide" style="background-image:url('../../assets/img/rla/rla-2.jpg')"></div>
     <div class="rla-hero-slide" style="background-image:url('../../assets/img/rla/rla-3.jpg')"></div>
   </div>
+  <div class="rla-hero-overlay" aria-hidden="true"></div>
   <div class="rla-hero-content">
-    <div class="rla-eyebrow">RL Academy</div>
+    <div class="rla-hero-badge">
+      <span class="rla-hero-badge-dot" aria-hidden="true"></span>
+      RealLingo Language Academy · RLA
+    </div>
     <h1 class="rla-h1">Learn a language<br><em>face to face.</em></h1>
     <p class="rla-sub">Small groups, expert tutors, real venues. Starting with Mandarin Chinese — more languages on the way.</p>
+    <div class="rla-hero-ctas">
+      <a href="https://forms.gle/XpTHAushwW1f6iWT8" target="_blank" rel="noopener" class="rla-btn-hero rla-btn-hero--yellow">Register Interest →</a>
+      <a href="#info" class="rla-btn-hero rla-btn-hero--ghost">How It Works</a>
+    </div>
+    <div class="rla-city-ticker" aria-label="Active in">
+      <span class="rla-city-ticker-label">Active in</span>
+      <div class="rla-city-ticker-track" aria-hidden="true">
+        <div class="rla-city-ticker-items">
+          <span class="rla-city-ticker-item">الخبر · Khobar</span>
+          <span class="rla-city-ticker-item">北京 · Beijing</span>
+          <span class="rla-city-ticker-item">المنامة · Manama</span>
+          <span class="rla-city-ticker-item">الخبر · Khobar</span>
+          <span class="rla-city-ticker-item">北京 · Beijing</span>
+          <span class="rla-city-ticker-item">المنامة · Manama</span>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="rla-pills">
     <span class="rla-pill">🀄 Chinese Workshop</span>
