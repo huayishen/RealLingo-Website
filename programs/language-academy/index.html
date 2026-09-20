@@ -112,10 +112,26 @@
 
   /* ── CTA card ────────────────────────────── */
   .rla-cta-card {
-    display: flex; flex-direction: column; align-items: flex-start; gap: 1rem;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 1.4rem;
     position: sticky; top: 2rem; padding-top: .5rem;
   }
-  .rla-cta-card p { font-size: .92rem; color: rgba(17,18,22,.55); line-height: 1.6; }
+  .rla-cta-heading {
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: clamp(1.4rem, 2.2vw, 1.75rem); font-weight: 400; line-height: 1.2;
+    color: #111216; letter-spacing: -.02em;
+  }
+  .rla-cta-sub {
+    font-size: .97rem; color: rgba(17,18,22,.6); line-height: 1.6; margin-top: -.6rem;
+  }
+  .rla-cta-list { list-style: none; display: flex; flex-direction: column; gap: .65rem; }
+  .rla-cta-list li {
+    display: flex; align-items: flex-start; gap: .6rem;
+    font-size: .92rem; line-height: 1.55; color: rgba(17,18,22,.75);
+  }
+  .rla-cta-list li::before {
+    content: '✦'; flex-shrink: 0; color: #c9973a; font-size: .7rem; margin-top: .28rem;
+  }
+  .rla-cta-divider { width: 100%; height: 1px; background: rgba(17,18,22,.1); }
   .rla-btn--dark { background: #111216; color: #ffeb99; }
   .rla-btn--dark:hover { background: #2a2b30; transform: translateY(-2px); }
 
@@ -169,7 +185,16 @@
   <!-- CTA card -->
   <div class="rla-form-col">
     <div class="rla-cta-card">
-      <p>Interested in the next cohort? Register your interest and we'll reach out when a seat opens near you.</p>
+      <h3 class="rla-cta-heading">Looking for in-person language workshops?</h3>
+      <p class="rla-cta-sub">Learn a language in a small group with RealLingo Academy!</p>
+      <ul class="rla-cta-list">
+        <li>Led by experienced tutors at partner cafés and venues</li>
+        <li>Immersive workshops focused on one language at a time (Chinese available!)</li>
+        <li>Small groups, more speaking time</li>
+        <li>Paid sessions for quality learning</li>
+      </ul>
+      <div class="rla-cta-divider"></div>
+      <p style="font-size:.88rem;color:rgba(17,18,22,.45);line-height:1.55;">Interested in the next cohort? Register your interest and we'll reach out when a seat opens near you.</p>
       <a href="https://forms.gle/XpTHAushwW1f6iWT8" target="_blank" rel="noopener" class="rla-btn rla-btn--dark">
         Register Interest →
       </a>
