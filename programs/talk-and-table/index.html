@@ -845,13 +845,12 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 .tt-reel-section {
   background: var(--cream-white, #fffff2);
   padding: 5rem 5vw 5rem;
-  position: relative; overflow: hidden;
 }
 .tt-reel-inner {
-  max-width: 860px; margin: 0 auto;
-  position: relative;
+  max-width: 900px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
 }
-.tt-reel-copy { max-width: 520px; }
+.tt-reel-copy { }
 .tt-reel-eyebrow {
   font-size: .68rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
   color: rgba(17,18,22,.35); margin-bottom: .8rem;
@@ -875,15 +874,10 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 
 /* Phone frame */
 .tt-phone-wrap {
-  position: absolute; top: -1.5rem; right: -2rem; z-index: 2;
-  animation: phoneFloat 5s ease-in-out infinite alternate;
-}
-@keyframes phoneFloat {
-  0%   { transform: translateY(0) rotate(-1.5deg); }
-  100% { transform: translateY(-14px) rotate(1deg); }
+  display: flex; justify-content: center;
 }
 .tt-phone {
-  position: relative; width: 310px;
+  position: relative; width: 270px;
   background: #0a0a0a;
   border-radius: 44px;
   padding: 14px 10px 22px;
@@ -969,8 +963,8 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 }
 
 @media (max-width: 700px) {
-  .tt-phone-wrap { position: relative; top: auto; right: auto; display: flex; justify-content: center; margin-top: 2.5rem; animation: none; }
-  .tt-phone { width: 260px; }
+  .tt-reel-inner { grid-template-columns: 1fr; }
+  .tt-phone { width: 240px; }
 }
 </style>
 </head>
@@ -1263,7 +1257,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 <section class="tt-reel-section">
   <div class="tt-reel-inner">
 
-    <div class="tt-reel-copy" style="padding-right:340px;">
+    <div class="tt-reel-copy">
       <div class="tt-reel-eyebrow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
         Catch us on Instagram
