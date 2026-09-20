@@ -75,7 +75,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   opacity: 0; transition: opacity 1.4s ease-in-out;
 }
 .tt-hero-slide.active { opacity: 1; }
-.tt-hero-slide:nth-child(1) { background-image: url('../../assets/img/tt/tt-9.jpg'); background-position: center 30%; }
+.tt-hero-slide:nth-child(1) { background-image: url('../../assets/img/tt/tt-11.jpg'); background-position: center 30%; }
 
 .tt-hero-overlay {
   position: absolute; inset: 0; z-index: 1;
@@ -823,8 +823,13 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 
   /* Countries grid inside popup */
   .tt-arc-popup-countries { display: flex; flex-direction: column; gap: .3rem; }
-  .tt-arc-popup-country { display: flex; align-items: center; gap: .45rem; font-size: .82rem; color: rgba(255,255,255,.85); white-space: nowrap; }
+  .tt-arc-popup-country { display: flex; align-items: center; gap: .45rem; font-size: .82rem; color: rgba(255,255,255,.85); white-space: nowrap; cursor: default; }
   .tt-arc-popup-flag { font-size: 1rem; line-height: 1; }
+  .tt-arc-country-wrap { position: relative; }
+  .tt-arc-country-native { opacity: 1; transition: opacity .15s; display: inline-block; }
+  .tt-arc-country-en { position: absolute; left: 0; opacity: 0; white-space: nowrap; pointer-events: none; transition: opacity .15s; }
+  .tt-arc-popup-country:hover .tt-arc-country-native { opacity: 0; }
+  .tt-arc-popup-country:hover .tt-arc-country-en { opacity: 1; }
 
   @media (max-width: 700px) {
     .tt-archive-row { grid-template-columns: 1fr 1fr; row-gap: .8rem; }
@@ -840,12 +845,13 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 .tt-reel-section {
   background: var(--cream-white, #fffff2);
   padding: 5rem 5vw 5rem;
+  position: relative; overflow: hidden;
 }
 .tt-reel-inner {
-  max-width: 900px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  max-width: 860px; margin: 0 auto;
+  position: relative;
 }
-.tt-reel-copy { }
+.tt-reel-copy { max-width: 520px; }
 .tt-reel-eyebrow {
   font-size: .68rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
   color: rgba(17,18,22,.35); margin-bottom: .8rem;
@@ -869,10 +875,15 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 
 /* Phone frame */
 .tt-phone-wrap {
-  display: flex; justify-content: center;
+  position: absolute; top: -1.5rem; right: -2rem; z-index: 2;
+  animation: phoneFloat 5s ease-in-out infinite alternate;
+}
+@keyframes phoneFloat {
+  0%   { transform: translateY(0) rotate(-1.5deg); }
+  100% { transform: translateY(-14px) rotate(1deg); }
 }
 .tt-phone {
-  position: relative; width: 270px;
+  position: relative; width: 310px;
   background: #0a0a0a;
   border-radius: 44px;
   padding: 14px 10px 22px;
@@ -958,8 +969,8 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 }
 
 @media (max-width: 700px) {
-  .tt-reel-inner { grid-template-columns: 1fr; }
-  .tt-phone { width: 240px; }
+  .tt-phone-wrap { position: relative; top: auto; right: auto; display: flex; justify-content: center; margin-top: 2.5rem; animation: none; }
+  .tt-phone { width: 260px; }
 }
 </style>
 </head>
@@ -1252,7 +1263,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 <section class="tt-reel-section">
   <div class="tt-reel-inner">
 
-    <div class="tt-reel-copy">
+    <div class="tt-reel-copy" style="padding-right:340px;">
       <div class="tt-reel-eyebrow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
         Catch us on Instagram
@@ -1583,14 +1594,30 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
     if (countryMetric) {
       var countriesEl = countryMetric.querySelector('.tt-arc-popup-countries');
       if (countriesEl) {
+        var nativeCountry = {
+          'Saudi Arabia': 'السعودية',
+          'Yemen': 'اليمن',
+          'China': '中国',
+          'Germany': 'Deutschland',
+          'Denmark': 'Danmark',
+          'South Korea': '한국',
+          'France': 'France',
+          'Spain': 'España',
+          'Bangladesh': 'বাংলাদেশ'
+        };
         countries.forEach(function (c) {
           /* Format: "🇸🇦 Saudi Arabia" */
           var parts = c.split(' ');
           var flag  = parts[0];
           var name  = parts.slice(1).join(' ');
+          var native = nativeCountry[name] || name;
           var div = document.createElement('div');
           div.className = 'tt-arc-popup-country';
-          div.innerHTML = '<span class="tt-arc-popup-flag">' + flag + '</span><span>' + name + '</span>';
+          div.innerHTML = '<span class="tt-arc-popup-flag">' + flag + '</span>'
+            + '<span class="tt-arc-country-wrap">'
+            + '<span class="tt-arc-country-native">' + native + '</span>'
+            + '<span class="tt-arc-country-en">' + name + '</span>'
+            + '</span>';
           countriesEl.appendChild(div);
         });
       }
@@ -1718,14 +1745,15 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   ];
   /* Language popups per country: [lon, lat, native, english, anchor] */
   var langLabels = [
-    [45,  24,   'العربية', 'Arabic',  'middle'],
-    [104, 35,   '中文',     'Chinese', 'middle'],
-    [10,  51.5, 'Deutsch', 'German',  'middle'],
-    [10,  56.5, 'Dansk',   'Danish',  'middle'],
-    [128, 37,   '한국어',   'Korean',  'middle'],
-    [2,   46,   'Français','French',  'middle'],
-    [-4,  40,   'Español', 'Spanish', 'middle'],
-    [90,  23.5, 'বাংলা',   'Bangla',  'middle'],
+    [45,  24,   'العربية 🇸🇦', 'Arabic 🇸🇦',  'middle'],
+    [48,  16,   'العربية 🇾🇪', 'Arabic 🇾🇪',  'middle'],
+    [104, 35,   '中文 🇨🇳',    'Chinese 🇨🇳', 'middle'],
+    [10,  51.5, 'Deutsch 🇩🇪', 'German 🇩🇪',  'middle'],
+    [10,  56.5, 'Dansk 🇩🇰',   'Danish 🇩🇰',  'middle'],
+    [128, 37,   '한국어 🇰🇷',   'Korean 🇰🇷',  'middle'],
+    [2,   46,   'Français 🇫🇷','French 🇫🇷',  'middle'],
+    [-4,  40,   'Español 🇪🇸', 'Spanish 🇪🇸', 'middle'],
+    [90,  23.5, 'বাংলা 🇧🇩',   'Bangla 🇧🇩',  'middle'],
   ];
 
   var w = 800, h = 384;
