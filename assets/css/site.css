@@ -47,6 +47,7 @@
   gap: 2rem;
   background: var(--yellow-pale);
   transition: background .3s, box-shadow .3s;
+  transform: translateZ(0);
 }
 .site-hdr.scrolled {
   background: rgba(255,247,214,.94);
