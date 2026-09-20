@@ -509,6 +509,24 @@
 .rv-children.in > *:nth-child(5) { transition-delay: .33s; }
 .rv-children.in > *:nth-child(6) { transition-delay: .4s; }
 
+/* ── Hero title highlight slide-in animation ── */
+@keyframes hlSlide {
+  from { background-size: 0% 100%; }
+  to   { background-size: 100% 100%; }
+}
+.hero-hl {
+  background-image: linear-gradient(to right, var(--yellow) 0%, var(--yellow) 100%);
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 0% 45%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding: .06em .18em;
+  border-radius: 3px;
+  color: var(--dark) !important;
+  animation: hlSlide .65s cubic-bezier(.22,1,.36,1) 1s forwards;
+}
+
 /* Text-roll hover: letter-by-letter roll effect on CTAs */
 [data-roll] {
   display: inline-flex;
