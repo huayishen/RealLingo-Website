@@ -603,8 +603,10 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 }
 .tt-lang-native { display: inline; }
 .tt-lang-en { display: none; }
-.tt-lang-tag:hover .tt-lang-native { display: none; }
-.tt-lang-tag:hover .tt-lang-en { display: inline; }
+.tt-lang-tag:hover .tt-lang-native,
+.tt-arc-popup-lang:hover .tt-lang-native { display: none; }
+.tt-lang-tag:hover .tt-lang-en,
+.tt-arc-popup-lang:hover .tt-lang-en { display: inline; }
 .tt-lang-tag {
   display: inline-flex; align-items: center; gap: .35rem; flex-shrink: 0;
   font-size: .78rem; font-weight: 700; padding: .35rem .8rem;
@@ -1369,10 +1371,22 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
     if (langMetric) {
       var langsEl = langMetric.querySelector('.tt-arc-popup-langs');
       if (langsEl) {
+        var nativeToEn = {
+          '中文':'Chinese','العربية':'Arabic','বাংলা':'Bangla',
+          'Deutsch':'German','Dansk':'Danish','한국어':'Korean',
+          'Français':'French','Español':'Spanish'
+        };
         langs.forEach(function (l) {
           var span = document.createElement('span');
           span.className = 'tt-arc-popup-lang';
-          span.textContent = l;
+          var native = document.createElement('span');
+          native.className = 'tt-lang-native';
+          native.textContent = l;
+          var en = document.createElement('span');
+          en.className = 'tt-lang-en';
+          en.textContent = nativeToEn[l] || l;
+          span.appendChild(native);
+          span.appendChild(en);
           langsEl.appendChild(span);
         });
       }
@@ -1502,7 +1516,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   if (typeof d3 === 'undefined' || typeof topojson === 'undefined') return;
 
   /* Only session attendee countries — Tanzania/Singapore are expanding cities, not attendee countries */
-  var repCountries = new Set(['682','156','276','208','410','250','724','50']);
+  var repCountries = new Set(['682','887','156','276','208','410','250','724','50']);
   /* Active cities: [lon, lat, label] */
   var activeCities = [
     [50.2, 26.3, 'Khobar'],
