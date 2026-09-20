@@ -922,34 +922,31 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 .tt-phone-ig-avatar {
   width: 28px; height: 28px; border-radius: 50%;
   background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-  padding: 2px;
-  flex-shrink: 0;
+  padding: 2px; flex-shrink: 0;
 }
 .tt-phone-ig-avatar-inner {
   width: 100%; height: 100%; border-radius: 50%;
   background: #111;
   background-image: url('../../assets/img/favicon.png');
-  background-size: 80%; background-position: center; background-repeat: no-repeat;
+  background-size: cover; background-position: center;
 }
-.tt-phone-ig-name {
-  font-size: 10px; font-weight: 700; color: #fff;
-  font-family: var(--font-sans, sans-serif); line-height: 1.2;
-}
+.tt-phone-ig-name { font-size: 10px; font-weight: 700; color: #fff; font-family: var(--font-sans, sans-serif); line-height: 1.2; }
 .tt-phone-ig-handle { font-size: 9px; color: rgba(255,255,255,.45); font-weight: 400; }
-.tt-phone-ig-follow {
-  margin-left: auto; font-size: 9px; font-weight: 700;
-  color: #0095f6; font-family: var(--font-sans, sans-serif);
-}
-/* Embed container */
+.tt-phone-ig-follow { margin-left: auto; font-size: 9px; font-weight: 700; color: #0095f6; font-family: var(--font-sans, sans-serif); }
+
+/* Embed container — crops IG's own header/caption, shows only video */
 .tt-phone-embed {
-  width: 100%;
-  background: #000;
-  position: relative;
+  width: 100%; background: #000;
+  position: relative; overflow: hidden;
 }
-/* Cover the embed's own header (collab tag, location) */
-.tt-phone-embed-cover {
+/* Black covers to hide IG's embedded header (profile/collab/location) and footer (caption/actions) */
+.tt-phone-embed-cover-top {
   position: absolute; top: 0; left: 0; right: 0;
-  height: 72px; background: #000; z-index: 2; pointer-events: none;
+  height: 88px; background: #000; z-index: 2; pointer-events: none;
+}
+.tt-phone-embed-cover-bot {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 64px; background: #000; z-index: 2; pointer-events: none;
 }
 .tt-phone-embed iframe,
 .tt-phone-embed .instagram-media {
@@ -960,13 +957,6 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   border-radius: 0 !important;
   margin: 0 !important;
 }
-/* IG action bar */
-.tt-phone-ig-actions {
-  background: #000; padding: 6px 12px 8px;
-  display: flex; align-items: center; gap: 12px;
-}
-.tt-phone-ig-actions svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 1.8; }
-.tt-phone-ig-actions-right { margin-left: auto; }
 /* Home bar */
 .tt-phone-bar {
   width: 90px; height: 4px; background: rgba(255,255,255,.2);
@@ -1295,21 +1285,13 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
           </div>
           <!-- Reel embed -->
           <div class="tt-phone-embed">
-            <div class="tt-phone-embed-cover"></div>
+            <div class="tt-phone-embed-cover-top"></div>
+            <div class="tt-phone-embed-cover-bot"></div>
             <blockquote class="instagram-media"
               data-instgrm-permalink="https://www.instagram.com/reel/DdAQ5a_I1-X/?utm_source=ig_embed"
               data-instgrm-version="14"
               style="background:#000;border:0;border-radius:0;box-shadow:none;margin:0;max-width:100%;min-width:unset;padding:0;width:100%;">
             </blockquote>
-          </div>
-          <!-- IG actions -->
-          <div class="tt-phone-ig-actions">
-            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            <div class="tt-phone-ig-actions-right">
-              <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-            </div>
           </div>
         </div>
         <div class="tt-phone-bar"></div>
