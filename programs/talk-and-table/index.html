@@ -696,7 +696,15 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   .tt-archive-inner { max-width: 1000px; margin: 0 auto; }
   .tt-archive-label { font-size: .68rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: rgba(17,18,22,.35); margin-bottom: .5rem; }
   .tt-archive-h2 { font-family: var(--font-serif, Georgia, serif); font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 400; line-height: 1.15; letter-spacing: -.02em; margin-bottom: 1.8rem; }
-  .tt-archive-h2 em { font-style: italic; }
+  .tt-archive-h2 em {
+    font-style: italic;
+    background: #ffeb99;
+    color: #111216;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    padding: .05em .18em;
+    border-radius: 3px;
+  }
   /* ── Session venue link ─────────────────────── */
   .tt-arc-venue {
     display: inline-flex; align-items: center; gap: .32rem;
