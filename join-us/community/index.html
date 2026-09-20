@@ -215,10 +215,17 @@
     background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09);
     border-radius: 999px; padding: .55rem 1.1rem;
     font-size: .88rem; font-weight: 700; color: rgba(255,255,255,.75);
-    white-space: nowrap;
+    white-space: nowrap; position: relative;
     transition: background .2s, border-color .2s;
   }
   .joc-ticker-pill:hover { background: rgba(255,235,153,.08); border-color: rgba(255,235,153,.2); color: #ffeb99; }
+  .joc-pill-native { opacity: 1; transition: opacity .15s; display: inline-block; }
+  .joc-pill-en {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    opacity: 0; white-space: nowrap; pointer-events: none; transition: opacity .15s;
+  }
+  .joc-ticker-pill:hover .joc-pill-native { opacity: 0; }
+  .joc-ticker-pill:hover .joc-pill-en { opacity: 1; }
   .joc-map-grid { stroke: rgba(255,255,255,.04); stroke-width: 0.5; fill: none; }
 
   .joc-map-pin { cursor: pointer; }
@@ -545,35 +552,35 @@
     <div class="joc-ticker-eyebrow">Languages spoken so far</div>
     <div class="joc-ticker-mask">
       <div class="joc-ticker-track" id="jocTickerTrack">
-        <span class="joc-ticker-pill">Chinese 🇨🇳</span>
-        <span class="joc-ticker-pill">Arabic 🇸🇦</span>
-        <span class="joc-ticker-pill">Bangla 🇧🇩</span>
-        <span class="joc-ticker-pill">German 🇩🇪</span>
-        <span class="joc-ticker-pill">Danish 🇩🇰</span>
-        <span class="joc-ticker-pill">Korean 🇰🇷</span>
-        <span class="joc-ticker-pill">French 🇫🇷</span>
-        <span class="joc-ticker-pill">Spanish 🇪🇸</span>
-        <span class="joc-ticker-pill">Swahili 🇹🇿</span>
-        <span class="joc-ticker-pill">Malay 🇸🇬</span>
-        <span class="joc-ticker-pill">English 🇬🇧</span>
-        <span class="joc-ticker-pill">Hindi 🇮🇳</span>
-        <span class="joc-ticker-pill">Turkish 🇹🇷</span>
-        <span class="joc-ticker-pill">Italian 🇮🇹</span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">中文 🇨🇳</span><span class="joc-pill-en">Chinese 🇨🇳</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">العربية 🇸🇦</span><span class="joc-pill-en">Arabic 🇸🇦</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">বাংলা 🇧🇩</span><span class="joc-pill-en">Bangla 🇧🇩</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Deutsch 🇩🇪</span><span class="joc-pill-en">German 🇩🇪</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Dansk 🇩🇰</span><span class="joc-pill-en">Danish 🇩🇰</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">한국어 🇰🇷</span><span class="joc-pill-en">Korean 🇰🇷</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Français 🇫🇷</span><span class="joc-pill-en">French 🇫🇷</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Español 🇪🇸</span><span class="joc-pill-en">Spanish 🇪🇸</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Kiswahili 🇹🇿</span><span class="joc-pill-en">Swahili 🇹🇿</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Bahasa Melayu 🇸🇬</span><span class="joc-pill-en">Malay 🇸🇬</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">English 🇬🇧</span><span class="joc-pill-en">English 🇬🇧</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">हिन्दी 🇮🇳</span><span class="joc-pill-en">Hindi 🇮🇳</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Türkçe 🇹🇷</span><span class="joc-pill-en">Turkish 🇹🇷</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Italiano 🇮🇹</span><span class="joc-pill-en">Italian 🇮🇹</span></span>
         <!-- duplicate set for seamless loop -->
-        <span class="joc-ticker-pill">Chinese 🇨🇳</span>
-        <span class="joc-ticker-pill">Arabic 🇸🇦</span>
-        <span class="joc-ticker-pill">Bangla 🇧🇩</span>
-        <span class="joc-ticker-pill">German 🇩🇪</span>
-        <span class="joc-ticker-pill">Danish 🇩🇰</span>
-        <span class="joc-ticker-pill">Korean 🇰🇷</span>
-        <span class="joc-ticker-pill">French 🇫🇷</span>
-        <span class="joc-ticker-pill">Spanish 🇪🇸</span>
-        <span class="joc-ticker-pill">Swahili 🇹🇿</span>
-        <span class="joc-ticker-pill">Malay 🇸🇬</span>
-        <span class="joc-ticker-pill">English 🇬🇧</span>
-        <span class="joc-ticker-pill">Hindi 🇮🇳</span>
-        <span class="joc-ticker-pill">Turkish 🇹🇷</span>
-        <span class="joc-ticker-pill">Italian 🇮🇹</span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">中文 🇨🇳</span><span class="joc-pill-en">Chinese 🇨🇳</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">العربية 🇸🇦</span><span class="joc-pill-en">Arabic 🇸🇦</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">বাংলা 🇧🇩</span><span class="joc-pill-en">Bangla 🇧🇩</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Deutsch 🇩🇪</span><span class="joc-pill-en">German 🇩🇪</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Dansk 🇩🇰</span><span class="joc-pill-en">Danish 🇩🇰</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">한국어 🇰🇷</span><span class="joc-pill-en">Korean 🇰🇷</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Français 🇫🇷</span><span class="joc-pill-en">French 🇫🇷</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Español 🇪🇸</span><span class="joc-pill-en">Spanish 🇪🇸</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Kiswahili 🇹🇿</span><span class="joc-pill-en">Swahili 🇹🇿</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Bahasa Melayu 🇸🇬</span><span class="joc-pill-en">Malay 🇸🇬</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">English 🇬🇧</span><span class="joc-pill-en">English 🇬🇧</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">हिन्दी 🇮🇳</span><span class="joc-pill-en">Hindi 🇮🇳</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Türkçe 🇹🇷</span><span class="joc-pill-en">Turkish 🇹🇷</span></span>
+        <span class="joc-ticker-pill"><span class="joc-pill-native">Italiano 🇮🇹</span><span class="joc-pill-en">Italian 🇮🇹</span></span>
       </div>
     </div>
   </div>
