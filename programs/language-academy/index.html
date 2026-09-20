@@ -20,8 +20,9 @@
   /* ── Hero ─────────────────────────────────── */
   .rla-hero {
     background: #111216;
-    padding: 5rem 5vw 4rem;
+    padding: 5rem 5vw 5rem;
     text-align: center;
+    position: relative;
   }
   .rla-eyebrow {
     font-size: .68rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
@@ -44,8 +45,8 @@
   /* ── Pills row ───────────────────────────── */
   .rla-pills {
     display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem;
-    padding: 2rem 5vw 0;
-    background: #111216;
+    position: absolute; bottom: 2rem; left: 0; right: 0;
+    padding: 0 5vw;
   }
   .rla-pill {
     display: inline-flex; align-items: center; gap: .45rem;
@@ -123,8 +124,8 @@
     .rla-form-col { order: -1; }
   }
   @media (max-width: 480px) {
-    .rla-hero { padding: 4rem 1.4rem 3rem; }
-    .rla-pills { padding: 1.5rem 1.4rem 0; }
+    .rla-hero { padding: 4rem 1.4rem 5rem; }
+    .rla-pills { padding: 0 1.4rem; }
     .rla-body { padding: 0 1.4rem 4rem; }
   }
 </style>
@@ -137,15 +138,14 @@
   <div class="rla-eyebrow">RL Academy</div>
   <h1 class="rla-h1">Learn a language<br><em>face to face.</em></h1>
   <p class="rla-sub">Small groups, expert tutors, real venues. Starting with Mandarin Chinese — more languages on the way.</p>
+  <div class="rla-pills">
+    <span class="rla-pill">🀄 Chinese Workshop</span>
+    <span class="rla-pill">👩‍🏫 Tutor-led</span>
+    <span class="rla-pill">📍 In-person</span>
+    <span class="rla-pill">👥 Small groups</span>
+    <span class="rla-pill">🌱 More languages coming</span>
+  </div>
 </section>
-
-<div class="rla-pills">
-  <span class="rla-pill">🀄 Chinese Workshop</span>
-  <span class="rla-pill">👩‍🏫 Tutor-led</span>
-  <span class="rla-pill">📍 In-person</span>
-  <span class="rla-pill">👥 Small groups</span>
-  <span class="rla-pill">🌱 More languages coming</span>
-</div>
 
 <div class="rla-divider" aria-hidden="true"></div>
 
