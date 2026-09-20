@@ -46,13 +46,69 @@
 
 <!-- ── Fullscreen overlay nav ── -->
 <div class="site-overlay" id="siteOverlay" aria-hidden="true">
-  <nav class="site-overlay-nav" aria-label="Main navigation">
-    <a href="" data-href="about/" class="site-overlay-link"><span class="site-overlay-num">01</span>About</a>
-    <a href="" data-href="programs/" class="site-overlay-link"><span class="site-overlay-num">02</span>Programs</a>
-    <a href="" data-href="explore/event/" class="site-overlay-link"><span class="site-overlay-num">03</span>Find Events</a>
-    <a href="" data-href="join-us/community/" class="site-overlay-link"><span class="site-overlay-num">04</span>Join Us</a>
-    <a href="" data-href="business/" class="site-overlay-link"><span class="site-overlay-num">05</span>For Business</a>
-  </nav>
+  <div class="site-overlay-body">
+
+    <!-- Left: primary nav items -->
+    <nav class="site-overlay-nav" aria-label="Main navigation">
+      <a href="" data-href="about/" class="site-overlay-link" data-sub="sub-about">
+        <span class="site-overlay-num">01</span>About
+      </a>
+      <a href="" data-href="programs/" class="site-overlay-link" data-sub="sub-programs">
+        <span class="site-overlay-num">02</span>Programs
+      </a>
+      <a href="" data-href="explore/event/" class="site-overlay-link" data-sub="sub-explore">
+        <span class="site-overlay-num">03</span>Find Events
+      </a>
+      <a href="" data-href="join-us/community/" class="site-overlay-link" data-sub="sub-joinus">
+        <span class="site-overlay-num">04</span>Join Us
+      </a>
+      <a href="" data-href="business/" class="site-overlay-link" data-sub="sub-business">
+        <span class="site-overlay-num">05</span>For Business
+      </a>
+    </nav>
+
+    <!-- Right: sub-section panels (shown on hover) -->
+    <div class="site-overlay-sub-wrap">
+
+      <div class="site-overlay-sub" id="sub-about">
+        <div class="site-overlay-sub-label">About</div>
+        <a href="" data-href="about/" class="site-overlay-sub-link">Our Story</a>
+        <a href="" data-href="join-us/team/" class="site-overlay-sub-link">Our Team</a>
+      </div>
+
+      <div class="site-overlay-sub" id="sub-programs">
+        <div class="site-overlay-sub-label">Programs</div>
+        <a href="" data-href="programs/creator-collective/" class="site-overlay-sub-link">Creator Collective <span class="site-overlay-sub-tag">RLCC</span></a>
+        <a href="" data-href="programs/talk-and-table/" class="site-overlay-sub-link">Talk &amp; Table <span class="site-overlay-sub-tag">RLTT</span></a>
+        <a href="" data-href="programs/language-academy/" class="site-overlay-sub-link">Language Academy <span class="site-overlay-sub-tag">RLA</span></a>
+        <a href="" data-href="resources/marketplace/" class="site-overlay-sub-link">Marketplace</a>
+        <a href="" data-href="resources/" class="site-overlay-sub-link">Open Sources</a>
+      </div>
+
+      <div class="site-overlay-sub" id="sub-explore">
+        <div class="site-overlay-sub-label">Find Events</div>
+        <a href="" data-href="eventpartners/?country=Saudi%20Arabia" class="site-overlay-sub-link">🇸🇦 Saudi Arabia</a>
+        <a href="" data-href="eventpartners/?country=China" class="site-overlay-sub-link">🇨🇳 China</a>
+        <a href="" data-href="eventpartners/?country=Singapore" class="site-overlay-sub-link">🇸🇬 Singapore</a>
+        <a href="" data-href="eventpartners/?type=online" class="site-overlay-sub-link">🌐 Online</a>
+      </div>
+
+      <div class="site-overlay-sub" id="sub-joinus">
+        <div class="site-overlay-sub-label">Join Us</div>
+        <a href="" data-href="join-us/community/" class="site-overlay-sub-link">Join Our Community</a>
+        <a href="" data-href="join-us/team/" class="site-overlay-sub-link">Our Team</a>
+        <a href="" data-href="join-us/professional/" class="site-overlay-sub-link">Be A Partner</a>
+      </div>
+
+      <div class="site-overlay-sub" id="sub-business">
+        <div class="site-overlay-sub-label">For Business</div>
+        <a href="" data-href="business/" class="site-overlay-sub-link">Venue Partners</a>
+        <a href="" data-href="join-us/professional/" class="site-overlay-sub-link">Become a Partner</a>
+      </div>
+
+    </div><!-- /.site-overlay-sub-wrap -->
+  </div><!-- /.site-overlay-body -->
+
   <div class="site-overlay-footer">
     <div>
       <div class="site-overlay-footer-label">Instagram</div>
@@ -60,7 +116,7 @@
     </div>
     <div>
       <div class="site-overlay-footer-label">Community</div>
-      <a href="" data-href="join-us/community/" class="site-overlay-link-sm site-overlay-footer-link">Join our community →</a>
+      <a href="" data-href="join-us/community/" class="site-overlay-footer-link">Join our community →</a>
     </div>
     <div class="site-overlay-actions">
       <a href="" data-href="login/" class="site-btn-ghost">Log In</a>

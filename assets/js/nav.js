@@ -304,8 +304,30 @@
       }
     });
 
-    // Overlay nav toggle (Indisea-style fullscreen menu)
+    // ── Overlay nav (Indisea-style fullscreen menu with sub-panels) ──
     var overlay = document.getElementById('siteOverlay');
+
+    function showSub(id) {
+      if (!overlay) return;
+      overlay.querySelectorAll('.site-overlay-sub').forEach(function (p) {
+        p.classList.remove('visible');
+      });
+      overlay.querySelectorAll('.site-overlay-link').forEach(function (l) {
+        l.classList.remove('active');
+      });
+      if (id) {
+        var panel = document.getElementById(id);
+        if (panel) {
+          // force reflow so transition fires each time
+          panel.style.display = 'flex';
+          panel.offsetHeight; // reflow
+          panel.classList.add('visible');
+        }
+        var link = overlay.querySelector('[data-sub="' + id + '"]');
+        if (link) link.classList.add('active');
+      }
+    }
+
     function openOverlay() {
       if (!overlay) return;
       overlay.classList.add('open');
@@ -313,6 +335,8 @@
       burger.classList.add('open');
       burger.setAttribute('aria-expanded', 'true');
       document.body.style.overflow = 'hidden';
+      // default: show first sub-panel
+      showSub('sub-about');
     }
     function closeOverlay() {
       if (!overlay) return;
@@ -321,7 +345,15 @@
       burger.classList.remove('open');
       burger.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
+      // hide all sub panels
+      overlay.querySelectorAll('.site-overlay-sub').forEach(function (p) {
+        p.classList.remove('visible');
+      });
+      overlay.querySelectorAll('.site-overlay-link').forEach(function (l) {
+        l.classList.remove('active');
+      });
     }
+
     burger.addEventListener('click', function () {
       if (overlay && overlay.classList.contains('open')) {
         closeOverlay();
@@ -330,24 +362,25 @@
         openOverlay();
       }
     });
+
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && overlay && overlay.classList.contains('open')) {
         e.preventDefault();
         closeOverlay();
       }
     });
-    // Resolve data-href links inside overlay
+
+    // Wire up overlay links: hover shows sub, click navigates
     if (overlay) {
       overlay.querySelectorAll('[data-href]').forEach(function (a) {
         var href = a.getAttribute('data-href') || '';
         a.href = ROOT + href;
         a.addEventListener('click', function () { closeOverlay(); });
       });
-    }
-    // Keep legacy mobile-open for small viewports (fallback)
-    if (nav) {
-      burger.addEventListener('click', function () {
-        // handled above by overlay; no-op here
+      overlay.querySelectorAll('.site-overlay-link[data-sub]').forEach(function (link) {
+        var subId = link.getAttribute('data-sub');
+        link.addEventListener('mouseenter', function () { showSub(subId); });
+        link.addEventListener('focus', function () { showSub(subId); });
       });
     }
   }
