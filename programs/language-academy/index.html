@@ -20,9 +20,10 @@
   /* ── Hero ─────────────────────────────────── */
   .rla-hero {
     background: #111216;
-    padding: 5rem 5vw 5rem;
+    padding: 6rem 5vw 6rem;
     text-align: center;
     position: relative;
+    min-height: 420px;
   }
   .rla-eyebrow {
     font-size: .68rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
@@ -42,18 +43,38 @@
     max-width: 520px; margin: 0 auto;
   }
 
-  /* ── Pills row ───────────────────────────── */
+  /* ── Floating pills ───────────────────────── */
   .rla-pills {
-    display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem;
-    position: absolute; bottom: 2rem; left: 0; right: 0;
-    padding: 0 5vw;
+    position: absolute; inset: 0; pointer-events: none;
   }
   .rla-pill {
+    position: absolute;
     display: inline-flex; align-items: center; gap: .45rem;
     font-size: .8rem; font-weight: 700;
-    background: rgba(255,235,153,.08); color: rgba(255,235,153,.75);
-    border: 1px solid rgba(255,235,153,.15); border-radius: 999px;
+    background: rgba(255,235,153,.09); color: rgba(255,235,153,.8);
+    border: 1px solid rgba(255,235,153,.18); border-radius: 999px;
     padding: .4rem .95rem;
+    pointer-events: auto;
+    animation: pillFloat var(--dur, 6s) ease-in-out infinite alternate;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes pillFloat {
+    0%   { transform: translate(0, 0) rotate(var(--r0, -1deg)); }
+    50%  { transform: translate(var(--mx, 8px), var(--my, -10px)) rotate(var(--r1, 1deg)); }
+    100% { transform: translate(var(--mx2, -6px), var(--my2, 6px)) rotate(var(--r2, 0deg)); }
+  }
+  /* Position each pill individually */
+  .rla-pill:nth-child(1) { top: 18%; left: 6%;  --dur:7s; --delay:0s;    --mx:10px;  --my:-12px; --mx2:-8px; --my2:8px;  --r0:-2deg; --r1:1.5deg; --r2:0deg; }
+  .rla-pill:nth-child(2) { top: 12%; left: 32%; --dur:6s; --delay:-.8s;  --mx:-8px;  --my:10px;  --mx2:6px;  --my2:-8px; --r0:1deg;  --r1:-1deg;  --r2:.5deg; }
+  .rla-pill:nth-child(3) { top: 22%; left: 58%; --dur:8s; --delay:-1.5s; --mx:12px;  --my:-8px;  --mx2:-10px; --my2:10px; --r0:-1deg; --r1:2deg;   --r2:-1deg; }
+  .rla-pill:nth-child(4) { top: 62%; left: 14%; --dur:7s; --delay:-2.2s; --mx:-10px; --my:8px;   --mx2:8px;  --my2:-12px; --r0:2deg; --r1:-1.5deg; --r2:1deg; }
+  .rla-pill:nth-child(5) { top: 68%; left: 62%; --dur:6s; --delay:-3s;   --mx:8px;   --my:-10px; --mx2:-6px; --my2:8px;  --r0:-1.5deg; --r1:1deg; --r2:-.5deg; }
+  @media (max-width: 480px) {
+    .rla-pill:nth-child(1) { top: 15%; left: 2%; }
+    .rla-pill:nth-child(2) { top: 10%; left: 38%; }
+    .rla-pill:nth-child(3) { top: 25%; left: 55%; }
+    .rla-pill:nth-child(4) { top: 60%; left: 2%; }
+    .rla-pill:nth-child(5) { top: 65%; left: 50%; }
   }
 
   /* ── Divider into cream ──────────────────── */
