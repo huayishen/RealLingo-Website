@@ -601,12 +601,18 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
-.tt-lang-native { display: inline; }
-.tt-lang-en { display: none; }
+.tt-lang-native { opacity: 1; transition: opacity .15s; }
+.tt-lang-en {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  opacity: 0; white-space: nowrap; pointer-events: none;
+  transition: opacity .15s;
+}
+.tt-lang-tag,
+.tt-arc-popup-lang { position: relative; }
 .tt-lang-tag:hover .tt-lang-native,
-.tt-arc-popup-lang:hover .tt-lang-native { display: none; }
+.tt-arc-popup-lang:hover .tt-lang-native { opacity: 0; }
 .tt-lang-tag:hover .tt-lang-en,
-.tt-arc-popup-lang:hover .tt-lang-en { display: inline; }
+.tt-arc-popup-lang:hover .tt-lang-en { opacity: 1; pointer-events: auto; }
 .tt-lang-tag {
   display: inline-flex; align-items: center; gap: .35rem; flex-shrink: 0;
   font-size: .78rem; font-weight: 700; padding: .35rem .8rem;
