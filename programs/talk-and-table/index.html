@@ -75,8 +75,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   opacity: 0; transition: opacity 1.4s ease-in-out;
 }
 .tt-hero-slide.active { opacity: 1; }
-.tt-hero-slide:nth-child(1) { background-image: url('../../assets/img/tt/tt-5.jpg'); background-position: center 40%; }
-.tt-hero-slide:nth-child(2) { background-image: url('../../assets/img/tt/tt-9.jpg'); background-position: center 30%; }
+.tt-hero-slide:nth-child(1) { background-image: url('../../assets/img/tt/tt-9.jpg'); background-position: center 30%; }
 
 .tt-hero-overlay {
   position: absolute; inset: 0; z-index: 1;
@@ -835,7 +834,6 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 <section class="tt-hero" id="top">
   <div class="tt-hero-slides" aria-hidden="true">
     <div class="tt-hero-slide active"></div>
-    <div class="tt-hero-slide"></div>
   </div>
   <div class="tt-hero-overlay" aria-hidden="true"></div>
 
@@ -1509,13 +1507,13 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
     [103.8, 1.35, 'Singapore']
   ];
 
-  var w = container.offsetWidth || 560;
-  var h = Math.round(w * 0.48);
+  var w = 800, h = 384;
 
   var svg = d3.select('#ttMapContainer').append('svg')
     .attr('class', 'tt-d3-map-svg')
     .attr('viewBox', '0 0 ' + w + ' ' + h)
-    .attr('preserveAspectRatio', 'xMidYMid meet');
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .style('width', '100%').style('height', 'auto').style('display', 'block');
 
   var proj = d3.geoNaturalEarth1()
     .scale(w / 6.5)
@@ -1551,7 +1549,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
       svg.append('text').attr('x', pt[0]).attr('y', pt[1] + 13)
         .attr('text-anchor','middle')
         .attr('fill','rgba(255,255,255,.32)')
-        .attr('font-size', Math.max(7, w/80))
+        .attr('font-size', 10)
         .attr('font-family',"'Be Vietnam Pro',sans-serif")
         .text(c[2]);
     });
@@ -1567,7 +1565,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
       svg.append('text').attr('x', pt[0]).attr('y', pt[1] - 9)
         .attr('text-anchor','middle')
         .attr('fill','#ffeb99')
-        .attr('font-size', Math.max(8, w/70))
+        .attr('font-size', 11)
         .attr('font-family',"'Be Vietnam Pro',sans-serif")
         .attr('font-weight','700')
         .text(c[2]);
