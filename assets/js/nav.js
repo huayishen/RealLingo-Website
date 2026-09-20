@@ -304,14 +304,49 @@
       }
     });
 
-    // Mobile burger
+    // Overlay nav toggle (Indisea-style fullscreen menu)
+    var overlay = document.getElementById('siteOverlay');
+    function openOverlay() {
+      if (!overlay) return;
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      burger.classList.add('open');
+      burger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeOverlay() {
+      if (!overlay) return;
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
     burger.addEventListener('click', function () {
-      var willOpen = !nav.classList.contains('mobile-open');
-      nav.classList.toggle('mobile-open', willOpen);
-      burger.classList.toggle('open', willOpen);
-      burger.setAttribute('aria-expanded', String(willOpen));
-      if (!willOpen) closeAll();
+      if (overlay && overlay.classList.contains('open')) {
+        closeOverlay();
+      } else {
+        closeAll();
+        openOverlay();
+      }
     });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay && overlay.classList.contains('open')) closeOverlay();
+    });
+    // Resolve data-href links inside overlay
+    if (overlay) {
+      overlay.querySelectorAll('[data-href]').forEach(function (a) {
+        var href = a.getAttribute('data-href') || '';
+        a.href = ROOT + href;
+        a.addEventListener('click', function () { closeOverlay(); });
+      });
+    }
+    // Keep legacy mobile-open for small viewports (fallback)
+    if (nav) {
+      burger.addEventListener('click', function () {
+        // handled above by overlay; no-op here
+      });
+    }
   }
 
   function initFooter(target) {

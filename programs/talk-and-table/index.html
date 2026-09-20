@@ -39,7 +39,11 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 .tt-eyebrow {
   font-size: .68rem; font-weight: 800; letter-spacing: .18em;
   text-transform: uppercase; color: var(--tt-soft);
-  margin-bottom: .75rem;
+  margin-bottom: .75rem; display: flex; align-items: center; gap: .6rem;
+}
+.tt-eyebrow-num {
+  color: var(--tt-y); opacity: .55; font-variant-numeric: tabular-nums;
+  letter-spacing: .08em;
 }
 .tt-h2 {
   font-family: var(--font-serif); font-size: clamp(1.85rem, 3.8vw, 2.9rem);
@@ -1064,7 +1068,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   <div class="tt-data-inner">
 
     <div class="tt-data-left">
-      <div class="tt-data-eyebrow">By the numbers</div>
+      <div class="tt-data-eyebrow"><span class="tt-eyebrow-num">01 /</span> By the numbers</div>
       <div class="tt-data-stats">
         <div class="tt-data-stat">
           <div class="tt-data-val" data-count="2">2</div>
@@ -1128,7 +1132,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 ══════════════════════════════════════════ -->
 <section class="tt-archive" id="archive">
   <div class="tt-archive-inner">
-    <div class="tt-archive-label rv">Session Archive</div>
+    <div class="tt-archive-label rv"><span class="tt-eyebrow-num">02 /</span> Session Archive</div>
     <h2 class="tt-archive-h2 rv rv--delay-1">Past Talk&amp;Table Sessions<br><em>@Khobar, Saudi Arabia</em></h2>
     <div class="tt-archive-controls rv rv--delay-2" id="ttArcControls" aria-label="Sort and filter sessions">
       <span class="tt-arc-ctrl-label">Sort</span>
@@ -1215,7 +1219,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 ══════════════════════════════════════════ -->
 <section class="tt-route-section" id="experience">
   <div class="tt-route-head">
-    <div class="tt-eyebrow">What to expect</div>
+    <div class="tt-eyebrow"><span class="tt-eyebrow-num">03 /</span> What to expect</div>
     <h2 class="tt-h2">Come as you are.<br><em>Leave with new friends.</em></h2>
   </div>
 
@@ -1302,7 +1306,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
     <div class="tt-reel-copy">
       <div class="tt-reel-eyebrow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-        Catch us on Instagram
+        <span class="tt-eyebrow-num">04 /</span> Catch us on Instagram
       </div>
       <h2 class="tt-reel-h2">See what a session<br><em>actually looks like.</em></h2>
       <p class="tt-reel-p">Languages in motion — real conversations, real people, real moments. Scroll through our latest reel from Talk&amp;Table.</p>
@@ -1359,7 +1363,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   <div class="tt-cta-band-bg" aria-hidden="true"></div>
   <div class="tt-cta-band-overlay" aria-hidden="true"></div>
   <div class="tt-cta-band-content">
-    <div class="tt-eyebrow">For Venue Partners</div>
+    <div class="tt-eyebrow"><span class="tt-eyebrow-num">05 /</span> For Venue Partners</div>
     <h2 class="tt-h2" style="color:#fff;">Turn a quiet Thursday<br>into a <em>community night.</em></h2>
     <p>Host Talk&amp;Table at your café. We bring 10–20 engaged guests every session — you keep 100% of F&amp;B. Zero hassle, recurring footfall, real cultural impact.</p>
     <div class="tt-cta-band-btns">
