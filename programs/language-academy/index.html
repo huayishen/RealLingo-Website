@@ -20,27 +20,42 @@
   /* ── Hero ─────────────────────────────────── */
   .rla-hero {
     background: #111216;
-    padding: 6rem 5vw 6rem;
-    text-align: center;
+    padding: 7rem 5vw 7rem;
+    text-align: left;
     position: relative;
-    min-height: 420px;
+    min-height: 520px;
+    display: flex; align-items: center;
+    overflow: hidden;
   }
+  /* Photo slideshow background */
+  .rla-hero-slides { position: absolute; inset: 0; z-index: 0; }
+  .rla-hero-slide {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    opacity: 0; transition: opacity 1.2s ease;
+  }
+  .rla-hero-slide.active { opacity: 1; }
+  .rla-hero-slide::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,.72) 0%, rgba(0,0,0,.45) 55%, rgba(0,0,0,.15) 100%);
+  }
+  .rla-hero-content { position: relative; z-index: 1; max-width: 600px; }
   .rla-eyebrow {
     font-size: .68rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
     color: rgba(255,235,153,.55); margin-bottom: 1.4rem;
-    display: flex; align-items: center; justify-content: center; gap: .7rem;
+    display: flex; align-items: center; gap: .7rem;
   }
-  .rla-eyebrow::before, .rla-eyebrow::after { content: ''; display: block; width: 24px; height: 1px; background: rgba(255,235,153,.3); }
+  .rla-eyebrow::before { content: ''; display: block; width: 24px; height: 1px; background: rgba(255,235,153,.3); }
   .rla-h1 {
     font-family: var(--font-serif, Georgia, serif);
     font-size: clamp(2.4rem, 5.5vw, 4rem);
     font-weight: 400; line-height: 1.1; color: #fff;
-    letter-spacing: -.02em; max-width: 640px; margin: 0 auto .9rem;
+    letter-spacing: -.02em; max-width: 600px; margin: 0 0 .9rem;
   }
   .rla-h1 em { font-style: italic; color: #ffeb99; }
   .rla-sub {
-    font-size: 1.05rem; color: rgba(255,255,255,.55); line-height: 1.65;
-    max-width: 520px; margin: 0 auto;
+    font-size: 1.05rem; color: rgba(255,255,255,.6); line-height: 1.65;
+    max-width: 480px;
   }
 
   /* ── Floating pills ───────────────────────── */
@@ -171,9 +186,16 @@
 <div id="site-header"></div>
 
 <section class="rla-hero">
-  <div class="rla-eyebrow">RL Academy</div>
-  <h1 class="rla-h1">Learn a language<br><em>face to face.</em></h1>
-  <p class="rla-sub">Small groups, expert tutors, real venues. Starting with Mandarin Chinese — more languages on the way.</p>
+  <div class="rla-hero-slides">
+    <div class="rla-hero-slide active" style="background-image:url('../../assets/img/rla/rla-1.jpg')"></div>
+    <div class="rla-hero-slide" style="background-image:url('../../assets/img/rla/rla-2.jpg')"></div>
+    <div class="rla-hero-slide" style="background-image:url('../../assets/img/rla/rla-3.jpg')"></div>
+  </div>
+  <div class="rla-hero-content">
+    <div class="rla-eyebrow">RL Academy</div>
+    <h1 class="rla-h1">Learn a language<br><em>face to face.</em></h1>
+    <p class="rla-sub">Small groups, expert tutors, real venues. Starting with Mandarin Chinese — more languages on the way.</p>
+  </div>
   <div class="rla-pills">
     <span class="rla-pill">🀄 Chinese Workshop</span>
     <span class="rla-pill">👩‍🏫 Tutor-led</span>
@@ -216,5 +238,17 @@
   window.SITE_PAGE = "programs/language-academy";
 </script>
 <script src="../../assets/js/nav.js?v=38" defer></script>
+<script>
+  (function () {
+    var slides = document.querySelectorAll('.rla-hero-slide');
+    if (slides.length < 2) return;
+    var current = 0;
+    setInterval(function () {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }, 4000);
+  })();
+</script>
 </body>
 </html>
