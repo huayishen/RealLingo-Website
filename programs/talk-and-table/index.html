@@ -875,9 +875,14 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 /* Phone frame */
 .tt-phone-wrap {
   display: flex; justify-content: center;
+  animation: ttPhoneFloat 5s ease-in-out infinite alternate;
+}
+@keyframes ttPhoneFloat {
+  0%   { transform: translateY(0) rotate(-1deg); }
+  100% { transform: translateY(-16px) rotate(1deg); }
 }
 .tt-phone {
-  position: relative; width: 270px;
+  position: relative; width: 310px;
   background: #0a0a0a;
   border-radius: 44px;
   padding: 14px 10px 22px;
