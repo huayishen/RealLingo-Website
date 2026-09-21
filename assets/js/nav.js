@@ -196,7 +196,7 @@
   }
 
   function loadPartial(name, targetId, after) {
-    fetch(ROOT + 'partials/' + name + '?v=38')   // versioned so header/footer partials refresh with each release
+    fetch(ROOT + 'partials/' + name + '?v=45')   // versioned so header/footer partials refresh with each release
       .then(function (r) { return r.text(); })
       .then(function (html) {
         var target = document.getElementById(targetId);
@@ -220,6 +220,12 @@
       var navSection = (SECTION === 'marketplace' || SECTION === 'opensource') ? 'programs' : SECTION;
       var active = target.querySelector('.site-nav-item[data-section="' + navSection + '"]');
       if (active) active.classList.add('active');
+    }
+
+    // Override back button when page sets window.SITE_BACK
+    if (window.SITE_BACK) {
+      var backBtn = target.querySelector('.site-home-back');
+      if (backBtn) backBtn.href = ROOT + window.SITE_BACK;
     }
 
     // Scroll shadow
@@ -335,8 +341,8 @@
       burger.classList.add('open');
       burger.setAttribute('aria-expanded', 'true');
       document.body.style.overflow = 'hidden';
-      // default: show first sub-panel
-      showSub('sub-about');
+      // default: show Programs sub-panel
+      showSub('sub-programs');
     }
     function closeOverlay() {
       if (!overlay) return;
@@ -363,6 +369,11 @@
       }
     });
 
+    var overlayCloseBtn = document.getElementById('siteOverlayClose');
+    if (overlayCloseBtn) {
+      overlayCloseBtn.addEventListener('click', closeOverlay);
+    }
+
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && overlay && overlay.classList.contains('open')) {
         e.preventDefault();
@@ -377,8 +388,8 @@
         a.href = ROOT + href;
         a.addEventListener('click', function () { closeOverlay(); });
       });
-      overlay.querySelectorAll('.site-overlay-link[data-sub]').forEach(function (link) {
-        var subId = link.getAttribute('data-sub');
+      overlay.querySelectorAll('.site-overlay-link').forEach(function (link) {
+        var subId = link.getAttribute('data-sub') || null;
         link.addEventListener('mouseenter', function () { showSub(subId); });
         link.addEventListener('focus', function () { showSub(subId); });
       });

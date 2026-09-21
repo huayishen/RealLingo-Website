@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/site.css?v=39">
+<link rel="stylesheet" href="../../assets/css/site.css?v=42">
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js" defer></script>
 <style>
@@ -21,7 +21,7 @@
   body { font-family: var(--font-sans); background: #111216; }
 
   /* ── Join Our Community ───────────────────────────────────── */
-  .joc-section { background: #111216; padding: 0; position: relative; overflow: hidden; }
+  .joc-section { background: #111216; padding: 0; position: relative; }
 
   /* ── 4-city mosaic background (2×2 grid) ── */
   .joc-mosaic {
@@ -348,13 +348,203 @@
   }
   @media (max-width: 768px) {
     .joc-stage { padding: 4rem 1.5rem 3.5rem; }
-    .joc-tabs-section { padding: 2rem 1.5rem 0; }
     .joc-map-wrap { padding: 0 1.5rem; }
     .joc-rlcc-wrap, .joc-rla-wrap { padding: 0 1.5rem; }
     .joc-rlcc-actions { flex-direction: column; }
     .joc-rlcc-btn-wa, .joc-rlcc-btn-page { width: 100%; justify-content: center; }
-    .joc-tabs { width: 100%; }
-    .joc-tab { flex: 1; text-align: center; font-size: .8rem; padding: .6rem .75rem; }
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     STACKED CARD DECK + FLOATING TOC
+  ════════════════════════════════════════════════════════════ */
+  .joc-deck-area {
+    position: relative; z-index: 2;
+    padding: 0 4rem 5rem;
+  }
+
+  /* ── Top bar: eyebrow + collapse toggle ── */
+  .joc-deck-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 2.5rem 0 1.5rem; max-width: 1280px; margin: 0 auto;
+  }
+  .joc-deck-eyebrow {
+    font-size: .68rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(255,255,255,.4);
+  }
+  .joc-collapse-btn {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 999px; padding: .45rem .9rem;
+    font-size: .74rem; font-weight: 700; color: rgba(255,255,255,.55);
+    cursor: pointer; transition: background .2s, color .2s;
+  }
+  .joc-collapse-btn:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+  /* ── Deck container (holds 3 stacked absolute cards) ── */
+  .joc-deck {
+    position: relative;
+    max-width: 1280px; margin: 0 auto;
+    height: 520px;
+    padding-bottom: 48px; /* room for stacked card peek */
+    transition: height .5s cubic-bezier(.22,1,.36,1), opacity .4s ease;
+  }
+  .joc-deck.map-expanded { height: 700px; }
+
+  /* ── Individual cards ── */
+  .joc-deck-card {
+    position: absolute; inset: 0;
+    background: rgba(17,18,22,.92); backdrop-filter: blur(20px);
+    border-radius: 22px;
+    border: 1px solid rgba(255,255,255,.08);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    transform-origin: top center;
+    transition: transform .5s cubic-bezier(.22,1,.36,1),
+                opacity .4s ease,
+                box-shadow .4s ease,
+                z-index 0s;
+    will-change: transform;
+  }
+  /* Front card (rank 0) */
+  .joc-deck-card[data-rank="0"] {
+    z-index: 3; transform: translateY(0) scale(1);
+    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    pointer-events: auto; cursor: default;
+  }
+  /* Second card (rank 1) */
+  .joc-deck-card[data-rank="1"] {
+    z-index: 2;
+    transform: translateY(22px) scale(0.97);
+    box-shadow: 0 12px 40px rgba(0,0,0,.3);
+    pointer-events: auto; cursor: pointer;
+  }
+  .joc-deck-card[data-rank="1"]:hover {
+    transform: translateY(14px) scale(0.975);
+  }
+  /* Back card (rank 2) */
+  .joc-deck-card[data-rank="2"] {
+    z-index: 1;
+    transform: translateY(40px) scale(0.94);
+    box-shadow: none;
+    pointer-events: auto; cursor: pointer;
+  }
+  .joc-deck-card[data-rank="2"]:hover {
+    transform: translateY(32px) scale(0.945);
+  }
+
+  /* ── Card header bar ── */
+  .joc-deck-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,.06);
+    flex-shrink: 0;
+  }
+  .joc-deck-card-label {
+    font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(255,235,153,.6);
+  }
+
+  /* ── Cities@RealLingo label as clickable trigger ── */
+  .joc-cities-trigger {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(255,235,153,.6); cursor: pointer; background: none; border: none;
+    transition: color .2s;
+  }
+  .joc-cities-trigger:hover { color: #ffeb99; }
+  .joc-cities-trigger svg { transition: transform .2s; }
+
+  /* ── Map container inside card ── */
+  .joc-deck-card .joc-map-wrap { padding: 0; flex: 1; overflow: hidden; }
+  .joc-deck-card .joc-map-container { border-radius: 0; height: 100%; }
+
+  /* ── Fullscreen map modal ── */
+  .joc-map-modal-ov {
+    position: fixed; inset: 0; z-index: 9500;
+    background: rgba(10,11,16,.85); backdrop-filter: blur(4px);
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s ease;
+  }
+  .joc-map-modal-ov.open { opacity: 1; pointer-events: auto; }
+  .joc-map-modal {
+    position: fixed; inset: 0; z-index: 9501;
+    display: flex; flex-direction: column;
+    background: #10121a;
+    transform: scale(.97); opacity: 0;
+    transition: transform .3s cubic-bezier(.22,1,.36,1), opacity .3s ease;
+    pointer-events: none;
+  }
+  .joc-map-modal-ov.open + .joc-map-modal,
+  .joc-map-modal.open { transform: scale(1); opacity: 1; pointer-events: auto; }
+  .joc-map-modal-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 1.5rem; flex-shrink: 0;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .joc-map-modal-title {
+    font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(255,235,153,.7);
+  }
+  .joc-map-modal-close {
+    display: inline-flex; align-items: center; gap: .35rem;
+    background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 999px; padding: .38rem .85rem;
+    font-size: .72rem; font-weight: 700; color: rgba(255,255,255,.5);
+    cursor: pointer; transition: background .2s, color .2s;
+  }
+  .joc-map-modal-close:hover { background: rgba(255,255,255,.13); color: #fff; }
+  .joc-map-modal-body { flex: 1; position: relative; overflow: hidden; }
+
+  /* ── RLCC/RLA card content inside deck card ── */
+  .joc-deck-card .joc-rlcc-wrap { padding: 2rem 2.5rem; flex: 1; }
+  .joc-deck-card .joc-rlcc-card { background: transparent; padding: 0; }
+
+  /* ── Collapsed state ── */
+  .joc-deck-area.collapsed .joc-deck {
+    opacity: 0; pointer-events: none; height: 0;
+    overflow: hidden;
+  }
+  .joc-deck-area.collapsed .joc-deck-topbar .joc-collapse-btn span { display: none; }
+
+  /* ── Floating TOC pill nav ── */
+  .joc-float-toc {
+    display: none;
+    flex-direction: column; align-items: center;
+    gap: .6rem;
+    padding: 3rem 0;
+    max-width: 1280px; margin: 0 auto;
+    opacity: 0; pointer-events: none;
+    transition: opacity .35s ease;
+  }
+  .joc-deck-area.collapsed .joc-float-toc {
+    display: flex; opacity: 1; pointer-events: auto;
+  }
+  .joc-float-toc[aria-hidden="false"] { display: flex; }
+
+  .joc-float-pill {
+    display: inline-flex; align-items: center;
+    background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 999px; padding: .65rem 1.4rem;
+    font-size: .88rem; font-weight: 700; color: rgba(255,255,255,.6);
+    cursor: pointer; transition: background .2s, color .2s, border-color .2s;
+    min-width: 200px; text-align: center; justify-content: center;
+  }
+  .joc-float-pill:hover { background: rgba(255,235,153,.08); border-color: rgba(255,235,153,.25); color: #ffeb99; }
+  .joc-float-pill--active { background: rgba(255,235,153,.1); border-color: rgba(255,235,153,.3); color: #ffeb99; }
+
+  .joc-float-expand {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: none; border: none;
+    font-size: .74rem; font-weight: 700; color: rgba(255,255,255,.3);
+    cursor: pointer; margin-top: .4rem;
+    transition: color .2s;
+  }
+  .joc-float-expand:hover { color: rgba(255,255,255,.7); }
+
+  @media (max-width: 768px) {
+    .joc-deck-area { padding: 0 1.5rem 4rem; }
+    .joc-deck { height: 500px; }
+    .joc-deck.map-expanded { height: 640px; }
+    .joc-deck-card .joc-rlcc-wrap { padding: 1.5rem; }
   }
 </style>
 </head>
@@ -392,7 +582,7 @@
       <div class="joc-mosaic-accent"></div>
     </div>
     <div class="joc-mosaic-panel" id="jocMPanel3"
-         style="background-image:url('../../assets/img/community/singapore-1.png')">
+         style="background-image:url('../../assets/img/community/lab-singapore-2.jpg')">
       <div class="joc-mosaic-label">
         <span class="joc-mosaic-label-native">新加坡</span>
         <span class="joc-mosaic-label-en">Singapore</span>
@@ -419,132 +609,152 @@
     </div>
   </div>
 
-  <!-- 2. Tab selection bar -->
-  <div class="joc-tabs-section">
-    <div class="joc-tabs-header">
-      <div class="joc-tabs-eyebrow">Join Our Community</div>
+  <!-- 2+3. Stacked card deck (starts collapsed — mosaic+pills is the landing view) -->
+  <div class="joc-deck-area collapsed" id="jocDeckArea">
+
+    <!-- Collapse toggle: hides deck, reveals mosaic -->
+    <div class="joc-deck-topbar">
+      <div class="joc-deck-eyebrow">Join Our Community</div>
+      <button class="joc-collapse-btn" id="jocCollapseBtn" aria-label="Collapse to background view" title="Show background">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10l5-5 5 5"/></svg>
+        <span>Hide</span>
+      </button>
     </div>
-    <div class="joc-tabs-wrap">
-      <div class="joc-tabs" role="tablist">
-        <button class="joc-tab active" data-prog="cities" role="tab" aria-selected="true" type="button">Cities@RealLingo</button>
-        <button class="joc-tab" data-prog="rlcc" role="tab" aria-selected="false" type="button">Creator Collective</button>
-        <button class="joc-tab" data-prog="rla" role="tab" aria-selected="false" type="button">RL Academy</button>
+
+    <!-- Deck: 3 overlapping cards -->
+    <div class="joc-deck" id="jocDeck">
+
+      <!-- Card 0: Creator Collective (maps card removed; fullscreen map opens via floating pill) -->
+      <div class="joc-deck-card" data-deck-i="0" id="jocDeckCard1">
+        <div class="joc-deck-card-header">
+          <span class="joc-deck-card-label">Creator Collective</span>
+        </div>
+        <div class="joc-rlcc-wrap">
+          <div class="joc-rlcc-card">
+            <div class="joc-rlcc-top">
+              <div class="joc-rlcc-avatar">🎙️</div>
+              <div class="joc-rlcc-meta">
+                <div class="joc-rlcc-meta-tag">WhatsApp Group</div>
+                <div class="joc-rlcc-meta-name">RealLingo Creator Collective</div>
+              </div>
+              <span class="joc-rlcc-wa-badge">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.953 0C5.354 0 0 5.343 0 11.926c0 2.098.549 4.116 1.594 5.894L.057 23.857a.5.5 0 00.614.62l6.178-1.616A11.898 11.898 0 0011.953 23.85c6.598 0 11.952-5.343 11.952-11.926C23.905 5.343 18.551 0 11.953 0zm0 21.796a9.845 9.845 0 01-5.014-1.374l-.36-.214-3.727.976.995-3.63-.234-.373a9.816 9.816 0 01-1.506-5.255C2.107 6.503 6.622 2 11.953 2c5.33 0 9.845 4.503 9.845 10.054-.001 5.552-4.516 9.742-9.845 9.742z"/></svg>
+                WhatsApp
+              </span>
+            </div>
+            <p class="joc-rlcc-desc">Creators, educators, and storytellers shaping the future of language and cultural content creation. Join the community building what comes next.</p>
+            <div class="joc-rlcc-actions">
+              <a href="https://chat.whatsapp.com/LiIeGX44xtF9nxIBFFZjpK?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" class="joc-rlcc-btn-wa">Join on WhatsApp ↗</a>
+              <a href="../../programs/creator-collective/" class="joc-rlcc-btn-page">Learn More →</a>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.joc-deck-card (rlcc) -->
+
+      <!-- Card 1: RL Academy -->
+      <div class="joc-deck-card" data-deck-i="1" id="jocDeckCard2">
+        <div class="joc-deck-card-header">
+          <span class="joc-deck-card-label">RL Academy</span>
+        </div>
+        <div class="joc-rlcc-wrap">
+          <div class="joc-rlcc-card">
+            <div class="joc-rlcc-top">
+              <div class="joc-rlcc-avatar">🀄</div>
+              <div class="joc-rlcc-meta">
+                <div class="joc-rlcc-meta-tag">RL Academy</div>
+                <div class="joc-rlcc-meta-name">Chinese Workshop</div>
+              </div>
+            </div>
+            <p class="joc-rlcc-desc">Structured, tutor-led Chinese sessions for all levels. Register your interest and we'll reach out with the next cohort details.</p>
+            <div class="joc-rlcc-actions">
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSdQ-CBeXqYphFwx5YMeyhokgB8qs2B2hdJo5MJlDnbJOwt4WA/viewform" target="_blank" rel="noopener noreferrer" class="joc-rlcc-btn-wa">Register Interest →</a>
+              <a href="../../programs/language-academy/" class="joc-rlcc-btn-page">Learn More →</a>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.joc-deck-card (rla) -->
+
+    </div><!-- /.joc-deck -->
+
+    <!-- Floating TOC pill nav — visible when deck is collapsed -->
+    <div class="joc-float-toc" id="jocFloatToc" aria-hidden="true">
+      <button class="joc-float-pill joc-float-pill--active" data-float-i="0">Cities@RealLingo</button>
+      <button class="joc-float-pill" data-float-i="1">Creator Collective</button>
+      <button class="joc-float-pill" data-float-i="2">RL Academy</button>
+      <button class="joc-float-expand" id="jocExpandBtn">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6l5 5 5-5"/></svg>
+        <span>Show Details</span>
+      </button>
+    </div>
+
+  </div><!-- /.joc-deck-area -->
+
+  <!-- Hidden map container used by fullscreen modal (D3 renders here) -->
+  <div id="jocMapContainerHolder" style="display:none" aria-hidden="true">
+    <div id="jocMapContainer" class="joc-map-container" style="width:100%;height:100%;">
+      <div class="joc-map-popup" id="jocPopup-khobar">
+        <button class="joc-popup-close" aria-label="Close">✕</button>
+        <span class="joc-popup-flag">🇸🇦🇧🇭</span>
+        <div class="joc-popup-native">الخبر · المنامة</div>
+        <div class="joc-popup-en">Khobar &amp; Manama</div>
+        <div class="joc-popup-region">Saudi Arabia · Bahrain</div>
+        <a class="joc-popup-btn" href="https://chat.whatsapp.com/ITixzsnV9RR7fVU3SVfO6P?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 0C4.477 0 0 4.373 0 9.765c0 1.73.463 3.35 1.27 4.753L0 20l5.666-1.235A10.07 10.07 0 0010 19.53c5.523 0 10-4.374 10-9.765C20 4.373 15.523 0 10 0zm4.94 13.627c-.207.576-1.2 1.099-1.657 1.168-.424.063-.963.09-1.554-.098-.358-.114-.819-.266-1.406-.52-2.468-1.057-4.079-3.52-4.204-3.683-.122-.163-1.003-1.323-1.003-2.526 0-1.202.638-1.795.864-2.04a.91.91 0 01.659-.307c.164 0 .328.003.472.009.152.007.354-.057.555.42.207.49.701 1.695.763 1.818.061.122.102.266.02.43-.082.163-.122.265-.243.408l-.365.423c-.122.122-.248.254-.107.498.142.244.629 1.025 1.35 1.66.928.822 1.71 1.075 1.955 1.197.244.122.386.103.53-.061.141-.163.608-.706.77-.949.163-.243.325-.204.548-.122.224.082 1.42.666 1.664.789.244.122.406.183.467.285.061.101.061.583-.146 1.16z"/></svg>
+          Join on WhatsApp
+        </a>
+      </div>
+      <div class="joc-map-popup" id="jocPopup-beijing">
+        <button class="joc-popup-close" aria-label="Close">✕</button>
+        <span class="joc-popup-flag">🇨🇳</span>
+        <div class="joc-popup-native">北京</div>
+        <div class="joc-popup-en">Beijing</div>
+        <div class="joc-popup-region">China</div>
+        <a class="joc-popup-btn" href="https://chat.whatsapp.com/GHBIVl7OJI7Ds5feTOfKpP?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 0C4.477 0 0 4.373 0 9.765c0 1.73.463 3.35 1.27 4.753L0 20l5.666-1.235A10.07 10.07 0 0010 19.53c5.523 0 10-4.374 10-9.765C20 4.373 15.523 0 10 0zm4.94 13.627c-.207.576-1.2 1.099-1.657 1.168-.424.063-.963.09-1.554-.098-.358-.114-.819-.266-1.406-.52-2.468-1.057-4.079-3.52-4.204-3.683-.122-.163-1.003-1.323-1.003-2.526 0-1.202.638-1.795.864-2.04a.91.91 0 01.659-.307c.164 0 .328.003.472.009.152.007.354-.057.555.42.207.49.701 1.695.763 1.818.061.122.102.266.02.43-.082.163-.122.265-.243.408l-.365.423c-.122.122-.248.254-.107.498.142.244.629 1.025 1.35 1.66.928.822 1.71 1.075 1.955 1.197.244.122.386.103.53-.061.141-.163.608-.706.77-.949.163-.243.325-.204.548-.122.224.082 1.42.666 1.664.789.244.122.406.183.467.285.061.101.061.583-.146 1.16z"/></svg>
+          Join on WhatsApp
+        </a>
+      </div>
+      <div class="joc-map-popup" id="jocPopup-dar">
+        <button class="joc-popup-close" aria-label="Close">✕</button>
+        <span class="joc-popup-flag">🇹🇿</span>
+        <div class="joc-popup-native">Dar es Salaam</div>
+        <div class="joc-popup-en">Dar es Salaam</div>
+        <div class="joc-popup-region">East Africa</div>
+        <a class="joc-popup-btn" href="https://chat.whatsapp.com/EIwYWAL5plWEOVb3fx08qC?s=cl&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 0C4.477 0 0 4.373 0 9.765c0 1.73.463 3.35 1.27 4.753L0 20l5.666-1.235A10.07 10.07 0 0010 19.53c5.523 0 10-4.374 10-9.765C20 4.373 15.523 0 10 0zm4.94 13.627c-.207.576-1.2 1.099-1.657 1.168-.424.063-.963.09-1.554-.098-.358-.114-.819-.266-1.406-.52-2.468-1.057-4.079-3.52-4.204-3.683-.122-.163-1.003-1.323-1.003-2.526 0-1.202.638-1.795.864-2.04a.91.91 0 01.659-.307c.164 0 .328.003.472.009.152.007.354-.057.555.42.207.49.701 1.695.763 1.818.061.122.102.266.02.43-.082.163-.122.265-.243.408l-.365.423c-.122.122-.248.254-.107.498.142.244.629 1.025 1.35 1.66.928.822 1.71 1.075 1.955 1.197.244.122.386.103.53-.061.141-.163.608-.706.77-.949.163-.243.325-.204.548-.122.224.082 1.42.666 1.664.789.244.122.406.183.467.285.061.101.061.583-.146 1.16z"/></svg>
+          Join on WhatsApp
+        </a>
+      </div>
+      <div class="joc-map-popup" id="jocPopup-singapore">
+        <button class="joc-popup-close" aria-label="Close">✕</button>
+        <span class="joc-popup-flag">🇸🇬</span>
+        <div class="joc-popup-native">新加坡</div>
+        <div class="joc-popup-en">Singapore</div>
+        <div class="joc-popup-region">Southeast Asia</div>
+        <a class="joc-popup-btn" href="https://chat.whatsapp.com/LWZgst1bo5y3O2joCKSXZN?s=cl&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 0C4.477 0 0 4.373 0 9.765c0 1.73.463 3.35 1.27 4.753L0 20l5.666-1.235A10.07 10.07 0 0010 19.53c5.523 0 10-4.374 10-9.765C20 4.373 15.523 0 10 0zm4.94 13.627c-.207.576-1.2 1.099-1.657 1.168-.424.063-.963.09-1.554-.098-.358-.114-.819-.266-1.406-.52-2.468-1.057-4.079-3.52-4.204-3.683-.122-.163-1.003-1.323-1.003-2.526 0-1.202.638-1.795.864-2.04a.91.91 0 01.659-.307c.164 0 .328.003.472.009.152.007.354-.057.555.42.207.49.701 1.695.763 1.818.061.122.102.266.02.43-.082.163-.122.265-.243.408l-.365.423c-.122.122-.248.254-.107.498.142.244.629 1.025 1.35 1.66.928.822 1.71 1.075 1.955 1.197.244.122.386.103.53-.061.141-.163.608-.706.77-.949.163-.243.325-.204.548-.122.224.082 1.42.666 1.664.789.244.122.406.183.467.285.061.101.061.583-.146 1.16z"/></svg>
+          Join on WhatsApp
+        </a>
+      </div>
+      <div class="joc-map-legend">
+        <span class="joc-map-legend-item"><span class="joc-legend-swatch"></span> Community countries</span>
+        <span class="joc-map-legend-item"><span class="joc-legend-dot-active"></span> Active city</span>
+        <span class="joc-map-legend-item"><span class="joc-legend-dot-exp"></span> Expanding</span>
       </div>
     </div>
   </div>
 
-  <!-- 3. Content panels -->
-  <div class="joc-content">
-
-    <!-- Cities panel — world map (D3 rendered) -->
-    <div class="joc-content-panel active" id="joc-panel-cities">
-      <div class="joc-map-wrap">
-        <div class="joc-map-container" id="jocMapContainer">
-          <!-- D3 inserts SVG here at load time -->
-
-          <!-- Popups (auto-cycle; hover to pause; pin click to jump) -->
-          <div class="joc-map-popup" id="jocPopup-khobar">
-            <button class="joc-popup-close" aria-label="Close">✕</button>
-            <span class="joc-popup-flag">🇸🇦🇧🇭</span>
-            <div class="joc-popup-native">الخبر · المنامة</div>
-            <div class="joc-popup-en">Khobar &amp; Manama</div>
-            <div class="joc-popup-region">Saudi Arabia · Bahrain</div>
-            <a class="joc-popup-btn" href="https://chat.whatsapp.com/ITixzsnV9RR7fVU3SVfO6P?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">
-              <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 0C4.477 0 0 4.373 0 9.765c0 1.73.463 3.35 1.27 4.753L0 20l5.666-1.235A10.07 10.07 0 0010 19.53c5.523 0 10-4.374 10-9.765C20 4.373 15.523 0 10 0zm4.94 13.627c-.207.576-1.2 1.099-1.657 1.168-.424.063-.963.09-1.554-.098-.358-.114-.819-.266-1.406-.52-2.468-1.057-4.079-3.52-4.204-3.683-.122-.163-1.003-1.323-1.003-2.526 0-1.202.638-1.795.864-2.04a.91.91 0 01.659-.307c.164 0 .328.003.472.009.152.007.354-.057.555.42.207.49.701 1.695.763 1.818.061.122.102.266.02.43-.082.163-.122.265-.243.408l-.365.423c-.122.122-.248.254-.107.498.142.244.629 1.025 1.35 1.66.928.822 1.71 1.075 1.955 1.197.244.122.386.103.53-.061.141-.163.608-.706.77-.949.163-.243.325-.204.548-.122.224.082 1.42.666 1.664.789.244.122.406.183.467.285.061.101.061.583-.146 1.16z"/></svg>
-              Join on WhatsApp
-            </a>
-          </div>
-
-          <div class="joc-map-popup" id="jocPopup-beijing">
-            <button class="joc-popup-close" aria-label="Close">✕</button>
-            <span class="joc-popup-flag">🇨🇳</span>
-            <div class="joc-popup-native">北京</div>
-            <div class="joc-popup-en">Beijing</div>
-            <div class="joc-popup-region">China</div>
-            <a class="joc-popup-btn" href="https://chat.whatsapp.com/GHBIVl7OJI7Ds5feTOfKpP?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">
-              <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 0C4.477 0 0 4.373 0 9.765c0 1.73.463 3.35 1.27 4.753L0 20l5.666-1.235A10.07 10.07 0 0010 19.53c5.523 0 10-4.374 10-9.765C20 4.373 15.523 0 10 0zm4.94 13.627c-.207.576-1.2 1.099-1.657 1.168-.424.063-.963.09-1.554-.098-.358-.114-.819-.266-1.406-.52-2.468-1.057-4.079-3.52-4.204-3.683-.122-.163-1.003-1.323-1.003-2.526 0-1.202.638-1.795.864-2.04a.91.91 0 01.659-.307c.164 0 .328.003.472.009.152.007.354-.057.555.42.207.49.701 1.695.763 1.818.061.122.102.266.02.43-.082.163-.122.265-.243.408l-.365.423c-.122.122-.248.254-.107.498.142.244.629 1.025 1.35 1.66.928.822 1.71 1.075 1.955 1.197.244.122.386.103.53-.061.141-.163.608-.706.77-.949.163-.243.325-.204.548-.122.224.082 1.42.666 1.664.789.244.122.406.183.467.285.061.101.061.583-.146 1.16z"/></svg>
-              Join on WhatsApp
-            </a>
-          </div>
-
-          <div class="joc-map-popup" id="jocPopup-dar">
-            <button class="joc-popup-close" aria-label="Close">✕</button>
-            <span class="joc-popup-flag">🇹🇿</span>
-            <div class="joc-popup-native">Dar es Salaam</div>
-            <div class="joc-popup-en">Dar es Salaam</div>
-            <div class="joc-popup-region">East Africa</div>
-            <a class="joc-popup-btn" href="https://chat.whatsapp.com/EIwYWAL5plWEOVb3fx08qC?s=cl&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">
-              <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 0C4.477 0 0 4.373 0 9.765c0 1.73.463 3.35 1.27 4.753L0 20l5.666-1.235A10.07 10.07 0 0010 19.53c5.523 0 10-4.374 10-9.765C20 4.373 15.523 0 10 0zm4.94 13.627c-.207.576-1.2 1.099-1.657 1.168-.424.063-.963.09-1.554-.098-.358-.114-.819-.266-1.406-.52-2.468-1.057-4.079-3.52-4.204-3.683-.122-.163-1.003-1.323-1.003-2.526 0-1.202.638-1.795.864-2.04a.91.91 0 01.659-.307c.164 0 .328.003.472.009.152.007.354-.057.555.42.207.49.701 1.695.763 1.818.061.122.102.266.02.43-.082.163-.122.265-.243.408l-.365.423c-.122.122-.248.254-.107.498.142.244.629 1.025 1.35 1.66.928.822 1.71 1.075 1.955 1.197.244.122.386.103.53-.061.141-.163.608-.706.77-.949.163-.243.325-.204.548-.122.224.082 1.42.666 1.664.789.244.122.406.183.467.285.061.101.061.583-.146 1.16z"/></svg>
-              Join on WhatsApp
-            </a>
-          </div>
-
-          <div class="joc-map-popup" id="jocPopup-singapore">
-            <button class="joc-popup-close" aria-label="Close">✕</button>
-            <span class="joc-popup-flag">🇸🇬</span>
-            <div class="joc-popup-native">新加坡</div>
-            <div class="joc-popup-en">Singapore</div>
-            <div class="joc-popup-region">Southeast Asia</div>
-            <a class="joc-popup-btn" href="https://chat.whatsapp.com/LWZgst1bo5y3O2joCKSXZN?s=cl&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">
-              <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 0C4.477 0 0 4.373 0 9.765c0 1.73.463 3.35 1.27 4.753L0 20l5.666-1.235A10.07 10.07 0 0010 19.53c5.523 0 10-4.374 10-9.765C20 4.373 15.523 0 10 0zm4.94 13.627c-.207.576-1.2 1.099-1.657 1.168-.424.063-.963.09-1.554-.098-.358-.114-.819-.266-1.406-.52-2.468-1.057-4.079-3.52-4.204-3.683-.122-.163-1.003-1.323-1.003-2.526 0-1.202.638-1.795.864-2.04a.91.91 0 01.659-.307c.164 0 .328.003.472.009.152.007.354-.057.555.42.207.49.701 1.695.763 1.818.061.122.102.266.02.43-.082.163-.122.265-.243.408l-.365.423c-.122.122-.248.254-.107.498.142.244.629 1.025 1.35 1.66.928.822 1.71 1.075 1.955 1.197.244.122.386.103.53-.061.141-.163.608-.706.77-.949.163-.243.325-.204.548-.122.224.082 1.42.666 1.664.789.244.122.406.183.467.285.061.101.061.583-.146 1.16z"/></svg>
-              Join on WhatsApp
-            </a>
-          </div>
-
-          <!-- Map legend -->
-          <div class="joc-map-legend">
-            <span class="joc-map-legend-item"><span class="joc-legend-swatch"></span> Community countries</span>
-            <span class="joc-map-legend-item"><span class="joc-legend-dot-active"></span> Active city</span>
-            <span class="joc-map-legend-item"><span class="joc-legend-dot-exp"></span> Expanding</span>
-          </div>
-        </div>
-      </div>
+  <!-- Fullscreen map modal -->
+  <div class="joc-map-modal-ov" id="jocMapModalOv"></div>
+  <div class="joc-map-modal" id="jocMapModal" role="dialog" aria-modal="true" aria-label="Cities@RealLingo Global Map">
+    <div class="joc-map-modal-head">
+      <div class="joc-map-modal-title">Cities@RealLingo</div>
+      <button class="joc-map-modal-close" id="jocMapModalClose">
+        <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg>
+        Close
+      </button>
     </div>
-
-    <!-- RLCC panel -->
-    <div class="joc-content-panel" id="joc-panel-rlcc">
-      <div class="joc-rlcc-wrap">
-        <div class="joc-rlcc-card">
-          <div class="joc-rlcc-top">
-            <div class="joc-rlcc-avatar">🎙️</div>
-            <div class="joc-rlcc-meta">
-              <div class="joc-rlcc-meta-tag">WhatsApp Group</div>
-              <div class="joc-rlcc-meta-name">RealLingo Creator Collective</div>
-            </div>
-            <span class="joc-rlcc-wa-badge">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.953 0C5.354 0 0 5.343 0 11.926c0 2.098.549 4.116 1.594 5.894L.057 23.857a.5.5 0 00.614.62l6.178-1.616A11.898 11.898 0 0011.953 23.85c6.598 0 11.952-5.343 11.952-11.926C23.905 5.343 18.551 0 11.953 0zm0 21.796a9.845 9.845 0 01-5.014-1.374l-.36-.214-3.727.976.995-3.63-.234-.373a9.816 9.816 0 01-1.506-5.255C2.107 6.503 6.622 2 11.953 2c5.33 0 9.845 4.503 9.845 10.054-.001 5.552-4.516 9.742-9.845 9.742z"/></svg>
-              WhatsApp
-            </span>
-          </div>
-          <p class="joc-rlcc-desc">Creators, educators, and storytellers shaping the future of language and cultural content creation. Join the community building what comes next.</p>
-          <div class="joc-rlcc-actions">
-            <a href="https://chat.whatsapp.com/LiIeGX44xtF9nxIBFFZjpK?s=sh&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" class="joc-rlcc-btn-wa">Join on WhatsApp ↗</a>
-            <a href="../../programs/creator-collective/" class="joc-rlcc-btn-page">Learn More →</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- RLA panel -->
-    <div class="joc-content-panel" id="joc-panel-rla">
-      <div class="joc-rlcc-wrap">
-        <div class="joc-rlcc-card">
-          <div class="joc-rlcc-top">
-            <div class="joc-rlcc-avatar">🀄</div>
-            <div class="joc-rlcc-meta">
-              <div class="joc-rlcc-meta-tag">RL Academy</div>
-              <div class="joc-rlcc-meta-name">Chinese Workshop</div>
-            </div>
-          </div>
-          <p class="joc-rlcc-desc">Structured, tutor-led Chinese sessions for all levels. Register your interest and we'll reach out with the next cohort details.</p>
-          <div class="joc-rlcc-actions">
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdQ-CBeXqYphFwx5YMeyhokgB8qs2B2hdJo5MJlDnbJOwt4WA/viewform" target="_blank" rel="noopener noreferrer" class="joc-rlcc-btn-wa">Register Interest →</a>
-            <a href="../../programs/rl-academy/" class="joc-rlcc-btn-page">Learn More →</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <div class="joc-map-modal-body" id="jocMapModalBody"></div>
   </div>
 
   <!-- Language ticker -->
@@ -837,7 +1047,120 @@
         startCycle();
       });
   });
+
+  /* ── Stacked Card Deck ───────────────────────────────────── */
+  (function () {
+    var cards    = Array.prototype.slice.call(document.querySelectorAll('.joc-deck-card'));
+    var deckEl   = document.getElementById('jocDeck');
+    var areaEl   = document.getElementById('jocDeckArea');
+    var collapseBtn = document.getElementById('jocCollapseBtn');
+    var expandBtn   = document.getElementById('jocExpandBtn');
+    var floatToc    = document.getElementById('jocFloatToc');
+    var frontIdx    = 0; /* which data-deck-i is currently at front */
+
+    function getRank(deckI) {
+      var rel = (deckI - frontIdx + cards.length) % cards.length;
+      return rel; /* 0=front, 1=middle, 2=back */
+    }
+    function applyRanks() {
+      cards.forEach(function (c) {
+        var i = parseInt(c.getAttribute('data-deck-i'), 10);
+        c.setAttribute('data-rank', getRank(i));
+      });
+    }
+    /* Clicking a behind card brings it to front */
+    cards.forEach(function (c) {
+      c.addEventListener('click', function (e) {
+        var rank = parseInt(c.getAttribute('data-rank'), 10);
+        if (rank === 0) return; /* already front */
+        /* Don't eat link clicks */
+        if (e.target.closest('a, button')) return;
+        frontIdx = parseInt(c.getAttribute('data-deck-i'), 10);
+        applyRanks();
+        syncFloatPills();
+      });
+    });
+
+    /* Sync floating TOC active pill */
+    function syncFloatPills() {
+      document.querySelectorAll('.joc-float-pill').forEach(function (p) {
+        p.classList.toggle('joc-float-pill--active', parseInt(p.getAttribute('data-float-i'), 10) === frontIdx);
+      });
+    }
+
+    /* Floating TOC pills → bring card to front and expand deck */
+    document.querySelectorAll('.joc-float-pill').forEach(function (p) {
+      p.addEventListener('click', function () {
+        frontIdx = parseInt(p.getAttribute('data-float-i'), 10);
+        applyRanks();
+        syncFloatPills();
+        /* Expand the deck */
+        areaEl.classList.remove('collapsed');
+      });
+    });
+
+    /* Collapse / expand toggle */
+    if (collapseBtn) {
+      collapseBtn.addEventListener('click', function () {
+        areaEl.classList.add('collapsed');
+      });
+    }
+    if (expandBtn) {
+      expandBtn.addEventListener('click', function () {
+        areaEl.classList.remove('collapsed');
+      });
+    }
+
+    /* Fullscreen map modal */
+    (function () {
+      var trigger   = document.getElementById('jocCitiesTrigger');
+      var modalOv   = document.getElementById('jocMapModalOv');
+      var modal     = document.getElementById('jocMapModal');
+      var modalBody = document.getElementById('jocMapModalBody');
+      var closeBtn  = document.getElementById('jocMapModalClose');
+      var mapCont   = document.getElementById('jocMapContainer');
+      if (!modal || !modalOv || !mapCont) return;
+
+      function openModal() {
+        /* Move map container into modal body */
+        modalBody.appendChild(mapCont);
+        mapCont.style.cssText = 'border-radius:0;width:100%;height:100%;max-height:none;';
+        modal.classList.add('open');
+        modalOv.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeModal() {
+        /* Move map container back to hidden holder */
+        var holder = document.getElementById('jocMapContainerHolder');
+        if (holder) holder.appendChild(mapCont);
+        mapCont.style.cssText = 'width:100%;height:100%;';
+        modal.classList.remove('open');
+        modalOv.classList.remove('open');
+        document.body.style.overflow = '';
+        /* Return to collapsed mosaic+pills view */
+        areaEl.classList.add('collapsed');
+      }
+
+      if (trigger) trigger.addEventListener('click', function (e) { e.stopPropagation(); openModal(); });
+      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+      modalOv.addEventListener('click', closeModal);
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+
+      /* Cities@RealLingo pill in floating TOC → open fullscreen map directly */
+      var citiesPill = document.querySelector('.joc-float-pill[data-float-i="0"]');
+      if (citiesPill) {
+        citiesPill.addEventListener('click', function (e) {
+          e.stopPropagation();
+          openModal();
+        });
+      }
+    })();
+
+    /* Init ranks */
+    applyRanks();
+    syncFloatPills();
+  })();
 </script>
-<script src="../../assets/js/nav.js?v=38" defer></script>
+<script src="../../assets/js/nav.js?v=47" defer></script>
 </body>
 </html>

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0; url=../../">
 <link rel="icon" type="image/png" href="../../assets/img/favicon.png">
 <link rel="apple-touch-icon" href="../../assets/img/favicon.png">
     <title>About RealLingo — Real Experience Right At Your Fingertips</title>
@@ -21,7 +22,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/site.css?v=39">
+    <link rel="stylesheet" href="../../assets/css/site.css?v=42">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -56,118 +57,94 @@
 
         /* ── HERO ────────────────────────────────────────────── */
         .hero {
-            background: var(--yellow);
-            min-height: 100vh;
-            padding: 7.5rem 4rem 5rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5rem;
-            align-items: center;
             position: relative;
-            overflow: hidden;
-        }
-
-        .hero-lang-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: .5rem;
-            font-size: .72rem;
-            font-weight: 700;
-            letter-spacing: .12em;
-            text-transform: uppercase;
-            color: var(--text-mid);
-            margin-bottom: 1.75rem;
-            padding: .35rem 1rem;
-            border: 1px solid rgba(17,18,22,.15);
-            border-radius: 100px;
-            opacity: 0;
-            animation: fadeUp .7s ease forwards .2s;
-        }
-        .hero-lang-pill span { color: var(--dark); font-weight: 800; }
-
-        .hero-h1 {
-            font-family: var(--font-serif);
-            font-size: clamp(3rem, 5.5vw, 5.75rem);
-            font-weight: 400;
-            line-height: 1.04;
-            letter-spacing: -.025em;
-            color: var(--dark);
-            margin-bottom: 1.625rem;
-            opacity: 0;
-            animation: fadeUp .7s ease forwards .4s;
-        }
-        .hero-h1 em { font-style: italic; }
-
-        .hero-sub {
-            font-size: 1.05rem;
-            font-weight: 300;
-            color: var(--text-mid);
-            line-height: 1.75;
-            max-width: 460px;
-            margin-bottom: 2.625rem;
-            opacity: 0;
-            animation: fadeUp .7s ease forwards .6s;
-        }
-
-        .hero-origin {
-            display: flex; align-items: flex-start; gap: .55rem;
-            font-size: .82rem; font-weight: 500; color: var(--text-mid);
-            margin-bottom: 1.5rem; line-height: 1.5;
-            opacity: 0; animation: fadeUp .7s ease forwards .72s;
-        }
-        .hero-origin-flag { font-size: 1rem; flex-shrink: 0; margin-top: .05rem; }
-
-        .hero-ctas {
+            min-height: min(85vh, 760px);
             display: flex;
-            gap: 1.125rem;
-            align-items: center;
-            flex-wrap: wrap;
-            opacity: 0;
-            animation: fadeUp .7s ease forwards .9s;
+            flex-direction: column;
+            justify-content: flex-end;
+            overflow: hidden;
+            background: #111216;
         }
-
-        .btn-dark {
-            background: var(--dark);
-            color: var(--yellow);
-            padding: 1rem 2.25rem;
+        .hero-slides { position: absolute; inset: 0; z-index: 0; }
+        .hero-slide {
+            position: absolute; inset: 0;
+            background-size: cover; background-position: center 30%;
+            opacity: 0; transition: opacity 1.4s ease-in-out;
+        }
+        .hero-slide.active { opacity: 1; }
+        .hero-slide:nth-child(1) { background-image: url('../../assets/img/hero/hero-1.jpg'); }
+        .hero-slide:nth-child(2) { background-image: url('../../assets/img/hero/hero-3.jpg'); }
+        .hero-slide:nth-child(3) { background-image: url('../../assets/img/hero/hero-5.jpg'); }
+        .hero-overlay {
+            position: absolute; inset: 0; z-index: 1;
+            background: linear-gradient(
+                180deg,
+                rgba(17,18,22,.18) 0%,
+                rgba(17,18,22,.25) 40%,
+                rgba(17,18,22,.72) 80%,
+                rgba(17,18,22,.88) 100%
+            );
+        }
+        .hero-content {
+            position: relative; z-index: 2;
+            padding: 3.5rem 5vw 4rem;
+            max-width: 860px;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: .5rem;
+            background: #ffeb99; color: #111216;
+            font-size: .7rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase;
+            padding: .32rem .8rem; border-radius: 100px; margin-bottom: 1.4rem;
+        }
+        .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #111216; flex-shrink: 0; }
+        .hero-h1 {
             font-family: var(--font-sans);
-            font-size: .95rem; font-weight: 700;
-            text-decoration: none;
-            display: inline-block;
-            transition: background .2s, transform .2s, box-shadow .2s;
+            font-size: clamp(2.4rem, 5.8vw, 4.4rem);
+            font-weight: 800;
+            line-height: 1.08;
+            letter-spacing: -.03em;
+            color: #fff;
+            text-shadow: 0 4px 30px rgba(0,0,0,.3);
+            margin-bottom: 1.1rem;
         }
-        .btn-dark:hover {
-            background: #1e2028;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 24px rgba(17,18,22,.18);
+        .hero-sub {
+            font-size: clamp(1rem, 2vw, 1.2rem); color: rgba(255,255,255,.8);
+            line-height: 1.6; max-width: 540px; margin-bottom: 2rem;
         }
+        .hero-ctas { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 2.5rem; }
+        .hero-btn {
+            display: inline-flex; align-items: center; gap: .45rem;
+            padding: .85rem 1.8rem; border-radius: 100px;
+            font-family: var(--font-sans); font-weight: 700; font-size: .95rem;
+            text-decoration: none; border: none; cursor: pointer;
+            transition: transform .16s, box-shadow .16s, background .16s;
+        }
+        .hero-btn--yellow { background: #ffeb99; color: #111216; }
+        .hero-btn--yellow:hover { background: #f5d96a; transform: translateY(-2px); box-shadow: 0 12px 28px -10px rgba(245,217,106,.5); }
+        .hero-btn--ghost { background: rgba(255,255,255,.85); color: #111216; border: 1.5px solid rgba(255,255,255,.35); }
+        .hero-btn--ghost:hover { background: #fff; transform: translateY(-2px); }
+        .hero-city-ticker {
+            display: flex; align-items: center; gap: .75rem;
+            font-size: .8rem; color: rgba(255,255,255,.55);
+            letter-spacing: .06em; text-transform: uppercase; font-weight: 600;
+        }
+        .hero-city-ticker-label { white-space: nowrap; }
+        .hero-city-ticker-track {
+            overflow: hidden; height: 1.4em; position: relative; min-width: 200px;
+        }
+        .hero-city-ticker-items {
+            display: flex; flex-direction: column;
+            animation: heroTickerScroll 14s linear infinite;
+        }
+        .hero-city-ticker-item { height: 1.4em; white-space: nowrap; color: rgba(255,255,255,.9); }
+        @keyframes heroTickerScroll {
+            0%   { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+        /* hide old hero sub-elements */
+        .hero-lang-pill, .hero-origin, .hero-visual { display: none !important; }
 
-        .btn-outline {
-            border: 1.5px solid var(--dark);
-            color: var(--dark);
-            background: transparent;
-            padding: 1rem 2.25rem;
-            font-family: var(--font-sans);
-            font-size: .95rem; font-weight: 700;
-            text-decoration: none;
-            display: inline-block;
-            transition: background .2s, color .2s, transform .2s;
-        }
-        .btn-outline:hover {
-            background: var(--dark);
-            color: var(--yellow);
-            transform: translateY(-2px);
-        }
-
-        .btn-ghost {
-            font-size: .88rem; font-weight: 500;
-            color: var(--text-mid); text-decoration: none;
-            display: flex; align-items: center; gap: .4rem;
-            transition: color .2s;
-        }
-        .btn-ghost:hover { color: var(--text); }
-        .btn-ghost::after { content: '↓'; transition: transform .2s; }
-        .btn-ghost:hover::after { transform: translateY(3px); }
+        .btn-dark, .btn-outline, .btn-ghost { display: none; }
 
         /* ── HERO ILLUSTRATION: globe + orbiting languages ─────── */
         .hero-visual {
@@ -537,61 +514,49 @@
 <div id="site-header"></div>
 
 <!-- ═══ HERO ══════════════════════════════════════════════════ -->
-<section class="hero">
-    <div>
-        <div class="hero-lang-pill">
-            <span>Decentralized</span> · Language Platform
-        </div>
-        <h1 class="hero-h1">Language events,<br><em>right where<br>you are.</em></h1>
-        <p class="hero-sub">
-            RealLingo partners with cafés, libraries, marketing agencies, and NGOs worldwide to make authentic language experiences accessible — connecting language lovers, educators, creators, and digital talents around a shared table.
-        </p>
-        <div class="hero-origin">
-            <span class="hero-origin-flag">🇸🇦</span>
-            <span>Founded in Saudi Arabia as an expat-focused language community — now expanding across China, Bahrain, Tanzania, Qatar, and Singapore.</span>
-        </div>
-        <div class="hero-ctas">
-            <a href="../../signup/" class="btn-dark">Find Your Match</a>
-            <a href="../../explore/event/" class="btn-outline">Explore now!</a>
-            <a href="#features" class="btn-ghost">See how it works</a>
-        </div>
+<section class="hero" id="top">
+  <div class="hero-slides" aria-hidden="true">
+    <div class="hero-slide active"></div>
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+  </div>
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="hero-badge-dot" aria-hidden="true"></span>
+      RealLingo · Language Platform
+    </div>
+    <h1 class="hero-h1"><span class="hw" style="--hw-i:0;--hw-total:6">Language</span> <span class="hw" style="--hw-i:1;--hw-total:6">events,</span><br><span class="hw" style="--hw-i:2;--hw-total:6">right</span> <span class="hw" style="--hw-i:3;--hw-total:6">where</span> <span class="hw" style="--hw-i:4;--hw-total:6">you</span> <span class="hw" style="--hw-i:5;--hw-total:6">are.</span></h1>
+    <p class="hero-sub">RealLingo partners with cafés, libraries, and NGOs worldwide to make authentic language experiences accessible — connecting language lovers around a shared table.</p>
+
+    <div class="hero-ctas">
+      <a href="../../signup/" class="hero-btn hero-btn--yellow">Find Your Match →</a>
+      <a href="../../explore/event/" class="hero-btn hero-btn--ghost">Explore Events</a>
+      <a href="#features" class="hero-btn hero-btn--ghost">See How It Works</a>
     </div>
 
-    <div class="hero-visual">
-        <div class="orbit-ring"></div>
-
-        <div class="globe-illust">
-            <svg viewBox="0 0 200 200" width="190" height="190">
-                <circle cx="100" cy="100" r="82" fill="none" stroke="var(--dark)" stroke-width="2"/>
-                <ellipse cx="100" cy="100" rx="82" ry="28" fill="none" stroke="var(--dark)" stroke-width="1.2" opacity=".5"/>
-                <ellipse cx="100" cy="100" rx="36" ry="82" fill="none" stroke="var(--dark)" stroke-width="1.2" opacity=".5"/>
-                <path d="M18,100 H182" stroke="var(--dark)" stroke-width="1.2" opacity=".5"/>
-                <path class="node-line" d="M66,58 L138,72 M138,72 L128,140 M128,140 L58,134 M58,134 L66,58" stroke="var(--dark)" stroke-width="1" opacity=".28" stroke-dasharray="3 4"/>
-                <circle class="node n1" cx="66" cy="58" r="4" fill="var(--dark)"/>
-                <circle class="node n2" cx="138" cy="72" r="4" fill="var(--dark)"/>
-                <circle class="node n3" cx="58" cy="134" r="4" fill="var(--dark)"/>
-                <circle class="node n4" cx="128" cy="140" r="4" fill="var(--dark)"/>
-            </svg>
+    <div class="hero-city-ticker" aria-label="Communities active in">
+      <span class="hero-city-ticker-label">Active in</span>
+      <div class="hero-city-ticker-track" aria-hidden="true">
+        <div class="hero-city-ticker-items">
+          <span class="hero-city-ticker-item">🇸🇦 Saudi Arabia</span>
+          <span class="hero-city-ticker-item">🇨🇳 China</span>
+          <span class="hero-city-ticker-item">🇧🇭 Bahrain</span>
+          <span class="hero-city-ticker-item">🇹🇿 Tanzania</span>
+          <span class="hero-city-ticker-item">🇸🇬 Singapore</span>
+          <span class="hero-city-ticker-item">🇶🇦 Qatar</span>
+          <span class="hero-city-ticker-item">🇸🇦 Saudi Arabia</span>
+          <span class="hero-city-ticker-item">🇨🇳 China</span>
+          <span class="hero-city-ticker-item">🇧🇭 Bahrain</span>
+          <span class="hero-city-ticker-item">🇹🇿 Tanzania</span>
+          <span class="hero-city-ticker-item">🇸🇬 Singapore</span>
+          <span class="hero-city-ticker-item">🇶🇦 Qatar</span>
         </div>
-
-        <div class="orbit-spinner">
-            <div class="orbit-item" style="--a:-18deg"><div class="lang-chip has-variant" lang="zh" data-variants="Mandarin,Cantonese,Taiwanese,Hokkien"><span class="cf-row"><span class="cf">🇨🇳</span>中文</span><span class="chip-variant">Mandarin</span></div></div>
-            <div class="orbit-item" style="--a:54deg"><div class="lang-chip has-variant" data-variants="Fusha (MSA),Gulf,Egyptian,Levantine,Maghrebi"><span class="cf-row"><span class="cf">🇸🇦</span>العربية</span><span class="chip-variant">Fusha (MSA)</span></div></div>
-            <div class="orbit-item" style="--a:126deg"><div class="lang-chip" lang="ko"><span class="cf">🇰🇷</span>한국어</div></div>
-            <div class="orbit-item" style="--a:198deg"><div class="lang-chip has-variant" data-variants="France,Québec,Belgian,Swiss"><span class="cf-row"><span class="cf">🇫🇷</span>Français</span><span class="chip-variant">France</span></div></div>
-            <div class="orbit-item" style="--a:270deg"><div class="lang-chip has-variant" data-variants="Castilian,Mexican,Andean,Caribbean" ><span class="cf-row"><span class="cf">🇪🇸</span>Español</span><span class="chip-variant">Castilian</span></div></div>
-        </div>
-
-        <div class="accent-icon a-plane" title="Travel">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--dark)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l7-1 5-8 2 1-3 7 6-1 2 2-7 3-2 6-2-1 1-6-6 1z"/></svg>
-        </div>
-        <div class="accent-icon a-chat" title="Cross-cultural communication">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--dark)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>
-        </div>
-        <div class="accent-icon a-people" title="Community">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--dark)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.6"/><path d="M2 20c0-3.3 2.7-6 6-6s6 2.7 6 6M13 15c2.8 0 5 2 5 5"/></svg>
-        </div>
+      </div>
     </div>
+  </div>
+
 </section>
 
 <!-- ═══ CITY BANNER ══════════════════════════════════════════ -->
@@ -750,7 +715,7 @@
     window.SITE_SECTION = "about";
     window.SITE_PAGE = "about/launch";
 </script>
-<script src="../../assets/js/nav.js?v=38" defer></script>
+<script src="../../assets/js/nav.js?v=47" defer></script>
 
 <script>
     // Scroll reveal
@@ -759,20 +724,17 @@
     }, { threshold: .1, rootMargin: '0px 0px -28px 0px' });
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-    // Cycle each hero chip's regional-variant label independently
-    document.querySelectorAll('.lang-chip[data-variants]').forEach((chip, i) => {
-        const variants = chip.dataset.variants.split(',');
-        const label = chip.querySelector('.chip-variant');
-        let idx = 0;
-        setInterval(() => {
-            label.style.opacity = '0';
-            setTimeout(() => {
-                idx = (idx + 1) % variants.length;
-                label.textContent = variants[idx];
-                label.style.opacity = '1';
-            }, 300);
-        }, 2600 + i * 550);
-    });
+    // Hero slideshow
+    (function() {
+        var slides = document.querySelectorAll('.hero-slide');
+        if (!slides.length) return;
+        var cur = 0;
+        setInterval(function() {
+            slides[cur].classList.remove('active');
+            cur = (cur + 1) % slides.length;
+            slides[cur].classList.add('active');
+        }, 5000);
+    })();
 </script>
 </body>
 </html>

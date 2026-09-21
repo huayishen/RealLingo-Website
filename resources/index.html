@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/site.css?v=39">
+<link rel="stylesheet" href="../assets/css/site.css?v=42">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font-sans); }
@@ -52,59 +52,63 @@
   .lh-cols {
     display: grid; grid-template-columns: repeat(3, 1fr);
     width: 100%; max-width: 1140px; margin: 0 auto;
-    background: #fff; border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden;
+    border: 1px solid var(--border);
   }
   .lh-col {
     position: relative; display: flex; text-decoration: none; color: inherit;
     border-left: 1px solid var(--border);
-    transition: background .18s ease;
+    background: #fff;
+    transition: background .3s cubic-bezier(.22,1,.36,1);
   }
   .lh-col:first-child { border-left: none; }
-  /* activation accent — a yellow bar that wipes in along the top */
-  .lh-col::before {
-    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: var(--yellow); transform: scaleX(0); transform-origin: left;
-    transition: transform .2s ease;
-  }
-  .lh-col:hover, .lh-col:focus-visible { background: rgba(255, 235, 153, .1); outline: none; }
-  .lh-col:hover::before, .lh-col:focus-visible::before { transform: scaleX(1); }
+  .lh-col:hover, .lh-col:focus-visible { background: var(--yellow); outline: none; }
 
   .lh-col-inner {
     flex: 1; display: flex; flex-direction: column; align-items: flex-start;
     padding: clamp(2rem, 3vw, 3rem) clamp(1.5rem, 2.4vw, 2.5rem);
+    min-height: 380px;
   }
-  .lh-num { font-size: .72rem; font-weight: 700; letter-spacing: .14em; color: var(--text-soft); }
-  .lh-icon { margin: 1.5rem 0 1.25rem; color: var(--dark); }
-  .lh-icon svg { display: block; width: 30px; height: 30px; }
-  .lh-col-title { font-size: 1.4rem; font-weight: 800; letter-spacing: -.015em; color: var(--dark); }
-  .lh-col-title .u { border-bottom: 2px solid transparent; padding-bottom: 2px; transition: border-color .18s ease; }
-  .lh-col:hover .lh-col-title .u, .lh-col:focus-visible .lh-col-title .u { border-color: var(--yellow-mid); }
-  .lh-col-desc { margin-top: .7rem; font-size: .92rem; line-height: 1.6; color: var(--text-mid); max-width: 30ch; }
+  /* numbered circle */
+  .lh-num {
+    width: 42px; height: 42px; border-radius: 50%;
+    border: 1.5px solid rgba(17,18,22,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .72rem; font-weight: 700; letter-spacing: .1em;
+    color: var(--dark); flex-shrink: 0;
+    transition: border-color .3s ease;
+  }
+  .lh-col:hover .lh-num { border-color: var(--dark); }
+  .lh-icon { margin: auto 0 0; color: var(--dark); padding-top: 2rem; }
+  .lh-icon svg { display: block; width: 28px; height: 28px; }
+  .lh-col-title {
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem); font-weight: 800;
+    letter-spacing: -.025em; color: var(--dark);
+    margin-top: 1.2rem; line-height: 1.1;
+  }
+  .lh-col-desc { margin-top: .65rem; font-size: .92rem; line-height: 1.6; color: var(--text-mid); }
+  .lh-col:hover .lh-col-desc { color: rgba(17,18,22,.65); }
   .lh-cta {
-    margin-top: auto; padding-top: 1.75rem;
+    margin-top: 1.75rem;
     font-size: .85rem; font-weight: 800; color: var(--dark);
     display: inline-flex; align-items: center; gap: .45rem;
   }
-  .lh-cta .arw { transition: transform .2s ease; }
-  .lh-col:hover .lh-cta .arw, .lh-col:focus-visible .lh-cta .arw { transform: translateX(4px); }
+  .lh-cta .arw { transition: transform .22s ease; }
+  .lh-col:hover .lh-cta .arw, .lh-col:focus-visible .lh-cta .arw { transform: translateX(5px); }
 
-  /* ── Tablet: keep three columns while they stay readable ── */
+  /* ── Tablet ── */
   @media (max-width: 860px) {
-    .lh-col-inner { padding: 2rem 1.35rem; }
-    .lh-col-title { font-size: 1.2rem; }
-    .lh-col-desc { font-size: .86rem; }
+    .lh-col-inner { padding: 2rem 1.35rem; min-height: 320px; }
+    .lh-col-title { font-size: 1.25rem; }
   }
 
-  /* ── Mobile: stack, dividers become horizontal, accent moves to the side ── */
+  /* ── Mobile: stack ── */
   @media (max-width: 620px) {
-    .lh-cols { grid-template-columns: 1fr; }
+    .lh-cols { grid-template-columns: 1fr; border-radius: 14px; }
     .lh-col { border-left: none; border-top: 1px solid var(--border); }
     .lh-col:first-child { border-top: none; }
-    .lh-col::before { height: auto; width: 3px; top: 0; bottom: 0; right: auto;
-      transform: scaleY(0); transform-origin: top; transition: transform .2s ease; }
-    .lh-col:hover::before, .lh-col:focus-visible::before { transform: scaleY(1); }
-    .lh-icon { margin: 1rem 0 .9rem; }
-    .lh-cta { padding-top: 1.25rem; }
+    .lh-col-inner { min-height: 260px; }
+    .lh-cta { margin-top: 1.25rem; }
   }
 </style>
 </head>
@@ -130,7 +134,7 @@
             <path d="M12 4 2 9l10 5 10-5-10-5Z"/><path d="M6 11.2V16c0 1.2 2.7 2.6 6 2.6s6-1.4 6-2.6v-4.8"/><path d="M22 9v4.5"/>
           </svg>
         </span>
-        <h2 class="lh-col-title"><span class="u">Scholarship</span></h2>
+        <h2 class="lh-col-title">Scholarship</h2>
         <p class="lh-col-desc">Discover scholarships, educational opportunities, and international learning opportunities.</p>
         <span class="lh-cta">Explore <span class="arw">→</span></span>
       </div>
@@ -145,7 +149,7 @@
             <path d="M12 6.6C10.4 5.3 8.2 4.9 6 5.3 5 5.5 4 6.3 4 7.5v9.7c0 .8.8 1.4 1.6 1.2 2-.4 4-.1 5.4 1 .6.5 1.4.5 2 0 1.4-1.1 3.4-1.4 5.4-1 .8.2 1.6-.4 1.6-1.2V7.5c0-1.2-1-2-2-2.2-2.2-.4-4.4 0-6 1.3Z"/><path d="M12 6.6V19"/>
           </svg>
         </span>
-        <h2 class="lh-col-title"><span class="u">Online Resources</span></h2>
+        <h2 class="lh-col-title">Online Resources</h2>
         <p class="lh-col-desc">Curated digital resources for language learning, teaching, culture, and professional development.</p>
         <span class="lh-cta">Explore <span class="arw">→</span></span>
       </div>
@@ -160,7 +164,7 @@
             <rect x="5" y="5" width="14" height="16" rx="1.5"/><path d="M9 5V4.4A1.4 1.4 0 0 1 10.4 3h3.2A1.4 1.4 0 0 1 15 4.4V5"/><path d="m8.6 13.2 2 2 4.2-4.2"/>
           </svg>
         </span>
-        <h2 class="lh-col-title"><span class="u">Application Hub</span></h2>
+        <h2 class="lh-col-title">Application Hub</h2>
         <p class="lh-col-desc">Discover and manage applications for RealLingo opportunities and programs.</p>
         <span class="lh-cta">Explore <span class="arw">→</span></span>
       </div>
@@ -173,8 +177,9 @@
 <script>
   window.SITE_ROOT = "../";
   window.SITE_SECTION = "opensource";
+  window.SITE_BACK = "programs/";
   window.SITE_PAGE = "resources";
 </script>
-<script src="../assets/js/nav.js?v=38" defer></script>
+<script src="../assets/js/nav.js?v=47" defer></script>
 </body>
 </html>

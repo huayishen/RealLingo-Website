@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Alice&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/site.css?v=39">
+<link rel="stylesheet" href="../assets/css/site.css?v=42">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow-x: hidden; }
@@ -110,8 +110,6 @@ body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow
               0 0 20px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 .rdm-stop.is-active .rdm-node-badge::after { border-color: color-mix(in srgb, var(--accent) 25%, transparent); }
-.rdm-node-ico { font-size: 1.1rem; opacity: .3; transition: opacity .35s, transform .35s; }
-.rdm-stop.is-active .rdm-node-ico { opacity: 1; transform: scale(1.2); }
 
 /* ── Card ─── */
 .rdm-card {
@@ -251,7 +249,7 @@ body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow
 }
 </style>
 </head>
-<body>
+<body class="page-dark">
 
 <div id="site-header"></div>
 
@@ -281,7 +279,6 @@ body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow
     </a>
     <div class="rdm-node">
       <div class="rdm-node-badge">01</div>
-      <div class="rdm-node-ico">🎙️</div>
     </div>
     <div class="rdm-spacer"></div>
   </div>
@@ -291,7 +288,6 @@ body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow
     <div class="rdm-spacer"></div>
     <div class="rdm-node">
       <div class="rdm-node-badge">02</div>
-      <div class="rdm-node-ico">☕</div>
     </div>
     <a class="rdm-card" href="../programs/talk-and-table/">
       <span class="rdm-card-tag">RLTT</span>
@@ -311,7 +307,6 @@ body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow
     </a>
     <div class="rdm-node">
       <div class="rdm-node-badge">03</div>
-      <div class="rdm-node-ico">🀄</div>
     </div>
     <div class="rdm-spacer"></div>
   </div>
@@ -321,7 +316,6 @@ body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow
     <div class="rdm-spacer"></div>
     <div class="rdm-node">
       <div class="rdm-node-badge">04</div>
-      <div class="rdm-node-ico">🛍️</div>
     </div>
     <a class="rdm-card" href="../resources/marketplace/">
       <span class="rdm-card-tag">MKT</span>
@@ -341,7 +335,6 @@ body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow
     </a>
     <div class="rdm-node">
       <div class="rdm-node-badge">05</div>
-      <div class="rdm-node-ico">🌐</div>
     </div>
     <div class="rdm-spacer"></div>
   </div>
@@ -396,6 +389,6 @@ body { font-family: var(--font-sans); background: #0e0f12; color: #fff; overflow
     onScroll();
   })();
 </script>
-<script src="../assets/js/nav.js?v=38" defer></script>
+<script src="../assets/js/nav.js?v=47" defer></script>
 </body>
 </html>

@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/site.css?v=39">
+<link rel="stylesheet" href="../../assets/css/site.css?v=42">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root { --y:#ffeb99; --ym:#f5d96a; --yp:#fff7d6; --dark:#111216; --mid:#4a4840; --soft:#8a8878; --border:rgba(17,18,22,.09); }
@@ -65,7 +65,7 @@
   @keyframes rlccCityTicker { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
 
   /* ── Page body ──────────────────────────────── */
-  .pg-wrap { max-width: 960px; margin: 0 auto; padding: 3.5rem 1.5rem 5rem; }
+  .pg-wrap { max-width: 960px; margin: 0 auto; padding: 3.5rem 1.5rem 5rem; position: relative; z-index: 6; }
 
   .pg-sec { margin-top: 3.5rem; }
   .pg-label { font-size: .68rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--soft); text-align: center; margin-bottom: .5rem; }
@@ -103,21 +103,61 @@
   .rlcc-metric-val { font-family: var(--font-serif, Georgia, serif); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 400; color: var(--y); line-height: 1; }
   .rlcc-metric-label { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-top: .4rem; }
 
-  /* Content Pieces metric expands inline */
-  .rlcc-metric-item--platforms { padding: 0 1.5rem; }
-  .rlcc-platform-inline { margin-top: .9rem; display: flex; flex-direction: column; gap: .45rem; }
-  .rlcc-platform-inline-row { display: grid; grid-template-columns: 18px 1fr auto; align-items: center; gap: .5rem; }
-  .rlcc-platform-inline-logo { display: flex; align-items: center; flex-shrink: 0; }
-  .rlcc-platform-inline-track { height: 4px; background: rgba(255,255,255,.1); border-radius: 2px; overflow: hidden; }
-  .rlcc-platform-inline-fill { height: 100%; background: var(--y); border-radius: 2px; width: 0; transition: width 1.2s cubic-bezier(.25,.46,.45,.94) .4s; }
-  .rlcc-platform-inline-fill.animated { width: var(--w); }
-  .rlcc-platform-inline-count { font-size: .72rem; font-weight: 700; color: var(--y); min-width: 18px; text-align: right; }
+  /* Full-width platform bars — image-2 workstream style */
+  .rlcc-platform-band {
+    grid-column: 1 / -1;
+    padding-top: 1.6rem;
+    margin-top: .4rem;
+    border-top: 1px solid rgba(255,255,255,.08);
+    display: flex; flex-direction: column; gap: .55rem;
+  }
+  .rlcc-platform-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 32px;
+    align-items: center; gap: 1rem;
+  }
+  .rlcc-platform-name {
+    display: flex; align-items: center; gap: .5rem;
+    font-size: .8rem; font-weight: 600; color: rgba(255,255,255,.65);
+    white-space: nowrap;
+  }
+  .rlcc-platform-track {
+    height: 10px; background: rgba(255,255,255,.08); border-radius: 100px; overflow: hidden;
+  }
+  .rlcc-platform-fill {
+    height: 100%; border-radius: 100px; width: 0;
+    transition: width 1.6s cubic-bezier(.25,.46,.45,.94);
+  }
+  .rlcc-platform-fill.animated { width: var(--w); }
+  .rlcc-platform-count {
+    font-size: .82rem; font-weight: 700; color: var(--y); text-align: right;
+  }
+
+  /* Count-up: hide initial number until animation fires */
+  .rlcc-metric-val[data-count] { transition: opacity .2s; }
+
+  /* Sparkline below bars — not absolutely positioned */
+  .rlcc-sparkline-wrap {
+    grid-column: 1 / -1;
+    margin-top: 1.2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+  .rlcc-sparkline { display: block; pointer-events: none; width: 100%; height: 60px; overflow: visible; }
+  .rlcc-sparkline-path {
+    fill: none; stroke: #ffeb99; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 900; stroke-dashoffset: 900;
+    transition: stroke-dashoffset 2.4s cubic-bezier(.25,.46,.45,.94) .4s;
+  }
+  .rlcc-sparkline-path.animated { stroke-dashoffset: 0; }
+  .rlcc-sparkline-area { transition: opacity 1s ease .6s; opacity: 0; }
+  .rlcc-sparkline-area.animated { opacity: 1; }
 
   @media (max-width: 560px) {
     .rlcc-metrics-band { grid-template-columns: repeat(2, 1fr); }
     .rlcc-metric-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.08); padding: 1rem 0; }
     .rlcc-metric-item:nth-child(2n) { border-bottom: none; }
-    .rlcc-metric-item--platforms { grid-column: 1 / -1; border-bottom: none !important; }
+    .rlcc-platform-band { grid-column: 1 / -1; }
   }
 
   /* ── Archive ─────────────────────────────────── */
@@ -156,16 +196,22 @@
     .rlcc-arc-metrics { justify-content: flex-start; }
   }
 
-  /* ── Platform breakdown ─────────────────────── */
+  /* ── Platform breakdown (light card — uses distinct class names) ── */
   .rlcc-platforms { margin-top: 1.5rem; background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.4rem 1.6rem; }
   .rlcc-platforms-label { font-size: .66rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin-bottom: 1rem; }
   .rlcc-platform-bars { display: flex; flex-direction: column; gap: .8rem; }
-  .rlcc-platform-row { display: grid; grid-template-columns: 130px 1fr 28px; align-items: center; gap: .75rem; }
-  .rlcc-platform-name { font-size: .85rem; font-weight: 600; color: var(--dark); display: flex; align-items: center; gap: .4rem; }
-  .rlcc-platform-track { height: 8px; background: #f5f0e8; border-radius: 4px; overflow: hidden; }
-  .rlcc-platform-fill { height: 100%; background: var(--y); border-radius: 4px; width: 0; transition: width 1.2s cubic-bezier(.25,.46,.45,.94) .3s; }
-  .rlcc-platform-fill.animated { width: var(--w); }
-  .rlcc-platform-count { font-size: .85rem; font-weight: 700; color: var(--dark); text-align: right; }
+
+  /* ── Entrance reveal animations ─────────────── */
+  .rl-reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.65s cubic-bezier(.22,1,.36,1),
+                transform 0.65s cubic-bezier(.22,1,.36,1);
+  }
+  .rl-reveal.rl-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   /* ── CTA band ───────────────────────────────── */
   .pg-band { margin-top: 3.5rem; background: var(--dark); border-radius: 22px; padding: 2.8rem; text-align: center; color: #fff; }
@@ -255,121 +301,153 @@
   </div>
 </section>
 
-<!-- Metrics banner -->
-<div class="rlcc-metrics-band">
-    <div class="rlcc-metric-item">
-      <div class="rlcc-metric-val" data-count="1">1</div>
-      <div class="rlcc-metric-label">Session</div>
-    </div>
-    <div class="rlcc-metric-item">
-      <div class="rlcc-metric-val" data-count="15">15</div>
-      <div class="rlcc-metric-label">Creators</div>
-    </div>
-    <div class="rlcc-metric-item rlcc-metric-item--platforms" id="rlccContentMetric">
-      <div class="rlcc-metric-val" data-count="22">22</div>
-      <div class="rlcc-metric-label">Content Pieces</div>
-      <div class="rlcc-platform-inline" aria-label="Platforms reached">
-        <div class="rlcc-platform-inline-row">
-          <div class="rlcc-platform-inline-logo">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Instagram"><defs><radialGradient id="ig-i1" cx="30%" cy="107%" r="150%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285AEB"/></radialGradient></defs><rect x="2" y="2" width="20" height="20" rx="6" ry="6" fill="url(#ig-i1)"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="17.5" cy="6.5" r="1.1" fill="#fff"/></svg>
-          </div>
-          <div class="rlcc-platform-inline-track"><div class="rlcc-platform-inline-fill" style="--w:72.7%"></div></div>
-          <div class="rlcc-platform-inline-count">16</div>
+<!-- ── Sticky-stack panels ── -->
+<div class="rlcc-stack">
+
+  <!-- Panel 1: Metrics -->
+  <div class="rlcc-panel rlcc-panel--dark" style="--panel-i:0" id="stats">
+    <div class="rlcc-panel-inner">
+      <div class="rlcc-panel-label">By the numbers</div>
+      <div class="rlcc-metrics-band">
+
+        <div class="rlcc-metric-item">
+          <div class="rlcc-metric-val" data-count="1">1</div>
+          <div class="rlcc-metric-label">Session</div>
         </div>
-        <div class="rlcc-platform-inline-row">
-          <div class="rlcc-platform-inline-logo">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="TikTok"><rect width="24" height="24" rx="5" fill="#010101"/><path d="M19.59 7.12a4.49 4.49 0 0 1-2.63-.84 4.5 4.5 0 0 1-1.73-3.28H12.5v9.34l-.01 5.1a2.63 2.63 0 0 1-2.63 2.56 2.63 2.63 0 0 1-2.63-2.63 2.63 2.63 0 0 1 2.63-2.63c.26 0 .5.04.74.1V11.1a6.34 6.34 0 0 0-.74-.04 6.33 6.33 0 0 0-6.33 6.33 6.33 6.33 0 0 0 6.33 6.33 6.33 6.33 0 0 0 6.33-6.33l-.03-8.4a8.13 8.13 0 0 0 4.76 1.52V7.18a4.5 4.5 0 0 1-1.13-.06z" fill="#fff"/></svg>
-          </div>
-          <div class="rlcc-platform-inline-track"><div class="rlcc-platform-inline-fill" style="--w:18.2%"></div></div>
-          <div class="rlcc-platform-inline-count">4</div>
+        <div class="rlcc-metric-item">
+          <div class="rlcc-metric-val" data-count="15">15</div>
+          <div class="rlcc-metric-label">Creators</div>
         </div>
-        <div class="rlcc-platform-inline-row">
-          <div class="rlcc-platform-inline-logo">
-            <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="小红书 RED"><rect width="24" height="24" rx="5" fill="#FF2442"/><text x="12" y="16.5" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" font-family="sans-serif">小红书</text></svg>
+        <div class="rlcc-metric-item" id="rlccContentMetric">
+          <div class="rlcc-metric-val" data-count="22">22</div>
+          <div class="rlcc-metric-label">Content Pieces</div>
+        </div>
+        <div class="rlcc-metric-item">
+          <div class="rlcc-metric-val" data-count="2">2</div>
+          <div class="rlcc-metric-label">Speakers</div>
+        </div>
+
+        <!-- Platform bars: workstream style spanning all 4 columns -->
+        <div class="rlcc-platform-band" aria-label="Platforms reached">
+          <div class="rlcc-platform-row">
+            <div class="rlcc-platform-name">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-label="Instagram"><defs><radialGradient id="ig-i1" cx="30%" cy="107%" r="150%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285AEB"/></radialGradient></defs><rect x="2" y="2" width="20" height="20" rx="6" ry="6" fill="url(#ig-i1)"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="17.5" cy="6.5" r="1.1" fill="#fff"/></svg>
+              Instagram
+            </div>
+            <div class="rlcc-platform-track"><div class="rlcc-platform-fill" style="--w:72.7%;background:linear-gradient(90deg,#fd5949,#d6249f,#285AEB);transition-delay:.05s"></div></div>
+            <div class="rlcc-platform-count">16</div>
           </div>
-          <div class="rlcc-platform-inline-track"><div class="rlcc-platform-inline-fill" style="--w:9.1%"></div></div>
-          <div class="rlcc-platform-inline-count">2</div>
+          <div class="rlcc-platform-row">
+            <div class="rlcc-platform-name">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-label="TikTok"><rect width="24" height="24" rx="5" fill="#010101"/><path d="M19.59 7.12a4.49 4.49 0 0 1-2.63-.84 4.5 4.5 0 0 1-1.73-3.28H12.5v9.34l-.01 5.1a2.63 2.63 0 0 1-2.63 2.56 2.63 2.63 0 0 1-2.63-2.63 2.63 2.63 0 0 1 2.63-2.63c.26 0 .5.04.74.1V11.1a6.34 6.34 0 0 0-.74-.04 6.33 6.33 0 0 0-6.33 6.33 6.33 6.33 0 0 0 6.33 6.33 6.33 6.33 0 0 0 6.33-6.33l-.03-8.4a8.13 8.13 0 0 0 4.76 1.52V7.18a4.5 4.5 0 0 1-1.13-.06z" fill="#fff"/></svg>
+              TikTok
+            </div>
+            <div class="rlcc-platform-track"><div class="rlcc-platform-fill" style="--w:18.2%;background:#69C9D0;transition-delay:.2s"></div></div>
+            <div class="rlcc-platform-count">4</div>
+          </div>
+          <div class="rlcc-platform-row">
+            <div class="rlcc-platform-name">
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-label="小红书"><rect width="24" height="24" rx="5" fill="#FF2442"/><text x="12" y="16.5" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" font-family="sans-serif">小红书</text></svg>
+              小红书 RED
+            </div>
+            <div class="rlcc-platform-track"><div class="rlcc-platform-fill" style="--w:9.1%;background:#FF2442;transition-delay:.35s"></div></div>
+            <div class="rlcc-platform-count">2</div>
+          </div>
+        </div>
+
+        <!-- Sparkline below bars -->
+        <div class="rlcc-sparkline-wrap">
+          <svg class="rlcc-sparkline" aria-hidden="true" viewBox="0 0 400 60" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="spk-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffeb99" stop-opacity="0.2"/>
+                <stop offset="100%" stop-color="#ffeb99" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <polygon class="rlcc-sparkline-area" points="0,60 0,54 55,50 110,40 165,28 220,18 275,10 330,5 400,2 400,60" fill="url(#spk-grad)"/>
+            <polyline class="rlcc-sparkline-path" points="0,54 55,50 110,40 165,28 220,18 275,10 330,5 400,2"/>
+          </svg>
         </div>
       </div>
-    </div>
-    <div class="rlcc-metric-item">
-      <div class="rlcc-metric-val" data-count="2">2</div>
-      <div class="rlcc-metric-label">Speakers</div>
     </div>
   </div>
 
-<main class="pg-wrap">
-
-  <!-- How a session works -->
-  <section class="pg-sec">
-    <div class="pg-label">How a session works</div>
-    <h2 class="pg-h2">A 1–2 Hour Online Panel</h2>
-    <div class="rlcc-steps">
-      <div class="rlcc-step">
-        <div class="rlcc-step-n">01</div>
-        <div class="rlcc-step-title">Welcome</div>
-        <div class="rlcc-step-desc">Intros, community warm-up, quick ice-breaker.</div>
-      </div>
-      <div class="rlcc-step">
-        <div class="rlcc-step-n">02</div>
-        <div class="rlcc-step-title">Speaker's Talk</div>
-        <div class="rlcc-step-desc">Invited creators share their experience and perspective.</div>
-      </div>
-      <div class="rlcc-step">
-        <div class="rlcc-step-n">03</div>
-        <div class="rlcc-step-title">Insights Exchange</div>
-        <div class="rlcc-step-desc">Moderated discussion — real-world insights, no fluff.</div>
-      </div>
-      <div class="rlcc-step">
-        <div class="rlcc-step-n">04</div>
-        <div class="rlcc-step-title">Audience Q&amp;A</div>
-        <div class="rlcc-step-desc">Participants ask directly and connect with speakers.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Archive -->
-  <section class="rlcc-archive" id="archive">
-    <div class="pg-label">Past Sessions</div>
-    <h2 class="pg-h2">Session Archive</h2>
-    <div class="rlcc-archive-list">
-
-      <div class="rlcc-archive-row">
-        <div class="rlcc-arc-date">Aug 29, 2026</div>
-        <div class="rlcc-arc-main">
-          <div class="rlcc-arc-topic">Content Creation Across China &amp; MENA</div>
-          <div class="rlcc-arc-speakers-row">
-            <div class="rlcc-arc-speaker">
-              <img class="rlcc-arc-headshot" src="../../assets/img/rlcc/aya-zhang.jpg" alt="Aya Zhang">
-              <div><div class="rlcc-arc-speaker-name">Aya Zhang</div><div class="rlcc-arc-speaker-aff">UAE-based Creator</div></div>
-            </div>
-            <div class="rlcc-arc-speaker">
-              <img class="rlcc-arc-headshot" src="../../assets/img/rlcc/lucy-wu.jpg" alt="Lucy Wu">
-              <div><div class="rlcc-arc-speaker-name">Lucy Wu</div><div class="rlcc-arc-speaker-aff">TikTok MENA</div></div>
-            </div>
-          </div>
+  <!-- Panel 2: How a session works -->
+  <div class="rlcc-panel rlcc-panel--cream" style="--panel-i:1" id="how-it-works">
+    <div class="rlcc-panel-inner">
+      <div class="rlcc-panel-label">How a session works</div>
+      <h2 class="pg-h2">A 1–2 Hour Online Panel</h2>
+      <div class="rlcc-steps">
+        <div class="rlcc-step">
+          <div class="rlcc-step-n">01</div>
+          <div class="rlcc-step-title">Welcome</div>
+          <div class="rlcc-step-desc">Intros, community warm-up, quick ice-breaker.</div>
         </div>
-        <div class="rlcc-arc-metrics">
-          <div class="rlcc-arc-metric"><div class="rlcc-arc-metric-val">15</div><div class="rlcc-arc-metric-lbl">Creators</div></div>
-          <div class="rlcc-arc-metric"><div class="rlcc-arc-metric-val">22</div><div class="rlcc-arc-metric-lbl">Content Pieces</div></div>
-          <div class="rlcc-arc-metric"><div class="rlcc-arc-metric-val">2</div><div class="rlcc-arc-metric-lbl">Speakers</div></div>
+        <div class="rlcc-step">
+          <div class="rlcc-step-n">02</div>
+          <div class="rlcc-step-title">Speaker's Talk</div>
+          <div class="rlcc-step-desc">Invited creators share their experience and perspective.</div>
+        </div>
+        <div class="rlcc-step">
+          <div class="rlcc-step-n">03</div>
+          <div class="rlcc-step-title">Insights Exchange</div>
+          <div class="rlcc-step-desc">Moderated discussion — real-world insights, no fluff.</div>
+        </div>
+        <div class="rlcc-step">
+          <div class="rlcc-step-n">04</div>
+          <div class="rlcc-step-title">Audience Q&amp;A</div>
+          <div class="rlcc-step-desc">Participants ask directly and connect with speakers.</div>
         </div>
       </div>
-
-    </div>
-
-  </section>
-
-  <div class="pg-band">
-    <h2>Ready to <em>be a speaker?</em></h2>
-    <p>One form, one minute — let us know you're interested and we'll be in touch.</p>
-    <div class="pg-band-cta">
-      <a class="pg-btn pg-btn--yellow" href="https://forms.gle/t1ynTqy8ddKbaq7j9" target="_blank" rel="noopener">Register Your Interest →</a>
-      <button type="button" class="pg-btn pg-btn--ghost" id="rlccDlBtn">Download Proposal ↓</button>
     </div>
   </div>
 
-</main>
+  <!-- Panel 3: Archive -->
+  <div class="rlcc-panel rlcc-panel--light" style="--panel-i:2" id="archive">
+    <div class="rlcc-panel-inner">
+      <div class="rlcc-panel-label">Past Sessions</div>
+      <h2 class="pg-h2">Session Archive</h2>
+      <div class="rlcc-archive-list">
+        <div class="rlcc-archive-row">
+          <div class="rlcc-arc-date">Aug 29, 2026</div>
+          <div class="rlcc-arc-main">
+            <div class="rlcc-arc-topic">Content Creation Across China &amp; MENA</div>
+            <div class="rlcc-arc-speakers-row">
+              <div class="rlcc-arc-speaker">
+                <img class="rlcc-arc-headshot" src="../../assets/img/rlcc/aya-zhang.jpg" alt="Aya Zhang">
+                <div><div class="rlcc-arc-speaker-name">Aya Zhang</div><div class="rlcc-arc-speaker-aff">UAE-based Creator</div></div>
+              </div>
+              <div class="rlcc-arc-speaker">
+                <img class="rlcc-arc-headshot" src="../../assets/img/rlcc/lucy-wu.jpg" alt="Lucy Wu">
+                <div><div class="rlcc-arc-speaker-name">Lucy Wu</div><div class="rlcc-arc-speaker-aff">TikTok MENA</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="rlcc-arc-metrics">
+            <div class="rlcc-arc-metric"><div class="rlcc-arc-metric-val">15</div><div class="rlcc-arc-metric-lbl">Creators</div></div>
+            <div class="rlcc-arc-metric"><div class="rlcc-arc-metric-val">22</div><div class="rlcc-arc-metric-lbl">Content Pieces</div></div>
+            <div class="rlcc-arc-metric"><div class="rlcc-arc-metric-val">2</div><div class="rlcc-arc-metric-lbl">Speakers</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 4: CTA -->
+  <div class="rlcc-panel rlcc-panel--dark" style="--panel-i:3" id="join">
+    <div class="rlcc-panel-inner rlcc-panel-inner--center">
+      <h2 class="rlcc-cta-h2">Ready to <em>be a speaker?</em></h2>
+      <p class="rlcc-cta-sub">One form, one minute — let us know you're interested and we'll be in touch.</p>
+      <div class="pg-band-cta">
+        <a class="pg-btn pg-btn--yellow" href="https://forms.gle/t1ynTqy8ddKbaq7j9" target="_blank" rel="noopener">Register Your Interest →</a>
+        <button type="button" class="pg-btn pg-btn--ghost" id="rlccDlBtn">Download Proposal ↓</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /rlcc-stack -->
+
+<main class="pg-wrap" style="display:none"></main>
 
 <!-- Download confirm modal -->
 <div class="dl-modal-backdrop" id="rlccDlBackdrop" role="dialog" aria-modal="true" aria-labelledby="rlccDlTitle">
@@ -389,6 +467,7 @@
 <script>
   window.SITE_ROOT = "../../";
   window.SITE_SECTION = "programs";
+  window.SITE_BACK = "programs/";
   window.SITE_PAGE = "programs/creator-collective";
 
   /* ── Animated counters ─── */
@@ -428,7 +507,58 @@
     bars.forEach(function (b) { obs.observe(b); });
   })();
 </script>
-<script src="../../assets/js/nav.js?v=38" defer></script>
+<script src="../../assets/js/nav.js?v=47" defer></script>
+<script src="../../assets/js/spine.js" defer></script>
+<script>
+/* ── Entrance reveal: float-up on scroll ── */
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+
+  /* Groups of selectors to reveal together with stagger within each group */
+  var GROUPS = [
+    /* panel labels + headings */
+    '.rlcc-panel-label',
+    '.pg-h2',
+    '.rlcc-cta-h2',
+    '.rlcc-cta-sub',
+    /* metric items individually staggered */
+    '.rlcc-metric-item',
+    /* step items individually staggered */
+    '.rlcc-step',
+    /* archive rows */
+    '.rlcc-archive-row',
+    /* cta row */
+    '.pg-band-cta',
+  ];
+
+  var all = [];
+  GROUPS.forEach(function (sel) {
+    var els = Array.prototype.slice.call(document.querySelectorAll(sel));
+    /* Stagger siblings that share the same parent */
+    var seen = {};
+    els.forEach(function (el) {
+      var key = el.parentNode;
+      if (!seen[key]) seen[key] = 0;
+      var delay = seen[key] * 90; /* 90ms per sibling */
+      seen[key]++;
+      el.classList.add('rl-reveal');
+      el.style.transitionDelay = delay + 'ms';
+      all.push(el);
+    });
+  });
+
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('rl-revealed');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  all.forEach(function (el) { obs.observe(el); });
+})();
+</script>
 <script>
 (function () {
   var btn      = document.getElementById('rlccDlBtn');
@@ -456,9 +586,10 @@
 </script>
 <script>
 (function () {
-  /* Animate inline platform bars when the band scrolls into view */
-  var fills = document.querySelectorAll('.rlcc-platform-inline-fill');
-  if (!fills.length) return;
+  /* Animate platform bars + sparkline when the band scrolls into view */
+  var fills = document.querySelectorAll('.rlcc-platform-fill');
+  var spkPath = document.querySelector('.rlcc-sparkline-path');
+  var spkArea = document.querySelector('.rlcc-sparkline-area');
   var animated = false;
   function animate() {
     if (animated) return;
@@ -466,11 +597,15 @@
     fills.forEach(function (f) {
       requestAnimationFrame(function () { f.classList.add('animated'); });
     });
+    if (spkPath) requestAnimationFrame(function () {
+      spkPath.classList.add('animated');
+      if (spkArea) spkArea.classList.add('animated');
+    });
   }
   if ('IntersectionObserver' in window) {
     var obs = new IntersectionObserver(function (entries) {
       if (entries[0].isIntersecting) { animate(); obs.disconnect(); }
-    }, { threshold: 0.4 });
+    }, { threshold: 0.3 });
     var band = document.querySelector('.rlcc-metrics-band');
     if (band) obs.observe(band);
   } else {

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+<link rel="apple-touch-icon" href="../../assets/img/favicon.png">
+<title>Proposals &amp; Brochures — For Business | RealLingo</title>
+<meta name="description" content="Download RealLingo's partnership proposals and brochures — venue partnerships, speakers programme, and creator collective.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/site.css?v=42">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+
+  .prop-wrap {
+    min-height: calc(100vh - 62px);
+    background: var(--dark);
+    padding: clamp(3rem, 7vw, 5.5rem) clamp(1.5rem, 6vw, 5rem) clamp(3rem, 6vw, 5rem);
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  .prop-head { max-width: 620px; margin-bottom: clamp(2.5rem, 5vw, 4rem); text-align: center; }
+  .prop-eyebrow {
+    font-size: .68rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+    color: rgba(255,235,153,.45); margin-bottom: 1rem;
+  }
+  .prop-title {
+    font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; letter-spacing: -.03em;
+    color: #fff; line-height: 1.05;
+  }
+  .prop-title em { font-style: italic; font-weight: 300; color: var(--yellow); }
+  .prop-sub { margin-top: .9rem; color: rgba(255,255,255,.45); font-size: .95rem; line-height: 1.6; max-width: 480px; }
+
+  /* ── Cards grid ── */
+  .prop-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 18px;
+    overflow: hidden;
+    max-width: 800px;
+    width: 100%;
+  }
+  .prop-card {
+    background: rgba(255,255,255,.03);
+    padding: 2.5rem 2rem;
+    display: flex; flex-direction: column;
+    gap: 0;
+    transition: background .3s cubic-bezier(.22,1,.36,1);
+  }
+  .prop-card:hover { background: rgba(255,235,153,.08); }
+
+  .prop-card-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .7rem; font-weight: 700; letter-spacing: .1em;
+    color: rgba(255,255,255,.4); margin-bottom: 2rem;
+    transition: border-color .3s;
+  }
+  .prop-card:hover .prop-card-num { border-color: var(--yellow); color: var(--yellow); }
+
+  .prop-card-label {
+    font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(255,235,153,.4); margin-bottom: .6rem;
+  }
+  .prop-card-title {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -.02em;
+    color: #fff; line-height: 1.15; margin-bottom: .7rem;
+  }
+  .prop-card-desc {
+    font-size: .87rem; line-height: 1.6; color: rgba(255,255,255,.45);
+    flex: 1; margin-bottom: 2rem;
+  }
+  .prop-card:hover .prop-card-desc { color: rgba(255,255,255,.6); }
+
+  /* ── Download buttons ── */
+  .prop-downloads { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .prop-dl-btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .55rem 1rem;
+    border-radius: 8px;
+    font-size: .78rem; font-weight: 700;
+    text-decoration: none;
+    transition: background .2s, color .2s;
+  }
+  .prop-dl-btn--primary {
+    background: var(--yellow); color: var(--dark);
+  }
+  .prop-dl-btn--primary:hover { background: #fff; }
+  .prop-dl-btn--ghost {
+    background: rgba(255,255,255,.07); color: rgba(255,255,255,.7);
+    border: 1px solid rgba(255,255,255,.12);
+  }
+  .prop-dl-btn--ghost:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+  .prop-dl-btn svg { flex-shrink: 0; }
+
+  .prop-sub { text-align: center; }
+  @media (max-width: 640px) {
+    .prop-grid { grid-template-columns: 1fr; border-radius: 14px; }
+    .prop-card { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main class="prop-wrap">
+  <header class="prop-head">
+    <div class="prop-eyebrow">For Business</div>
+    <h1 class="prop-title">Partnership<br><em>Proposals</em></h1>
+    <p class="prop-sub">Download our partnership decks and proposals to explore collaboration opportunities with RealLingo.</p>
+  </header>
+
+  <div class="prop-grid">
+
+    <!-- 01 Venue Partnership -->
+    <div class="prop-card" id="venue">
+      <div class="prop-card-num">01</div>
+      <div class="prop-card-label">Cities@RealLingo</div>
+      <h2 class="prop-card-title">Venue Partnership</h2>
+      <p class="prop-card-desc">Host a RealLingo language-exchange event at your venue. Includes event format, audience profile, co-branding, and commercial terms.</p>
+      <div class="prop-downloads">
+        <a href="../../assets/docs/cities-venue-partnership-en.pdf" download class="prop-dl-btn prop-dl-btn--primary">
+          <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M8 12l-4-4h2.5V3h3v5H12L8 12z"/><path d="M2 14h12v-1.5H2V14z"/></svg>
+          Download EN
+        </a>
+        <a href="../../assets/docs/cities-venue-partnership-ar.pdf" download class="prop-dl-btn prop-dl-btn--ghost">
+          <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M8 12l-4-4h2.5V3h3v5H12L8 12z"/><path d="M2 14h12v-1.5H2V14z"/></svg>
+          Download AR
+        </a>
+      </div>
+    </div>
+
+    <!-- 02 Speakers Programme -->
+    <div class="prop-card" id="speakers">
+      <div class="prop-card-num">02</div>
+      <div class="prop-card-label">Speakers &amp; Experts</div>
+      <h2 class="prop-card-title">Speakers Programme</h2>
+      <p class="prop-card-desc">Bring RealLingo speakers and cultural educators to your organization, conference, or corporate event. Covers topics, formats, and booking terms.</p>
+      <div class="prop-downloads">
+        <a href="../../assets/docs/reallingo-speakers-proposal.pdf" download class="prop-dl-btn prop-dl-btn--primary">
+          <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M8 12l-4-4h2.5V3h3v5H12L8 12z"/><path d="M2 14h12v-1.5H2V14z"/></svg>
+          Download Proposal
+        </a>
+      </div>
+    </div>
+
+    <!-- 03 General Brochure -->
+    <div class="prop-card">
+      <div class="prop-card-num">03</div>
+      <div class="prop-card-label">Overview</div>
+      <h2 class="prop-card-title">RealLingo Brochure</h2>
+      <p class="prop-card-desc">A full overview of RealLingo's programs, community, and impact — suitable for sharing with stakeholders, sponsors, or potential partners.</p>
+      <div class="prop-downloads">
+        <a href="../../RealLingo LOGO/RealLingo - Brochure.pdf" download class="prop-dl-btn prop-dl-btn--primary">
+          <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M8 12l-4-4h2.5V3h3v5H12L8 12z"/><path d="M2 14h12v-1.5H2V14z"/></svg>
+          Download Brochure
+        </a>
+      </div>
+    </div>
+
+    <!-- 04 Contact -->
+    <div class="prop-card" id="custom">
+      <div class="prop-card-num">04</div>
+      <div class="prop-card-label">Get in Touch</div>
+      <h2 class="prop-card-title">Custom Partnership</h2>
+      <p class="prop-card-desc">Have a specific collaboration in mind? Reach out directly — we're open to co-branded events, sponsorships, media partnerships, and more.</p>
+      <div class="prop-downloads">
+        <a href="mailto:pr@thereallingo.com" class="prop-dl-btn prop-dl-btn--ghost">
+          Email pr@thereallingo.com ↗
+        </a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+  window.SITE_ROOT = "../../";
+  window.SITE_SECTION = "business";
+  window.SITE_PAGE = "business/proposals";
+</script>
+<script src="../../assets/js/nav.js?v=47" defer></script>
+</body>
+</html>
