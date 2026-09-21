@@ -697,46 +697,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   .tt-cta-band-btns .tt-btn { width: 100%; justify-content: center; }
 }
   /* ── Session Archive ───────────────────────── */
-  @keyframes ttLineRtl {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-  @keyframes ttLineLtr {
-    0%   { transform: translateX(-50%); }
-    100% { transform: translateX(0); }
-  }
-  .tt-archive {
-    background: var(--cream-white, #fffff2);
-    padding: 4rem 5vw;
-    position: relative;
-    overflow: hidden;
-  }
-  /* top line: right → left */
-  .tt-archive::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 200%; height: 3px;
-    background: repeating-linear-gradient(
-      90deg,
-      #ffeb99 0px, #ffeb99 80px,
-      transparent 80px, transparent 140px
-    );
-    animation: ttLineRtl 6s linear infinite;
-  }
-  /* bottom line: left → right */
-  .tt-archive::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: -100%;
-    width: 200%; height: 3px;
-    background: repeating-linear-gradient(
-      90deg,
-      #ffeb99 0px, #ffeb99 80px,
-      transparent 80px, transparent 140px
-    );
-    animation: ttLineLtr 6s linear infinite;
-  }
+  .tt-archive { background: var(--cream-white, #fffff2); padding: 4rem 5vw; }
   .tt-archive-inner { max-width: 1000px; margin: 0 auto; }
   .tt-archive-label { font-size: .68rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: rgba(17,18,22,.35); margin-bottom: .5rem; }
   .tt-archive-h2 { font-family: var(--font-serif, Georgia, serif); font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 400; line-height: 1.15; letter-spacing: -.02em; margin-bottom: 1.8rem; }
