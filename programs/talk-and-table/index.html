@@ -768,6 +768,22 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   }
 
   .tt-archive-list { display: flex; flex-direction: column; gap: 1px; background: rgba(17,18,22,.09); border: 1px solid rgba(17,18,22,.09); border-radius: 18px; overflow: visible; }
+  .tt-archive-row--upcoming { background: #fffbec !important; }
+  .tt-arc-upcoming-badge {
+    display: inline-flex; align-items: center; gap: .3rem;
+    font-size: .63rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    background: #ffeb99; color: #7a5000; border-radius: 100px;
+    padding: .22rem .65rem; margin-bottom: .35rem;
+  }
+  .tt-arc-register-btn {
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .4rem 1rem; border-radius: 100px;
+    font-family: var(--font-sans); font-size: .78rem; font-weight: 700;
+    background: #111216; color: #fff; text-decoration: none;
+    transition: background .15s, transform .1s;
+    white-space: nowrap;
+  }
+  .tt-arc-register-btn:hover { background: #333; transform: translateY(-1px); }
   .tt-archive-row {
     background: #fff; padding: 1.25rem 1.5rem;
     display: grid; grid-template-columns: 110px 1fr auto;
@@ -861,6 +877,66 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
     .tt-arc-metric--interactive:hover .tt-arc-popup,
     .tt-arc-metric--interactive.open .tt-arc-popup { transform: translateX(0) scale(1); }
   }
+
+/* ── Participation section ──────────────────────── */
+.tt-part-section {
+  background: var(--cream-white, #fffff2); padding: 4rem 5vw;
+}
+.tt-part-inner { max-width: 1000px; margin: 0 auto; }
+.tt-part-head { margin-bottom: 1.8rem; }
+.tt-part-head .tt-eyebrow { color: rgba(17,18,22,.35); }
+.tt-part-head p { margin-top: .5rem; font-family: var(--font-serif); font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 400; line-height: 1.15; letter-spacing: -.02em; color: var(--tt-dark); }
+.tt-part-head p em { font-style: italic; background: #ffeb99; color: #111216; -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: .05em .18em; border-radius: 3px; }
+.tt-part-grid {
+  display: flex; flex-direction: column;
+  gap: 1px; background: rgba(17,18,22,.09);
+  border: 1px solid rgba(17,18,22,.09); border-radius: 18px; overflow: hidden;
+}
+.tt-part-card {
+  background: #fff; padding: 2rem 2rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start;
+}
+.tt-part-card--host { background: #fffbec; }
+.tt-part-card-tag {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .62rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase;
+  padding: .3rem .75rem; border-radius: 100px; margin-bottom: 1rem;
+}
+.tt-part-card--member .tt-part-card-tag { background: rgba(17,18,22,.07); color: rgba(17,18,22,.6); }
+.tt-part-card--host   .tt-part-card-tag { background: #ffeb99; color: #7a5000; }
+.tt-part-card-title {
+  font-family: var(--font-serif); font-size: 1.4rem; font-weight: 400;
+  line-height: 1.2; letter-spacing: -.01em; color: var(--tt-dark); margin-bottom: .5rem;
+}
+.tt-part-card-desc { font-size: .875rem; line-height: 1.72; color: rgba(17,18,22,.52); margin: 0; }
+.tt-part-card-list { list-style: none; display: flex; flex-direction: column; gap: .55rem; }
+.tt-part-card-list li {
+  display: flex; align-items: flex-start; gap: .6rem;
+  font-size: .875rem; line-height: 1.55; color: rgba(17,18,22,.7);
+}
+.tt-part-card-list li::before {
+  content: '✓'; flex-shrink: 0;
+  font-size: .75rem; font-weight: 800; margin-top: .18em;
+}
+.tt-part-card--member .tt-part-card-list li::before { color: rgba(17,18,22,.35); }
+.tt-part-card--host   .tt-part-card-list li::before { color: #b07800; }
+.tt-part-card-price {
+  display: inline-block; margin-top: .75rem;
+  font-size: .78rem; font-weight: 800; letter-spacing: .04em;
+  color: rgba(17,18,22,.5); background: rgba(17,18,22,.06);
+  padding: .25rem .7rem; border-radius: 100px;
+}
+.tt-part-card-contact {
+  display: inline-flex; align-items: center; gap: .35rem;
+  margin-top: .75rem; font-size: .78rem; font-weight: 700;
+  color: #25D366; text-decoration: none;
+  background: rgba(37,211,102,.1); padding: .25rem .7rem; border-radius: 100px;
+  transition: background .15s;
+}
+.tt-part-card-contact:hover { background: rgba(37,211,102,.2); }
+@media (max-width: 640px) {
+  .tt-part-card { grid-template-columns: 1fr; gap: 1.25rem; }
+}
 
 /* ── Instagram Reel section ─────────────────────── */
 .tt-reel-section {
@@ -1060,7 +1136,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
       Talk &amp; Table · Cities@RealLingo
     </div>
     <h1 class="tt-hero-h1"><span class="hw" style="--hw-i:0;--hw-total:5">Language</span> <span class="hw" style="--hw-i:1;--hw-total:5">Lovers</span><br><span class="hw" style="--hw-i:2;--hw-total:5">Around</span> <span class="hw" style="--hw-i:3;--hw-total:5">the</span> <span class="hw" style="--hw-i:4;--hw-total:5">Town.</span></h1>
-    <p class="tt-hero-sub">Grab a coffee, meet new people, and practice languages through real conversations.</p>
+    <p class="tt-hero-sub">A recurring language and cultural exchange in Khobar — join as a Guest Member or lead a table as a Community Host. Real conversations, real people, every other Thursday night.</p>
 
     <div class="tt-hero-ctas">
       <a href="../../join-us/community/" class="tt-btn tt-btn--yellow">Join Our Community →</a>
@@ -1155,12 +1231,12 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 </section>
 
 <!-- ══════════════════════════════════════════
-     SESSION ARCHIVE
+     SESSION CALENDAR
 ══════════════════════════════════════════ -->
-<section class="tt-archive" id="archive">
+<section class="tt-archive" id="calendar">
   <div class="tt-archive-inner">
-    <div class="tt-archive-label rv"><span class="tt-eyebrow-num">02 /</span> Session Archive</div>
-    <h2 class="tt-archive-h2 rv rv--delay-1">Past Talk&amp;Table Sessions<br><em>@Khobar, Saudi Arabia</em></h2>
+    <div class="tt-archive-label rv"><span class="tt-eyebrow-num">02 /</span> Session Calendar</div>
+    <h2 class="tt-archive-h2 rv rv--delay-1">Talk&amp;Table Sessions<br><em>@Khobar, Saudi Arabia</em></h2>
     <div class="tt-archive-controls rv rv--delay-2" id="ttArcControls" aria-label="Sort and filter sessions">
       <span class="tt-arc-ctrl-label">Sort</span>
       <button type="button" class="tt-arc-ctrl-btn active" data-sort="date" data-dir="desc" id="ttSortNewest">Newest first</button>
@@ -1174,6 +1250,34 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
       </div>
     </div>
     <div class="tt-archive-list rv rv--delay-2" id="ttArcList">
+
+      <div class="tt-archive-row tt-archive-row--upcoming"
+           data-date="2026-10-22"
+           data-venue="Takyah game تكية"
+           data-venue-url="https://maps.app.goo.gl/muS2L6fVgBVtVD2H6">
+        <div class="tt-arc-date">
+          <div class="tt-arc-upcoming-badge">⬤ Upcoming</div>
+          <div>Oct 22, 2026</div>
+        </div>
+        <div style="min-width:0"><a class="tt-arc-venue" href="https://maps.app.goo.gl/muS2L6fVgBVtVD2H6" target="_blank" rel="noopener"><span class="tt-arc-venue-name">Takyah game تكية</span><span class="tt-arc-venue-arrow">↗</span></a></div>
+        <div class="tt-arc-metrics">
+          <a class="tt-arc-register-btn" href="https://forms.gle/nJARaBcqhKKaSs1JA" target="_blank" rel="noopener">Register →</a>
+        </div>
+      </div>
+
+      <div class="tt-archive-row tt-archive-row--upcoming"
+           data-date="2026-10-08"
+           data-venue="Takyah game تكية"
+           data-venue-url="https://maps.app.goo.gl/muS2L6fVgBVtVD2H6">
+        <div class="tt-arc-date">
+          <div class="tt-arc-upcoming-badge">⬤ Upcoming</div>
+          <div>Oct 8, 2026</div>
+        </div>
+        <div style="min-width:0"><a class="tt-arc-venue" href="https://maps.app.goo.gl/muS2L6fVgBVtVD2H6" target="_blank" rel="noopener"><span class="tt-arc-venue-name">Takyah game تكية</span><span class="tt-arc-venue-arrow">↗</span></a></div>
+        <div class="tt-arc-metrics">
+          <a class="tt-arc-register-btn" href="https://forms.gle/8bQmUWwTm64VpThe9" target="_blank" rel="noopener">Register →</a>
+        </div>
+      </div>
 
       <div class="tt-archive-row"
            data-langs="中文,বাংলা,العربية,Deutsch,Dansk,한국어"
@@ -1260,7 +1364,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
           <img src="../../assets/img/tt/tt-1.jpg" alt="People in conversation at a Talk&amp;Table session" loading="lazy">
           <img src="../../assets/img/tt/tt-10.jpg" alt="Talk&amp;Table session real moment" loading="lazy">
         </div>
-        <div class="tt-route-polaroid-caption">Talk &amp; Table · Real moments</div>
+        <div class="tt-route-polaroid-caption">Host-led Icebreaker</div>
       </div>
 
       <div class="tt-route-node">
@@ -1268,9 +1372,9 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
       </div>
 
       <div class="tt-route-card">
-        <span class="tt-route-card-icon">☕</span>
-        <div class="tt-route-card-title">Real conversations over coffee</div>
-        <p class="tt-route-card-desc">Relaxed 1–2 hour sessions in a warm café. No strangers — just language lovers with something to say. Show up, sit down, start talking.</p>
+        <span class="tt-route-card-icon">🎯</span>
+        <div class="tt-route-card-title">Host-led Icebreaker</div>
+        <p class="tt-route-card-desc">The host opens the session with an interactive icebreaker to get everyone comfortable and talking — designed to break the ice and kick off real conversation from the start.</p>
         <div class="tt-route-card-stamp">Stop 01 of 03</div>
       </div>
     </div>
@@ -1283,7 +1387,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
           <img src="../../assets/img/tt/tt-4.jpg" alt="Talk&amp;Table activity cards and materials" loading="lazy">
           <img src="../../assets/img/tt/tt-4b.jpg" alt="Talk&amp;Table games in action" loading="lazy">
         </div>
-        <div class="tt-route-polaroid-caption">Games &amp; Icebreakers</div>
+        <div class="tt-route-polaroid-caption">RealLingo Bingo</div>
       </div>
 
       <div class="tt-route-node">
@@ -1292,8 +1396,8 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 
       <div class="tt-route-card">
         <span class="tt-route-card-icon">🃏</span>
-        <div class="tt-route-card-title">Games &amp; activities</div>
-        <p class="tt-route-card-desc">Language icebreakers and prompt cards keep the energy alive — even if you're nervous about speaking. They make it easy to keep the conversation going.</p>
+        <div class="tt-route-card-title">RealLingo Bingo</div>
+        <p class="tt-route-card-desc">A fixed RealLingo Bingo activity runs in every session as part of RealLingo Culture — structured, fun, and a great way for everyone to interact across languages and backgrounds.</p>
         <div class="tt-route-card-stamp">Stop 02 of 03</div>
       </div>
     </div>
@@ -1306,7 +1410,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
           <img src="../../assets/img/tt/tt-9.jpg" alt="Group of attendees at a Talk&amp;Table session" loading="lazy">
           <img src="../../assets/img/tt/tt-14b.jpg" alt="Talk&amp;Table session attendees" loading="lazy">
         </div>
-        <div class="tt-route-polaroid-caption">Regular &amp; Local</div>
+        <div class="tt-route-polaroid-caption">Free Discussion</div>
       </div>
 
       <div class="tt-route-node">
@@ -1314,13 +1418,60 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
       </div>
 
       <div class="tt-route-card">
-        <span class="tt-route-card-icon">🗓️</span>
-        <div class="tt-route-card-title">Regular &amp; local</div>
-        <p class="tt-route-card-desc">Bi-weekly or monthly, usually Thursday evenings. The same crowd, the same city — until it starts to feel like home.</p>
+        <span class="tt-route-card-icon">💬</span>
+        <div class="tt-route-card-title">Free Discussion</div>
+        <p class="tt-route-card-desc">After the activities, the table opens up for open conversation. Talk, practice languages, swap stories, connect naturally — no script, no pressure.</p>
         <div class="tt-route-card-stamp">Stop 03 of 03</div>
       </div>
     </div>
 
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     TWO WAYS TO PARTICIPATE
+══════════════════════════════════════════ -->
+<section class="tt-part-section">
+  <div class="tt-part-inner">
+
+    <div class="tt-part-head">
+      <div class="tt-eyebrow"><span class="tt-eyebrow-num">04 /</span> How to Join</div>
+      <p>Guest Member<br>or <em>Community Host?</em></p>
+    </div>
+
+    <div class="tt-part-grid">
+
+      <!-- Activity Member -->
+      <div class="tt-part-card tt-part-card--member">
+        <div>
+          <div class="tt-part-card-tag">🎟 Guest Member</div>
+          <div class="tt-part-card-title">Show up &amp; talk</div>
+          <p class="tt-part-card-desc">Buy a ticket. Come as you are.</p>
+          <div class="tt-part-card-price">50 SAR / session</div>
+        </div>
+        <ul class="tt-part-card-list">
+          <li>Drinks included</li>
+          <li>Join the icebreaker, bingo &amp; open discussion</li>
+          <li>Zero prep needed</li>
+        </ul>
+      </div>
+
+      <!-- Community Host -->
+      <div class="tt-part-card tt-part-card--host">
+        <div>
+          <div class="tt-part-card-tag">⭐ Community Host</div>
+          <div class="tt-part-card-title">Lead the table</div>
+          <p class="tt-part-card-desc">No ticket. You run the session.</p>
+          <a class="tt-part-card-contact" href="https://wa.me/8615313760525" target="_blank" rel="noopener">💬 Contact us now</a>
+        </div>
+        <ul class="tt-part-card-list">
+          <li>Free entry — no ticket required</li>
+          <li>Design &amp; lead the icebreaker</li>
+          <li>RealLingo handles the rest</li>
+        </ul>
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -1333,7 +1484,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
     <div class="tt-reel-copy">
       <div class="tt-reel-eyebrow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-        <span class="tt-eyebrow-num">04 /</span> Catch us on Instagram
+        <span class="tt-eyebrow-num">05 /</span> Catch us on Instagram
       </div>
       <h2 class="tt-reel-h2">See what a session<br><em>actually looks like.</em></h2>
       <p class="tt-reel-p">Languages in motion — real conversations, real people, real moments. Scroll through our latest reel from Talk&amp;Table.</p>
@@ -1373,9 +1524,9 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   <div class="tt-cta-band-bg" aria-hidden="true"></div>
   <div class="tt-cta-band-overlay" aria-hidden="true"></div>
   <div class="tt-cta-band-content">
-    <div class="tt-eyebrow"><span class="tt-eyebrow-num">05 /</span> For Venue Partners</div>
+    <div class="tt-eyebrow"><span class="tt-eyebrow-num">06 /</span> For Venue Partners</div>
     <h2 class="tt-h2" style="color:#fff;">Turn a quiet Thursday<br>into a <em>community night.</em></h2>
-    <p>Host Talk&amp;Table at your café. We bring 10–20 engaged guests every session — you keep 100% of F&amp;B. Zero hassle, recurring footfall, real cultural impact.</p>
+    <p>Host Talk&amp;Table at your café in Khobar. We bring engaged guests every bi-weekly Thursday session — you keep 100% of F&amp;B. Zero hassle, recurring footfall, real cultural impact.</p>
     <div class="tt-cta-band-btns">
       <div class="tt-email-reveal-wrap" style="position:relative;display:inline-block;">
         <button type="button" class="tt-btn tt-btn--yellow" id="ttContactBtn" aria-expanded="false">Contact Us →</button>
