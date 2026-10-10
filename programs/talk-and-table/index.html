@@ -342,6 +342,23 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 .tt-route-section { padding: 5rem 5vw 6rem; background: var(--cream-white); }
 .tt-route-head { max-width: 640px; margin: 0 auto 4.5rem; text-align: center; }
 .tt-route-head .tt-h2 { margin-top: .4rem; }
+.tt-formula { margin-top: 2rem; }
+.tt-formula-lhs { display: flex; align-items: center; justify-content: center; gap: .5rem; margin-bottom: 1.25rem; opacity: 0; animation: ttFmlFade .5s .1s ease forwards; }
+.tt-formula-brand { font-size: 1.15rem; font-weight: 800; color: var(--tt-dark); letter-spacing: -.02em; }
+.tt-formula-eq { font-size: 1.15rem; font-weight: 300; color: var(--tt-y); }
+.tt-formula-row { display: flex; align-items: stretch; justify-content: center; flex-wrap: wrap; gap: 0; }
+.tt-formula-card { background: #fff; border: 1px solid rgba(17,18,22,.09); border-radius: 14px; padding: 1rem 1.1rem; text-align: center; width: 160px; opacity: 0; transform: translateY(12px); }
+.tt-formula-card:nth-child(1) { animation: ttFmlUp .45s .35s ease forwards; }
+.tt-formula-card:nth-child(3) { animation: ttFmlUp .45s .6s ease forwards; }
+.tt-formula-card:nth-child(5) { animation: ttFmlUp .45s .85s ease forwards; }
+.tt-formula-icon { font-size: 1.3rem; margin-bottom: .3rem; }
+.tt-formula-title { font-size: .82rem; font-weight: 700; color: var(--tt-dark); margin-bottom: .25rem; line-height: 1.2; }
+.tt-formula-sub { font-size: .68rem; color: rgba(17,18,22,.42); line-height: 1.4; }
+.tt-formula-plus { font-size: 1.1rem; font-weight: 300; color: var(--tt-y); align-self: center; padding: 0 .55rem; opacity: 0; }
+.tt-formula-plus:nth-child(2) { animation: ttFmlFade .3s .58s ease forwards; }
+.tt-formula-plus:nth-child(4) { animation: ttFmlFade .3s .83s ease forwards; }
+@keyframes ttFmlUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes ttFmlFade { to { opacity: 1; } }
 
 .tt-route-body {
   max-width: 1000px; margin: 0 auto;
@@ -1378,6 +1395,32 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
   <div class="tt-route-head">
     <div class="tt-eyebrow"><span class="tt-eyebrow-num">03 /</span> What to expect</div>
     <h2 class="tt-h2">Come as you are.<br><em>Leave with new friends.</em></h2>
+
+    <div class="tt-formula">
+      <div class="tt-formula-lhs">
+        <span class="tt-formula-brand">Talk&amp;Table</span>
+        <span class="tt-formula-eq">=</span>
+      </div>
+      <div class="tt-formula-row">
+        <div class="tt-formula-card">
+          <div class="tt-formula-icon">🎭</div>
+          <div class="tt-formula-title">Social Mixer</div>
+          <div class="tt-formula-sub">comedy · talk show · games</div>
+        </div>
+        <span class="tt-formula-plus">+</span>
+        <div class="tt-formula-card">
+          <div class="tt-formula-icon">🏆</div>
+          <div class="tt-formula-title">RealLingo Bingo</div>
+          <div class="tt-formula-sub">win a prize through networking</div>
+        </div>
+        <span class="tt-formula-plus">+</span>
+        <div class="tt-formula-card">
+          <div class="tt-formula-icon">☕</div>
+          <div class="tt-formula-title">Free Talk</div>
+          <div class="tt-formula-sub">grab a drink &amp; make new friends</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="tt-route-body">
@@ -1390,7 +1433,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
           <img src="../../assets/img/tt/tt-1.jpg" alt="People in conversation at a Talk&amp;Table session" loading="lazy">
           <img src="../../assets/img/tt/tt-10.jpg" alt="Talk&amp;Table session real moment" loading="lazy">
         </div>
-        <div class="tt-route-polaroid-caption">Host-led Icebreaker</div>
+        <div class="tt-route-polaroid-caption">Host-led Social Mixer</div>
       </div>
 
       <div class="tt-route-node">
@@ -1399,8 +1442,8 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
 
       <div class="tt-route-card">
         <span class="tt-route-card-icon">🎯</span>
-        <div class="tt-route-card-title">Host-led Icebreaker</div>
-        <p class="tt-route-card-desc">The host opens the session with an interactive icebreaker to get everyone comfortable and talking — designed to break the ice and kick off real conversation from the start.</p>
+        <div class="tt-route-card-title">Host-led Social Mixer</div>
+        <p class="tt-route-card-desc">Each host designs one format — comedy, talk show, or social mixer games. Every session feels different.</p>
         <div class="tt-route-card-stamp">Stop 01 of 03</div>
       </div>
     </div>
@@ -1423,7 +1466,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
       <div class="tt-route-card">
         <span class="tt-route-card-icon">🃏</span>
         <div class="tt-route-card-title">RealLingo Bingo</div>
-        <p class="tt-route-card-desc">A fixed RealLingo Bingo activity runs in every session as part of RealLingo Culture — structured, fun, and a great way for everyone to interact across languages and backgrounds.</p>
+        <p class="tt-route-card-desc">Each square is a person. Find them, talk to them, get your bingo — and win a prize.</p>
         <div class="tt-route-card-stamp">Stop 02 of 03</div>
       </div>
     </div>
@@ -1446,7 +1489,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
       <div class="tt-route-card">
         <span class="tt-route-card-icon">💬</span>
         <div class="tt-route-card-title">Free Discussion</div>
-        <p class="tt-route-card-desc">After the activities, the table opens up for open conversation. Talk, practice languages, swap stories, connect naturally — no script, no pressure.</p>
+        <p class="tt-route-card-desc">Grab a drink. Sit down. Talk to whoever you like — no script, no pressure.</p>
         <div class="tt-route-card-stamp">Stop 03 of 03</div>
       </div>
     </div>
@@ -1477,7 +1520,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
         </div>
         <ul class="tt-part-card-list">
           <li>Drinks included</li>
-          <li>Join the icebreaker, bingo &amp; open discussion</li>
+          <li>Join the social mixer, bingo &amp; open discussion</li>
           <li>Zero prep needed</li>
         </ul>
       </div>
@@ -1492,7 +1535,7 @@ body { font-family: var(--font-sans); background: var(--tt-cream); color: var(--
         </div>
         <ul class="tt-part-card-list">
           <li>Free entry — no ticket required</li>
-          <li>Design &amp; lead the icebreaker</li>
+          <li>Design &amp; lead the social mixer</li>
           <li>RealLingo handles the rest</li>
         </ul>
       </div>
